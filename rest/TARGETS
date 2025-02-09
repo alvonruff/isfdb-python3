@@ -1,0 +1,14 @@
+#
+#     (C) COPYRIGHT 2008-2021   Al von Ruff and Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 757 $
+#     Date: $Date: 2021-09-25 17:03:06 -0400 (Sat, 25 Sep 2021) $
+
+TARGETS = DIR/submission.cgi \
+	  DIR/getpub.cgi \
+	  DIR/getpub_by_ID.cgi \
+	  DIR/getpub_by_internal_ID.cgi

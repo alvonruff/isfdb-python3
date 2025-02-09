@@ -1,0 +1,13 @@
+#
+#     (C) COPYRIGHT 2018-2022   Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 856 $
+#     Date: $Date: 2022-03-03 17:00:52 -0500 (Thu, 03 Mar 2022) $
+
+TARGETS = DIR/monthly_job.py \
+          DIR/nightly_job.py \
+          DIR/weekly_job.py

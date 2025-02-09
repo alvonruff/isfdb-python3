@@ -1,0 +1,10 @@
+This is the ISFDB source code as of 2008-04-20. It is the contents of archive
+published on ISFDB wiki, except:
+
+- RCS files were removed
+- subdirectories 'local' were removed (they should be recreated during installation)
+- files .TARGETS were removed, as they should be recreated during installation
+- files css/xxx, edit/tmp.py, mod/tmp were removed
+- duplicates of files from common/ were removed from biblio/, edit/, mod/;
+  these files should be copied to biblio/, edit/ & mod/ by running 'make install'
+  in common/

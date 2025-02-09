@@ -1,0 +1,106 @@
+#
+#     (C) COPYRIGHT 2008-2022   Al von Ruff and Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 836 $
+#     Date: $Date: 2022-02-01 19:00:31 -0500 (Tue, 01 Feb 2022) $
+
+TARGETS = DIR/adv_identifier_search.cgi \
+	  DIR/adv_notes_search.cgi \
+	  DIR/adv_search_menu.cgi \
+	  DIR/adv_search_results.cgi \
+	  DIR/adv_search_selection.cgi \
+	  DIR/adv_user_search.cgi \
+	  DIR/adv_web_page_search.cgi \
+	  DIR/ae.cgi \
+	  DIR/author_history.cgi \
+	  DIR/authors_by_debut_year.cgi \
+	  DIR/authors_by_debut_year_table.cgi \
+	  DIR/authortags.cgi \
+	  DIR/award_category.cgi \
+	  DIR/award_category_history.cgi \
+	  DIR/award_category_year.cgi \
+	  DIR/award_details.cgi \
+	  DIR/award_directory.cgi \
+	  DIR/award_history.cgi \
+	  DIR/awardtype.cgi \
+	  DIR/awardtype_history.cgi \
+	  DIR/ay.cgi \
+	  DIR/calendar_day.cgi \
+	  DIR/calendar_menu.cgi \
+	  DIR/cancelsubmission.cgi \
+	  DIR/ch.cgi \
+	  DIR/changed_verified_pubs.cgi \
+	  DIR/diffselect.cgi \
+	  DIR/directory.cgi \
+	  DIR/dologin.cgi \
+	  DIR/dologout.cgi \
+	  DIR/dumpxml.cgi \
+	  DIR/ea.cgi \
+	  DIR/eaw.cgi \
+	  DIR/external_id_search_results.cgi \
+	  DIR/fc.cgi \
+	  DIR/google_search_redirect.cgi \
+	  DIR/index.cgi \
+	  DIR/languages.cgi \
+	  DIR/most_popular.cgi \
+	  DIR/most_popular_table.cgi \
+	  DIR/most_reviewed.cgi \
+	  DIR/most_reviewed_table.cgi \
+	  DIR/my_removed_secondary_verifications.cgi \
+	  DIR/my_secondary_verifications.cgi \
+	  DIR/my_unstable_ISBN_verifications.cgi \
+	  DIR/my_unstable_verifications.cgi \
+	  DIR/my_verifications_menu.cgi \
+	  DIR/mylanguages.cgi \
+	  DIR/mypreferences.cgi \
+	  DIR/mywebsites.cgi \
+	  DIR/myrecent.cgi \
+	  DIR/myvotes.cgi \
+	  DIR/note.cgi \
+	  DIR/note_search_results.cgi \
+	  DIR/pe.cgi \
+	  DIR/pl.cgi \
+	  DIR/popular_authors.cgi \
+	  DIR/popular_authors_table.cgi \
+	  DIR/pub_history.cgi \
+	  DIR/publisher.cgi \
+	  DIR/publisher_one_author.cgi \
+	  DIR/publisher_authors.cgi \
+	  DIR/publisher_history.cgi \
+	  DIR/publisheryear.cgi \
+	  DIR/pubseries.cgi \
+	  DIR/pubseries_history.cgi \
+	  DIR/pubs_not_in_series.cgi \
+	  DIR/recent.cgi \
+	  DIR/recent_activity_menu.cgi \
+	  DIR/recent_primary_ver.cgi \
+	  DIR/recentver.cgi \
+	  DIR/removed_secondary_verifications.cgi \
+	  DIR/se.cgi \
+	  DIR/series_history.cgi \
+	  DIR/seriesgrid.cgi \
+	  DIR/seriestags.cgi \
+	  DIR/stats.cgi \
+	  DIR/stats-and-tops.cgi \
+	  DIR/submitdiff.cgi \
+	  DIR/submitlogin.cgi \
+	  DIR/submitmylanguages.cgi \
+	  DIR/submitmywebsites.cgi \
+	  DIR/submitpreferences.cgi \
+	  DIR/tag.cgi \
+	  DIR/tag_author.cgi \
+	  DIR/title.cgi \
+	  DIR/title_history.cgi \
+	  DIR/titlecovers.cgi \
+	  DIR/topcontrib.cgi \
+	  DIR/user_search_results.cgi\
+	  DIR/usertag.cgi \
+	  DIR/usertitles.cgi \
+	  DIR/userver.cgi \
+	  DIR/verification_sources.cgi \
+	  DIR/view_submission.cgi \
+	  DIR/webpages_search_results.cgi

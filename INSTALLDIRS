@@ -1,0 +1,12 @@
+#
+#     (C) COPYRIGHT 2008-2017   Al von Ruff and Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 13 $
+#     Date: $Date: 2017-10-30 19:26:21 -0400 (Mon, 30 Oct 2017) $
+
+INSTALL_CGI	= /var/www/cgi-bin
+INSTALL_HTML	= /var/www/html

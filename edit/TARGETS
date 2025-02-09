@@ -1,0 +1,114 @@
+#
+#     (C) COPYRIGHT 2008-2023   Al von Ruff and Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 1140 $
+#     Date: $Date: 2023-07-12 21:18:44 -0400 (Wed, 12 Jul 2023) $
+
+TARGETS = DIR/add_recognized_domain.cgi \
+          DIR/add_template.cgi \
+          DIR/add_verification_source.cgi \
+          DIR/addaward.cgi \
+          DIR/addawardcat.cgi \
+          DIR/addpub.cgi \
+          DIR/addquicktag.cgi \
+          DIR/addvariant.cgi \
+          DIR/as_merge.cgi \
+          DIR/av_merge.cgi \
+          DIR/cleanup.cgi \
+          DIR/cleanup_report.cgi \
+          DIR/clonecontent.cgi \
+          DIR/clone_intermediate.cgi \
+          DIR/clonepub.cgi \
+          DIR/deleteaward.cgi \
+          DIR/deleteawardcat.cgi \
+          DIR/deleteawardtype.cgi \
+          DIR/deletepub.cgi \
+          DIR/deleteseries.cgi \
+          DIR/deletetitle.cgi \
+          DIR/edit_delete_recognized_domain.cgi \
+          DIR/edit_template.cgi \
+          DIR/edit_verification_source.cgi \
+          DIR/editauth.cgi \
+          DIR/editaward.cgi \
+          DIR/editawardcat.cgi \
+          DIR/editawardtype.cgi \
+          DIR/editpub.cgi \
+          DIR/editpublisher.cgi \
+          DIR/editpubseries.cgi \
+          DIR/editseries.cgi \
+          DIR/edittags.cgi \
+          DIR/edittitle.cgi \
+          DIR/empty_containers.cgi \
+          DIR/exportcontent.cgi \
+          DIR/find_dups.cgi \
+          DIR/find_pub_dups.cgi \
+          DIR/find_title_dups.cgi \
+          DIR/importcontent.cgi \
+          DIR/incomplete_contents.cgi \
+          DIR/keygen.cgi \
+          DIR/linkaward.cgi \
+          DIR/linkreview.cgi \
+          DIR/mkpseudo.cgi \
+          DIR/mkvariant.cgi \
+          DIR/new_language.cgi \
+          DIR/newawardtype.cgi \
+          DIR/newpub.cgi \
+          DIR/numeric_external_id_ranges.cgi \
+          DIR/ps_merge.cgi \
+          DIR/publisher_exceptions.cgi \
+          DIR/pv_merge.cgi \
+          DIR/rmtitles.cgi \
+          DIR/select_award_type.cgi \
+          DIR/sfe3_authors.cgi \
+          DIR/submit_add_recognized_domain.cgi \
+          DIR/submit_add_template.cgi \
+          DIR/submit_add_verification_source.cgi \
+          DIR/submit_delete_recognized_domain.cgi \
+          DIR/submit_edit_recognized_domain.cgi \
+          DIR/submit_edit_template.cgi \
+          DIR/submit_edit_verification_source.cgi \
+          DIR/submit_new_language.cgi \
+          DIR/submit_primary_verification.cgi \
+          DIR/submit_select_award_type.cgi \
+          DIR/submitaddpub.cgi \
+          DIR/submitauth.cgi \
+          DIR/submitaward.cgi \
+          DIR/submitawardcat.cgi \
+          DIR/submitawardtype.cgi \
+          DIR/submitclone.cgi \
+          DIR/submitdelaward.cgi \
+          DIR/submitdeleteawardcat.cgi \
+          DIR/submitdeleteawardtype.cgi \
+          DIR/submitdelpub.cgi \
+          DIR/submitdelseries.cgi \
+          DIR/submitdeltitle.cgi \
+          DIR/submitlinkaward.cgi \
+          DIR/submitlinkreview.cgi \
+          DIR/submitmkpseudo.cgi \
+          DIR/submitmkvar1.cgi \
+          DIR/submitmkvar2.cgi \
+          DIR/submitnewaward.cgi \
+          DIR/submitnewawardcat.cgi \
+          DIR/submitnewawardtype.cgi \
+          DIR/submitnewpub.cgi \
+          DIR/submitpub.cgi \
+          DIR/submitpublisher.cgi \
+          DIR/submitpubseries.cgi \
+          DIR/submitrempseudo.cgi \
+          DIR/submitrm.cgi \
+          DIR/submitseries.cgi \
+          DIR/submittags.cgi \
+          DIR/submittitle.cgi \
+          DIR/submitvariant.cgi \
+          DIR/submitver.cgi \
+          DIR/submitvote.cgi \
+          DIR/ts_merge.cgi \
+          DIR/ts_unmerge.cgi \
+          DIR/tv_merge.cgi \
+          DIR/tv_unmerge.cgi \
+          DIR/verify.cgi \
+          DIR/vote.cgi

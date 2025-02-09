@@ -1,0 +1,86 @@
+#
+#     (C) COPYRIGHT 2008-2023   Al von Ruff and Ahasuerus
+#       ALL RIGHTS RESERVED
+#
+#     The copyright notice above does not evidence any actual or
+#     intended publication of such source code.
+#
+#     Version: $Revision: 1140 $
+#     Date: $Date: 2023-07-12 21:18:44 -0400 (Wed, 12 Jul 2023) $
+
+TARGETS = DIR/aa_merge.cgi \
+	  DIR/aa_update.cgi \
+	  DIR/award_cat_delete_file.cgi \
+	  DIR/award_cat_new_file.cgi \
+	  DIR/award_cat_update_file.cgi \
+	  DIR/award_link_file.cgi \
+	  DIR/award_type_delete_file.cgi \
+	  DIR/award_type_new_file.cgi \
+	  DIR/award_type_update_file.cgi \
+	  DIR/bad_images.cgi \
+	  DIR/bureaucrat.cgi \
+	  DIR/ca_new.cgi \
+	  DIR/change_tag_status.cgi \
+	  DIR/cpanel.cgi \
+	  DIR/hardreject.cgi \
+	  DIR/hold.cgi \
+	  DIR/ka_new.cgi \
+	  DIR/library.cgi \
+	  DIR/list.cgi \
+	  DIR/list_recognized_domains.cgi \
+	  DIR/list_templates.cgi \
+	  DIR/list_verification_sources.cgi \
+	  DIR/marque.cgi \
+	  DIR/new_language_file.cgi \
+	  DIR/pa_new.cgi \
+	  DIR/pa_delete.cgi \
+	  DIR/pa_update.cgi \
+	  DIR/private_tags.cgi \
+	  DIR/ra_link.cgi \
+	  DIR/recognized_domain_add_file.cgi \
+	  DIR/recognized_domain_edit_file.cgi \
+	  DIR/recognized_domain_delete_file.cgi \
+	  DIR/recent.cgi \
+	  DIR/reject.cgi \
+	  DIR/remove_secondary_verification.cgi \
+	  DIR/remove_tag.cgi \
+	  DIR/resolve_bad_url.cgi \
+	  DIR/resolve_cleanup.cgi \
+	  DIR/resolve_empty_containers.cgi \
+	  DIR/resolve_sfe3_url.cgi \
+	  DIR/sa_delete.cgi \
+	  DIR/sa_update.cgi \
+	  DIR/select_secondary_verification.cgi \
+	  DIR/self_approvers.cgi \
+	  DIR/self_approver_file.cgi \
+	  DIR/submission_review.cgi \
+	  DIR/submission_search.cgi \
+	  DIR/submission_search_results.cgi \
+	  DIR/submissions_by_language.cgi \
+	  DIR/submitcpanel.cgi \
+	  DIR/submitref.cgi \
+	  DIR/ta_delete.cgi \
+	  DIR/ta_update.cgi \
+	  DIR/ta_merge.cgi \
+	  DIR/ta_remove.cgi \
+	  DIR/ta_unmerge.cgi \
+	  DIR/tag_breakdown.cgi \
+	  DIR/tag_status_changes.cgi \
+	  DIR/template_add_file.cgi \
+	  DIR/template_update_file.cgi \
+	  DIR/ua_merge.cgi \
+	  DIR/unhold.cgi \
+	  DIR/unreject.cgi \
+          DIR/va_new.cgi \
+	  DIR/verification_source_add_file.cgi \
+	  DIR/verification_source_file.cgi \
+	  DIR/wa_new.cgi \
+	  DIR/wa_update.cgi \
+	  DIR/web_api_users.cgi \
+	  DIR/web_api_users_file.cgi \
+	  DIR/xa_update.cgi \
+	  DIR/ya_new.cgi \
+	  DIR/ya_remove.cgi \
+	  DIR/wa_delete.cgi \
+	  DIR/za_update.cgi
+	 
