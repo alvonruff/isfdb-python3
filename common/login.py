@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Uzume
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Uzume
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,135 +23,135 @@ from library import ISFDBLink, ISFDBLinkNoName
 # setCookies() sets the user_id, user_name, and user_token
 ####################################################################
 def setCookies(user_id, user_name, user_token):
-	os.environ['HTTP_COOKIE'] = 'isfdbUserID=%s; isfdbUserName=%s; isfdbToken=%s;' % (user_id, user_name, user_token)
+        os.environ['HTTP_COOKIE'] = 'isfdbUserID=%s; isfdbUserName=%s; isfdbToken=%s;' % (user_id, user_name, user_token)
         for domain in (HTMLHOST, HTMLHOST_ALT):
                 setDomainCookies(domain, user_id, user_name, user_token)
 
 def setDomainCookies(domain, user_id, user_name, user_token):
         if not domain:
                 return
-	print 'Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_id, domain)
-	print 'Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_name, domain)
-	print 'Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_token, domain)
+        print 'Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_id, domain)
+        print 'Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_name, domain)
+        print 'Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_token, domain)
 
 ####################################################################
 # clearCookies() clears user_id, user_name, and user_token
 ####################################################################
 def clearCookies():
-	os.environ['HTTP_COOKIE'] = ''
+        os.environ['HTTP_COOKIE'] = ''
         for domain in (HTMLHOST, HTMLHOST_ALT):
                 clearDomainCookies(domain)
 
 def clearDomainCookies(domain):
         if not domain:
                 return
-	print 'Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
-	print 'Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
-	print 'Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
+        print 'Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
+        print 'Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
+        print 'Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
 
 
 ####################################################################
 # getCookie() returns a cookie dictionary of the ISFDB cookie.
 ####################################################################
 def getCookie():
-	try:
-		httpCookie = os.environ['HTTP_COOKIE']
-	except:
-		return 0
-	cookie = SimpleCookie(httpCookie)
-	return cookie
+        try:
+                httpCookie = os.environ['HTTP_COOKIE']
+        except:
+                return 0
+        cookie = SimpleCookie(httpCookie)
+        return cookie
 
 
 ####################################################################
 # Look at the cookies and create the tuple: (user_id, user_name, user_token)
 ####################################################################
 def GetUserData():
-	from SQLparsing import SQLgetUserName
+        from SQLparsing import SQLgetUserName
 
-	cookie = getCookie()
-	if cookie == 0:
-		return(0,0,0)
+        cookie = getCookie()
+        if cookie == 0:
+                return(0,0,0)
 
-	try:
-		id = cookie['isfdbUserID'].value
-		token = cookie['isfdbToken'].value
-	except:
-		return(0,0,0)
+        try:
+                id = cookie['isfdbUserID'].value
+                token = cookie['isfdbToken'].value
+        except:
+                return(0,0,0)
 
-	# If cookie expiration works properly, this should never happen, but we leave it
-	# as a safety measure in case the cookie expiration does not parse (the values
-	# change, but the cookies are still delivered).
-	if id == 'x' and token == 'x':
-		return(0,0,0)
+        # If cookie expiration works properly, this should never happen, but we leave it
+        # as a safety measure in case the cookie expiration does not parse (the values
+        # change, but the cookies are still delivered).
+        if id == 'x' and token == 'x':
+                return(0,0,0)
 
-	try:
-		(name, persistent_token) = SQLgetUserNameAndToken(id)
-		# If the token in the cookie doesn't match the token stored in the database
-		# for this user ID, then something is wrong -- possible forged cookies
+        try:
+                (name, persistent_token) = SQLgetUserNameAndToken(id)
+                # If the token in the cookie doesn't match the token stored in the database
+                # for this user ID, then something is wrong -- possible forged cookies
                 if (name != '') and (token != persistent_token):
                         os.environ['HTTP_COOKIE'] = ''
-        		return(0,0,0)
-	except Exception, e:
-		return(0,0,0)
+                        return(0,0,0)
+        except Exception, e:
+                return(0,0,0)
 
-	return(id, name, token)
+        return(id, name, token)
 
 
 ####################################################################
 # Emit the login page
 ####################################################################
 def LoginPage(executable, argument):
-	print '<h2>Login Page</h2>'
-	print """If you do not have an ISFDB account, you can create a free one
+        print '<h2>Login Page</h2>'
+        print """If you do not have an ISFDB account, you can create a free one
                 <a href="%s://%s/index.php?title=Special:Userlogin&amp;type=signup">here</a>.""" % (PROTOCOL, WIKILOC)
-	print '<br>Note that the user name and password for editing the ISFDB are the same as those for the ISFDB wiki.'
-	print '<p>'
-	print '<h3>Note: The first letter of your user name should be always capitalized.</h3>'
-	print '<form METHOD="POST" ACTION="/cgi-bin/submitlogin.cgi">'
-	print '<table border="0">'
-	print '<tbody>'
-	print '<tr>'
-	print '<td><b>User Name: </b></td>'
-	print '<td><input type="text" name="login" size="25"></td>'
-	print '</tr>'
-	print '<tr>'
-	print '<td><b>Password: </b></td>'
-	print '<td><input type="password" name="password" size="25"></td>'
-	print '</tr>'
-	print '</tbody>'
-	print '</table>'
-	print '<div>'
-	print '<input type="submit" value="submit">'
-	print '<input NAME="executable" VALUE="' +executable+ '" TYPE="HIDDEN">'
-	print '<input NAME="argument" VALUE="' +argument+ '" TYPE="HIDDEN">'
-	print '</div>'
-	print '</form>'
+        print '<br>Note that the user name and password for editing the ISFDB are the same as those for the ISFDB wiki.'
+        print '<p>'
+        print '<h3>Note: The first letter of your user name should be always capitalized.</h3>'
+        print '<form METHOD="POST" ACTION="/cgi-bin/submitlogin.cgi">'
+        print '<table border="0">'
+        print '<tbody>'
+        print '<tr>'
+        print '<td><b>User Name: </b></td>'
+        print '<td><input type="text" name="login" size="25"></td>'
+        print '</tr>'
+        print '<tr>'
+        print '<td><b>Password: </b></td>'
+        print '<td><input type="password" name="password" size="25"></td>'
+        print '</tr>'
+        print '</tbody>'
+        print '</table>'
+        print '<div>'
+        print '<input type="submit" value="submit">'
+        print '<input NAME="executable" VALUE="' +executable+ '" TYPE="HIDDEN">'
+        print '<input NAME="argument" VALUE="' +argument+ '" TYPE="HIDDEN">'
+        print '</div>'
+        print '</form>'
 
 class User:
-	def __init__(self):
-		self.id = ''
-		self.name = ''
-		self.token = ''
-		self.concise_display = ''
-		# The default language is English (17) if none is specified
-		self.default_language = 17
-		self.display_all_languages = 'All'
-		self.display_title_translations = 1
-		self.covers_display = ''
-		self.preferences_id = ''
-		self.suppress_translation_warnings = ''
-		self.suppress_bibliographic_warnings = ''
-		self.cover_links_display = ''
-		self.keep_spaces_in_searches = ''
-		self.suppress_help_bubbles = ''
-		self.languages = []
-		self.suppress_awards = ''
-		self.suppress_reviews = ''
-		self.display_post_submission = ''
-		self.moderator = 0
-		self.bureaucrat = 0
+        def __init__(self):
+                self.id = ''
+                self.name = ''
+                self.token = ''
+                self.concise_display = ''
+                # The default language is English (17) if none is specified
+                self.default_language = 17
+                self.display_all_languages = 'All'
+                self.display_title_translations = 1
+                self.covers_display = ''
+                self.preferences_id = ''
+                self.suppress_translation_warnings = ''
+                self.suppress_bibliographic_warnings = ''
+                self.cover_links_display = ''
+                self.keep_spaces_in_searches = ''
+                self.suppress_help_bubbles = ''
+                self.languages = []
+                self.suppress_awards = ''
+                self.suppress_reviews = ''
+                self.display_post_submission = ''
+                self.moderator = 0
+                self.bureaucrat = 0
 
-	def load(self):
+        def load(self):
                 (self.id, self.name, self.token) = GetUserData()
                 if not self.id:
                         # If this is an unregistered user, retrieve translation

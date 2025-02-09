@@ -22,97 +22,97 @@ from xml.dom import Node
 
 
 class series:
-	def __init__(self, db):
-		self.db = db
-		self.used_id         = 0
-		self.used_name       = 0
-		self.used_trans_names = 0
-		self.used_parent_id  = 0
-		self.used_parent     = 0
-		self.used_type       = 0
-		self.used_parentposition = 0
-		self.used_webpages = 0
-		self.used_note_id = 0
-		self.used_note = 0
+        def __init__(self, db):
+                self.db = db
+                self.used_id         = 0
+                self.used_name       = 0
+                self.used_trans_names = 0
+                self.used_parent_id  = 0
+                self.used_parent     = 0
+                self.used_type       = 0
+                self.used_parentposition = 0
+                self.used_webpages = 0
+                self.used_note_id = 0
+                self.used_note = 0
 
-		self.series_id         = ''
-		self.series_name       = ''
-		self.series_trans_names = []
-		self.series_parent_id  = ''
-		self.series_parent     = ''
-		self.series_type       = ''
-		self.series_parentposition = ''
-		self.series_note_id = ''
-		self.series_note = ''
-		self.series_webpages = []
+                self.series_id         = ''
+                self.series_name       = ''
+                self.series_trans_names = []
+                self.series_parent_id  = ''
+                self.series_parent     = ''
+                self.series_type       = ''
+                self.series_parentposition = ''
+                self.series_note_id = ''
+                self.series_note = ''
+                self.series_webpages = []
 
-		self.error = ''
+                self.error = ''
 
-	def load(self, id, fullLoad = 1):
-		self.loadCommon(id, 0, fullLoad)
+        def load(self, id, fullLoad = 1):
+                self.loadCommon(id, 0, fullLoad)
 
-	def loadXML(self, id, fullLoad = 1):
-		self.loadCommon(id, 1, fullLoad)
+        def loadXML(self, id, fullLoad = 1):
+                self.loadCommon(id, 1, fullLoad)
 
-	def loadCommon(self, id, doXML = 0, fullLoad = 1):
-		if id == 0:
-			return
-		record = SQLget1Series(id)
-		if record:
-			if record[SERIES_PUBID]:
-				self.series_id = record[SERIES_PUBID]
-				self.used_id = 1
-			if record[SERIES_NAME]:
-				self.series_name = record[SERIES_NAME]
-				self.used_name = 1
+        def loadCommon(self, id, doXML = 0, fullLoad = 1):
+                if id == 0:
+                        return
+                record = SQLget1Series(id)
+                if record:
+                        if record[SERIES_PUBID]:
+                                self.series_id = record[SERIES_PUBID]
+                                self.used_id = 1
+                        if record[SERIES_NAME]:
+                                self.series_name = record[SERIES_NAME]
+                                self.used_name = 1
 
                         res2 = SQLloadTransSeriesNames(record[PUB_SERIES_ID])
                         if res2:
                                 self.series_trans_names = res2
                                 self.used_trans_names = 1
 
-			if record[SERIES_PARENT]:
-				self.series_parent_id = record[SERIES_PARENT]
-				self.used_parent_id = 1
-				if fullLoad:
+                        if record[SERIES_PARENT]:
+                                self.series_parent_id = record[SERIES_PARENT]
+                                self.used_parent_id = 1
+                                if fullLoad:
                                         self.series_parent = SQLgetSeriesName(record[SERIES_PARENT])
                                         self.used_parent = 1
-			if record[SERIES_TYPE]:
-				self.series_type = record[SERIES_TYPE]
-				self.used_type = 1
-			if record[SERIES_PARENT_POSITION]:
-				self.series_parentposition = record[SERIES_PARENT_POSITION]
-				self.used_parentposition = 1
+                        if record[SERIES_TYPE]:
+                                self.series_type = record[SERIES_TYPE]
+                                self.used_type = 1
+                        if record[SERIES_PARENT_POSITION]:
+                                self.series_parentposition = record[SERIES_PARENT_POSITION]
+                                self.used_parentposition = 1
                         if fullLoad and record[SERIES_NOTE]:
                                 self.series_note_id = record[SERIES_NOTE]
                                 self.used_note_id = 1
                                 self.series_note = SQLgetNotes(self.series_note_id)
                                 if self.series_note:
-					self.used_note = 1
+                                        self.used_note = 1
 
                         if fullLoad:
                                 self.series_webpages = SQLloadSeriesWebpages(record[SERIES_PUBID])
                                 if self.series_webpages:
                                         self.used_webpages = 1
 
-		else:
-			print "ERROR: series record not found: ", id
-			self.error = 'Series record not found'
-			return
+                else:
+                        print "ERROR: series record not found: ", id
+                        self.error = 'Series record not found'
+                        return
 
-	def cgi2obj(self):
-		self.form = cgi.FieldStorage()
-		try:
-			self.series_id = str(int(self.form['series_id'].value))
-			self.used_id = 1
-		except:
+        def cgi2obj(self):
+                self.form = cgi.FieldStorage()
+                try:
+                        self.series_id = str(int(self.form['series_id'].value))
+                        self.used_id = 1
+                except:
                         self.error = "Series ID must be a valid integer number"
                         return
                 
-		try:
-			self.series_name = XMLescape(self.form['series_name'].value)
-			self.used_name = 1
-			if not self.series_name:
+                try:
+                        self.series_name = XMLescape(self.form['series_name'].value)
+                        self.used_name = 1
+                        if not self.series_name:
                                 raise
                         # Unescape the series name to ensure that the lookup finds it in the database
                         current_series = SQLGetSeriesByName(XMLunescape(self.series_name))
@@ -120,11 +120,11 @@ class series:
                                 if int(self.series_id) != int(current_series[SERIES_PUBID]):
                                         self.error = "Series '%s' already exists" % current_series[SERIES_NAME]
                                         return
-		except:
+                except:
                         self.error = "Series name is required"
                         return
 
-      		for key in self.form:
+                for key in self.form:
                         if 'trans_series_names' in key:
                                 value = XMLescape(self.form[key].value)
                                 if value:
@@ -133,9 +133,9 @@ class series:
                                         self.series_trans_names.append(value)
                                         self.used_trans_names = 1
 
-		if self.form.has_key('series_parent'):
-			self.series_parent = XMLescape(self.form['series_parent'].value)
-			if self.series_parent:
+                if self.form.has_key('series_parent'):
+                        self.series_parent = XMLescape(self.form['series_parent'].value)
+                        if self.series_parent:
                                 self.used_parent = 1
                                 # Check that the entered parent series is not the same as the current series
                                 current_parent = SQLget1Series(self.series_id)
@@ -143,27 +143,27 @@ class series:
                                         self.error = 'Parent series name cannot be the same as the series name'
                                         return
                 
-		if self.form.has_key('series_type'):
-			self.series_type = XMLescape(self.form['series_type'].value)
-			if self.series_type:
+                if self.form.has_key('series_type'):
+                        self.series_type = XMLescape(self.form['series_type'].value)
+                        if self.series_type:
                                 self.used_type = 1
                 
-		if self.form.has_key('series_parentposition'):
-			self.series_parentposition = XMLescape(self.form['series_parentposition'].value)
-			if self.series_parentposition:
+                if self.form.has_key('series_parentposition'):
+                        self.series_parentposition = XMLescape(self.form['series_parentposition'].value)
+                        if self.series_parentposition:
                                 self.used_parentposition = 1
                                 # Check that the entered position within the superseries is 1-9 digits
                                 if not re.match(r'^[1-9]{1}[0-9]{0,8}$', self.series_parentposition):
                                         self.error = "Series Parent Position must be an integer greater than 0 and contain 1-9 digits"
                                         return
                 
-		if self.form.has_key('series_note'):
-			self.series_note = XMLescape(self.form['series_note'].value)
-			if self.series_note:
+                if self.form.has_key('series_note'):
+                        self.series_note = XMLescape(self.form['series_note'].value)
+                        if self.series_note:
                                 self.used_note = 1
 
-		counter = 1
-		for key in self.form:
+                counter = 1
+                for key in self.form:
                         if key[:15] == 'series_webpages':
                                 value = XMLescape(self.form[key].value)
                                 if value:
@@ -279,17 +279,17 @@ class series:
                 # Retrieve all user tags for this series
                 seriesTags = SQLgetTitleListTags(title_string, user.id)
                 
-		# Build a list of parent title IDs that have pubs associated DIRECTLY with them
-		parent_string = dict_to_in_clause(variantTitles, variantSerials)
-		parentsWithPubs = SQLTitlesWithPubs(parent_string)
+                # Build a list of parent title IDs that have pubs associated DIRECTLY with them
+                parent_string = dict_to_in_clause(variantTitles, variantSerials)
+                parentsWithPubs = SQLTitlesWithPubs(parent_string)
 
-		# Load all variants' (including serials') authors
-		variantAuthors = buildVTAuthors(variantTitles, variantSerials)
+                # Load all variants' (including serials') authors
+                variantAuthors = buildVTAuthors(variantTitles, variantSerials)
 
-		# Load all transliterated titles
+                # Load all transliterated titles
                 translit_titles = builtTranslitTitles(seriesTitlesList, variantTitles, variantSerials)
 
-		# Load all transliterated authors
+                # Load all transliterated authors
                 translit_authors = builtTranslitAuthors(parentAuthors, variantAuthors)
 
                 return (seriesData, seriesCanonicalTitles, seriesTree, parentAuthors,

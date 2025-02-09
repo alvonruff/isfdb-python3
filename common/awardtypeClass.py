@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2013-2021   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,47 +16,47 @@ from library import *
 
 
 class award_type(awardShared):
-	def __init__(self):
+        def __init__(self):
                 self.used_id = 0
                 self.used_code = 0
                 self.used_by = 0
                 self.used_for = 0
-		self.used_name = 0
-		self.used_short_name = 0
-		self.used_note = 0
-		self.used_note_id = 0
-		self.used_poll = 0
-		self.used_webpages = 0
-		self.used_non_genre = 0
+                self.used_name = 0
+                self.used_short_name = 0
+                self.used_note = 0
+                self.used_note_id = 0
+                self.used_poll = 0
+                self.used_webpages = 0
+                self.used_non_genre = 0
 
-		self.award_type_id = ''
-		self.award_type_code = ''
-		self.award_type_by = ''
-		self.award_type_for = ''
-		self.award_type_name = ''
-		self.award_type_short_name = ''
-		self.award_type_poll = ''
-		self.award_type_note_id = ''
-		self.award_type_note = ''
-		self.award_type_webpages = []
-		self.award_type_non_genre = ''
+                self.award_type_id = ''
+                self.award_type_code = ''
+                self.award_type_by = ''
+                self.award_type_for = ''
+                self.award_type_name = ''
+                self.award_type_short_name = ''
+                self.award_type_poll = ''
+                self.award_type_note_id = ''
+                self.award_type_note = ''
+                self.award_type_webpages = []
+                self.award_type_non_genre = ''
 
-		self.error = ''
+                self.error = ''
 
-	def load(self):
+        def load(self):
                 if not self.award_type_id and not self.award_type_code:
                         self.error = "Award type not specified"
                         return
                 if self.award_type_id:
-                	award_type = SQLGetAwardTypeById(self.award_type_id)
-        		if not award_type:
-        			self.error = "Award type not found: %s" % self.award_type_id
-        			return
+                        award_type = SQLGetAwardTypeById(self.award_type_id)
+                        if not award_type:
+                                self.error = "Award type not found: %s" % self.award_type_id
+                                return
                 if self.award_type_code:
                         award_type = SQLGetAwardTypeByCode(self.award_type_code)
-        		if not award_type:
-        			self.error = "Award type not found: %s" % self.award_type_code
-        			return
+                        if not award_type:
+                                self.error = "Award type not found: %s" % self.award_type_code
+                                return
 
                 if award_type[AWARD_TYPE_ID]:
                         self.award_type_id = award_type[AWARD_TYPE_ID]
@@ -94,13 +94,13 @@ class award_type(awardShared):
                 if self.award_type_webpages:
                         self.used_webpages = 1
 
-	def cgi2obj(self):
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('award_type_id'):
-			self.award_type_id = int(self.form['award_type_id'].value)
-			self.used_id = 1
+        def cgi2obj(self):
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('award_type_id'):
+                        self.award_type_id = int(self.form['award_type_id'].value)
+                        self.used_id = 1
 
-		try:
+                try:
                         self.award_type_name = XMLescape(self.form['award_type_name'].value)
                         self.used_name = 1
                         if not self.award_type_name:
@@ -111,11 +111,11 @@ class award_type(awardShared):
                                 if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
                                         self.error = "Award type with full name '%s' already exists" % current_award_type[AWARD_TYPE_NAME]
                                         return
-		except:
+                except:
                         self.error = "Full name is required for Award types"
-			return
+                        return
 
-		try:
+                try:
                         self.award_type_short_name = XMLescape(self.form['award_type_short_name'].value)
                         self.used_short_name = 1
                         if not self.award_type_short_name:
@@ -126,35 +126,35 @@ class award_type(awardShared):
                                 if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
                                         self.error = "Award type with short name '%s' already exists" % current_award_type[AWARD_TYPE_SHORT_NAME]
                                         return
-		except:
+                except:
                         self.error = "Short name is required for Award types"
-			return
+                        return
 
-		if self.form.has_key('award_type_by'):
+                if self.form.has_key('award_type_by'):
                         value = XMLescape(self.form['award_type_by'].value)
                         if value:
                                 self.award_type_by = value
                                 self.used_by = 1
                 
-		if self.form.has_key('award_type_for'):
+                if self.form.has_key('award_type_for'):
                         value = XMLescape(self.form['award_type_for'].value)
                         if value:
                                 self.award_type_for = value
                                 self.used_for = 1
 
-		if self.form.has_key('award_type_poll'):
+                if self.form.has_key('award_type_poll'):
                         value = XMLescape(self.form['award_type_poll'].value)
                         if value:
                                 self.award_type_poll = value
                                 self.used_poll = 1
 
-		if self.form.has_key('award_type_note'):
+                if self.form.has_key('award_type_note'):
                         value = XMLescape(self.form['award_type_note'].value)
                         if value:
                                 self.award_type_note = value
                                 self.used_note = 1
 
-		for key in self.form:
+                for key in self.form:
                         if key[:19] == 'award_type_webpages':
                                 value = XMLescape(self.form[key].value)
                                 if value:
@@ -166,7 +166,7 @@ class award_type(awardShared):
                                         self.award_type_webpages.append(value)
                                         self.used_webpages = 1
 
-		if self.form.has_key('award_type_non_genre'):
+                if self.form.has_key('award_type_non_genre'):
                         value = XMLescape(self.form['award_type_non_genre'].value)
                         if value:
                                 self.award_type_non_genre = value

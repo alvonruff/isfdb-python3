@@ -111,17 +111,17 @@ class awardShared:
 
 
 class awards(awardShared):
-	def __init__(self, db):
-		self.db = db
-		self.used_id         = 0
-		self.used_title      = 0
-		self.used_year       = 0
-		self.used_cat_id     = 0
-		self.used_cat_name   = 0
-		self.used_level	     = 0
-		self.used_movie	     = 0
+        def __init__(self, db):
+                self.db = db
+                self.used_id         = 0
+                self.used_title      = 0
+                self.used_year       = 0
+                self.used_cat_id     = 0
+                self.used_cat_name   = 0
+                self.used_level             = 0
+                self.used_movie             = 0
                 self.used_title_id   = 1
-		self.num_authors     = 0
+                self.num_authors     = 0
                 self.used_type_name  = 0
                 self.used_type_short_name = 0
                 self.used_type_id    = 0
@@ -129,16 +129,16 @@ class awards(awardShared):
                 self.used_note_id    = 0
                 self.used_note       = 0
                 
-		self.award_authors    = []
-		self.award_id         = ''
-		self.title_id         = ''
-		self.award_title      = ''
-		self.award_year       = ''
-		self.award_cat_id     = ''
-		self.award_cat_name   = ''
-		self.award_level      = ''
-		self.award_displayed_level = ''
-		self.award_movie      = ''
+                self.award_authors    = []
+                self.award_id         = ''
+                self.title_id         = ''
+                self.award_title      = ''
+                self.award_year       = ''
+                self.award_cat_id     = ''
+                self.award_cat_name   = ''
+                self.award_level      = ''
+                self.award_displayed_level = ''
+                self.award_movie      = ''
                 self.award_type_name  = ''
                 self.award_type_short_name = ''
                 self.award_type_id    = ''
@@ -149,53 +149,53 @@ class awards(awardShared):
 
                 self.error = ''
 
-	def authors(self):
-		counter = 0
-		retval = ''
-		while counter < self.num_authors:
-			if counter == 0:
-				retval = self.award_authors[counter]
-			else:
-				retval += "+" + self.award_authors[counter]
-			counter += 1
-		return retval
+        def authors(self):
+                counter = 0
+                retval = ''
+                while counter < self.num_authors:
+                        if counter == 0:
+                                retval = self.award_authors[counter]
+                        else:
+                                retval += "+" + self.award_authors[counter]
+                        counter += 1
+                return retval
 
-	def load(self, id):
-		self.loadCommon(id, 0)
+        def load(self, id):
+                self.loadCommon(id, 0)
 
-	def loadXML(self, id):
-		self.loadCommon(id, 1)
+        def loadXML(self, id):
+                self.loadCommon(id, 1)
 
-	def loadCommon(self, id, doXML):
-		if id == 0:
-			return
+        def loadCommon(self, id, doXML):
+                if id == 0:
+                        return
                 award = SQLloadAwards(id)
-		if award:
+                if award:
                         award = award[0]
-			if award[AWARD_ID]:
-				self.award_id = award[AWARD_ID]
-				self.used_id = 1
+                        if award[AWARD_ID]:
+                                self.award_id = award[AWARD_ID]
+                                self.used_id = 1
                                 title = SQLloadTitleFromAward(self.award_id)
                                 if title:
                                         self.title_id = title[0][TITLE_PUBID]
                                         self.used_title_id = 1
-			if award[AWARD_TITLE]:
-				self.award_title = award[AWARD_TITLE]
-				self.used_title = 1
-			if award[AWARD_YEAR]:
-				self.award_year = award[AWARD_YEAR]
-				self.used_year = 1
-			if award[AWARD_TYPEID]:
-				self.award_type_id = award[AWARD_TYPEID]
-				self.used_type_id = 1
-				award_type = SQLGetAwardTypeById(self.award_type_id)
-				self.award_type_name = award_type[AWARD_TYPE_NAME]
-				self.award_type_short_name = award_type[AWARD_TYPE_SHORT_NAME]
-				self.used_type_name = 1
-				self.award_type_poll = award_type[AWARD_TYPE_POLL]
-				self.used_type_poll = 1
-			if award[AWARD_LEVEL]:
-				self.award_level = award[AWARD_LEVEL]
+                        if award[AWARD_TITLE]:
+                                self.award_title = award[AWARD_TITLE]
+                                self.used_title = 1
+                        if award[AWARD_YEAR]:
+                                self.award_year = award[AWARD_YEAR]
+                                self.used_year = 1
+                        if award[AWARD_TYPEID]:
+                                self.award_type_id = award[AWARD_TYPEID]
+                                self.used_type_id = 1
+                                award_type = SQLGetAwardTypeById(self.award_type_id)
+                                self.award_type_name = award_type[AWARD_TYPE_NAME]
+                                self.award_type_short_name = award_type[AWARD_TYPE_SHORT_NAME]
+                                self.used_type_name = 1
+                                self.award_type_poll = award_type[AWARD_TYPE_POLL]
+                                self.used_type_poll = 1
+                        if award[AWARD_LEVEL]:
+                                self.award_level = award[AWARD_LEVEL]
                                 self.used_level = 1
                                 self.award_displayed_level = ''
                                 if int(self.award_level) > 70:
@@ -212,15 +212,15 @@ class awards(awardShared):
                                 self.used_cat_id = 1
                                 self.award_cat_name = SQLGetAwardCatById(self.award_cat_id)[AWARD_CAT_NAME]
                                 self.used_cat_name = 1
-			if award[AWARD_MOVIE]:
-				self.award_movie = award[AWARD_MOVIE]
-				self.used_movie = 1
-			if award[AWARD_AUTHOR]:
-				authors = string.split(award[AWARD_AUTHOR], '+')
-				self.num_authors = 0
-				for author in authors:
-					self.award_authors.append(author)
-					self.num_authors += 1
+                        if award[AWARD_MOVIE]:
+                                self.award_movie = award[AWARD_MOVIE]
+                                self.used_movie = 1
+                        if award[AWARD_AUTHOR]:
+                                authors = string.split(award[AWARD_AUTHOR], '+')
+                                self.num_authors = 0
+                                for author in authors:
+                                        self.award_authors.append(author)
+                                        self.num_authors += 1
                         if award[AWARD_NOTEID]:
                                 note = SQLgetNotes(award[AWARD_NOTEID])
                                 if note:
@@ -229,34 +229,34 @@ class awards(awardShared):
                                         self.award_note = note
                                         self.used_note = 1
 
-		else:
-			print "ERROR: award record not found: ", id
-			self.error = 'Award record not found'
-			return
+                else:
+                        print "ERROR: award record not found: ", id
+                        self.error = 'Award record not found'
+                        return
 
-	def cgi2obj(self):
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('award_id'):
-			self.award_id = self.form['award_id'].value
-			self.used_id = 1
+        def cgi2obj(self):
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('award_id'):
+                        self.award_id = self.form['award_id'].value
+                        self.used_id = 1
 
                 # title_id is only present for Add (as opposed to Edit) Award submissions
-		if self.form.has_key('title_id'):
-			self.title_id = self.form['title_id'].value
-			self.used_title_id = 1
-		
-		if self.form.has_key('award_title'):
-			self.award_title = XMLescape(self.form['award_title'].value)
-			self.used_title = 1
+                if self.form.has_key('title_id'):
+                        self.title_id = self.form['title_id'].value
+                        self.used_title_id = 1
+                
+                if self.form.has_key('award_title'):
+                        self.award_title = XMLescape(self.form['award_title'].value)
+                        self.used_title = 1
                 else:
                         self.award_title = 'untitled'
-			self.used_title = 1
+                        self.used_title = 1
 
-		self.num_authors = 0
-		self.award_authors = []
-		counter = 0
-		while counter < 100:
-			if self.form.has_key('title_author'+str(counter+1)):
+                self.num_authors = 0
+                self.award_authors = []
+                counter = 0
+                while counter < 100:
+                        if self.form.has_key('title_author'+str(counter+1)):
                                 value = XMLescape(ISFDBnormalizeAuthor(self.form['title_author'+str(counter+1)].value))
                                 self.error = ISFDBAuthorError(value)
                                 if self.error:
@@ -264,47 +264,47 @@ class awards(awardShared):
                                 if value and (value not in self.award_authors):
                                         self.award_authors.append(value)
                                         self.num_authors += 1
-			counter += 1
+                        counter += 1
 
-		if self.form.has_key('award_year'):
-			year = self.form['award_year'].value
-			# Take the submitted value and convert it to the standard YYYY-MM-DD format
-			self.award_year = ISFDBnormalizeDate(year)
-			if self.award_year == '0000-00-00':
-				self.error = "For awards, 0000 years are not allowed."
-				return
-			if self.award_year[5:] != '00-00':
-				self.error = "Bad YEAR value. Only YYYY and YYYY-00-00 values are valid for awards."
-				return
-			self.used_year = 1
-		else:
+                if self.form.has_key('award_year'):
+                        year = self.form['award_year'].value
+                        # Take the submitted value and convert it to the standard YYYY-MM-DD format
+                        self.award_year = ISFDBnormalizeDate(year)
+                        if self.award_year == '0000-00-00':
+                                self.error = "For awards, 0000 years are not allowed."
+                                return
+                        if self.award_year[5:] != '00-00':
+                                self.error = "Bad YEAR value. Only YYYY and YYYY-00-00 values are valid for awards."
+                                return
+                        self.used_year = 1
+                else:
                         self.error = "Missing YEAR value"
                         return
 
-		if self.form.has_key('award_type_id'):
-			self.award_type_id = self.form['award_type_id'].value
-			self.used_type_id = 1
+                if self.form.has_key('award_type_id'):
+                        self.award_type_id = self.form['award_type_id'].value
+                        self.used_type_id = 1
                 else:
                         self.error = "Missing Award Type ID"
                         return
 
-		if self.form.has_key('award_cat_id'):
-			self.award_cat_id = self.form['award_cat_id'].value
-			self.used_cat_id = 1
+                if self.form.has_key('award_cat_id'):
+                        self.award_cat_id = self.form['award_cat_id'].value
+                        self.used_cat_id = 1
                 else:
                         self.error = "Missing Award Category ID"
                         return
 
-		if self.form.has_key('LEVEL'):
-			if self.form['LEVEL'].value == 'WIN':
-				self.award_level = '1'
-				self.used_level = 1
-			elif self.form['LEVEL'].value == 'NOM':
-				self.award_level = '9'
-				self.used_level = 1
-			elif self.form['LEVEL'].value == 'LEVEL':
-				if self.form.has_key('award_level'):
-					try:
+                if self.form.has_key('LEVEL'):
+                        if self.form['LEVEL'].value == 'WIN':
+                                self.award_level = '1'
+                                self.used_level = 1
+                        elif self.form['LEVEL'].value == 'NOM':
+                                self.award_level = '9'
+                                self.used_level = 1
+                        elif self.form['LEVEL'].value == 'LEVEL':
+                                if self.form.has_key('award_level'):
+                                        try:
                                                 self.award_level = self.form['award_level'].value
                                                 self.used_level = 1
                                                 # Check that the entered value is between 1 and 70
@@ -316,8 +316,8 @@ class awards(awardShared):
                                 else:
                                         self.error = "Missing award level value"
                                         return
-			elif self.form['LEVEL'].value == 'SPECIAL':
-				if self.form.has_key('award_special'):
+                        elif self.form['LEVEL'].value == 'SPECIAL':
+                                if self.form.has_key('award_special'):
                                         try:
                                                 self.award_level = self.form['award_special'].value
                                                 self.used_level = 1
@@ -331,16 +331,16 @@ class awards(awardShared):
                                         self.error = "Missing special award level value"
                                         return
 
-		if self.form.has_key('award_movie'):
-			self.award_movie = XMLescape(self.form['award_movie'].value)
-			if self.award_movie[:2] != 'tt':
+                if self.form.has_key('award_movie'):
+                        self.award_movie = XMLescape(self.form['award_movie'].value)
+                        if self.award_movie[:2] != 'tt':
                                 self.error = "IMDB title codes must start with 'tt'. See mouseover Help for details"
                                 return
-			self.used_movie = 1
+                        self.used_movie = 1
 
-		if self.form.has_key('award_note'):
-			self.award_note = XMLescape(self.form['award_note'].value)
-			self.used_note = 1
+                if self.form.has_key('award_note'):
+                        self.award_note = XMLescape(self.form['award_note'].value)
+                        self.used_note = 1
 
         def PrintAwardTable(self, award_list, print_title = 1, print_authors = 0, limit = 10000):
                 print '<table>'

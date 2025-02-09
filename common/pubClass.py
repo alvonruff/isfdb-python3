@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2024   Al von Ruff, Ahasuerus and Lokal_Profil
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,384 +32,384 @@ def lastRecord(form, field,counter):
         return 1
 
 class titleEntry:
-	def __init__(self):
-		self.page = ''
-		self.title = ''
-		self.date = ''
-		self.type = ''
-		self.length = ''
-		self.authors = ''
-		self.next = ''
-		self.id = 0
-		self.oldtitle = 0
+        def __init__(self):
+                self.page = ''
+                self.title = ''
+                self.date = ''
+                self.type = ''
+                self.length = ''
+                self.authors = ''
+                self.next = ''
+                self.id = 0
+                self.oldtitle = 0
 
-	def setPage(self, page):
-		self.page = XMLescape(page)
-	def setTitle(self, title):
-		self.title = XMLescape(title)
-	def setID(self, id):
-		if int(id) > 0:
-			self.id = int(id)
-	def setDate(self, date):
+        def setPage(self, page):
+                self.page = XMLescape(page)
+        def setTitle(self, title):
+                self.title = XMLescape(title)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
+        def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
-	def setType(self, type):
-		self.type = XMLescape(type)
-	def setLength(self, length):
+        def setType(self, type):
+                self.type = XMLescape(type)
+        def setLength(self, length):
                 if length == None:
                         length = ''
-		self.length = XMLescape(length)
-	def setAuthors(self, authors):
-		self.authors = XMLescape(authors)
-	def setOldTitle(self, oldtitle):
-		self.oldtitle = oldtitle
+                self.length = XMLescape(length)
+        def setAuthors(self, authors):
+                self.authors = XMLescape(authors)
+        def setOldTitle(self, oldtitle):
+                self.oldtitle = oldtitle
 
-	def xmlTitle(self):
-		if self.id:
-			needstart = 1
-			retval = ''
-			if self.title != self.oldtitle.title:
-				if needstart:
-					needstart = 0
-					retval += '<ContentTitle>\n'
-					retval += '\t<Record>%s</Record>\n' % self.id
-				retval += '  <cTitle>%s</cTitle>\n' % self.title
-			if self.date != self.oldtitle.date:
-				if needstart:
-					needstart = 0
-					retval += '<ContentTitle>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cDate>%s</cDate>\n' % self.date
-			if str(self.page) != str(self.oldtitle.page):
-				if needstart:
-					needstart = 0
-					retval += '<ContentTitle>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			if self.type != self.oldtitle.type:
-				if needstart:
-					needstart = 0
-					retval += '<ContentTitle>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cType>%s</cType>\n' % self.type
-			if self.length != self.oldtitle.length:
+        def xmlTitle(self):
+                if self.id:
+                        needstart = 1
+                        retval = ''
+                        if self.title != self.oldtitle.title:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentTitle>\n'
+                                        retval += '\t<Record>%s</Record>\n' % self.id
+                                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        if self.date != self.oldtitle.date:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentTitle>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cDate>%s</cDate>\n' % self.date
+                        if str(self.page) != str(self.oldtitle.page):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentTitle>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        if self.type != self.oldtitle.type:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentTitle>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cType>%s</cType>\n' % self.type
+                        if self.length != self.oldtitle.length:
                                 if needstart:
                                         needstart = 0
                                         retval += '<ContentTitle>\n'
                                         retval += '  <Record>%s</Record>\n' % self.id
                                 retval += '  <cLength>%s</cLength>\n' % self.length
-			if ISFDBDifferentAuthorStrings(self.authors, self.oldtitle.authors):
-				if needstart:
-					needstart = 0
-					retval += '<ContentTitle>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
-			if needstart == 0:
-				retval += '</ContentTitle>\n'
-		else:
-			retval = ''
-			retval += '<ContentTitle>\n'
-			retval += '  <cTitle>%s</cTitle>\n' % self.title
-			retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
-			retval += '  <cDate>%s</cDate>\n' % self.date
-			if self.page != '':
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			if self.type != '':
-				retval += '  <cType>%s</cType>\n' % self.type
-			if self.length != '':
+                        if ISFDBDifferentAuthorStrings(self.authors, self.oldtitle.authors):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentTitle>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
+                        if needstart == 0:
+                                retval += '</ContentTitle>\n'
+                else:
+                        retval = ''
+                        retval += '<ContentTitle>\n'
+                        retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
+                        retval += '  <cDate>%s</cDate>\n' % self.date
+                        if self.page != '':
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        if self.type != '':
+                                retval += '  <cType>%s</cType>\n' % self.type
+                        if self.length != '':
                                 retval += '  <cLength>%s</cLength>\n' % self.length
-			retval += '</ContentTitle>\n'
-		return retval
+                        retval += '</ContentTitle>\n'
+                return retval
 
-	def xmlCloneTitle(self):
-		retval = ''
-		retval += '<ContentTitle>\n'
-		retval += '  <Record>%s</Record>\n' % self.id
-		retval += '  <cTitle>%s</cTitle>\n' % self.title
-		retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
-		retval += '  <cDate>%s</cDate>\n' % self.date
-		if self.page != '':
-			retval += '  <cPage>%s</cPage>\n' % self.page
-		if self.type != '':
-			retval += '  <cType>%s</cType>\n' % self.type
-		if self.length != '':
+        def xmlCloneTitle(self):
+                retval = ''
+                retval += '<ContentTitle>\n'
+                retval += '  <Record>%s</Record>\n' % self.id
+                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                retval += '  <cAuthors>%s</cAuthors>\n' % self.authors
+                retval += '  <cDate>%s</cDate>\n' % self.date
+                if self.page != '':
+                        retval += '  <cPage>%s</cPage>\n' % self.page
+                if self.type != '':
+                        retval += '  <cType>%s</cType>\n' % self.type
+                if self.length != '':
                         retval += '  <cLength>%s</cLength>\n' % self.length
-		retval += '</ContentTitle>\n'
-		return retval
+                retval += '</ContentTitle>\n'
+                return retval
 
-	def printTitle(self):
-		print self.xmlTitle()
+        def printTitle(self):
+                print self.xmlTitle()
 
 class reviewEntry:
-	def __init__(self):
-		self.page = ''
-		self.title = ''
-		self.date = ''
-		self.bookauthors = ''
-		self.reviewers = ''
-		self.next = ''
-		self.oldreview = 0
-		self.id = 0
+        def __init__(self):
+                self.page = ''
+                self.title = ''
+                self.date = ''
+                self.bookauthors = ''
+                self.reviewers = ''
+                self.next = ''
+                self.oldreview = 0
+                self.id = 0
 
-	def setPage(self, page):
-		self.page = XMLescape(page)
-	def setTitle(self, title):
-		self.title = XMLescape(title)
-	def setID(self, id):
-		if int(id) > 0:
-			self.id = int(id)
-	def setDate(self, date):
-		self.date = ISFDBnormalizeDate(date)
-	def setBookAuthors(self, authors):
-		self.bookauthors = XMLescape(authors)
-	def setReviewers(self, authors):
-		self.reviewers = XMLescape(authors)
-	def setOldReview(self, oldreview):
-		self.oldreview = oldreview
-	def xmlTitle(self):
-		if self.id:
-			needstart = 1
-			retval = ''
-			if self.title != self.oldreview.title:
-				if needstart:
-					needstart = 0
-					retval += '<ContentReview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cTitle>%s</cTitle>\n' % self.title
-			if self.date != self.oldreview.date:
-				if needstart:
-					needstart = 0
-					retval += '<ContentReview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cDate>%s</cDate>\n' % self.date
-			if str(self.page) != str(self.oldreview.page):
-				if needstart:
-					needstart = 0
-					retval += '<ContentReview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			if ISFDBDifferentAuthorStrings(self.bookauthors, self.oldreview.bookauthors):
-				if needstart:
-					needstart = 0
-					retval += '<ContentReview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
-			if ISFDBDifferentAuthorStrings(self.reviewers, self.oldreview.reviewers):
-				if needstart:
-					needstart = 0
-					retval += '<ContentReview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
-			if needstart == 0:
-				retval += '</ContentReview>\n'
-		else:
-			retval = ''
-			retval += '<ContentReview>\n'
-			retval += '  <cTitle>%s</cTitle>\n' % self.title
-			retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
-			retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
-			retval += '  <cDate>%s</cDate>\n' % self.date
-			if self.page != '':
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			retval += '</ContentReview>\n'
-		return retval
+        def setPage(self, page):
+                self.page = XMLescape(page)
+        def setTitle(self, title):
+                self.title = XMLescape(title)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
+        def setDate(self, date):
+                self.date = ISFDBnormalizeDate(date)
+        def setBookAuthors(self, authors):
+                self.bookauthors = XMLescape(authors)
+        def setReviewers(self, authors):
+                self.reviewers = XMLescape(authors)
+        def setOldReview(self, oldreview):
+                self.oldreview = oldreview
+        def xmlTitle(self):
+                if self.id:
+                        needstart = 1
+                        retval = ''
+                        if self.title != self.oldreview.title:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentReview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        if self.date != self.oldreview.date:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentReview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cDate>%s</cDate>\n' % self.date
+                        if str(self.page) != str(self.oldreview.page):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentReview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        if ISFDBDifferentAuthorStrings(self.bookauthors, self.oldreview.bookauthors):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentReview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
+                        if ISFDBDifferentAuthorStrings(self.reviewers, self.oldreview.reviewers):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentReview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
+                        if needstart == 0:
+                                retval += '</ContentReview>\n'
+                else:
+                        retval = ''
+                        retval += '<ContentReview>\n'
+                        retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
+                        retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
+                        retval += '  <cDate>%s</cDate>\n' % self.date
+                        if self.page != '':
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        retval += '</ContentReview>\n'
+                return retval
 
-	def xmlCloneTitle(self):
-		retval = ''
-		retval += '<ContentReview>\n'
-		retval += '  <Record>%s</Record>\n' % self.id
-		retval += '  <cTitle>%s</cTitle>\n' % self.title
-		retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
-		retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
-		retval += '  <cDate>%s</cDate>\n' % self.date
-		if self.page != '':
-			retval += '  <cPage>%s</cPage>\n' % self.page
-		retval += '</ContentReview>\n'
-		return retval
+        def xmlCloneTitle(self):
+                retval = ''
+                retval += '<ContentReview>\n'
+                retval += '  <Record>%s</Record>\n' % self.id
+                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                retval += '  <cBookAuthors>%s</cBookAuthors>\n' % self.bookauthors
+                retval += '  <cReviewers>%s</cReviewers>\n' % self.reviewers
+                retval += '  <cDate>%s</cDate>\n' % self.date
+                if self.page != '':
+                        retval += '  <cPage>%s</cPage>\n' % self.page
+                retval += '</ContentReview>\n'
+                return retval
 
-	def printTitle(self):
-		print self.xmlTitle()
+        def printTitle(self):
+                print self.xmlTitle()
 
 class interviewEntry:
-	def __init__(self):
-		self.page = ''
-		self.title = ''
-		self.date = ''
-		self.interviewees = ''
-		self.interviewers = ''
-		self.next = ''
-		self.id = 0
-		self.oldinterview = 0
+        def __init__(self):
+                self.page = ''
+                self.title = ''
+                self.date = ''
+                self.interviewees = ''
+                self.interviewers = ''
+                self.next = ''
+                self.id = 0
+                self.oldinterview = 0
 
-	def setPage(self, page):
-		self.page = XMLescape(page)
-	def setTitle(self, title):
-		self.title = XMLescape(title)
-	def setID(self, id):
-		if int(id) > 0:
-			self.id = int(id)
-	def setDate(self, date):
-		self.date = ISFDBnormalizeDate(date)
-	def setInterviewees(self, authors):
-		self.interviewees = XMLescape(authors)
-	def setInterviewers(self, authors):
-		self.interviewers = XMLescape(authors)
-	def setOldInterview(self, oldinterview):
-		self.oldinterview = oldinterview
-	def xmlTitle(self):
-		if self.id:
-			needstart = 1
-			retval = ''
-			if self.title != self.oldinterview.title:
-				if needstart:
-					needstart = 0
-					retval += '<ContentInterview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cTitle>%s</cTitle>\n' % self.title
-			if self.date != self.oldinterview.date:
-				if needstart:
-					needstart = 0
-					retval += '<ContentInterview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cDate>%s</cDate>\n' % self.date
-			if str(self.page) != str(self.oldinterview.page):
-				if needstart:
-					needstart = 0
-					retval += '<ContentInterview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			if ISFDBDifferentAuthorStrings(self.interviewees, self.oldinterview.interviewees):
-				if needstart:
-					needstart = 0
-					retval += '<ContentInterview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
-			if ISFDBDifferentAuthorStrings(self.interviewers, self.oldinterview.interviewers):
-				if needstart:
-					needstart = 0
-					retval += '<ContentInterview>\n'
-					retval += '  <Record>%s</Record>\n' % self.id
-				retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
-			if needstart == 0:
-				retval += '</ContentInterview>\n'
-		else:
-			retval = ''
-			retval += '<ContentInterview>\n'
-			retval += '  <cTitle>%s</cTitle>\n' % self.title
-			retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
-			retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
-			retval += '  <cDate>%s</cDate>\n' % self.date
-			if self.page != '':
-				retval += '  <cPage>%s</cPage>\n' % self.page
-			retval += '</ContentInterview>\n'
-		return retval
+        def setPage(self, page):
+                self.page = XMLescape(page)
+        def setTitle(self, title):
+                self.title = XMLescape(title)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
+        def setDate(self, date):
+                self.date = ISFDBnormalizeDate(date)
+        def setInterviewees(self, authors):
+                self.interviewees = XMLescape(authors)
+        def setInterviewers(self, authors):
+                self.interviewers = XMLescape(authors)
+        def setOldInterview(self, oldinterview):
+                self.oldinterview = oldinterview
+        def xmlTitle(self):
+                if self.id:
+                        needstart = 1
+                        retval = ''
+                        if self.title != self.oldinterview.title:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentInterview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        if self.date != self.oldinterview.date:
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentInterview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cDate>%s</cDate>\n' % self.date
+                        if str(self.page) != str(self.oldinterview.page):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentInterview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        if ISFDBDifferentAuthorStrings(self.interviewees, self.oldinterview.interviewees):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentInterview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
+                        if ISFDBDifferentAuthorStrings(self.interviewers, self.oldinterview.interviewers):
+                                if needstart:
+                                        needstart = 0
+                                        retval += '<ContentInterview>\n'
+                                        retval += '  <Record>%s</Record>\n' % self.id
+                                retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
+                        if needstart == 0:
+                                retval += '</ContentInterview>\n'
+                else:
+                        retval = ''
+                        retval += '<ContentInterview>\n'
+                        retval += '  <cTitle>%s</cTitle>\n' % self.title
+                        retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
+                        retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
+                        retval += '  <cDate>%s</cDate>\n' % self.date
+                        if self.page != '':
+                                retval += '  <cPage>%s</cPage>\n' % self.page
+                        retval += '</ContentInterview>\n'
+                return retval
 
-	def xmlCloneTitle(self):
-		retval = ''
-		retval += '<ContentInterview>\n'
-		retval += '  <cTitle>%s</cTitle>\n' % self.title
-		retval += '  <Record>%s</Record>\n' % self.id
-		retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
-		retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
-		retval += '  <cDate>%s</cDate>\n' % self.date
-		if self.page != '':
-			retval += '  <cPage>%s</cPage>\n' % self.page
-		retval += '</ContentInterview>\n'
-		return retval
+        def xmlCloneTitle(self):
+                retval = ''
+                retval += '<ContentInterview>\n'
+                retval += '  <cTitle>%s</cTitle>\n' % self.title
+                retval += '  <Record>%s</Record>\n' % self.id
+                retval += '  <cInterviewees>%s</cInterviewees>\n' % self.interviewees
+                retval += '  <cInterviewers>%s</cInterviewers>\n' % self.interviewers
+                retval += '  <cDate>%s</cDate>\n' % self.date
+                if self.page != '':
+                        retval += '  <cPage>%s</cPage>\n' % self.page
+                retval += '</ContentInterview>\n'
+                return retval
 
-	def printTitle(self):
-		print self.xmlTitle()
+        def printTitle(self):
+                print self.xmlTitle()
 
 class pubs:
-	def __init__(self, db):
-		self.db = db
-		self.used_id        = 0
-		self.used_title     = 0
-		self.used_trans_titles = 0
-		self.used_tag       = 0
-		self.used_year      = 0
-		self.used_publisher = 0
-		self.used_series    = 0
-		self.used_series_num= 0
-		self.used_pages     = 0
-		self.used_ptype     = 0
-		self.used_ctype     = 0
-		self.used_isbn      = 0
-		self.used_catalog   = 0
-		self.used_image     = 0
-		self.used_price     = 0
-		self.used_note      = 0
-		self.used_webpages  = 0
-		self.title_id       = 0
-		self.num_authors    = 0
-		self.pub_authors    = []
-		self.num_artists    = 0
-		self.pub_artists    = []
-		self.pub_id         = ''
-		self.pub_title      = ''
-		self.pub_trans_titles = []
-		self.pub_tag        = ''
-		self.pub_year       = ''
-		self.pub_pages      = ''
-		self.pub_ptype      = ''
-		self.pub_ctype      = ''
-		self.pub_isbn       = ''
-		self.pub_catalog    = ''
-		self.pub_image      = ''
-		self.pub_price      = ''
-		self.pub_publisher_id = ''
-		self.pub_publisher  = ''
-		self.pub_series     = ''
-		self.pub_series_id  = ''
-		self.pub_series_num = ''
-		self.pub_note       = ''
-		self.pub_webpages   = []
-		self.titles         = ''
-		self.reviews        = ''
-		self.interviews     = ''
-		self.editor	    = ''
-		self.error          = ''
-		self.covers         = []
-		self.cover_ids      = {}
-		self.cover_records  = {}
-		self.cover_artists  = {}
-		self.cover_dates    = {}
-		self.cover_titles   = {}
-		self.cover_changed  = {}
-		self.cover_changed_dates  = {}
-		self.cover_changed_titles  = {}
-		self.cover_changed_artists  = {}
+        def __init__(self, db):
+                self.db = db
+                self.used_id        = 0
+                self.used_title     = 0
+                self.used_trans_titles = 0
+                self.used_tag       = 0
+                self.used_year      = 0
+                self.used_publisher = 0
+                self.used_series    = 0
+                self.used_series_num= 0
+                self.used_pages     = 0
+                self.used_ptype     = 0
+                self.used_ctype     = 0
+                self.used_isbn      = 0
+                self.used_catalog   = 0
+                self.used_image     = 0
+                self.used_price     = 0
+                self.used_note      = 0
+                self.used_webpages  = 0
+                self.title_id       = 0
+                self.num_authors    = 0
+                self.pub_authors    = []
+                self.num_artists    = 0
+                self.pub_artists    = []
+                self.pub_id         = ''
+                self.pub_title      = ''
+                self.pub_trans_titles = []
+                self.pub_tag        = ''
+                self.pub_year       = ''
+                self.pub_pages      = ''
+                self.pub_ptype      = ''
+                self.pub_ctype      = ''
+                self.pub_isbn       = ''
+                self.pub_catalog    = ''
+                self.pub_image      = ''
+                self.pub_price      = ''
+                self.pub_publisher_id = ''
+                self.pub_publisher  = ''
+                self.pub_series     = ''
+                self.pub_series_id  = ''
+                self.pub_series_num = ''
+                self.pub_note       = ''
+                self.pub_webpages   = []
+                self.titles         = ''
+                self.reviews        = ''
+                self.interviews     = ''
+                self.editor            = ''
+                self.error          = ''
+                self.covers         = []
+                self.cover_ids      = {}
+                self.cover_records  = {}
+                self.cover_artists  = {}
+                self.cover_dates    = {}
+                self.cover_titles   = {}
+                self.cover_changed  = {}
+                self.cover_changed_dates  = {}
+                self.cover_changed_titles  = {}
+                self.cover_changed_artists  = {}
                 self.reference_title_count = 0
                 self.identifiers    = {}
                 self.body   = ''
 
-	def pushTitle(self, titleEntry):
-		if self.titles == '':
-			self.titles = titleEntry
-		else:
-			tmp = self.titles
-			while tmp.next != '':
-				tmp = tmp.next
-			tmp.next = titleEntry
+        def pushTitle(self, titleEntry):
+                if self.titles == '':
+                        self.titles = titleEntry
+                else:
+                        tmp = self.titles
+                        while tmp.next != '':
+                                tmp = tmp.next
+                        tmp.next = titleEntry
 
-	def pushReview(self, reviewEntry):
-		if self.reviews == '':
-			self.reviews = reviewEntry
-		else:
-			tmp = self.reviews
-			while tmp.next != '':
-				tmp = tmp.next
-			tmp.next = reviewEntry
+        def pushReview(self, reviewEntry):
+                if self.reviews == '':
+                        self.reviews = reviewEntry
+                else:
+                        tmp = self.reviews
+                        while tmp.next != '':
+                                tmp = tmp.next
+                        tmp.next = reviewEntry
 
-	def pushInterview(self, interviewEntry):
-		if self.interviews == '':
-			self.interviews = interviewEntry
-		else:
-			tmp = self.interviews
-			while tmp.next != '':
-				tmp = tmp.next
-			tmp.next = interviewEntry
+        def pushInterview(self, interviewEntry):
+                if self.interviews == '':
+                        self.interviews = interviewEntry
+                else:
+                        tmp = self.interviews
+                        while tmp.next != '':
+                                tmp = tmp.next
+                        tmp.next = interviewEntry
 
-	def xmlCoverArt(self, clone):
+        def xmlCoverArt(self, clone):
                 retval = ''
                 for cover_record in self.cover_records:
                         cover_title_id = self.cover_records[cover_record]
@@ -446,48 +446,48 @@ class pubs:
                 retval += '</cArtists>\n'
                 return retval
 
-	def xmlContent(self):
-		retval = '    <Content>\n'
-		# Cover Art records
-		retval += self.xmlCoverArt(0)
-		tmp = self.titles
-		while tmp != '':
-			retval += tmp.xmlTitle()
-			tmp = tmp.next
-		tmp = self.reviews
-		while tmp != '':
-			retval += tmp.xmlTitle()
-			tmp = tmp.next
-		tmp = self.interviews
-		while tmp != '':
-			retval += tmp.xmlTitle()
-			tmp = tmp.next
-		retval += '    </Content>\n'
-		return retval
+        def xmlContent(self):
+                retval = '    <Content>\n'
+                # Cover Art records
+                retval += self.xmlCoverArt(0)
+                tmp = self.titles
+                while tmp != '':
+                        retval += tmp.xmlTitle()
+                        tmp = tmp.next
+                tmp = self.reviews
+                while tmp != '':
+                        retval += tmp.xmlTitle()
+                        tmp = tmp.next
+                tmp = self.interviews
+                while tmp != '':
+                        retval += tmp.xmlTitle()
+                        tmp = tmp.next
+                retval += '    </Content>\n'
+                return retval
 
-	def xmlCloneContent(self):
-		retval = ''
-		retval += '<Content>\n'
-		# Cover Art records -- the new way
-		retval += self.xmlCoverArt(1)
-		tmp = self.titles
-		while tmp != '':
-			retval += tmp.xmlCloneTitle()
-			tmp = tmp.next
-		tmp = self.reviews
-		while tmp != '':
-			retval += tmp.xmlCloneTitle()
-			tmp = tmp.next
-		tmp = self.interviews
-		while tmp != '':
-			retval += tmp.xmlCloneTitle()
-			tmp = tmp.next
-		retval += '</Content>\n'
-		return retval
+        def xmlCloneContent(self):
+                retval = ''
+                retval += '<Content>\n'
+                # Cover Art records -- the new way
+                retval += self.xmlCoverArt(1)
+                tmp = self.titles
+                while tmp != '':
+                        retval += tmp.xmlCloneTitle()
+                        tmp = tmp.next
+                tmp = self.reviews
+                while tmp != '':
+                        retval += tmp.xmlCloneTitle()
+                        tmp = tmp.next
+                tmp = self.interviews
+                while tmp != '':
+                        retval += tmp.xmlCloneTitle()
+                        tmp = tmp.next
+                retval += '</Content>\n'
+                return retval
 
         def xmlIdentifiers(self, include_type_name = 0):
-		update_string = "    <External_IDs>\n"
-		for type_name in self.identifiers:
+                update_string = "    <External_IDs>\n"
+                for type_name in self.identifiers:
                         for id_value in self.identifiers[type_name]:
                                 type_id = self.identifiers[type_name][id_value][0]
                                 update_string += "      <External_ID>\n"
@@ -497,14 +497,14 @@ class pubs:
                                 # Identifier values must be XML-escaped here since they are not escaped in cgi2obj
                                 update_string += "          <IDvalue>%s</IDvalue>\n" % db.escape_string(XMLescape(id_value))
                                 update_string += "      </External_ID>\n"
-		update_string += "    </External_IDs>\n"
-		return update_string
+                update_string += "    </External_IDs>\n"
+                return update_string
 
-	def printContent(self):
-		tmp = self.titles
-		while tmp.next != '':
-			tmp.printTitle()
-			tmp = tmp.next
+        def printContent(self):
+                tmp = self.titles
+                while tmp.next != '':
+                        tmp.printTitle()
+                        tmp = tmp.next
 
         def authors(self):
                 counter = 0
@@ -528,50 +528,50 @@ class pubs:
                         counter += 1
                 return retval
 
-	def load(self, id):
-		if id == 0:
-			return
-		query = "select * from pubs where pub_id=%d" % int(id)
-		self.db.query(query)
-		result = self.db.store_result()
-		record = result.fetch_row()
-		if record:
-			if record[0][PUB_PUBID]:
-				self.pub_id = record[0][PUB_PUBID]
-				self.used_id = 1
-			if record[0][PUB_TITLE]:
-				self.pub_title = record[0][PUB_TITLE]
-				self.used_title = 1
-			if record[0][PUB_TAG]:
-				self.pub_tag  = record[0][PUB_TAG]
-				self.used_tag = 1
-			if record[0][PUB_YEAR]:
-				self.pub_year = record[0][PUB_YEAR]
-				self.used_year = 1
-			if record[0][PUB_PAGES]:
-				self.pub_pages = record[0][PUB_PAGES]
-				self.used_pages = 1
-			if record[0][PUB_PTYPE]:
-				self.pub_ptype = record[0][PUB_PTYPE]
-				self.used_ptype = 1
-			if record[0][PUB_CTYPE]:
-				self.pub_ctype = record[0][PUB_CTYPE]
-				self.used_ctype = 1
-			if record[0][PUB_ISBN]:
-				self.pub_isbn = record[0][PUB_ISBN]
-				self.used_isbn = 1
-			if record[0][PUB_CATALOG]:
-				self.pub_catalog = record[0][PUB_CATALOG]
-				self.used_catalog = 1
-			if record[0][PUB_IMAGE]:
-				self.pub_image = record[0][PUB_IMAGE]
-				self.used_image = 1
-			if record[0][PUB_PRICE]:
-				self.pub_price = record[0][PUB_PRICE]
-				self.used_price = 1
-			if record[0][PUB_SERIES_NUM]:
-				self.pub_series_num = record[0][PUB_SERIES_NUM]
-				self.used_series_num = 1
+        def load(self, id):
+                if id == 0:
+                        return
+                query = "select * from pubs where pub_id=%d" % int(id)
+                self.db.query(query)
+                result = self.db.store_result()
+                record = result.fetch_row()
+                if record:
+                        if record[0][PUB_PUBID]:
+                                self.pub_id = record[0][PUB_PUBID]
+                                self.used_id = 1
+                        if record[0][PUB_TITLE]:
+                                self.pub_title = record[0][PUB_TITLE]
+                                self.used_title = 1
+                        if record[0][PUB_TAG]:
+                                self.pub_tag  = record[0][PUB_TAG]
+                                self.used_tag = 1
+                        if record[0][PUB_YEAR]:
+                                self.pub_year = record[0][PUB_YEAR]
+                                self.used_year = 1
+                        if record[0][PUB_PAGES]:
+                                self.pub_pages = record[0][PUB_PAGES]
+                                self.used_pages = 1
+                        if record[0][PUB_PTYPE]:
+                                self.pub_ptype = record[0][PUB_PTYPE]
+                                self.used_ptype = 1
+                        if record[0][PUB_CTYPE]:
+                                self.pub_ctype = record[0][PUB_CTYPE]
+                                self.used_ctype = 1
+                        if record[0][PUB_ISBN]:
+                                self.pub_isbn = record[0][PUB_ISBN]
+                                self.used_isbn = 1
+                        if record[0][PUB_CATALOG]:
+                                self.pub_catalog = record[0][PUB_CATALOG]
+                                self.used_catalog = 1
+                        if record[0][PUB_IMAGE]:
+                                self.pub_image = record[0][PUB_IMAGE]
+                                self.used_image = 1
+                        if record[0][PUB_PRICE]:
+                                self.pub_price = record[0][PUB_PRICE]
+                                self.used_price = 1
+                        if record[0][PUB_SERIES_NUM]:
+                                self.pub_series_num = record[0][PUB_SERIES_NUM]
+                                self.used_series_num = 1
 
                         query = """select authors.author_canonical from authors, pub_authors
                                    where pub_authors.author_id=authors.author_id and
@@ -579,59 +579,59 @@ class pubs:
                         self.db.query(query)
                         res2 = self.db.store_result()
                         rec2 = res2.fetch_row()
-			while rec2:
-				try:
-					self.pub_authors.append(rec2[0][0])
-					self.num_authors += 1
-					rec2 = res2.fetch_row()
-				except:
-					break
+                        while rec2:
+                                try:
+                                        self.pub_authors.append(rec2[0][0])
+                                        self.num_authors += 1
+                                        rec2 = res2.fetch_row()
+                                except:
+                                        break
 
-			titles = SQLloadTitlesXBT(record[0][PUB_PUBID])
-			results = []
-			for title in titles:
-				if title[TITLE_TTYPE] == 'COVERART':
-					artists = SQLTitleAuthors(title[TITLE_PUBID])
-					for artist in artists:
-						self.pub_artists.append(artist)
-						self.num_artists += 1
+                        titles = SQLloadTitlesXBT(record[0][PUB_PUBID])
+                        results = []
+                        for title in titles:
+                                if title[TITLE_TTYPE] == 'COVERART':
+                                        artists = SQLTitleAuthors(title[TITLE_PUBID])
+                                        for artist in artists:
+                                                self.pub_artists.append(artist)
+                                                self.num_artists += 1
 
-			if record[0][PUB_PUBLISHER]:
-                        	query = "select publisher_name from publishers where publisher_id='%d'" % (record[0][PUB_PUBLISHER])
-                        	self.db.query(query)
-                        	res2 = self.db.store_result()
-                        	rec2 = res2.fetch_row()
-                        	if rec2:
-					self.used_publisher = 1
-					self.pub_publisher_id = record[0][PUB_PUBLISHER]
-					self.pub_publisher = rec2[0][0]
+                        if record[0][PUB_PUBLISHER]:
+                                query = "select publisher_name from publishers where publisher_id='%d'" % (record[0][PUB_PUBLISHER])
+                                self.db.query(query)
+                                res2 = self.db.store_result()
+                                rec2 = res2.fetch_row()
+                                if rec2:
+                                        self.used_publisher = 1
+                                        self.pub_publisher_id = record[0][PUB_PUBLISHER]
+                                        self.pub_publisher = rec2[0][0]
 
-			if record[0][PUB_SERIES]:
-                        	query = "select pub_series_name from pub_series where pub_series_id='%d'" % (record[0][PUB_SERIES])
-                        	self.db.query(query)
-                        	res2 = self.db.store_result()
-                        	rec2 = res2.fetch_row()
-                        	if rec2:
-					self.used_series = 1
-					self.pub_series = rec2[0][0]
-					self.pub_series_id = record[0][PUB_SERIES]
+                        if record[0][PUB_SERIES]:
+                                query = "select pub_series_name from pub_series where pub_series_id='%d'" % (record[0][PUB_SERIES])
+                                self.db.query(query)
+                                res2 = self.db.store_result()
+                                rec2 = res2.fetch_row()
+                                if rec2:
+                                        self.used_series = 1
+                                        self.pub_series = rec2[0][0]
+                                        self.pub_series_id = record[0][PUB_SERIES]
 
-			if record[0][PUB_NOTE]:
-                        	query = "select note_note from notes where note_id='%d'" % (int(record[0][PUB_NOTE]))
-                        	self.db.query(query)
-                        	res2 = self.db.store_result()
-                        	rec2 = res2.fetch_row()
-                        	if rec2:
-					self.used_note = 1
-					self.pub_note = rec2[0][0]
+                        if record[0][PUB_NOTE]:
+                                query = "select note_note from notes where note_id='%d'" % (int(record[0][PUB_NOTE]))
+                                self.db.query(query)
+                                res2 = self.db.store_result()
+                                rec2 = res2.fetch_row()
+                                if rec2:
+                                        self.used_note = 1
+                                        self.pub_note = rec2[0][0]
 
                         self.loadTransTitles()
                         self.loadPubWebpages()
-			self.loadExternalIDs()
+                        self.loadExternalIDs()
 
-		else:
-			self.error = 'Pub record not found'
-			return
+                else:
+                        self.error = 'Pub record not found'
+                        return
 
         def loadTransTitles(self):
                 self.pub_trans_titles = SQLloadTransPubTitles(self.pub_id)
@@ -657,110 +657,110 @@ class pubs:
                                 self.identifiers[type_name] = {}
                         self.identifiers[type_name][id_value] = (type_id, type_full_name)
 
-	# obj2xml converts a pubs class object into XML format
-	def obj2xml(self):
-		if self.used_id:
-			container = "    <Publication>\n"
-			container += "      <Record>%s</Record>\n" % (self.pub_id)
+        # obj2xml converts a pubs class object into XML format
+        def obj2xml(self):
+                if self.used_id:
+                        container = "    <Publication>\n"
+                        container += "      <Record>%s</Record>\n" % (self.pub_id)
 
-			if self.used_title:
-				container += "      <Title>%s</Title>\n" % XMLescape(self.pub_title)
+                        if self.used_title:
+                                container += "      <Title>%s</Title>\n" % XMLescape(self.pub_title)
 
-			if self.num_authors:
-				container += "      <Authors>\n"
-				counter = 0
-				while counter < self.num_authors:
-					container += "        <Author>%s</Author>\n" % XMLescape(self.pub_authors[counter])
-					counter += 1
-				container += "      </Authors>\n"
+                        if self.num_authors:
+                                container += "      <Authors>\n"
+                                counter = 0
+                                while counter < self.num_authors:
+                                        container += "        <Author>%s</Author>\n" % XMLescape(self.pub_authors[counter])
+                                        counter += 1
+                                container += "      </Authors>\n"
 
-			if self.used_year:
-				container += "      <Year>%s</Year>\n" % XMLescape(self.pub_year)
-			if self.used_isbn:
-				container += "      <Isbn>%s</Isbn>\n" % XMLescape(self.pub_isbn)
-			if self.used_catalog:
-				container += "      <Catalog>%s</Catalog>\n" % XMLescape(self.pub_catalog)
-			if self.used_publisher:
-				container += "      <Publisher>%s</Publisher>\n" % XMLescape(self.pub_publisher)
-			if self.used_series:
-				container += "      <PubSeries>%s</PubSeries>\n" % XMLescape(self.pub_series)
-			if self.used_series_num:
-				container += "      <PubSeriesNum>%s</PubSeriesNum>\n" % XMLescape(self.pub_series_num)
-			if self.used_price:
-				container += "      <Price>%s</Price>\n" % XMLescape(self.pub_price)
-			if self.used_pages:
-				container += "      <Pages>%s</Pages>\n" % XMLescape(self.pub_pages)
-			if self.used_ptype:
-				container += "      <Binding>%s</Binding>\n" % XMLescape(self.pub_ptype)
-			if self.used_ctype:
-				container += "      <Type>%s</Type>\n" % XMLescape(self.pub_ctype)
-			if self.used_tag:
-				container += "      <Tag>%s</Tag>\n" % XMLescape(self.pub_tag)
-			if self.used_image:
-				container += "      <Image>%s</Image>\n" % XMLescape(self.pub_image)
+                        if self.used_year:
+                                container += "      <Year>%s</Year>\n" % XMLescape(self.pub_year)
+                        if self.used_isbn:
+                                container += "      <Isbn>%s</Isbn>\n" % XMLescape(self.pub_isbn)
+                        if self.used_catalog:
+                                container += "      <Catalog>%s</Catalog>\n" % XMLescape(self.pub_catalog)
+                        if self.used_publisher:
+                                container += "      <Publisher>%s</Publisher>\n" % XMLescape(self.pub_publisher)
+                        if self.used_series:
+                                container += "      <PubSeries>%s</PubSeries>\n" % XMLescape(self.pub_series)
+                        if self.used_series_num:
+                                container += "      <PubSeriesNum>%s</PubSeriesNum>\n" % XMLescape(self.pub_series_num)
+                        if self.used_price:
+                                container += "      <Price>%s</Price>\n" % XMLescape(self.pub_price)
+                        if self.used_pages:
+                                container += "      <Pages>%s</Pages>\n" % XMLescape(self.pub_pages)
+                        if self.used_ptype:
+                                container += "      <Binding>%s</Binding>\n" % XMLescape(self.pub_ptype)
+                        if self.used_ctype:
+                                container += "      <Type>%s</Type>\n" % XMLescape(self.pub_ctype)
+                        if self.used_tag:
+                                container += "      <Tag>%s</Tag>\n" % XMLescape(self.pub_tag)
+                        if self.used_image:
+                                container += "      <Image>%s</Image>\n" % XMLescape(self.pub_image)
 
-			if self.used_note:
-				container += "      <Note>%s</Note>\n" % XMLescape(self.pub_note)
+                        if self.used_note:
+                                container += "      <Note>%s</Note>\n" % XMLescape(self.pub_note)
 
-			#########################
-			# Content
-			#########################
-			#self.titles
-			#self.reviews
-			#self.interviews
-			#self.editor
-
-
-			container += "    </Publication>\n"
-		else:
-			print "XML: pass"
-			container = ""
-		return container
+                        #########################
+                        # Content
+                        #########################
+                        #self.titles
+                        #self.reviews
+                        #self.interviews
+                        #self.editor
 
 
-	# cgi2obj converts input from an html form into a pubs class object.
-	def cgi2obj(self, reference_title = 'explicit'):
-		sys.stderr = sys.stdout
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('pub_id'):
+                        container += "    </Publication>\n"
+                else:
+                        print "XML: pass"
+                        container = ""
+                return container
+
+
+        # cgi2obj converts input from an html form into a pubs class object.
+        def cgi2obj(self, reference_title = 'explicit'):
+                sys.stderr = sys.stdout
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('pub_id'):
                         try:
-        			self.pub_id = str(int(self.form['pub_id'].value))
-        		except:
+                                self.pub_id = str(int(self.form['pub_id'].value))
+                        except:
                                 self.error = "Publication ID must be an integer number"
                                 return
-			self.used_id = 1
+                        self.used_id = 1
 
-		try:
-			self.pub_title = XMLescape(self.form['pub_title'].value)
-			self.used_title = 1
-			if not self.pub_title:
+                try:
+                        self.pub_title = XMLescape(self.form['pub_title'].value)
+                        self.used_title = 1
+                        if not self.pub_title:
                                 raise
                 except:
                         self.error = 'No title specified'
                         return
 
-		if self.form.has_key('title_id'):
+                if self.form.has_key('title_id'):
                         try:
-        			self.title_id = str(int(self.form['title_id'].value))
-        		except:
+                                self.title_id = str(int(self.form['title_id'].value))
+                        except:
                                 self.error = "Title ID must be an integer number"
                                 return
 
-		if self.form.has_key('editor'):
-			self.editor = self.form['editor'].value
+                if self.form.has_key('editor'):
+                        self.editor = self.form['editor'].value
 
-      		for key in self.form:
+                for key in self.form:
                         if 'trans_titles' in key:
                                 value = XMLescape(self.form[key].value)
                                 if value:
                                         self.pub_trans_titles.append(value)
                                         self.used_trans_titles = 1
 
-		###################################
-		# AUTHORS
-		###################################
-		self.num_authors = 0
-		self.pub_authors = []
+                ###################################
+                # AUTHORS
+                ###################################
+                self.num_authors = 0
+                self.pub_authors = []
                 counter = 0
                 while counter < 200:
                         if self.form.has_key('pub_author'+str(counter+1)):
@@ -783,59 +783,59 @@ class pubs:
                         return
 
 
-		###################################
-		# METADATA
-		###################################
-		if self.form.has_key('pub_tag'):
-			tag = self.form['pub_tag'].value
-			tag = string.replace(tag, "'", '')
-			tag = string.replace(tag, "<", '')
-			tag = string.replace(tag, ">", '')
-			self.pub_tag = tag
-			self.used_tag = 1
-		try:
+                ###################################
+                # METADATA
+                ###################################
+                if self.form.has_key('pub_tag'):
+                        tag = self.form['pub_tag'].value
+                        tag = string.replace(tag, "'", '')
+                        tag = string.replace(tag, "<", '')
+                        tag = string.replace(tag, ">", '')
+                        self.pub_tag = tag
+                        self.used_tag = 1
+                try:
                         # Handle XML escaping; also strip leading and trailing spaces
                         self.pub_year = XMLescape(self.form['pub_year'].value)
                         if not self.pub_year:
                                 raise
                         # Validate and normalize the date - change to 0000-00-00 if it's invalid
                         self.pub_year = ISFDBnormalizeDate(self.pub_year)
-			self.used_year = 1
-		except:
+                        self.used_year = 1
+                except:
                         self.error = 'No year was specified'
                         return
 
-		if self.form.has_key('pub_publisher'):
+                if self.form.has_key('pub_publisher'):
                         value = XMLescape(self.form['pub_publisher'].value)
                         if value:
-        			self.pub_publisher = value
-        			self.used_publisher = 1
+                                self.pub_publisher = value
+                                self.used_publisher = 1
 
-		if self.form.has_key('pub_series'):
+                if self.form.has_key('pub_series'):
                         value = XMLescape(self.form['pub_series'].value)
                         if value:
-        			self.pub_series = value
-        			self.used_series = 1
+                                self.pub_series = value
+                                self.used_series = 1
 
-		if self.form.has_key('pub_series_num'):
+                if self.form.has_key('pub_series_num'):
                         value = XMLescape(self.form['pub_series_num'].value)
                         if value:
-        			if len(value) > 63:
+                                if len(value) > 63:
                                         self.error = 'Publication series number must be less than 64 characters long'
                                         return
-        			self.pub_series_num = value
-        			self.used_series_num = 1
+                                self.pub_series_num = value
+                                self.used_series_num = 1
 
-		if self.form.has_key('pub_pages'):
+                if self.form.has_key('pub_pages'):
                         value = XMLescape(self.form['pub_pages'].value)
                         if value:
-        			if len(value) > 99:
+                                if len(value) > 99:
                                         self.error = 'Pages value must be less than 100 characters long'
                                         return
-        			self.pub_pages = value
-        			self.used_pages = 1
+                                self.pub_pages = value
+                                self.used_pages = 1
 
-		if self.form.has_key('pub_ptype'):
+                if self.form.has_key('pub_ptype'):
                         value = XMLescape(self.form['pub_ptype'].value)
                         if value not in SESSION.db.formats:
                                 self.error = 'Invalid Publication Format - %s' % value
@@ -844,17 +844,17 @@ class pubs:
                         self.used_ptype = 1
 
                 ctype = ''
-		try:
-			ctype = self.form['pub_ctype'].value
-			if ctype not in SESSION.db.pub_types:
+                try:
+                        ctype = self.form['pub_ctype'].value
+                        if ctype not in SESSION.db.pub_types:
                                 raise
                         self.pub_ctype = ctype
                         self.used_ctype = 1
-		except:
+                except:
                         self.error = 'Invalid Publication Type - %s' % ctype
                         return
 
-		if self.form.has_key('pub_image'):
+                if self.form.has_key('pub_image'):
                         value = XMLescape(self.form['pub_image'].value)
                         if value:
                                 self.error = invalidURL(value)
@@ -863,28 +863,28 @@ class pubs:
                                 if value[0:41] == '%s://%s/index.php/Image' % (PROTOCOL, WIKILOC):
                                         self.error = "URL for covers should be for the image, not the Wiki page the image is on"
                                         return
-        			self.pub_image = value
-        			self.used_image = 1
+                                self.pub_image = value
+                                self.used_image = 1
 
-		if self.form.has_key('pub_isbn'):
+                if self.form.has_key('pub_isbn'):
                         value = XMLescape(self.form['pub_isbn'].value)
                         value = string.replace(value, '-', '')
                         value = string.replace(value, ' ', '')
                         value = string.replace(value, 'x', 'X')
                         if value:
-        			if len(value) > 99:
+                                if len(value) > 99:
                                         self.error = 'ISBN value must be less than 100 characters long'
                                         return
                                 self.pub_isbn = value
                                 self.used_isbn = 1
 
-		if self.form.has_key('pub_catalog'):
+                if self.form.has_key('pub_catalog'):
                         value = XMLescape(self.form['pub_catalog'].value)
                         if value:
-        			self.pub_catalog = value
-        			self.used_catalog = 1
+                                self.pub_catalog = value
+                                self.used_catalog = 1
 
-		for key in self.form:
+                for key in self.form:
                         if key.startswith('pub_webpages') or key.startswith('shared_pub_webpages'):
                                 value = XMLescape(self.form[key].value)
                                 if value:
@@ -937,7 +937,7 @@ class pubs:
                                         continue
                                 self.identifiers[type_name][ext_id_value] = (id_type_number, type_full_name)
 
-		if self.form.has_key('pub_price'):
+                if self.form.has_key('pub_price'):
                         value = XMLescape(self.form['pub_price'].value)
                         if value:
                                 currency_map = {'B' : SESSION.currency.baht,
@@ -957,22 +957,22 @@ class pubs:
                                                         padding_space = ' '
                                                 value = '%s%s%s' % (XMLescape(currency_sign), padding_space, value[len(abbrev):])
                                                 break
-        			if len(value) > 99:
+                                if len(value) > 99:
                                         self.error = 'Price value must be less than 100 characters long'
                                         return
-        			self.used_price = 1
-        			self.pub_price = value
+                                self.used_price = 1
+                                self.pub_price = value
 
-		if self.form.has_key('pub_note'):
+                if self.form.has_key('pub_note'):
                         value = XMLescape(self.form['pub_note'].value)
                         if value:
-        			self.pub_note = value
-        			self.used_note = 1
+                                self.pub_note = value
+                                self.used_note = 1
 
-		#####################################################################
-		# COVER ART CONTENT
-		#####################################################################
-		# Parse the submitted form and put its values in Python dictionaries
+                #####################################################################
+                # COVER ART CONTENT
+                #####################################################################
+                # Parse the submitted form and put its values in Python dictionaries
                 for key in self.form.keys():
                         # Put title cover IDs in self.cover_ids
                         splitstring = key.partition('cover_id')
@@ -1119,77 +1119,77 @@ class pubs:
                                 self.cover_changed_artists[cover_id] = 1
                 
 
-		###################################
-		# REGULAR TITLE CONTENT
-		###################################
-		counter = 1
-		title_types = {}
-		while counter:
-			#############################
-			# TITLE
-			#############################
-			key = "title_title"+str(counter)
-			oldTitle = 0
-			if self.form.has_key(key):
-				newTitle = titleEntry()
-				newTitle.setTitle(self.form[key].value)
+                ###################################
+                # REGULAR TITLE CONTENT
+                ###################################
+                counter = 1
+                title_types = {}
+                while counter:
+                        #############################
+                        # TITLE
+                        #############################
+                        key = "title_title"+str(counter)
+                        oldTitle = 0
+                        if self.form.has_key(key):
+                                newTitle = titleEntry()
+                                newTitle.setTitle(self.form[key].value)
 
-				key = "title_id"+str(counter)
-				if self.form.has_key(key):
-					newTitle.setID(self.form[key].value)
-					if int(newTitle.id) > 0:
-						oldTitle = titleEntry()
-						title_data = SQLloadTitle(newTitle.id)
-						oldTitle.setTitle(title_data[TITLE_TITLE])
-						oldTitle.setID(newTitle.id)
-			else:
-				key = "title_page"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Entry must have a title. Page=%s" % (self.form[key].value)
-					return
-				key = "title_author%s.1" % str(counter)
-				if self.form.has_key(key):
-					self.error = "Entry must have a title. Author=%s" % (self.form[key].value)
-					return
-				# Check if this is the last submitted Title record
-				if lastRecord(self.form, "title_title", counter):
+                                key = "title_id"+str(counter)
+                                if self.form.has_key(key):
+                                        newTitle.setID(self.form[key].value)
+                                        if int(newTitle.id) > 0:
+                                                oldTitle = titleEntry()
+                                                title_data = SQLloadTitle(newTitle.id)
+                                                oldTitle.setTitle(title_data[TITLE_TITLE])
+                                                oldTitle.setID(newTitle.id)
+                        else:
+                                key = "title_page"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Entry must have a title. Page=%s" % (self.form[key].value)
+                                        return
+                                key = "title_author%s.1" % str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Entry must have a title. Author=%s" % (self.form[key].value)
+                                        return
+                                # Check if this is the last submitted Title record
+                                if lastRecord(self.form, "title_title", counter):
                                         break
                                 else:
-					counter += 1
-					continue
+                                        counter += 1
+                                        continue
 
-			#############################
-			# PAGE
-			#############################
-			key = "title_page"+str(counter)
-			if self.form.has_key(key):
+                        #############################
+                        # PAGE
+                        #############################
+                        key = "title_page"+str(counter)
+                        if self.form.has_key(key):
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'title')
                                 if self.error:
                                         return
-				newTitle.setPage(page_number)
-			if oldTitle:
-				title_page = SQLGetPageNumber(oldTitle.id, self.pub_id)
-				if title_page:
-					oldTitle.setPage(title_page)
+                                newTitle.setPage(page_number)
+                        if oldTitle:
+                                title_page = SQLGetPageNumber(oldTitle.id, self.pub_id)
+                                if title_page:
+                                        oldTitle.setPage(title_page)
 
-			#############################
-			# DATE
-			#############################
-			key = "title_date"+str(counter)
-			if self.form.has_key(key):
-				newTitle.setDate(self.form[key].value)
-			else:
-				newTitle.setDate(self.pub_year)
-			if oldTitle:
-				oldTitle.setDate(title_data[TITLE_YEAR])
+                        #############################
+                        # DATE
+                        #############################
+                        key = "title_date"+str(counter)
+                        if self.form.has_key(key):
+                                newTitle.setDate(self.form[key].value)
+                        else:
+                                newTitle.setDate(self.pub_year)
+                        if oldTitle:
+                                oldTitle.setDate(title_data[TITLE_YEAR])
 
-			#############################
-			# TTYPE
-			#############################
-			key = "title_ttype"+str(counter)
-			if self.form.has_key(key):
-				newTitle.setType(self.form[key].value)
+                        #############################
+                        # TTYPE
+                        #############################
+                        key = "title_ttype"+str(counter)
+                        if self.form.has_key(key):
+                                newTitle.setType(self.form[key].value)
                                 if newTitle.type not in SESSION.db.regular_title_types:
                                         self.error = 'Invalid title type'
                                         return
@@ -1198,14 +1198,14 @@ class pubs:
                                         self.reference_title_count += 1
                                 if newTitle.type == 'EDITOR' and self.pub_ctype in ('MAGAZINE', 'FANZINE'):
                                         self.reference_title_count += 1
-			if oldTitle:
-				oldTitle.setType(title_data[TITLE_TTYPE])
+                        if oldTitle:
+                                oldTitle.setType(title_data[TITLE_TTYPE])
 
-			#############################
-			# LENGTH
-			#############################
-			key = "title_storylen"+str(counter)
-			if self.form.has_key(key):
+                        #############################
+                        # LENGTH
+                        #############################
+                        key = "title_storylen"+str(counter)
+                        if self.form.has_key(key):
                                 newTitle.setLength(self.form[key].value)
                                 if newTitle.length not in SESSION.db.storylen_codes:
                                         self.error = 'Invalid short fiction length'
@@ -1213,58 +1213,58 @@ class pubs:
                                 if newTitle.length and newTitle.type != 'SHORTFICTION':
                                         self.error = 'Only SHORTFICTION titles can have Length values'
                                         return
-			if oldTitle:
+                        if oldTitle:
                                 oldTitle.setLength(title_data[TITLE_STORYLEN])
 
-			#############################
-			# AUTHORS
-			#############################
-			author = 1
-			author_list = []
-			total_skips = 0
-			while True:
-				key = "title_author%s.%s" % (str(counter), str(author))
-				if self.form.has_key(key):
-					value = ISFDBnormalizeAuthor(self.form[key].value)
+                        #############################
+                        # AUTHORS
+                        #############################
+                        author = 1
+                        author_list = []
+                        total_skips = 0
+                        while True:
+                                key = "title_author%s.%s" % (str(counter), str(author))
+                                if self.form.has_key(key):
+                                        value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
                                                 return
-					if not ISFDBAuthorInAuthorList(value, author_list):
+                                        if not ISFDBAuthorInAuthorList(value, author_list):
                                                 author_list.append(value)
-				else:
-					total_skips += 1
-					if total_skips > 10:
-						break
-				author += 1
-			authors = '+'.join(author_list)
+                                else:
+                                        total_skips += 1
+                                        if total_skips > 10:
+                                                break
+                                author += 1
+                        authors = '+'.join(author_list)
 
-			if authors == '':
-				key = "title_title"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Entry must have an author. Title=%s" % (self.form[key].value)
-				else:
-					self.error = "Entry must have an author"
+                        if authors == '':
+                                key = "title_title"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Entry must have an author. Title=%s" % (self.form[key].value)
+                                else:
+                                        self.error = "Entry must have an author"
                                 return
-			else:
-				newTitle.setAuthors(authors)
+                        else:
+                                newTitle.setAuthors(authors)
 
-			if oldTitle:
-				authors = SQLTitleAuthors(newTitle.id)
-				newauthors = ''
-				count = 1
-				for author in authors:
-					if count == 1:
-						newauthors += author
-					else:
-						newauthors += '+'+author
-					count += 1
-				oldTitle.setAuthors(newauthors)
+                        if oldTitle:
+                                authors = SQLTitleAuthors(newTitle.id)
+                                newauthors = ''
+                                count = 1
+                                for author in authors:
+                                        if count == 1:
+                                                newauthors += author
+                                        else:
+                                                newauthors += '+'+author
+                                        count += 1
+                                oldTitle.setAuthors(newauthors)
 
-			if oldTitle:
-				newTitle.setOldTitle(oldTitle)
-			self.pushTitle(newTitle)
+                        if oldTitle:
+                                newTitle.setOldTitle(oldTitle)
+                        self.pushTitle(newTitle)
 
-			counter += 1
+                        counter += 1
 
                         if title_types.get('EDITOR', 0) > 1:
                                 self.error = 'Multiple EDITOR titles are not allowed'
@@ -1312,330 +1312,330 @@ class pubs:
                                 return
 
 
-		###################################
-		# REVIEW CONTENT
-		###################################
-		counter = 1
-		while counter:
-			#############################
-			# TITLE
-			#############################
-			key = "review_title"+str(counter)
-			oldReview = 0
-			if self.form.has_key(key):
-				newReview = reviewEntry()
-				try:
-					newReview.setTitle(self.form[key].value)
-				except:
-					self.error = "Could not read the value associated with %s" % key
-					break
+                ###################################
+                # REVIEW CONTENT
+                ###################################
+                counter = 1
+                while counter:
+                        #############################
+                        # TITLE
+                        #############################
+                        key = "review_title"+str(counter)
+                        oldReview = 0
+                        if self.form.has_key(key):
+                                newReview = reviewEntry()
+                                try:
+                                        newReview.setTitle(self.form[key].value)
+                                except:
+                                        self.error = "Could not read the value associated with %s" % key
+                                        break
 
-				key = "review_id"+str(counter)
-				if self.form.has_key(key):
-					newReview.setID(self.form[key].value)
-					if int(newReview.id) > 0:
-						oldReview = reviewEntry()
-						title_data = SQLloadTitle(newReview.id)
-						oldReview.setTitle(title_data[TITLE_TITLE])
-						oldReview.setID(newReview.id)
-			else:
-				key = "review_page"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Reviews must have a title. Page=%s" % (self.form[key].value)
-					return
-				key = "review_author%s.1" % str(counter)
-				if self.form.has_key(key):
-					self.error = "Reviews must have a title. Author=%s" % (self.form[key].value)
-					return
-				# Check if this is the last submitted Review record
-				if lastRecord(self.form, "review_title", counter):
+                                key = "review_id"+str(counter)
+                                if self.form.has_key(key):
+                                        newReview.setID(self.form[key].value)
+                                        if int(newReview.id) > 0:
+                                                oldReview = reviewEntry()
+                                                title_data = SQLloadTitle(newReview.id)
+                                                oldReview.setTitle(title_data[TITLE_TITLE])
+                                                oldReview.setID(newReview.id)
+                        else:
+                                key = "review_page"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Reviews must have a title. Page=%s" % (self.form[key].value)
+                                        return
+                                key = "review_author%s.1" % str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Reviews must have a title. Author=%s" % (self.form[key].value)
+                                        return
+                                # Check if this is the last submitted Review record
+                                if lastRecord(self.form, "review_title", counter):
                                         break
                                 else:
-					counter += 1
-					continue
+                                        counter += 1
+                                        continue
 
-			#############################
-			# PAGE
-			#############################
-			key = "review_page"+str(counter)
-			if self.form.has_key(key):
+                        #############################
+                        # PAGE
+                        #############################
+                        key = "review_page"+str(counter)
+                        if self.form.has_key(key):
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'review')
                                 if self.error:
                                         return
-				newReview.setPage(page_number)
+                                newReview.setPage(page_number)
                         if oldReview:
                                 title_page = SQLGetPageNumber(oldReview.id, self.pub_id)
                                 if title_page:
                                         oldReview.setPage(title_page)
 
-			#############################
-			# DATE
-			#############################
-			key = "review_date"+str(counter)
-			if self.form.has_key(key):
-				newReview.setDate(self.form[key].value)
-			else:
-				newReview.setDate(self.pub_year)
-			if oldReview:
-				oldReview.setDate(title_data[TITLE_YEAR])
+                        #############################
+                        # DATE
+                        #############################
+                        key = "review_date"+str(counter)
+                        if self.form.has_key(key):
+                                newReview.setDate(self.form[key].value)
+                        else:
+                                newReview.setDate(self.pub_year)
+                        if oldReview:
+                                oldReview.setDate(title_data[TITLE_YEAR])
 
-			#############################
-			# BOOK AUTHORS
-			#############################
-			author = 1
-			author_list = []
-			total_skips = 0
-			while True:
-				key = "review_author%s.%s" % (str(counter), str(author))
-				if self.form.has_key(key):
-					value = ISFDBnormalizeAuthor(self.form[key].value)
+                        #############################
+                        # BOOK AUTHORS
+                        #############################
+                        author = 1
+                        author_list = []
+                        total_skips = 0
+                        while True:
+                                key = "review_author%s.%s" % (str(counter), str(author))
+                                if self.form.has_key(key):
+                                        value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
                                                 return
-					if not ISFDBAuthorInAuthorList(value, author_list):
+                                        if not ISFDBAuthorInAuthorList(value, author_list):
                                                 author_list.append(value)
-				else:
-					total_skips += 1
-					if total_skips > 10:
-						break
-				author += 1
-			authors = '+'.join(author_list)
+                                else:
+                                        total_skips += 1
+                                        if total_skips > 10:
+                                                break
+                                author += 1
+                        authors = '+'.join(author_list)
 
-			if authors == '':
-				key = "review_title"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Reviews must specify at least one reviewed author. Title=%s" % (self.form[key].value)
-				else:
-					self.error = "Reviews must specify at least one reviewed author"
-				return
-			else:
-				newReview.setBookAuthors(authors)
+                        if authors == '':
+                                key = "review_title"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Reviews must specify at least one reviewed author. Title=%s" % (self.form[key].value)
+                                else:
+                                        self.error = "Reviews must specify at least one reviewed author"
+                                return
+                        else:
+                                newReview.setBookAuthors(authors)
 
-			if oldReview:
-				authors = SQLReviewAuthors(newReview.id)
-				newauthors = ''
-				count = 1
-				for author in authors:
-					if count == 1:
-						newauthors += author
-					else:
-						newauthors += '+'+author
-					count += 1
-				oldReview.setBookAuthors(newauthors)
+                        if oldReview:
+                                authors = SQLReviewAuthors(newReview.id)
+                                newauthors = ''
+                                count = 1
+                                for author in authors:
+                                        if count == 1:
+                                                newauthors += author
+                                        else:
+                                                newauthors += '+'+author
+                                        count += 1
+                                oldReview.setBookAuthors(newauthors)
 
 
-			#############################
-			# REVIEWER
-			#############################
-			author = 1
-			author_list = []
-			total_skips = 0
-			while True:
-				key = "review_reviewer%s.%s" % (str(counter), str(author))
-				if self.form.has_key(key):
-					value = ISFDBnormalizeAuthor(self.form[key].value)
+                        #############################
+                        # REVIEWER
+                        #############################
+                        author = 1
+                        author_list = []
+                        total_skips = 0
+                        while True:
+                                key = "review_reviewer%s.%s" % (str(counter), str(author))
+                                if self.form.has_key(key):
+                                        value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
                                                 return
-					if not ISFDBAuthorInAuthorList(value, author_list):
+                                        if not ISFDBAuthorInAuthorList(value, author_list):
                                                 author_list.append(value)
-				else:
-					total_skips += 1
-					if total_skips > 10:
-						break
-				author += 1
-			authors = '+'.join(author_list)
+                                else:
+                                        total_skips += 1
+                                        if total_skips > 10:
+                                                break
+                                author += 1
+                        authors = '+'.join(author_list)
 
-			if authors == '':
-				key = "review_title"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Reviews must specify at least one reviewer. Title=%s" % (self.form[key].value)
-				else:
-					self.error = "Reviews must specify at least one reviewer"
-				return
-			else:
-				newReview.setReviewers(authors)
+                        if authors == '':
+                                key = "review_title"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Reviews must specify at least one reviewer. Title=%s" % (self.form[key].value)
+                                else:
+                                        self.error = "Reviews must specify at least one reviewer"
+                                return
+                        else:
+                                newReview.setReviewers(authors)
 
-			if oldReview:
-				reviewers = SQLTitleAuthors(newReview.id)
-				newreviewers = ''
-				count = 1
-				for reviewer in reviewers:
-					if count == 1:
-						newreviewers += reviewer
-					else:
-						newreviewers += '+'+reviewer
-					count += 1
-				oldReview.setReviewers(newreviewers)
+                        if oldReview:
+                                reviewers = SQLTitleAuthors(newReview.id)
+                                newreviewers = ''
+                                count = 1
+                                for reviewer in reviewers:
+                                        if count == 1:
+                                                newreviewers += reviewer
+                                        else:
+                                                newreviewers += '+'+reviewer
+                                        count += 1
+                                oldReview.setReviewers(newreviewers)
 
-			if oldReview:
-				newReview.setOldReview(oldReview)
-			self.pushReview(newReview)
+                        if oldReview:
+                                newReview.setOldReview(oldReview)
+                        self.pushReview(newReview)
 
-			counter += 1
+                        counter += 1
 
 
-		###################################
-		# INTERVIEW CONTENT
-		###################################
-		counter = 1
-		while counter:
-			#############################
-			# TITLE
-			#############################
-			key = "interview_title"+str(counter)
-			oldInterview = 0
-			if self.form.has_key(key):
-				newInterview = interviewEntry()
-				newInterview.setTitle(self.form[key].value)
-				key = "interview_id"+str(counter)
-				if self.form.has_key(key):
-					newInterview.setID(self.form[key].value)
-					if int(newInterview.id) > 0:
-						oldInterview = interviewEntry()
-						title_data = SQLloadTitle(newInterview.id)
-						oldInterview.setTitle(title_data[TITLE_TITLE])
-						oldInterview.setID(newInterview.id)
-			else:
-				key = "interview_page"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Interviews must have a title. Page=%s" % (self.form[key].value)
-					return
-				key = "interviewee_author%s.1" % str(counter)
-				if self.form.has_key(key):
-					self.error = "Interviews must have a title. Interviewee=%s" % (self.form[key].value)
-					return
-				key = "interviewer_author%s.1" % str(counter)
-				if self.form.has_key(key):
-					self.error = "Interviews must have a title. Interviewer=%s" % (self.form[key].value)
-					return
-				# Check if this is the last submitted Interview record
-				if lastRecord(self.form, "interview_title", counter):
+                ###################################
+                # INTERVIEW CONTENT
+                ###################################
+                counter = 1
+                while counter:
+                        #############################
+                        # TITLE
+                        #############################
+                        key = "interview_title"+str(counter)
+                        oldInterview = 0
+                        if self.form.has_key(key):
+                                newInterview = interviewEntry()
+                                newInterview.setTitle(self.form[key].value)
+                                key = "interview_id"+str(counter)
+                                if self.form.has_key(key):
+                                        newInterview.setID(self.form[key].value)
+                                        if int(newInterview.id) > 0:
+                                                oldInterview = interviewEntry()
+                                                title_data = SQLloadTitle(newInterview.id)
+                                                oldInterview.setTitle(title_data[TITLE_TITLE])
+                                                oldInterview.setID(newInterview.id)
+                        else:
+                                key = "interview_page"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Interviews must have a title. Page=%s" % (self.form[key].value)
+                                        return
+                                key = "interviewee_author%s.1" % str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Interviews must have a title. Interviewee=%s" % (self.form[key].value)
+                                        return
+                                key = "interviewer_author%s.1" % str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Interviews must have a title. Interviewer=%s" % (self.form[key].value)
+                                        return
+                                # Check if this is the last submitted Interview record
+                                if lastRecord(self.form, "interview_title", counter):
                                         break
                                 else:
-					counter += 1
-					continue
-			
-			#############################
-			# PAGE
-			#############################
-			key = "interview_page"+str(counter)
-			if self.form.has_key(key):
+                                        counter += 1
+                                        continue
+                        
+                        #############################
+                        # PAGE
+                        #############################
+                        key = "interview_page"+str(counter)
+                        if self.form.has_key(key):
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'interview')
                                 if self.error:
                                         return
-				newInterview.setPage(page_number)
+                                newInterview.setPage(page_number)
                         if oldInterview:
                                 title_page = SQLGetPageNumber(oldInterview.id, self.pub_id)
                                 if title_page:
                                         oldInterview.setPage(title_page)
 
-			#############################
-			# DATE
-			#############################
-			key = "interview_date"+str(counter)
-			if self.form.has_key(key):
-				newInterview.setDate(self.form[key].value)
-			else:
-				newInterview.setDate(self.pub_year)
-			if oldInterview:
-				oldInterview.setDate(title_data[TITLE_YEAR])
+                        #############################
+                        # DATE
+                        #############################
+                        key = "interview_date"+str(counter)
+                        if self.form.has_key(key):
+                                newInterview.setDate(self.form[key].value)
+                        else:
+                                newInterview.setDate(self.pub_year)
+                        if oldInterview:
+                                oldInterview.setDate(title_data[TITLE_YEAR])
 
 
-			#############################
-			# INTERVIEWEE
-			#############################
-			author = 1
-			author_list = []
-			total_skips = 0
-			while True:
-				key = "interviewee_author%s.%s" % (str(counter), str(author))
-				if self.form.has_key(key):
-					value = ISFDBnormalizeAuthor(self.form[key].value)
+                        #############################
+                        # INTERVIEWEE
+                        #############################
+                        author = 1
+                        author_list = []
+                        total_skips = 0
+                        while True:
+                                key = "interviewee_author%s.%s" % (str(counter), str(author))
+                                if self.form.has_key(key):
+                                        value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
                                                 return
-					if not ISFDBAuthorInAuthorList(value, author_list):
+                                        if not ISFDBAuthorInAuthorList(value, author_list):
                                                 author_list.append(value)
-				else:
-					total_skips += 1
-					if total_skips > 10:
-						break
-				author += 1
-			authors = '+'.join(author_list)
+                                else:
+                                        total_skips += 1
+                                        if total_skips > 10:
+                                                break
+                                author += 1
+                        authors = '+'.join(author_list)
 
-			if authors == '':
-				key = "interview_title"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Interviews must specify at least one interviewed author. Title=%s" % (self.form[key].value)
-				else:
-					self.error = "Interviews must specify at least one interviewed author"
-				return
-			else:
-				newInterview.setInterviewees(authors)
+                        if authors == '':
+                                key = "interview_title"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Interviews must specify at least one interviewed author. Title=%s" % (self.form[key].value)
+                                else:
+                                        self.error = "Interviews must specify at least one interviewed author"
+                                return
+                        else:
+                                newInterview.setInterviewees(authors)
 
-			if oldInterview:
-				authors = SQLInterviewAuthors(newInterview.id)
-				newauthors = ''
-				count = 1
-				for author in authors:
-					if count == 1:
-						newauthors += author
-					else:
-						newauthors += '+'+author
-					count += 1
-				oldInterview.setInterviewees(newauthors)
+                        if oldInterview:
+                                authors = SQLInterviewAuthors(newInterview.id)
+                                newauthors = ''
+                                count = 1
+                                for author in authors:
+                                        if count == 1:
+                                                newauthors += author
+                                        else:
+                                                newauthors += '+'+author
+                                        count += 1
+                                oldInterview.setInterviewees(newauthors)
 
-			#############################
-			# INTERVIEWER
-			#############################
-			author = 1
-			author_list = []
-			total_skips = 0
-			while True:
-				key = "interviewer_author%s.%s" % (str(counter), str(author))
-				if self.form.has_key(key):
-					value = ISFDBnormalizeAuthor(self.form[key].value)
+                        #############################
+                        # INTERVIEWER
+                        #############################
+                        author = 1
+                        author_list = []
+                        total_skips = 0
+                        while True:
+                                key = "interviewer_author%s.%s" % (str(counter), str(author))
+                                if self.form.has_key(key):
+                                        value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
                                                 return
-					if not ISFDBAuthorInAuthorList(value, author_list):
+                                        if not ISFDBAuthorInAuthorList(value, author_list):
                                                 author_list.append(value)
-				else:
-					total_skips += 1
-					if total_skips > 10:
-						break
-				author += 1
-			authors = '+'.join(author_list)
+                                else:
+                                        total_skips += 1
+                                        if total_skips > 10:
+                                                break
+                                author += 1
+                        authors = '+'.join(author_list)
 
-			if authors == '':
-				key = "interview_title"+str(counter)
-				if self.form.has_key(key):
-					self.error = "Interviews must specify at least one interviewer. Title=%s" % (self.form[key].value)
-				else:
-					self.error = "Interviews must specify at least one interviewer"
-				return
-			else:
-				newInterview.setInterviewers(authors)
+                        if authors == '':
+                                key = "interview_title"+str(counter)
+                                if self.form.has_key(key):
+                                        self.error = "Interviews must specify at least one interviewer. Title=%s" % (self.form[key].value)
+                                else:
+                                        self.error = "Interviews must specify at least one interviewer"
+                                return
+                        else:
+                                newInterview.setInterviewers(authors)
 
-			if oldInterview:
-				interviewers = SQLTitleAuthors(newInterview.id)
-				newinterviewers = ''
-				count = 1
-				for interviewer in interviewers:
-					if count == 1:
-						newinterviewers += interviewer
-					else:
-						newinterviewers += '+'+interviewer
-					count += 1
-				oldInterview.setInterviewers(newinterviewers)
+                        if oldInterview:
+                                interviewers = SQLTitleAuthors(newInterview.id)
+                                newinterviewers = ''
+                                count = 1
+                                for interviewer in interviewers:
+                                        if count == 1:
+                                                newinterviewers += interviewer
+                                        else:
+                                                newinterviewers += '+'+interviewer
+                                        count += 1
+                                oldInterview.setInterviewers(newinterviewers)
 
-			if oldInterview:
-				newInterview.setOldInterview(oldInterview)
-			self.pushInterview(newInterview)
-			counter += 1
+                        if oldInterview:
+                                newInterview.setOldInterview(oldInterview)
+                        self.pushInterview(newInterview)
+                        counter += 1
 
         def ValidatePageNumber(self, page_number, counter, title_type):
                 # Duplicate of the Javascript check in case Javascript is disabled in the browser
@@ -2012,14 +2012,14 @@ class pubBody():
         def _build_image(self):
                 if not self.pub.pub_image:
                         return
-		self.body += '<table>'
-		self.body += '<tr class="scan">'
-		self.body += '<td>'
-		self.pub.pub_image = ISFDBHostCorrection(self.pub.pub_image)
+                self.body += '<table>'
+                self.body += '<tr class="scan">'
+                self.body += '<td>'
+                self.pub.pub_image = ISFDBHostCorrection(self.pub.pub_image)
                 image = self.pub.pub_image.split("|")[0]
-		self.body += '<a href="%s"><img src="%s" ' % (image, image)
-		self.body += 'alt="picture" class="scan"></a></td>'
-		self.body += '<td class="pubheader">'
+                self.body += '<a href="%s"><img src="%s" ' % (image, image)
+                self.body += 'alt="picture" class="scan"></a></td>'
+                self.body += '<td class="pubheader">'
 
         def _build_pub_title_line(self):
                 self.body += '<ul>'

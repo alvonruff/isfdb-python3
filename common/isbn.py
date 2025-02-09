@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2007-2024   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,8 +18,8 @@ from SQLparsing import *
 ######################################################################
 def convertISBN(isbn):
 
-	if not validISBN(isbn):
-		return isbn
+        if not validISBN(isbn):
+                return isbn
 
         stripped_isbn = isbn.replace('-','').replace(' ','')
         checksum = stripped_isbn[-1:]
@@ -59,7 +59,7 @@ def convertISBN(isbn):
                                                   stripped_isbn[prefix_length:prefix_length + publisher_length],
                                                   stripped_isbn[prefix_length + publisher_length: 9],
                                                   checksum)
-	return formatted_isbn
+        return formatted_isbn
 
 def isbnVariations(original):
         ######################################################################
@@ -70,8 +70,8 @@ def isbnVariations(original):
         #   - The hyphenated forms of the ISBN-10 and the ISBN-13
         #   - The unhyphenated forms of the ISBN-10 and the ISBN-13
         ######################################################################
-	variations = []
-	if original:
+        variations = []
+        if original:
                 original = string.replace(original, 'x', 'X')
                 # Always original
                 variations.append(original)
@@ -94,7 +94,7 @@ def isbnVariations(original):
                                 otherISBN = toISBN10(collapsedOrig)
                         variations.append(otherISBN)
                         variations.append(convertISBN(otherISBN))
-	return variations
+        return variations
 
 def ISBNValidFormat(isbn):
         # Returns 1 if the passed parameter follows the standard ISBN format, 0 otherwise
@@ -113,12 +113,12 @@ def ISBNValidFormat(isbn):
                         pass
                 else:
                         return 0
-		counter += 1
+                counter += 1
 
-	if isbn[len(isbn)-1] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'X']:
-		pass
-	else:
-		return 0
+        if isbn[len(isbn)-1] in ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'X']:
+                pass
+        else:
+                return 0
         return 1
 
 def ISBNlength(isbn):
@@ -127,37 +127,37 @@ def ISBNlength(isbn):
         return len(stripped_isbn)
 
 def validISBN13(isbn):
-	isbn = string.replace(isbn, '-', '')
-	isbn = string.replace(isbn, ' ', '')
-	if len(isbn) != 13:
-		return 0
+        isbn = string.replace(isbn, '-', '')
+        isbn = string.replace(isbn, ' ', '')
+        if len(isbn) != 13:
+                return 0
 
-	if not isbn.startswith('978') and not isbn.startswith('979'):
+        if not isbn.startswith('978') and not isbn.startswith('979'):
                 return 0
 
         try:
                 testInt = int(isbn[0:12])
-		newISBN = isbn[0:12]
+                newISBN = isbn[0:12]
         except:
                 return 0
 
-	sum1 = int(newISBN[0]) + int(newISBN[2]) + int(newISBN[4]) + int(newISBN[6]) + int(newISBN[8]) + int(newISBN[10])
-	sum2 = int(newISBN[1]) + int(newISBN[3]) + int(newISBN[5]) + int(newISBN[7]) + int(newISBN[9]) + int(newISBN[11])
-	checksum = sum1 + (sum2 * 3)
-	remainder = checksum - ((checksum/10)*10)
-	if remainder:
-		remainder = 10 - remainder
-	newISBN = newISBN + str(remainder)
-	if isbn == newISBN:
-		return 1
-	else:
-		return 0
+        sum1 = int(newISBN[0]) + int(newISBN[2]) + int(newISBN[4]) + int(newISBN[6]) + int(newISBN[8]) + int(newISBN[10])
+        sum2 = int(newISBN[1]) + int(newISBN[3]) + int(newISBN[5]) + int(newISBN[7]) + int(newISBN[9]) + int(newISBN[11])
+        checksum = sum1 + (sum2 * 3)
+        remainder = checksum - ((checksum/10)*10)
+        if remainder:
+                remainder = 10 - remainder
+        newISBN = newISBN + str(remainder)
+        if isbn == newISBN:
+                return 1
+        else:
+                return 0
 
 def validISBN(isbn):
-	isbn = string.replace(isbn, '-', '')
-	isbn = string.replace(isbn, ' ', '')
-	if len(isbn) != 10:
-		return validISBN13(isbn)
+        isbn = string.replace(isbn, '-', '')
+        isbn = string.replace(isbn, ' ', '')
+        if len(isbn) != 10:
+                return validISBN13(isbn)
 
         # Look for non-integer catalog numbers
         try:
@@ -165,14 +165,14 @@ def validISBN(isbn):
         except:
                 return 0
 
-	counter = 0
-	sum = 0
-	mult = 1
-	while counter < 9:
-		sum += (mult * int(isbn[counter]))
-		mult += 1
-		counter += 1
-	remain = sum % 11
+        counter = 0
+        sum = 0
+        mult = 1
+        while counter < 9:
+                sum += (mult * int(isbn[counter]))
+                mult += 1
+                counter += 1
+        remain = sum % 11
         if remain == 10:
                 if isbn[9] != 'X':
                         return 0
@@ -186,39 +186,39 @@ def validISBN(isbn):
         return 1
 
 def toISBN10(isbn13):
-	if len(isbn13) != 13:
-		return isbn13
-	isbn = isbn13[3:12]
-	counter = 0
-	sum = 0
-	mult = 1
-	try:
-		while counter < 9:
-			sum += (mult * int(isbn[counter]))
-			mult += 1
-			counter += 1
-		remain = sum % 11
-		if remain == 10:
-			isbn = isbn + 'X'
-		else:
-			isbn = isbn + str(remain)
-		return isbn
-	except:
-		return isbn13
+        if len(isbn13) != 13:
+                return isbn13
+        isbn = isbn13[3:12]
+        counter = 0
+        sum = 0
+        mult = 1
+        try:
+                while counter < 9:
+                        sum += (mult * int(isbn[counter]))
+                        mult += 1
+                        counter += 1
+                remain = sum % 11
+                if remain == 10:
+                        isbn = isbn + 'X'
+                else:
+                        isbn = isbn + str(remain)
+                return isbn
+        except:
+                return isbn13
 
 def toISBN13(isbn):
-	if len(isbn) != 10:
-		return isbn
-	newISBN = '978' + isbn[0:9]
+        if len(isbn) != 10:
+                return isbn
+        newISBN = '978' + isbn[0:9]
 
-	try:
-		sum1 = int(newISBN[0]) + int(newISBN[2]) + int(newISBN[4]) + int(newISBN[6]) + int(newISBN[8]) + int(newISBN[10])
-		sum2 = int(newISBN[1]) + int(newISBN[3]) + int(newISBN[5]) + int(newISBN[7]) + int(newISBN[9]) + int(newISBN[11])
-		checksum = sum1 + (sum2 * 3)
-		remainder = checksum - ((checksum/10)*10)
-		if remainder:
-			remainder = 10 - remainder
-		newISBN = newISBN + str(remainder)
-		return newISBN
-	except:
-		return isbn
+        try:
+                sum1 = int(newISBN[0]) + int(newISBN[2]) + int(newISBN[4]) + int(newISBN[6]) + int(newISBN[8]) + int(newISBN[10])
+                sum2 = int(newISBN[1]) + int(newISBN[3]) + int(newISBN[5]) + int(newISBN[7]) + int(newISBN[9]) + int(newISBN[11])
+                checksum = sum1 + (sum2 * 3)
+                remainder = checksum - ((checksum/10)*10)
+                if remainder:
+                        remainder = 10 - remainder
+                newISBN = newISBN + str(remainder)
+                return newISBN
+        except:
+                return isbn

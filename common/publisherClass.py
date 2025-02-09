@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2008-2023   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,33 +20,33 @@ from xml.dom import Node
 
 
 class publishers:
-	def __init__(self, db):
-		self.db = db
-		self.used_id = 0
-		self.used_name = 0
-		self.used_trans_names = 0
-		self.used_webpages = 0
-		self.used_note = 0
+        def __init__(self, db):
+                self.db = db
+                self.used_id = 0
+                self.used_name = 0
+                self.used_trans_names = 0
+                self.used_webpages = 0
+                self.used_note = 0
 
                 self.publisher_id = ''
-		self.publisher_name = ''
-		self.publisher_trans_names = []
-		self.publisher_note = ''
-		self.publisher_note_id = ''
-		self.publisher_webpages = []
+                self.publisher_name = ''
+                self.publisher_trans_names = []
+                self.publisher_note = ''
+                self.publisher_note_id = ''
+                self.publisher_webpages = []
 
-		self.error = ''
+                self.error = ''
 
-	def load(self, id):
+        def load(self, id):
                 record = SQLGetPublisher(id)
-		if record:
-			if record[PUBLISHER_ID]:
-				self.publisher_id = record[PUBLISHER_ID]
-				self.used_id = 1
-				
-			if record[PUBLISHER_NAME]:
-				self.publisher_name = record[PUBLISHER_NAME]
-				self.used_name = 1
+                if record:
+                        if record[PUBLISHER_ID]:
+                                self.publisher_id = record[PUBLISHER_ID]
+                                self.used_id = 1
+                                
+                        if record[PUBLISHER_NAME]:
+                                self.publisher_name = record[PUBLISHER_NAME]
+                                self.used_name = 1
 
                         res2 = SQLloadTransPublisherNames(record[PUBLISHER_ID])
                         if res2:
@@ -58,65 +58,65 @@ class publishers:
                                 if note:
                                         self.publisher_note_id = record[PUBLISHER_NOTE]
                                         self.publisher_note = note
-					self.used_note = 1
+                                        self.used_note = 1
 
                         self.publisher_webpages = SQLloadPublisherWebpages(record[PUBLISHER_ID])
                         if self.publisher_webpages:
                                 self.used_webpages = 1
-		else:
-			self.error = 'Publisher record not found'
-			return
+                else:
+                        self.error = 'Publisher record not found'
+                        return
 
-	def obj2xml(self):
-		if self.used_id:
-			container = "<UpdatePublisher>\n"
-			container += "  <PublisherId>%s</PublisherId>\n" % (self.publisher_id)
-			if self.used_name:
-				container += "  <PublisherName>%s</PublisherName>\n" % \
-						(self.publisher_name)
-			if self.used_webpages:
-				container += "  <PublisherWebpages>%s</PublisherWebpages>\n" % \
-						(self.publisher_webpages)
-			container += "</UpdatePublisher>\n"
-		else:
-			print "XML: pass"
-			container = ""
-		return container
-
-
-	def xml2obj(self, xml):
-		doc = minidom.parseString(xml)
-		metadata = doc.getElementsByTagName('UpdatePublisher')
-		if metadata == 0:
-			metadata = doc.getElementsByTagName('NewPublisher')
-		if metadata == 0:
-			return
-
-		elem = GetElementValue(metadata, 'PublisherName')
-		if elem:
-			self.used_name = 1
-			self.publisher_name = elem
-
-		elem = GetElementValue(metadata, 'PublisherWebpages')
-		if elem:
-			self.used_webpages = 1
-			self.publisher_webpages = elem
+        def obj2xml(self):
+                if self.used_id:
+                        container = "<UpdatePublisher>\n"
+                        container += "  <PublisherId>%s</PublisherId>\n" % (self.publisher_id)
+                        if self.used_name:
+                                container += "  <PublisherName>%s</PublisherName>\n" % \
+                                                (self.publisher_name)
+                        if self.used_webpages:
+                                container += "  <PublisherWebpages>%s</PublisherWebpages>\n" % \
+                                                (self.publisher_webpages)
+                        container += "</UpdatePublisher>\n"
+                else:
+                        print "XML: pass"
+                        container = ""
+                return container
 
 
-	def cgi2obj(self):
+        def xml2obj(self, xml):
+                doc = minidom.parseString(xml)
+                metadata = doc.getElementsByTagName('UpdatePublisher')
+                if metadata == 0:
+                        metadata = doc.getElementsByTagName('NewPublisher')
+                if metadata == 0:
+                        return
+
+                elem = GetElementValue(metadata, 'PublisherName')
+                if elem:
+                        self.used_name = 1
+                        self.publisher_name = elem
+
+                elem = GetElementValue(metadata, 'PublisherWebpages')
+                if elem:
+                        self.used_webpages = 1
+                        self.publisher_webpages = elem
+
+
+        def cgi2obj(self):
                 from login import User
-		self.form = cgi.FieldStorage()
+                self.form = cgi.FieldStorage()
                 try:
                         self.publisher_id = str(int(self.form['publisher_id'].value))
                         self.used_id = 1
                 except:
                         self.error = "Publisher ID must be an integer number"
                         return
-		try:
-			self.publisher_name = XMLescape(self.form['publisher_name'].value)
-			self.used_name = 1
-			unescaped_name = XMLunescape(self.publisher_name)
-			if not self.publisher_name:
+                try:
+                        self.publisher_name = XMLescape(self.form['publisher_name'].value)
+                        self.used_name = 1
+                        unescaped_name = XMLunescape(self.publisher_name)
+                        if not self.publisher_name:
                                 raise
                 except:
                         self.error = 'Publisher name is required'
@@ -141,19 +141,19 @@ class publishers:
                                 self.error = "Publisher '%s' already exists" % current_publisher[0][PUBLISHER_NAME]
                                 return
 
-      		for key in self.form:
+                for key in self.form:
                         if 'trans_publisher_names' in key:
                                 value = XMLescape(self.form[key].value)
                                 if value:
                                         self.publisher_trans_names.append(value)
                                         self.used_trans_names = 1
 
-		if self.form.has_key('publisher_note'):
-			self.publisher_note = XMLescape(self.form['publisher_note'].value)
-			self.used_note = 1
+                if self.form.has_key('publisher_note'):
+                        self.publisher_note = XMLescape(self.form['publisher_note'].value)
+                        self.used_note = 1
 
-		counter = 1
-		for key in self.form:
+                counter = 1
+                for key in self.form:
                         if key[:18] == 'publisher_webpages':
                                 value = XMLescape(self.form[key].value)
                                 if value:

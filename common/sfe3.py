@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2009-2024   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -158,7 +158,7 @@ class Sfe3:
                         self.print_record(unresolved_url)
                         self.bgcolor ^= 1
                         self.count += 1
-		print '</table>'
+                print '</table>'
 
         def load_moderator_flag(self):
                 from login import User

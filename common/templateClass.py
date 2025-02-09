@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -57,20 +57,20 @@ class Template():
                         self.used_mouseover = 1
 
         def cgi2obj(self):
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('template_id'):
-			self.id = int(self.form['template_id'].value)
-			self.used_id = 1
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('template_id'):
+                        self.id = int(self.form['template_id'].value)
+                        self.used_id = 1
                         if not SQLGetTemplate(self.id):
                                 self.error = 'This Template ID is not on file'
                                 return
 
-		if self.form.has_key('template_name'):
+                if self.form.has_key('template_name'):
                         self.name = XMLescape(self.form['template_name'].value)
                         self.used_name = 1
-		else:
+                else:
                         self.error = "Template name is a required field"
-			return
+                        return
 
                 # Unescape the name to ensure that the lookup finds it in the database
                 current_template = SQLGetTemplateByName(XMLunescape(self.name))

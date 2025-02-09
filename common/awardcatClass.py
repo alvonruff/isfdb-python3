@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2013-2021   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,26 +19,26 @@ from awardClass import awardShared
 
 
 class award_cat(awardShared):
-	def __init__(self):
+        def __init__(self):
                 self.used_cat_id = 0
                 self.used_cat_name = 0
                 self.used_cat_type_id = 0
                 self.used_cat_order = 0
-		self.used_note = 0
-		self.used_note_id = 0
-		self.used_webpages = 0
+                self.used_note = 0
+                self.used_note_id = 0
+                self.used_webpages = 0
 
-		self.award_cat_id = ''
-		self.award_cat_name = ''
-		self.award_cat_type_id = ''
-		self.award_cat_order = ''
-		self.award_cat_note_id = ''
-		self.award_cat_note = ''
-		self.award_cat_webpages = []
+                self.award_cat_id = ''
+                self.award_cat_name = ''
+                self.award_cat_type_id = ''
+                self.award_cat_order = ''
+                self.award_cat_note_id = ''
+                self.award_cat_note = ''
+                self.award_cat_webpages = []
 
-		self.error = ''
+                self.error = ''
 
-	def load(self):
+        def load(self):
                 if not self.award_cat_id:
                         return
                 award_cat = SQLGetAwardCatById(self.award_cat_id)
@@ -69,24 +69,24 @@ class award_cat(awardShared):
                 if self.award_cat_webpages:
                         self.used_webpages = 1
 
-	def cgi2obj(self):
-		sys.stderr = sys.stdout
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('award_cat_id'):
-			self.award_cat_id = int(self.form['award_cat_id'].value)
-			self.used_cat_id = 1
+        def cgi2obj(self):
+                sys.stderr = sys.stdout
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('award_cat_id'):
+                        self.award_cat_id = int(self.form['award_cat_id'].value)
+                        self.used_cat_id = 1
 
-		try:
-			self.award_cat_type_id = int(self.form['award_cat_type_id'].value)
-			self.used_cat_type_id = 1
-			award_type = SQLGetAwardTypeById(self.award_cat_type_id)
-			if not award_type:
+                try:
+                        self.award_cat_type_id = int(self.form['award_cat_type_id'].value)
+                        self.used_cat_type_id = 1
+                        award_type = SQLGetAwardTypeById(self.award_cat_type_id)
+                        if not award_type:
                                 raise
-		except:
+                except:
                         self.error = 'Valid award type is required for award categories'
                         return
 
-		try:
+                try:
                         self.award_cat_name = XMLescape(self.form['award_cat_name'].value)
                         self.used_cat_name = 1
                         if not self.award_cat_name:
@@ -97,24 +97,24 @@ class award_cat(awardShared):
                                 if (self.award_cat_type_id == int(current_award_cat[AWARD_CAT_TYPE_ID])) and (self.award_cat_id != int(current_award_cat[AWARD_CAT_ID])):
                                         self.error = "Entered award category name is aready associated with category '%s' for this award type" % current_award_cat[AWARD_CAT_NAME]
                                         return
-		except:
+                except:
                         self.error = 'Award category name is required'
                         return
 
-		if self.form.has_key('award_cat_order'):
-			self.award_cat_order = XMLescape(self.form['award_cat_order'].value)
-			self.used_cat_order = 1
+                if self.form.has_key('award_cat_order'):
+                        self.award_cat_order = XMLescape(self.form['award_cat_order'].value)
+                        self.used_cat_order = 1
                         if not re.match(r'^[1-9]{1}[0-9]{0,8}$', self.award_cat_order):
                                 self.error = 'Display Order must be an integer greater than 0 and must contain 1-9 digits'
                                 return
 
-		if self.form.has_key('award_cat_note'):
+                if self.form.has_key('award_cat_note'):
                         value = XMLescape(self.form['award_cat_note'].value)
                         if value:
                                 self.award_cat_note = value
                                 self.used_note = 1
 
-		for key in self.form:
+                for key in self.form:
                         if key[:18] == 'award_cat_webpages':
                                 value = XMLescape(self.form[key].value)
                                 if value:
@@ -139,8 +139,8 @@ class award_cat(awardShared):
                 self.PrintAwardCatTable(years)
 
         def PrintAwardCatTable(self, years):
-        	print '<table>'
-        	for year in sorted(years.keys()):
+                print '<table>'
+                for year in sorted(years.keys()):
                         print '<tr>'
                         print '<td colspan=3> </td>'
                         print '</tr>'
@@ -148,7 +148,7 @@ class award_cat(awardShared):
                         print '<th colspan=3>%s</th>' % ISFDBLink('award_category_year.cgi', '%d+%s' % (self.award_cat_id, year[:4]), year[:4])
                         print '</tr>'
                         self.PrintOneAwardList(years[year])
-        	print '</table>'
+                print '</table>'
 
         def PrintAwardCatSummary(self, win_nom):
                 self.PrintAwardCatPageHeader()

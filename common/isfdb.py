@@ -353,9 +353,9 @@ AUTHOR_LASTNAME   = 13
 AUTHOR_LANGUAGE   = 14
 AUTHOR_NOTE       = 15
 # Pseudo offsets used by author history
-AUTHOR_EMAILS	  = 16
-AUTHOR_WEBPAGES	  = 17
-AUTHOR_TRANS_LEGALNAME	  = 18
+AUTHOR_EMAILS          = 16
+AUTHOR_WEBPAGES          = 17
+AUTHOR_TRANS_LEGALNAME          = 18
 AUTHOR_TRANS_NAME = 19
 AUTHOR_MAX        = 20 # Highest author offset+1; used to display author history
 
@@ -626,31 +626,31 @@ MOD_REC_DOMAIN_ADD   = 43
 # [5] - Name of the "viewers" function or method used to display the body of this submission type
 # [6] - Name of the filing script in the mod subdirectory
 SUBMAP = {
-  MOD_AUTHOR_MERGE :	 (1, 'AuthorMerge', 'ea.cgi', 'Author Merge', 'Record', 'DisplayAuthorMerge', 'aa_merge'),
-  MOD_AUTHOR_UPDATE :	 (1, 'AuthorUpdate', 'ea.cgi', 'Author Update', 'Record', 'DisplayAuthorChanges', 'aa_update'),
-  MOD_AUTHOR_DELETE :	 (1, 'AuthorDelete', None, None, 'Record'), # currently unused
-  MOD_PUB_UPDATE :	 (1, 'PubUpdate', 'pl.cgi', 'Publication Update', 'Record', 'DisplayEditPub', 'pa_update'),
-  MOD_PUB_DELETE :	 (1, 'PubDelete', 'pl.cgi', 'Publication Delete', 'Record', 'DisplayDeletePub', 'pa_delete'),
-  MOD_PUB_NEW :		 (1, 'NewPub', 'pl.cgi', 'New Publication', 'Record', 'DisplayNewPub', 'pa_new'),
-  MOD_TITLE_UPDATE :	 (1, 'TitleUpdate', 'title.cgi', 'Title Update', 'Record', 'DisplayTitleEdit', 'ta_update'),
-  MOD_TITLE_MERGE :	 (1, 'TitleMerge', 'title.cgi', 'Title Merge', 'Record', 'DisplayMergeTitles', 'ta_merge'),
-  MOD_TITLE_DELETE :	 (1, 'TitleDelete', 'title.cgi', 'Title Delete', 'Record', 'DisplayTitleDelete', 'ta_delete'),
-  MOD_TITLE_NEW :	 (1, 'TitleNew', None, None, 'Record'), #currently unused, but referenced in submittitle
-  MOD_TITLE_UNMERGE :	 (1, 'TitleUnmerge', 'title.cgi', 'Title Unmerge', 'Record', 'DisplayUnmergeTitle', 'ta_unmerge'),
-  MOD_SERIES_UPDATE :	 (1, 'SeriesUpdate', 'pe.cgi', 'Series Update', 'Record', 'DisplaySeriesChanges', 'sa_update'),
-  MOD_CONTENT_UPDATE :	 (1, 'ContentUpdate', None, None, 'Record'), #currently unused
-  MOD_VARIANT_TITLE:	 (1, 'VariantTitle', 'title.cgi', 'Add Variant Title', 'Record', 'DisplayAddVariant', 'va_new'),
-  MOD_TITLE_MKVARIANT:	 (1, 'MakeVariant', 'title.cgi', 'Make Variant Title', 'Record', 'DisplayMakeVariant', 'ka_new'),
-  MOD_RMTITLE:		 (1, 'TitleRemove', 'pl.cgi', 'Remove Title', 'Record', 'DisplayRemoveTitle', 'ta_remove'),
-  MOD_PUB_CLONE :	 (1, 'NewPub', 'pl.cgi', 'Clone Publication', 'Record', 'DisplayClonePublication', 'ca_new'),
-  MOD_AUTHOR_PSEUDO :	 (1, 'MakePseudonym', 'ea.cgi', 'Create Alternate Name', 'Record', 'DisplayMakePseudonym', 'ya_new'),
-  MOD_AWARD_NEW :	 (1, 'NewAward', 'award_details.cgi', 'New Award', 'Record', 'DisplayNewAward', 'wa_new'),
-  MOD_AWARD_UPDATE :	 (1, 'AwardUpdate', 'award_details.cgi', 'Award Update', 'Record', 'DisplayAwardEdit', 'wa_update'),
-  MOD_AWARD_DELETE :	 (1, 'AwardDelete', None, 'Award Delete', 'Record', 'DisplayAwardDelete', 'wa_delete'),
+  MOD_AUTHOR_MERGE :         (1, 'AuthorMerge', 'ea.cgi', 'Author Merge', 'Record', 'DisplayAuthorMerge', 'aa_merge'),
+  MOD_AUTHOR_UPDATE :         (1, 'AuthorUpdate', 'ea.cgi', 'Author Update', 'Record', 'DisplayAuthorChanges', 'aa_update'),
+  MOD_AUTHOR_DELETE :         (1, 'AuthorDelete', None, None, 'Record'), # currently unused
+  MOD_PUB_UPDATE :         (1, 'PubUpdate', 'pl.cgi', 'Publication Update', 'Record', 'DisplayEditPub', 'pa_update'),
+  MOD_PUB_DELETE :         (1, 'PubDelete', 'pl.cgi', 'Publication Delete', 'Record', 'DisplayDeletePub', 'pa_delete'),
+  MOD_PUB_NEW :                 (1, 'NewPub', 'pl.cgi', 'New Publication', 'Record', 'DisplayNewPub', 'pa_new'),
+  MOD_TITLE_UPDATE :         (1, 'TitleUpdate', 'title.cgi', 'Title Update', 'Record', 'DisplayTitleEdit', 'ta_update'),
+  MOD_TITLE_MERGE :         (1, 'TitleMerge', 'title.cgi', 'Title Merge', 'Record', 'DisplayMergeTitles', 'ta_merge'),
+  MOD_TITLE_DELETE :         (1, 'TitleDelete', 'title.cgi', 'Title Delete', 'Record', 'DisplayTitleDelete', 'ta_delete'),
+  MOD_TITLE_NEW :         (1, 'TitleNew', None, None, 'Record'), #currently unused, but referenced in submittitle
+  MOD_TITLE_UNMERGE :         (1, 'TitleUnmerge', 'title.cgi', 'Title Unmerge', 'Record', 'DisplayUnmergeTitle', 'ta_unmerge'),
+  MOD_SERIES_UPDATE :         (1, 'SeriesUpdate', 'pe.cgi', 'Series Update', 'Record', 'DisplaySeriesChanges', 'sa_update'),
+  MOD_CONTENT_UPDATE :         (1, 'ContentUpdate', None, None, 'Record'), #currently unused
+  MOD_VARIANT_TITLE:         (1, 'VariantTitle', 'title.cgi', 'Add Variant Title', 'Record', 'DisplayAddVariant', 'va_new'),
+  MOD_TITLE_MKVARIANT:         (1, 'MakeVariant', 'title.cgi', 'Make Variant Title', 'Record', 'DisplayMakeVariant', 'ka_new'),
+  MOD_RMTITLE:                 (1, 'TitleRemove', 'pl.cgi', 'Remove Title', 'Record', 'DisplayRemoveTitle', 'ta_remove'),
+  MOD_PUB_CLONE :         (1, 'NewPub', 'pl.cgi', 'Clone Publication', 'Record', 'DisplayClonePublication', 'ca_new'),
+  MOD_AUTHOR_PSEUDO :         (1, 'MakePseudonym', 'ea.cgi', 'Create Alternate Name', 'Record', 'DisplayMakePseudonym', 'ya_new'),
+  MOD_AWARD_NEW :         (1, 'NewAward', 'award_details.cgi', 'New Award', 'Record', 'DisplayNewAward', 'wa_new'),
+  MOD_AWARD_UPDATE :         (1, 'AwardUpdate', 'award_details.cgi', 'Award Update', 'Record', 'DisplayAwardEdit', 'wa_update'),
+  MOD_AWARD_DELETE :         (1, 'AwardDelete', None, 'Award Delete', 'Record', 'DisplayAwardDelete', 'wa_delete'),
   MOD_PUBLISHER_UPDATE : (1, 'PublisherUpdate', 'publisher.cgi', 'Publisher Update', 'Record', 'DisplayPublisherChanges', 'xa_update'),
-  MOD_PUBLISHER_MERGE :	 (1, 'PublisherMerge', 'publisher.cgi', 'Publisher Merge', 'Record', 'DisplayPublisherMerge', 'ua_merge'),
-  MOD_REVIEW_LINK :	 (1, 'LinkReview', 'title.cgi', 'Link Review', 'Record', 'DisplayLinkReview', 'ra_link'),
-  MOD_DELETE_SERIES :	 (1, 'SeriesDelete', None, 'Delete Series', 'Record', 'DisplaySeriesDelete', 'sa_delete'),
+  MOD_PUBLISHER_MERGE :         (1, 'PublisherMerge', 'publisher.cgi', 'Publisher Merge', 'Record', 'DisplayPublisherMerge', 'ua_merge'),
+  MOD_REVIEW_LINK :         (1, 'LinkReview', 'title.cgi', 'Link Review', 'Record', 'DisplayLinkReview', 'ra_link'),
+  MOD_DELETE_SERIES :         (1, 'SeriesDelete', None, 'Delete Series', 'Record', 'DisplaySeriesDelete', 'sa_delete'),
   MOD_REMOVE_PSEUDO :    (1, 'RemovePseud', 'ea.cgi', 'Remove Alternate Name', 'Record', 'DisplayRemovePseudonym', 'ya_remove'),
   MOD_PUB_SERIES_UPDATE: (1, 'PubSeriesUpdate', 'pubseries.cgi', 'Publication Series Update', 'Record', 'DisplayPubSeriesChanges', 'za_update'),
   MOD_AWARD_TYPE_UPDATE: (1, 'AwardTypeUpdate', 'awardtype.cgi', 'Award Type Update', 'Record', 'DisplayEditAwardType', 'award_type_update_file'),

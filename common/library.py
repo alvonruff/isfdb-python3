@@ -130,58 +130,58 @@ def ISFDBnormalizeDate(date):
         return date
 
 def ISFDBconvertForthcoming(theDate):
-	year  = theDate[0:4]
-	month = int(theDate[5:7])
-	day   = theDate[8:10]
-	if month:
-		if int(day):
-			datestr = "%s %s %s" % (ISFDBmonthmap[month], day, year)
-		else:
-			datestr = "%s %s" % (ISFDBmonthmap[month], year)
-	else:
-		datestr = year
-	return datestr
+        year  = theDate[0:4]
+        month = int(theDate[5:7])
+        day   = theDate[8:10]
+        if month:
+                if int(day):
+                        datestr = "%s %s %s" % (ISFDBmonthmap[month], day, year)
+                else:
+                        datestr = "%s %s" % (ISFDBmonthmap[month], year)
+        else:
+                datestr = year
+        return datestr
 
 def ISFDBconvertYear(date):
         if not date:
                 date = '0000'
         year = str(date)[:4]
-	if year == '0000':
-		yearstr = 'unknown'
-	elif year == '8888':
-		yearstr = ISFDBunpublishedDate()
-	elif year == '9999':
-		yearstr = 'forthcoming'
-	else:
-		yearstr = year
-	return yearstr
+        if year == '0000':
+                yearstr = 'unknown'
+        elif year == '8888':
+                yearstr = ISFDBunpublishedDate()
+        elif year == '9999':
+                yearstr = 'forthcoming'
+        else:
+                yearstr = year
+        return yearstr
 
 def ISFDBunpublishedDate():
         return 'unpublished'
 
 def ISFDBconvertDate(theDate, precise = 0):
-	try:
-		if theDate == '0000-00-00':
-			datestr = 'date unknown'
-		elif theDate == '8888-00-00':
-			datestr = ISFDBunpublishedDate()
-		elif theDate == '9999-00-00':
-			datestr = 'forthcoming'
-		elif precise:
+        try:
+                if theDate == '0000-00-00':
+                        datestr = 'date unknown'
+                elif theDate == '8888-00-00':
+                        datestr = ISFDBunpublishedDate()
+                elif theDate == '9999-00-00':
+                        datestr = 'forthcoming'
+                elif precise:
                         datestr = theDate
-		else:
-			month = string.split(theDate, "-")[1]
-			if month:
-				try:
-					strmonth = ISFDBmonthmap[int(month)]
-					datestr = "%s %s" % (strmonth, theDate[:4])
-				except:
-					datestr = theDate[:4]
-			else:
-				datestr = theDate[:4]
-	except:
-		datestr = ''
-	return datestr
+                else:
+                        month = string.split(theDate, "-")[1]
+                        if month:
+                                try:
+                                        strmonth = ISFDBmonthmap[int(month)]
+                                        datestr = "%s %s" % (strmonth, theDate[:4])
+                                except:
+                                        datestr = theDate[:4]
+                        else:
+                                datestr = theDate[:4]
+        except:
+                datestr = ''
+        return datestr
 
 
 ##########################################################################
@@ -242,47 +242,47 @@ def ISFDBCompare2Dates(date1, date2):
 # particular XML tag.
 ##############################################
 def GetElementValue(element, tag):
-	document = element[0].getElementsByTagName(tag)
-	try:
-		value = document[0].firstChild.data.encode('iso-8859-1')
-	except:
-		value = ''
-	return value
+        document = element[0].getElementsByTagName(tag)
+        try:
+                value = document[0].firstChild.data.encode('iso-8859-1')
+        except:
+                value = ''
+        return value
 
 def GetChildValue(doc, label):
-	try:
-		tag = doc.getElementsByTagName(label)[0]
-		value = tag.firstChild.data.encode('iso-8859-1')
-	except:
-		value = ''
-	return value
+        try:
+                tag = doc.getElementsByTagName(label)[0]
+                value = tag.firstChild.data.encode('iso-8859-1')
+        except:
+                value = ''
+        return value
 
 def XMLunescape(input, compliant = 0):
-	retval = string.replace(str(input), "&amp;", "&")
-	# If standards-compliant XML was requested, unescape &apos;.
-	# Internally we use HTML-specific &rsquo; instead (for now)
-	if compliant:
-        	retval = string.replace(retval, "&apos;", "'")
+        retval = string.replace(str(input), "&amp;", "&")
+        # If standards-compliant XML was requested, unescape &apos;.
+        # Internally we use HTML-specific &rsquo; instead (for now)
+        if compliant:
+                retval = string.replace(retval, "&apos;", "'")
         else:
                 retval = string.replace(retval, "&rsquo;", "'")
-	retval = string.replace(retval, "&quot;", '"')
-	retval = string.replace(retval, "&lt;", "<")
-	retval = string.replace(retval, "&gt;", ">")
+        retval = string.replace(retval, "&quot;", '"')
+        retval = string.replace(retval, "&lt;", "<")
+        retval = string.replace(retval, "&gt;", ">")
         retval = string.strip(retval)
         retval = string.rstrip(retval)
-	return retval
+        return retval
 
 def XMLunescape2(input):
-	# un-encode quotes
-	retval = string.replace(str(input), "&rsquo;", "'")
-	retval = string.replace(retval, "&quot;", '"')
-	# sometimes we get \r + \n, sometimes just \n.
-	# remove any \r instances.
-	retval = string.replace(retval, "\r", "")
-	# remove leading + trailing spaces
-	retval = string.strip(retval)
-	retval = string.rstrip(retval)
-	return retval
+        # un-encode quotes
+        retval = string.replace(str(input), "&rsquo;", "'")
+        retval = string.replace(retval, "&quot;", '"')
+        # sometimes we get \r + \n, sometimes just \n.
+        # remove any \r instances.
+        retval = string.replace(retval, "\r", "")
+        # remove leading + trailing spaces
+        retval = string.strip(retval)
+        retval = string.rstrip(retval)
+        return retval
 
 ##############################################
 # Determines whether or not a particular
@@ -307,9 +307,9 @@ def normalizeInput(retval):
         while ". . . ." in retval:
                 retval = retval.replace(". . . .", "....")
 
-	###################################################################################
+        ###################################################################################
         # Replace and/or remove various characters
-	###################################################################################
+        ###################################################################################
         replace_dict = {}
         for char in range(0,32):
                 # Do not replace carriage return and line feed since they are legal
@@ -321,7 +321,7 @@ def normalizeInput(retval):
                 # Remove all other control characters
                 else:
                         replace_dict[chr(char)] = ''
-	
+        
         # Replace double spaces with single spaces
         replace_dict['  '] = ' '
         # Replace ". . ." with "..."
@@ -345,14 +345,14 @@ def normalizeInput(retval):
         # available, otherwise decimally HTML-encoded Unicode equivalents
         replace_dict = ISFDBUnicodeTranslation()
         retval = replaceDict(retval, replace_dict)
-	return retval
+        return retval
 
 def replaceDict(retval, replace_dict):
-	# Perform the actual replacement
-	for key in replace_dict:
+        # Perform the actual replacement
+        for key in replace_dict:
                 while key in retval:
                         retval = retval.replace(key, replace_dict[key])
-	return retval
+        return retval
        
 
 ###################################################
@@ -365,32 +365,32 @@ def XMLescape(input, compliant = 0):
 
         retval = normalizeInput(input)
 
-	###########################################
-	# Replace the usual ASCII characters with
-	# their escaped equivalents for XML
-	###########################################
-	retval = string.replace(retval, "&", "&amp;")
-	# If standards-compliant XML was requested, use &apos;. Internally we use HTML-specific &rsquo; instead (for now)
-	if compliant:
-        	retval = string.replace(retval, "'", "&apos;")
+        ###########################################
+        # Replace the usual ASCII characters with
+        # their escaped equivalents for XML
+        ###########################################
+        retval = string.replace(retval, "&", "&amp;")
+        # If standards-compliant XML was requested, use &apos;. Internally we use HTML-specific &rsquo; instead (for now)
+        if compliant:
+                retval = string.replace(retval, "'", "&apos;")
         else:
                 retval = string.replace(retval, "'", "&rsquo;")
-	retval = string.replace(retval, '"', "&quot;")
-	retval = string.replace(retval, "<", "&lt;")
-	retval = string.replace(retval, ">", "&gt;")
+        retval = string.replace(retval, '"', "&quot;")
+        retval = string.replace(retval, "<", "&lt;")
+        retval = string.replace(retval, ">", "&gt;")
 
-	###########################################
-	# Sometimes we get \r + \n, sometimes just
-	# \n.  Remove all instances of \r.
-	###########################################
-	retval = string.replace(retval, "\r", "")
+        ###########################################
+        # Sometimes we get \r + \n, sometimes just
+        # \n.  Remove all instances of \r.
+        ###########################################
+        retval = string.replace(retval, "\r", "")
 
-	###########################################
-	# Strip off leading and trailing spaces
-	###########################################
-	retval = string.strip(retval)
-	retval = string.rstrip(retval)
-	return retval
+        ###########################################
+        # Strip off leading and trailing spaces
+        ###########################################
+        retval = string.strip(retval)
+        retval = string.rstrip(retval)
+        return retval
 
 def ISFDBHostCorrection(value, mode = 'start'):
         # Replace www.isfdb.org with the current host/Wiki location and adjust http/https
@@ -464,23 +464,23 @@ def ISFDBLink(script, record_id, displayed_value, brackets=False, argument='', t
                                                                separator, record_id,
                                                                ISFDBText(displayed_value))
         # Transliterated values
-	trans_values = None
-	# If a list of transliterated values was passed in and contains
-	# transliterated values for this record ID, display them
-	if transliterations is not None:
+        trans_values = None
+        # If a list of transliterated values was passed in and contains
+        # transliterated values for this record ID, display them
+        if transliterations is not None:
                 trans_values = transliterations.get(record_id, None)
         # If no transliterations were passed in, the record ID is numeric,
         # and the CGI script is associated with a data retrieval function,
         # use that function to retrieve transliterations
-	elif trans_function and str(record_id).isdigit():
+        elif trans_function and str(record_id).isdigit():
                 trans_values = trans_function(record_id)
         # If transliterated values have been found, add them to the link
         if trans_values:
                 link = ISFDBMouseover(mouseover_values = trans_values,
                                       display_value = link, tag = '', html_escape = False)
-	if brackets:
-		link = '[%s]' % link
-	return link
+        if brackets:
+                link = '[%s]' % link
+        return link
 
 def ISFDBText(text, escape_quotes = False):
         from cgi import escape
@@ -676,23 +676,23 @@ class AutoVivification(dict):
 
 def roman2int(roman):
         # Convert a roman numeral to regular integer format
-	conversion = { 'm':1000, 'd':500, 'c':100, 'l':50, 'x':10, 'v':5, 'i':1 }
-	sum = 0
-	roman = roman.lower()
-	for i in range(len(roman)):
-		if conversion.has_key(roman[i]):
-			value = conversion[roman[i]]
-		else:
-			return 0
-		if i < (len(roman)-1):
-			if conversion.has_key(roman[i+1]):
-				nextvalue = conversion[roman[i+1]]
-			else:
-				return 0
-			if nextvalue > value:
-				value *= -1
-		sum += value
-	return sum
+        conversion = { 'm':1000, 'd':500, 'c':100, 'l':50, 'x':10, 'v':5, 'i':1 }
+        sum = 0
+        roman = roman.lower()
+        for i in range(len(roman)):
+                if conversion.has_key(roman[i]):
+                        value = conversion[roman[i]]
+                else:
+                        return 0
+                if i < (len(roman)-1):
+                        if conversion.has_key(roman[i+1]):
+                                nextvalue = conversion[roman[i+1]]
+                        else:
+                                return 0
+                        if nextvalue > value:
+                                value *= -1
+                sum += value
+        return sum
 
 def ConvertPageNumber(page):
         # Returns a tuple with the following sorting information for one page number:
@@ -701,8 +701,8 @@ def ConvertPageNumber(page):
         #  3. decimal part of the page number
         # The page groups are:
         #    1 for "no page", 2 for "cover", 3 for "roman", 4 for "arabic", 5 for "back"
-	if not page:
-		return (1, 0, '')
+        if not page:
+                return (1, 0, '')
 
         # If the page value contains a "pipe" character (|), then everything before the pipe is
         # the display value and the everything after the pipe is the "sort" value
@@ -711,31 +711,31 @@ def ConvertPageNumber(page):
         if len(pipe_list) > 1:
                 page = pipe_list[1]
         # Re-check the page number now that it may have been repaced with the "sort" value
-	if not page:
-		return (1, 0, '')
+        if not page:
+                return (1, 0, '')
         
-	# If the first and last characters are square brackets, remove them
-	if page[0] == '[' and page[-1] == ']':
+        # If the first and last characters are square brackets, remove them
+        if page[0] == '[' and page[-1] == ']':
                 page = page[1:-1]
 
-	# "fc" means "front cover"
-	if page == 'fc':
+        # "fc" means "front cover"
+        if page == 'fc':
                 return (2, 1, '')
 
-	# "rj" means "reverse jacket", i.e. inside of the dust jacket
-	if page == 'rj':
+        # "rj" means "reverse jacket", i.e. inside of the dust jacket
+        if page == 'rj':
                 return (2, 2, '')
 
-	# "fep" means "front end paper" or inside front cover of a magazine
-	if page == 'fep':
+        # "fep" means "front end paper" or inside front cover of a magazine
+        if page == 'fep':
                 return (2, 3, '')
 
-	# "bp" means "unpaginated pages that precede pagination"
-	if page == 'bp':
+        # "bp" means "unpaginated pages that precede pagination"
+        if page == 'bp':
                 return (2, 4, '')
 
-	# "ep" means "unpaginated pages that follow pagination"
-	if page == 'ep':
+        # "ep" means "unpaginated pages that follow pagination"
+        if page == 'ep':
                 return (5, 1, '')
 
         # "bep" means "back end paper" or inside back cover of a magazine
@@ -756,25 +756,25 @@ def ConvertPageNumber(page):
                 decimal_part = ''
 
         # Check if the supposed integer part of the page number is really an integer
-	try:
-		integer_part = int(integer_part)
-		return (4, integer_part, decimal_part)
+        try:
+                integer_part = int(integer_part)
+                return (4, integer_part, decimal_part)
         except:
                 # If the supposed integer part is not an integer, check if it's a roman numeral
-		integer_part = roman2int(integer_part)
-		if integer_part:
-			return (3, integer_part, decimal_part)
-		# If it's neither an arabic numeral nor a roman numeral, then it is unrecognized, so we will display this page value first
-		else:
-			return (1, 0, decimal_part)
+                integer_part = roman2int(integer_part)
+                if integer_part:
+                        return (3, integer_part, decimal_part)
+                # If it's neither an arabic numeral nor a roman numeral, then it is unrecognized, so we will display this page value first
+                else:
+                        return (1, 0, decimal_part)
 
 
 def getPubContentList(pubid):
-	pub_content_list = SQLGetPubContentList(pubid)
-	sorted_list = []
-	alphabetical_position = 1
-	# Build a list of content items with "sort group" and "normalized page number" information
-	for pub_content_record in pub_content_list:
+        pub_content_list = SQLGetPubContentList(pubid)
+        sorted_list = []
+        alphabetical_position = 1
+        # Build a list of content items with "sort group" and "normalized page number" information
+        for pub_content_record in pub_content_list:
                 page = pub_content_record[PUB_CONTENTS_PAGE]
                 (group, normalized_page, decimal_part) = ConvertPageNumber(page)
                 sorted_list.append((group, normalized_page, decimal_part, alphabetical_position, pub_content_record))
@@ -785,16 +785,16 @@ def getPubContentList(pubid):
         result = []
         for content_item in sorted_list:
                 result.append(content_item[4])
-	return result
+        return result
 
 def getSortedTitlesInPub(pub_id):
         titles = SQLloadTitlesXBT(pub_id)
-	title_dict = {}
+        title_dict = {}
         for title in titles:
                 title_dict[title[TITLE_PUBID]] = title
         sorted_contents = getPubContentList(pub_id)
         new_titles = []
-	for content in sorted_contents:
+        for content in sorted_contents:
                 title_id = content[PUB_CONTENTS_TITLE]
                 # Check that the title ID retrieved from the table of contents titles
                 # is in the main list of titles for this pub in case of data corruption
@@ -884,20 +884,20 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
         retval = note
 
         # Remove all '<!--isfdb specific-->' strings which were used for magazine links in the past
-	retval = string.replace(retval, '<!--isfdb specific-->','')
-	list_of_brs = ('br', 'br/', 'br /', 'Br', 'Br/', 'Br /', 'BR', 'BR/', 'BR /')
-	# Replace double <br>s with <p> (which will be replaced with two newlines later)
-	for element in list_of_brs:
+        retval = string.replace(retval, '<!--isfdb specific-->','')
+        list_of_brs = ('br', 'br/', 'br /', 'Br', 'Br/', 'Br /', 'BR', 'BR/', 'BR /')
+        # Replace double <br>s with <p> (which will be replaced with two newlines later)
+        for element in list_of_brs:
                 double_element = '<' + element + '>' + '<' + element + '>'
                 while double_element in retval:
                         retval = string.replace(retval, double_element, '<p>')
-	# Replace HTML <br>s with regular carriage returns
-	for element in list_of_brs:
+        # Replace HTML <br>s with regular carriage returns
+        for element in list_of_brs:
                 enclosed_element = '<' + element + '>'
-        	retval = string.replace(retval, enclosed_element, '\n')
+                retval = string.replace(retval, enclosed_element, '\n')
 
-	# Convert all double carriage returns, which may have resulted from the <br> conversion above, into single carriage returns
-	while '\n\n' in retval:
+        # Convert all double carriage returns, which may have resulted from the <br> conversion above, into single carriage returns
+        while '\n\n' in retval:
                 retval = string.replace(retval, '\n\n', '\n')
 
         # Remove all carriage returns before and after <p> and <ul> to avoid creating additional displayed new lines
@@ -915,19 +915,19 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
                 retval = string.replace(retval, '\n' + enclosed_upper, enclosed_upper)
                 retval = string.replace(retval, enclosed_upper + '\n', enclosed_upper)
 
-	# Replace HTML <p>s with two regular carriage returns
-	retval = string.replace(retval, '<p>', '\n\n')
-	retval = string.replace(retval, '<P>', '\n\n')
+        # Replace HTML <p>s with two regular carriage returns
+        retval = string.replace(retval, '<p>', '\n\n')
+        retval = string.replace(retval, '<P>', '\n\n')
 
-	# Remove leading and trailing spaces (but not newlines)
-	retval = string.strip(retval, ' ')
+        # Remove leading and trailing spaces (but not newlines)
+        retval = string.strip(retval, ' ')
 
         if div:
                 if note_type:
                         retval = '<div class="notes"><b>%s:</b> %s</div>' % (note_type, retval)
                 else:
                         retval = '<div class="notes">%s</div>' % (retval)
-	return retval
+        return retval
 
 def ISFDBLocalRedirect(script):
         location = '%s:/%s/%s' % (PROTOCOL, HTFAKE, script)
@@ -940,25 +940,25 @@ def _ServerSideRedirect(location):
         print 'Status: 303 See Other'
         print 'Location: %s' % location
         print 'Content-type: text/html; charset=%s\n' % (UNICODE)
-	print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
-	print '<html lang="en-us">'
-	print '<body>'
-	print '</body>'
-	sys.exit(0)
+        print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
+        print '<html lang="en-us">'
+        print '<body>'
+        print '</body>'
+        sys.exit(0)
 
 def ISFDBFormatAllAuthors(title_id, prefix = '', suffix = ''):
-	authors = SQLTitleBriefAuthorRecords(title_id)
-	return '%s%s%s' % (prefix, FormatAuthors(authors), suffix)
+        authors = SQLTitleBriefAuthorRecords(title_id)
+        return '%s%s%s' % (prefix, FormatAuthors(authors), suffix)
 
 def FormatAuthors(authors):
         counter = 0
-	output = ''
+        output = ''
         for author in authors:
                 if counter:
                         output += " <b>and</b> "
-		output += ISFDBLink('ea.cgi', author[0], author[1])
+                output += ISFDBLink('ea.cgi', author[0], author[1])
                 counter += 1
-	return output
+        return output
 
 def AwardLevelDescription(award_level, award_id):
         # Load the award type record for this award
@@ -1385,10 +1385,10 @@ def invalidURLcharacters(url, field_name, escaped_flag):
 def WikiExists():
         query = """select count(*) from information_schema.tables
                 where table_schema = 'isfdb' and table_name = 'mw_page'"""
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	if record[0][0]:
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        if record[0][0]:
                 return 1
         else:
                 return 0
@@ -1530,18 +1530,18 @@ def ISFDBprintSubmissionTable(result, status):
         
         print '</tr>'
         record = result.fetch_row()
-	color = 0
-	while record:
-		ISFDBprintSubmissionRecord(record, color, status, unreject)
-		color = color ^ 1
-        	record = result.fetch_row()
-	print '</table>'
+        color = 0
+        while record:
+                ISFDBprintSubmissionRecord(record, color, status, unreject)
+                color = color ^ 1
+                record = result.fetch_row()
+        print '</table>'
 
 def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
-	if eccolor:
-		print '<tr align=left class="table1">'
-	else:
-		print '<tr align=left class="table2">'
+        if eccolor:
+                print '<tr align=left class="table1">'
+        else:
+                print '<tr align=left class="table2">'
 
         subType=record[0][SUB_TYPE]
         subTypeName=SUBMAP[subType][1]
@@ -1569,7 +1569,7 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
 
         print '<td>%s</td>' % record[0][SUB_TIME]
 
-	print '<td>%s</td>' % WikiLink(submitter)
+        print '<td>%s</td>' % WikiLink(submitter)
 
         if status in ('I', 'R'):
                 if record[0][SUB_REVIEWED]:
@@ -1667,8 +1667,8 @@ def printRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):
 
 def buildRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):
         from login import User
-	output = '<span class="recordID"><b>%s Record # </b>%d' % (record_type, int(record_id))
-	if user_id:
+        output = '<span class="recordID"><b>%s Record # </b>%d' % (record_type, int(record_id))
+        if user_id:
                 cgi_scripts = {'Publication': ('editpub', 'pub_history'),
                                'Title': ('edittitle', 'title_history'),
                                'Author': ('editauth', 'author_history'),
@@ -1941,40 +1941,40 @@ def ISFDBCompareTwoTitles(title, target, mode):
         return match
 
 def _similarTitles(string1, string2):
-	newstr1 = string1.lower()
-	newstr1 = newstr1.replace(' ', '')
-	newstr2 = string2.lower()
-	newstr2 = newstr2.replace(' ', '')
-	if newstr1 == newstr2:
-		return 1
+        newstr1 = string1.lower()
+        newstr1 = newstr1.replace(' ', '')
+        newstr2 = string2.lower()
+        newstr2 = newstr2.replace(' ', '')
+        if newstr1 == newstr2:
+                return 1
 
-	if len(newstr1) > len(newstr2):
-		maxlen = len(newstr2)
-	else:
-		maxlen = len(newstr1)
+        if len(newstr1) > len(newstr2):
+                maxlen = len(newstr2)
+        else:
+                maxlen = len(newstr1)
 
-	counter = 0
-	total = 0
-	while counter < maxlen:
-		if newstr1[counter] == newstr2[counter]:
-			total += 1
-		counter += 1
+        counter = 0
+        total = 0
+        while counter < maxlen:
+                if newstr1[counter] == newstr2[counter]:
+                        total += 1
+                counter += 1
 
-	counter = 0
-	while counter < maxlen:
-		if newstr1[(len(newstr1)-1)-counter] == newstr2[(len(newstr2)-1)-counter]:
-			total += 1
-		counter += 1
+        counter = 0
+        while counter < maxlen:
+                if newstr1[(len(newstr1)-1)-counter] == newstr2[(len(newstr2)-1)-counter]:
+                        total += 1
+                counter += 1
 
-	if len(newstr1) > len(newstr2):
-		#ratio = float(total)/float(len(newstr1))
-		ratio = float(total)/float(len(newstr2))
-	else:
-		#ratio = float(total)/float(len(newstr2))
-		ratio = float(total)/float(len(newstr1))
+        if len(newstr1) > len(newstr2):
+                #ratio = float(total)/float(len(newstr1))
+                ratio = float(total)/float(len(newstr2))
+        else:
+                #ratio = float(total)/float(len(newstr2))
+                ratio = float(total)/float(len(newstr1))
 
-	#print '<br>RATIO:', newstr1, newstr2, ratio
-	if ratio > 0.85:
-		return 1
-	else:
-		return 0
+        #print '<br>RATIO:', newstr1, newstr2, ratio
+        if ratio > 0.85:
+                return 1
+        else:
+                return 0

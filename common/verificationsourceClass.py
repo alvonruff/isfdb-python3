@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -47,15 +47,15 @@ class VerificationSource():
                         self.used_url = 1
 
         def cgi2obj(self):
-		self.form = cgi.FieldStorage()
-		if self.form.has_key('source_id'):
-			self.id = int(self.form['source_id'].value)
-			self.used_id = 1
+                self.form = cgi.FieldStorage()
+                if self.form.has_key('source_id'):
+                        self.id = int(self.form['source_id'].value)
+                        self.used_id = 1
                         if not SQLGetVerificationSource(self.id):
                                 self.error = 'This Verification Source ID is not on file'
                                 return
 
-		try:
+                try:
                         self.label = XMLescape(self.form['source_label'].value)
                         self.used_label = 1
                         if not self.label:
@@ -66,9 +66,9 @@ class VerificationSource():
                                 if (self.id != int(current_source[REFERENCE_ID])) and (current_source[REFERENCE_LABEL] == XMLunescape(self.label)):
                                         self.error = "Entered label is aready associated with another Verification Source"
                                         return
-		except:
+                except:
                         self.error = "Verification Source Label is a required field"
-			return
+                        return
 
                 if self.form.has_key('source_name'):
                         self.name = XMLescape(self.form['source_name'].value)
