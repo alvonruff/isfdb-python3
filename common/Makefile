@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2023   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -80,6 +80,7 @@ clean:
 	cd ../mod && rm -rf $(BASE_FILES) $(CLASS_FILES) local
 	cd ../rest && rm -rf $(BASE_FILES) $(CLASS_FILES) local
 	cd ../nightly && rm -rf $(BASE_FILES) $(CLASS_FILES) local
+	cd ../scripts && rm -rf $(BASE_FILES) $(CLASS_FILES) local
 	rm -f ../css/localdefs.py
 	rm -f ../scripts/localdefs.py
 

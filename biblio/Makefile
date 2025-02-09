@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2006   Al von Ruff
+#     (C) COPYRIGHT 2005-2025   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,6 +29,7 @@ clean:
 	rm -f *.cgi
 	rm -f *.pyc
 	rm -f .TARGETS
+
 clobber:
 	make -f local.mk clobber
 	rm -f *.cgi

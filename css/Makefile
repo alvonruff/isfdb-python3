@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2008-2020   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -55,3 +55,4 @@ clean: clobber
 clobber:
 	rm -f localdefs.*
 	rm -f index.html
+	rm -f biblio.css

@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2013   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,6 +21,7 @@ install:
 	cd css    && $(MAKE) install;
 	cd rest   && $(MAKE) LOCAL;
 	cd rest   && $(MAKE) install;
+
 clean:
 	cd common && $(MAKE) clean;
 	cd biblio && $(MAKE) clean;
@@ -28,6 +29,8 @@ clean:
 	cd mod && $(MAKE) clean;
 	cd css && $(MAKE) clean;
 	cd rest && $(MAKE) clean;
+	cd nightly && $(MAKE) clean;
+
 export:
 		/bin/bash export.sh
 
