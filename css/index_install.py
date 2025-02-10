@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2008-2021   Al von Ruff, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2008-2025   Al von Ruff, Ahasuerus and Klaus Elsbernd
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -14,15 +14,15 @@ import os
 import string
 
 def fillIn(in_filename, out_filename, replacement_dictionary):
-	fd = open(in_filename)
-	image = fd.read()
-	fd.close()
+        fd = open(in_filename)
+        image = fd.read()
+        fd.close()
 
         for key in replacement_dictionary:
                 image = string.replace(image, key, replacement_dictionary[key])
-	fd = open(out_filename, 'w+')
-	fd.write(image)
-	fd.close()
+        fd = open(out_filename, 'w+')
+        fd.write(image)
+        fd.close()
         
 if __name__ == '__main__':
         replacement_dictionary = {'HTMLHOST': HTMLHOST,
