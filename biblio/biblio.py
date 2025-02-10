@@ -29,40 +29,40 @@ class Bibliography:
                 # AUTHOR properties
                 ##############################################
                 # Author name
-		self.author_name = ''
-		# Author ID
-		self.au_id = -1
+                self.author_name = ''
+                # Author ID
+                self.au_id = -1
                 # Full author record
-		self.au_data = []
-		# 0/1 flag indicating whether this author is an alternate name
-		self.au_is_pseudonym = 0
-		# 0/1 flag indicating whether this author has alternate names
-		self.au_has_pseudonyms = 0
-		# List of this author's tags
-		self.au_tags = []
-		# List of this author's transliterated canonical names
-		self.au_trans_names = []
-		# List of this author's transliterated legal names
-		self.au_trans_legal_names = []
+                self.au_data = []
+                # 0/1 flag indicating whether this author is an alternate name
+                self.au_is_pseudonym = 0
+                # 0/1 flag indicating whether this author has alternate names
+                self.au_has_pseudonyms = 0
+                # List of this author's tags
+                self.au_tags = []
+                # List of this author's transliterated canonical names
+                self.au_trans_names = []
+                # List of this author's transliterated legal names
+                self.au_trans_legal_names = []
 
                 ##############################################
                 # WEB PAGE TYPE properties
                 ##############################################
-		# Author page type; can be reset by CGI scripts
-		self.page_type = 'Summary'
-		# Dictionary of CGI script names indexed by displayed Web page name
+                # Author page type; can be reset by CGI scripts
+                self.page_type = 'Summary'
+                # Dictionary of CGI script names indexed by displayed Web page name
                 self.page_types = {'Summary': 'ea',
                                  'Alphabetical': 'ae',
                                  'Chronological': 'ch',
                                  'Award': 'eaw'
                                  }
-		self.cgi_script = ''
+                self.cgi_script = ''
 
                 ##############################################
                 # SERIES and TITLE TYPE properties
                 ##############################################
-		# Dictionary of displayed title types indexed by title type
-		# names stored in the database
+                # Dictionary of displayed title types indexed by title type
+                # names stored in the database
                 self.title_types = {'NOVEL': 'Novels',
                                'COLLECTION': 'Collections',
                                'ANTHOLOGY': 'Anthologies',
@@ -102,52 +102,52 @@ class Bibliography:
                 ##############################################
                 # TITLE and CO-AUTHOR properties
                 ##############################################
-		# List of canonical titles for this author. The sorting depends on
-		# the type of author page. For alphabetical and award
-		# biblios, the list also contains variant title records.
-		self.canonical_titles = []
-		# List of interviews WITH this author
-		self.interviews = []
-		# Dictionary of variant titles, excluding Serials, indexed by parent title ID
-		self.variant_titles = {}
-		# Dictionary of variant serials indexed by parent title ID
-		self.variant_serials = {}
-		# Dictionary of parent author IDs indexed by parent title ID
-		self.parent_authors = {}
-		# Dictionary of variant author IDs indexed by variant title ID
-		self.variant_authors = {}
-		# List of parent title IDs that have pubs associated DIRECTLY with them
-		self.parent_titles_with_pubs = []
-		# Dictionary of transliterated titles
-		self.translit_titles = {}
-		# Dictionary of transliterated authors
-		self.translit_authors = {}
+                # List of canonical titles for this author. The sorting depends on
+                # the type of author page. For alphabetical and award
+                # biblios, the list also contains variant title records.
+                self.canonical_titles = []
+                # List of interviews WITH this author
+                self.interviews = []
+                # Dictionary of variant titles, excluding Serials, indexed by parent title ID
+                self.variant_titles = {}
+                # Dictionary of variant serials indexed by parent title ID
+                self.variant_serials = {}
+                # Dictionary of parent author IDs indexed by parent title ID
+                self.parent_authors = {}
+                # Dictionary of variant author IDs indexed by variant title ID
+                self.variant_authors = {}
+                # List of parent title IDs that have pubs associated DIRECTLY with them
+                self.parent_titles_with_pubs = []
+                # Dictionary of transliterated titles
+                self.translit_titles = {}
+                # Dictionary of transliterated authors
+                self.translit_authors = {}
 
                 ##############################################
                 # AWARD properties
                 ##############################################
-		# List of awards for this author
-		self.au_awards = []
+                # List of awards for this author
+                self.au_awards = []
 
                 ##############################################
                 # USER properties
                 ##############################################
-		self.user = User()
+                self.user = User()
                 # Load user data
                 self.user.load()
 
                 ##############################################
                 # SERIES TREE properties
                 ##############################################
-		# Dict of all (bottom, top and intermediate) series by series ID: {series_id : series_data}
-		self.series_tree = {}
-		# Dict of ALL series by parent ID: {parent_series_id : [child_id_1, child_id_2, ...]}
-		self.series_parent = {}
-		# Dict of ALL parents by child ID: {child_series_id : parent_series_id}
-		self.series_child = {}
-		# Dict of TOP series: {series_id : series_type}. Series type mapping is defined in self.type_order
-		self.series_priority = {}
-		self.series_type = {}
+                # Dict of all (bottom, top and intermediate) series by series ID: {series_id : series_data}
+                self.series_tree = {}
+                # Dict of ALL series by parent ID: {parent_series_id : [child_id_1, child_id_2, ...]}
+                self.series_parent = {}
+                # Dict of ALL parents by child ID: {child_series_id : parent_series_id}
+                self.series_child = {}
+                # Dict of TOP series: {series_id : series_type}. Series type mapping is defined in self.type_order
+                self.series_priority = {}
+                self.series_type = {}
                 # Series type display order; lower numbers are displayed first
                 self.type_order = {
                         'NOVEL': SERIES_TYPE_FICTION,
@@ -192,9 +192,9 @@ class Bibliography:
                 # category/title type; used to decide whether to display the category line
                 self.first = 1
                 
-	####################################################
-	# 	MAIN DISPLAY METHOD
-	####################################################
+        ####################################################
+        #         MAIN DISPLAY METHOD
+        ####################################################
         def displayBiblio(self):
                 self.printHeaders()
                 self.printAuthorData()
@@ -246,68 +246,68 @@ class Bibliography:
                         self.last_checkpoint = time()
                         print '%s %f<br>' % (message, self.last_checkpoint - start)
 
-	####################################################
-	# 	LOAD METHODS
-	####################################################
-	def loadAuthorData(self):
+        ####################################################
+        #         LOAD METHODS
+        ####################################################
+        def loadAuthorData(self):
                 self.au_id = self.au_data[AUTHOR_ID]
                 SQLupdateAuthorViews(self.au_id)
-		self.au_trans_names = SQLloadTransAuthorNames(self.au_id)
-		self.au_trans_legal_names = SQLloadTransLegalNames(self.au_id)
-		self.au_emails = SQLloadEmails(self.au_id)
-		self.au_webpages = SQLloadWebpages(self.au_id)
-		self.au_is_pseudonym = SQLauthorIsPseudo(self.au_id)
-		self.au_has_pseudonyms = SQLauthorHasPseudo(self.au_id)
-		self.au_tags = SQLgetAuthorTags(self.au_id, int(self.user.id))
+                self.au_trans_names = SQLloadTransAuthorNames(self.au_id)
+                self.au_trans_legal_names = SQLloadTransLegalNames(self.au_id)
+                self.au_emails = SQLloadEmails(self.au_id)
+                self.au_webpages = SQLloadWebpages(self.au_id)
+                self.au_is_pseudonym = SQLauthorIsPseudo(self.au_id)
+                self.au_has_pseudonyms = SQLauthorHasPseudo(self.au_id)
+                self.au_tags = SQLgetAuthorTags(self.au_id, int(self.user.id))
 
-	def loadAllAuthorTitles(self):
-		self.canonical_titles = SQLloadAllAuthorTitles(self.au_id, self.page_type, self.user.display_all_languages, self.user.languages)
-		self.interviews = SQLGetInterviews(self.au_id, self.page_type)
+        def loadAllAuthorTitles(self):
+                self.canonical_titles = SQLloadAllAuthorTitles(self.au_id, self.page_type, self.user.display_all_languages, self.user.languages)
+                self.interviews = SQLGetInterviews(self.au_id, self.page_type)
 
-	def selfPseudo(self):
-		authors = SQLgetActualFromPseudo(self.au_id)
-		for author in authors:
-			if self.author_name == author[0]:
-				return 1
-		return 0
+        def selfPseudo(self):
+                authors = SQLgetActualFromPseudo(self.au_id)
+                for author in authors:
+                        if self.author_name == author[0]:
+                                return 1
+                return 0
 
-	def loadAuthorAwards(self):
+        def loadAuthorAwards(self):
                 pseudonyms = SQLgetBriefPseudoFromActual(self.au_id)
-		self.au_awards = SQLloadAwardsXBA(self.author_name, self.canonical_titles, pseudonyms)
+                self.au_awards = SQLloadAwardsXBA(self.author_name, self.canonical_titles, pseudonyms)
 
-	def loadParentAuthors(self):
-		title_list = []
-		for title in self.canonical_titles:
+        def loadParentAuthors(self):
+                title_list = []
+                for title in self.canonical_titles:
                         title_id = str(title[TITLE_PUBID])
                         title_list.append(title_id)
                 title_string = ", ".join(title_list)
-		self.parent_authors = SQLTitleListBriefAuthorRecords(title_string, self.au_id)
+                self.parent_authors = SQLTitleListBriefAuthorRecords(title_string, self.au_id)
 
-	def loadVariantTitles(self):
+        def loadVariantTitles(self):
                 # Retrieve all variants associated with this author, including Serials
-		variants = SQLloadVTsForAuthor(self.au_id)
-		
-		# Create a dictionary of variant titles and a separate dictionary of
-		# variant serials, both indexed by parent title ID. The logic is
-		# shared with the series display code.
-		(self.variant_titles, self.variant_serials) = buildVariants(self.canonical_titles, variants, self.user)
+                variants = SQLloadVTsForAuthor(self.au_id)
+                
+                # Create a dictionary of variant titles and a separate dictionary of
+                # variant serials, both indexed by parent title ID. The logic is
+                # shared with the series display code.
+                (self.variant_titles, self.variant_serials) = buildVariants(self.canonical_titles, variants, self.user)
 
-		# Build a list of parent title IDs that have pubs associated DIRECTLY with them
-		parent_string = dict_to_in_clause(self.variant_titles, self.variant_serials)
-		self.parent_titles_with_pubs = SQLTitlesWithPubs(parent_string)
+                # Build a list of parent title IDs that have pubs associated DIRECTLY with them
+                parent_string = dict_to_in_clause(self.variant_titles, self.variant_serials)
+                self.parent_titles_with_pubs = SQLTitlesWithPubs(parent_string)
 
-		# Load all variants' (including serials') authors
-		self.variant_authors = buildVTAuthors(self.variant_titles, self.variant_serials)
+                # Load all variants' (including serials') authors
+                self.variant_authors = buildVTAuthors(self.variant_titles, self.variant_serials)
 
         def loadTransliterations(self):
                 self.translit_titles = builtTranslitTitles(self.canonical_titles, self.variant_titles,
                                                            self.variant_serials, self.interviews)
                 self.translit_authors = builtTranslitAuthors(self.parent_authors, self.variant_authors)
                 
-	def loadSeriesData(self):
-		series_list = SQLgetSeriesData(self.au_id)
-		# Retrieve all higher level super-series and put them in self.series_tree
-		for series in series_list:
+        def loadSeriesData(self):
+                series_list = SQLgetSeriesData(self.au_id)
+                # Retrieve all higher level super-series and put them in self.series_tree
+                for series in series_list:
                         self.buildSuperSeries(series)
 
                 # For every title with a series designation, find the type
@@ -399,9 +399,9 @@ class Bibliography:
                 parent_id = self.series_child[series_id]
                 return self.findTopSeries(parent_id)
 
-	####################################################
-	# 	PRINT METHODS
-	####################################################
+        ####################################################
+        #         PRINT METHODS
+        ####################################################
 
         def displaySummary(self):
                 if self.nongenre and not self.displaySeparator():
@@ -427,7 +427,7 @@ class Bibliography:
                                 return 1
                 return 0
 
-	def printSeriesType(self, series_type):
+        def printSeriesType(self, series_type):
                 if series_type not in self.series_priority.values():
                         return
                 series_type_list = []
@@ -506,17 +506,17 @@ class Bibliography:
                                 self.printSeries(sub_series_data, series_type)
                 print '</ul>'
 
-	def printIsPseudo(self):
-		authors = SQLgetBriefActualFromPseudo(self.au_id)
+        def printIsPseudo(self):
+                authors = SQLgetBriefActualFromPseudo(self.au_id)
                 print '<li><b>Used As Alternate Name By:</b>'
                 displayAuthorList(authors)
 
-	def printHasPseudo(self):
-		authors = SQLgetBriefPseudoFromActual(self.au_id)
+        def printHasPseudo(self):
+                authors = SQLgetBriefPseudoFromActual(self.au_id)
                 print '<li><b>Used These Alternate Names:</b>'
                 displayAuthorList(authors)
 
-	def printAuthorData(self):
+        def printAuthorData(self):
                 print '<div class="ContentBox">'
                 other_authors = SQLGetDisambiguatedRecords(self.au_id, self.au_data[AUTHOR_CANONICAL], 'authors', 'author_id', 'author_canonical')
                 if other_authors:
@@ -524,20 +524,20 @@ class Bibliography:
                         displayAuthorList(other_authors)
                         print '</h3>'
 
-		if self.au_data[AUTHOR_IMAGE]:
-			print '<table>'
-			print '<tr align="left">'
-			print '<td>'
-			print '<img src="%s" width="150" alt="Author Picture">' % ISFDBHostCorrection(self.au_data[AUTHOR_IMAGE].split('|')[0])
-			print '</td>'
-			print '<td class="authorimage">'
+                if self.au_data[AUTHOR_IMAGE]:
+                        print '<table>'
+                        print '<tr align="left">'
+                        print '<td>'
+                        print '<img src="%s" width="150" alt="Author Picture">' % ISFDBHostCorrection(self.au_data[AUTHOR_IMAGE].split('|')[0])
+                        print '</td>'
+                        print '<td class="authorimage">'
 
-		print '<ul>'
-        	print '<li><b>Author:</b> %s' % ISFDBMouseover(self.au_trans_names, self.au_data[AUTHOR_CANONICAL], '')
-        	printRecordID('Author', self.au_id, self.user.id)
+                print '<ul>'
+                print '<li><b>Author:</b> %s' % ISFDBMouseover(self.au_trans_names, self.au_data[AUTHOR_CANONICAL], '')
+                printRecordID('Author', self.au_id, self.user.id)
 
-		if self.au_data[AUTHOR_LEGALNAME]:
-			print '<li><b>Legal Name:</b> %s' % ISFDBMouseover(self.au_trans_legal_names, self.au_data[AUTHOR_LEGALNAME], '')
+                if self.au_data[AUTHOR_LEGALNAME]:
+                        print '<li><b>Legal Name:</b> %s' % ISFDBMouseover(self.au_trans_legal_names, self.au_data[AUTHOR_LEGALNAME], '')
 
                 if self.au_data[AUTHOR_BIRTHPLACE]:
                         print '<li><b>Birthplace:</b>',  ISFDBText(self.au_data[AUTHOR_BIRTHPLACE])
@@ -552,46 +552,46 @@ class Bibliography:
                         displayed_language = LANGUAGES[int(self.au_data[AUTHOR_LANGUAGE])]
                         print '<li><b>Language:</b>', displayed_language
 
-		if self.au_emails:
-			for email in self.au_emails:
-				print "<li><b>Email:</b>"
-				print '<a href="mailto:' +email+ '">' +email+ '</a>'
+                if self.au_emails:
+                        for email in self.au_emails:
+                                print "<li><b>Email:</b>"
+                                print '<a href="mailto:' +email+ '">' +email+ '</a>'
 
                 PrintWebPages(self.au_webpages)
 
-		if self.au_is_pseudonym and not self.selfPseudo():
-                	self.printIsPseudo()
+                if self.au_is_pseudonym and not self.selfPseudo():
+                        self.printIsPseudo()
 
-		if self.au_has_pseudonyms:
-                	self.printHasPseudo()
+                if self.au_has_pseudonyms:
+                        self.printHasPseudo()
 
                 if self.au_data[AUTHOR_NOTE]:
                         print "<li>",FormatNote(self.au_data[AUTHOR_NOTE], 'Note', 'short', self.au_id, 'Author')
 
-		has_bio = SQLwikiLinkExists('Bio', self.au_data[AUTHOR_CANONICAL])
-		if has_bio:
+                has_bio = SQLwikiLinkExists('Bio', self.au_data[AUTHOR_CANONICAL])
+                if has_bio:
                         print "<li><b>Additional Biographical Data:</b>"
                         bio_title = 'Bio:%s' % self.au_data[AUTHOR_CANONICAL]
-			print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, bio_title, bio_title)
+                        print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, bio_title, bio_title)
 
-		has_biblio = SQLwikiLinkExists('Author', self.au_data[AUTHOR_CANONICAL])
-		if has_biblio:
+                has_biblio = SQLwikiLinkExists('Author', self.au_data[AUTHOR_CANONICAL])
+                if has_biblio:
                         print "<li><b>Additional Bibliographic Comments:</b>"
                         biblio_title = 'Author:%s' % self.au_data[AUTHOR_CANONICAL]
-			print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, biblio_title, biblio_title)
+                        print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, biblio_title, biblio_title)
 
-		if self.au_tags:
-			print "<li><b>Author Tags:</b>"
-			print_string = ''
-			count = 0
-			total_tags = len(self.au_tags)
-			for tag in self.au_tags:
-				if count:
-					print_string += ', '
-				print_string += ISFDBLinkNoName('tag_author.cgi', '%d+%d' % (tag[0], self.au_id), tag[1])
-				print_string += ' (%d)' % tag[2]
-				count += 1
-				if count == 20 and total_tags > 20:
+                if self.au_tags:
+                        print "<li><b>Author Tags:</b>"
+                        print_string = ''
+                        count = 0
+                        total_tags = len(self.au_tags)
+                        for tag in self.au_tags:
+                                if count:
+                                        print_string += ', '
+                                print_string += ISFDBLinkNoName('tag_author.cgi', '%d+%d' % (tag[0], self.au_id), tag[1])
+                                print_string += ' (%d)' % tag[2]
+                                count += 1
+                                if count == 20 and total_tags > 20:
                                         print_string += ' and %d additional tags. ' % (total_tags-20)
                                         print_string += ISFDBLinkNoName('authortags.cgi',
                                                                         self.au_id,
@@ -599,13 +599,13 @@ class Bibliography:
                                                                         False,
                                                                         'class="bold inverted"')
                                         break
-			print print_string
-		
-		print '</ul>'
+                        print print_string
+                
+                print '</ul>'
 
-		if self.au_data[AUTHOR_IMAGE]:
-			print '</td>'
-			print '</table>'
+                if self.au_data[AUTHOR_IMAGE]:
+                        print '</td>'
+                        print '</table>'
                         (webpage, credit, home_page, linked_page) = BuildDisplayedURL(self.au_data[AUTHOR_IMAGE])
                         print 'Image supplied by <a href="%s" target="_blank">%s</a>' % (home_page, credit)
                         if linked_page:
@@ -622,7 +622,7 @@ class Bibliography:
                         print '(or view all titles published using this alternate name)</a></b>'
 
         def printInterviews(self):
-		if not self.interviews:
+                if not self.interviews:
                         return
                 print '<b>Interviews with This Author</b>'
                 print '<ul>'
@@ -656,7 +656,7 @@ class Bibliography:
                         output +=  ")"
                 print output
 
-	def displayWorks(self, title_type):
+        def displayWorks(self, title_type):
                 self.first = 1
                 for title in self.canonical_titles:
                         if title[TITLE_TTYPE] == title_type:
@@ -684,15 +684,15 @@ class Bibliography:
                 if not self.first:
                         print "</ul>"
 
-	def printStrayPubs(self):
-		pubs = SQLGetPubsByAuthor(self.au_id)
-		if len(pubs):
-			print '<b>Stray Publications:</b>'
-			print '<ul>'
-			for pub in pubs:
-				print '<li>'
-				print ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class = "italic"')
-			print '</ul>'
+        def printStrayPubs(self):
+                pubs = SQLGetPubsByAuthor(self.au_id)
+                if len(pubs):
+                        print '<b>Stray Publications:</b>'
+                        print '<ul>'
+                        for pub in pubs:
+                                print '<li>'
+                                print ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class = "italic"')
+                        print '</ul>'
 
         def displayBiblioLinks(self):
                 print self.user.translation_message(self.page_type, self)
@@ -734,7 +734,7 @@ class Bibliography:
                         translations = SESSION.Parameter(1, 'str', None, ('All', 'None'))
                         self.user.translation_cookies(translations)
 
-		self.author_name = self.au_data[AUTHOR_CANONICAL]
+                self.author_name = self.au_data[AUTHOR_CANONICAL]
                 PrintHeader("%s Bibliography: %s" % (self.page_type, self.author_name))
 
                 if self.author_name == 'uncredited' and self.page_type != 'Award':

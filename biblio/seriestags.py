@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,8 +23,8 @@ if __name__ == '__main__':
         if not series_name:
                 SESSION.DisplayError('Series Does Not Exist')
 
-	PrintHeader('All Tags for Series %s' % series_name)
-	PrintNavbar('seriestags', 0, 0, 'seriestags.cgi', series_id)
+        PrintHeader('All Tags for Series %s' % series_name)
+        PrintNavbar('seriestags', 0, 0, 'seriestags.cgi', series_id)
 
         ser = series(db)
         ser.load(series_id)
@@ -38,4 +38,4 @@ if __name__ == '__main__':
 
         ser.PrintMetaData(user, 'full', seriesTags, 'tags')
 
-	PrintTrailer('seriestags', series_id, series_id)
+        PrintTrailer('seriestags', series_id, series_id)

@@ -28,40 +28,40 @@ if __name__ == '__main__':
         user = User()
         user.load()
         
-	title = 'Publisher: %s' % publisher[PUBLISHER_NAME]
-	PrintHeader(title)
-	PrintNavbar('publisher', publisher_id, publisher_id, 'publisher.cgi', publisher_id)
+        title = 'Publisher: %s' % publisher[PUBLISHER_NAME]
+        PrintHeader(title)
+        PrintNavbar('publisher', publisher_id, publisher_id, 'publisher.cgi', publisher_id)
 
-	print '<div class="ContentBox">'
+        print '<div class="ContentBox">'
         other_publishers = SQLGetDisambiguatedRecords(publisher_id, publisher[PUBLISHER_NAME], 'publishers', 'publisher_id', 'publisher_name')
         if other_publishers:
                 print '<h3>Note: There are other publishers with the same name:'
                 displayRecordList('publisher', other_publishers)
                 print '</h3>'
-	print '<ul>'
+        print '<ul>'
         # Transliterated name(s)
         trans_names = SQLloadTransPublisherNames(publisher_id)
         print '<li><b>Publisher: </b>%s' % ISFDBMouseover(trans_names, publisher[PUBLISHER_NAME], '')
         printRecordID('Publisher', publisher_id, user.id)
 
-	# Webpages
-	webpages = SQLloadPublisherWebpages(publisher_id)
-	PrintWebPages(webpages)
+        # Webpages
+        webpages = SQLloadPublisherWebpages(publisher_id)
+        PrintWebPages(webpages)
 
-	# Local Wiki Link
-	if SQLwikiLinkExists('Publisher', publisher[PUBLISHER_NAME]):
+        # Local Wiki Link
+        if SQLwikiLinkExists('Publisher', publisher[PUBLISHER_NAME]):
                 print "<li><b>Publisher Comments:</b>"
                 publisher_name = 'Publisher:%s' % publisher[PUBLISHER_NAME]
-		print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, publisher_name, publisher_name)
+                print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, publisher_name, publisher_name)
 
-	# Publisher Note
-	if publisher[PUBLISHER_NOTE]:
-		print '<li>'
-		notes = SQLgetNotes(publisher[PUBLISHER_NOTE])
-		print FormatNote(notes, 'Note', 'short', publisher_id, 'Publisher')
+        # Publisher Note
+        if publisher[PUBLISHER_NOTE]:
+                print '<li>'
+                notes = SQLgetNotes(publisher[PUBLISHER_NOTE])
+                print FormatNote(notes, 'Note', 'short', publisher_id, 'Publisher')
 
-	print '</ul>'
-	print '</div>'
+        print '</ul>'
+        print '</div>'
 
         print '<div class="ContentBox">'
         print '<h3 class="contentheader">Publication series data</h3>'
@@ -95,48 +95,48 @@ if __name__ == '__main__':
 
         print '<div class="ContentBox">'
         print '<h3 class="contentheader">Years When Books Were Published</h3>'
-	years = SQLGetPublisherYears(publisher_id)
+        years = SQLGetPublisherYears(publisher_id)
 
-	print '<table class="yearblock">'
+        print '<table class="yearblock">'
 
-	low_decade = 10000
-	hi_decade  = 0
-	for year in years:
+        low_decade = 10000
+        hi_decade  = 0
+        for year in years:
                 exception = ''
-		if year == 0:
+                if year == 0:
                         exception = 'unknown'
 
-		if year == 8888:
+                if year == 8888:
                         exception = ISFDBunpublishedDate()
 
-		if year == 9999:
+                if year == 9999:
                         exception = 'forthcoming'
 
                 if exception:
-			print '<tr>'
-			print '<td colspan="10">%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), exception)
-			print '</tr>'
+                        print '<tr>'
+                        print '<td colspan="10">%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), exception)
+                        print '</tr>'
 
-		if (year != 0) and (year < 2100):
-			decade = 10*(int(year)/10)
-			if decade < low_decade:
-				low_decade = decade
-			if decade > hi_decade:
-				hi_decade = decade
+                if (year != 0) and (year < 2100):
+                        decade = 10*(int(year)/10)
+                        if decade < low_decade:
+                                low_decade = decade
+                        if decade > hi_decade:
+                                hi_decade = decade
 
-	decade = low_decade
-	while decade <= hi_decade:
-		year = decade
-		print '<tr>'
-		while year < decade+10:
-			if year in years:
-				print '<td>%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), year)
-			else:
-				print "<td>------</td>"
-			year += 1
-		print "</tr>"
-		decade += 10
-	print '</table>'
+        decade = low_decade
+        while decade <= hi_decade:
+                year = decade
+                print '<tr>'
+                while year < decade+10:
+                        if year in years:
+                                print '<td>%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), year)
+                        else:
+                                print "<td>------</td>"
+                        year += 1
+                print "</tr>"
+                decade += 10
+        print '</table>'
         print '</div>'
 
         print '<div class="ContentBox">'
@@ -147,4 +147,4 @@ if __name__ == '__main__':
         print '</ul>'
         print '</div>'
 
-	PrintTrailer('publisher', publisher_id, publisher_id)
+        PrintTrailer('publisher', publisher_id, publisher_id)

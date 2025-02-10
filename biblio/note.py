@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2015-2021   Ahasuerus
+#     (C) COPYRIGHT 2015-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,7 +17,7 @@ from login import *
 
 
 class notes:
-	def __init__(self):
+        def __init__(self):
                 # The default display value is 'Note'; it may be
                 # overriden later on for Synopses and possibly other records
                 self.note_type ='Note'
@@ -142,9 +142,9 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Record Does Not Exist')
 
         PrintHeader('Full %s for %s: %s' % (note.note_type, note.record_name, note.record_title))
-	PrintNavbar('note', 0, 0, 'note.cgi', 0)
+        PrintNavbar('note', 0, 0, 'note.cgi', 0)
 
         print FormatNote(note.note_body, note.note_type, 'full', record_id, record_type)
         print '<big>Back to %s</big>' % ISFDBLink('%s.cgi' % note.cgi_script, record_id, note.record_title, False, 'class="inverted"')
         
-	PrintTrailer('note', 0, 0)
+        PrintTrailer('note', 0, 0)

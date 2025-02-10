@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,8 +19,8 @@ from common import *
 
 if __name__ == '__main__':
 
-	PrintHeader('Award Directory')
-	PrintNavbar('directory', 0, 0, 'award_directory.cgi', 0)
+        PrintHeader('Award Directory')
+        PrintNavbar('directory', 0, 0, 'award_directory.cgi', 0)
 
         print 'For the current status of the award data entry project see the <a href="%s://%s/index.php/Awards">Wiki Awards page</a>' % (PROTOCOL, WIKILOC)
         print '<p>'
@@ -29,4 +29,4 @@ if __name__ == '__main__':
 
         print '<p>'
 
-	PrintTrailer('directory', 0, 0)
+        PrintTrailer('directory', 0, 0)

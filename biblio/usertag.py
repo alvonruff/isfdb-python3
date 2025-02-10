@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2007-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,26 +18,26 @@ from library import *
 if __name__ == '__main__':
 
         user_id = SESSION.Parameter(0, 'int')
-	user_name = SQLgetUserName(user_id)
+        user_name = SQLgetUserName(user_id)
         if user_name == 'UNKNOWN':
                 SESSION.DisplayError('Unknown User')
 
-	PrintHeader("%s's Tags" % user_name)
-	PrintNavbar('usertag', 0, 0, 'usertag.cgi', user_id)
+        PrintHeader("%s's Tags" % user_name)
+        PrintNavbar('usertag', 0, 0, 'usertag.cgi', user_id)
 
-	query = """select distinct tag_mapping.tag_id,count(tag_mapping.tag_id) as xx,
+        query = """select distinct tag_mapping.tag_id,count(tag_mapping.tag_id) as xx,
                 tags.tag_name, tags.tag_status
                 from tag_mapping,tags
                 where tag_mapping.user_id=%d
                 and tags.tag_id=tag_mapping.tag_id
                 group by tag_mapping.tag_id
                 order by xx desc""" % user_id
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	first = 1
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        first = 1
         bgcolor = 1
-	while record:
+        while record:
                 if first:
                         print '<table class="generic_table">'
                         print '<tr class="generic_table_header">'
@@ -60,9 +60,9 @@ if __name__ == '__main__':
                 print '</td>'
                 print '</tr>'
                 bgcolor ^= 1
-		record = result.fetch_row()
+                record = result.fetch_row()
 
-	print '</table>'
-	print '<p><p>'
+        print '</table>'
+        print '<p><p>'
 
-	PrintTrailer('usertag', user_id, user_id)
+        PrintTrailer('usertag', user_id, user_id)

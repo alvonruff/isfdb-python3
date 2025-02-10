@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
         submission_id = SESSION.Parameter(0, 'int')
         submission = SQLloadSubmission(submission_id)
-	if not submission:
+        if not submission:
                 SESSION.DisplayError('Specified submission ID does not exist')
 
         sub_type = submission[SUB_TYPE]
@@ -99,5 +99,5 @@ if __name__ == '__main__':
         elif SQLisUserSelfApprover(userID) and sub_state == 'N':
                 print '<p>%s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Self-Approver View')
 
-	PrintTrailer('recent', 0, 0)
+        PrintTrailer('recent', 0, 0)
 

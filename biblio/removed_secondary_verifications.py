@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2022   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,20 +19,20 @@ if __name__ == '__main__':
 
         start = SESSION.Parameter(0, 'int', 0)
 
-	PrintHeader('Recently Removed Secondary Verifications')
-	PrintNavbar('removed_secondary_verifications', 0, 0, 'removed_secondary_verifications.cgi', 0)
+        PrintHeader('Recently Removed Secondary Verifications')
+        PrintNavbar('removed_secondary_verifications', 0, 0, 'removed_secondary_verifications.cgi', 0)
 
         per_page = 200
         # First select 200 deleted verification IDs -- needs to be done as a separate query since the SQL optimizer
         # in MySQL 5.0 is not always smart enough to use all available indices for multi-table queries
         query = "select * from deleted_secondary_verifications order by deletion_time desc limit %d, %d" % (start, per_page)
 
-	db.query(query)
-	result0 = db.store_result()
-	if result0.num_rows() == 0:
-		print '<h3>No removed secondary verifications present for the specified ID range</h3>'
-		PrintTrailer('removed_secondary_verifications', 0, 0)
-		sys.exit(0)
+        db.query(query)
+        result0 = db.store_result()
+        if result0.num_rows() == 0:
+                print '<h3>No removed secondary verifications present for the specified ID range</h3>'
+                PrintTrailer('removed_secondary_verifications', 0, 0)
+                sys.exit(0)
         deleted = result0.fetch_row()
         deleted_verifications = []
         while deleted:
@@ -90,9 +90,9 @@ if __name__ == '__main__':
                         print '</tr>'
                         record = result.fetch_row()
 
-	print '</table>'
-	if result0.num_rows() > (per_page - 1):
+        print '</table>'
+        if result0.num_rows() > (per_page - 1):
                 print '<p> [%s]' % ISFDBLink('removed_secondary_verifications.cgi', start + per_page, 'MORE')
 
-	PrintTrailer('removed_secondary_verifications', 0, 0)
+        PrintTrailer('removed_secondary_verifications', 0, 0)
 

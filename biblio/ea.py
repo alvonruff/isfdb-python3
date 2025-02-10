@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2016   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Bill Longley
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,6 +19,6 @@ from biblio import *
 
 if __name__ == '__main__':
 
-	bib = Bibliography()
-	bib.page_type = 'Summary'
+        bib = Bibliography()
+        bib.page_type = 'Summary'
         bib.displayBiblio()

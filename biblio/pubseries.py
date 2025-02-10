@@ -22,48 +22,48 @@ if __name__ == '__main__':
         if not pub_series:
                 SESSION.DisplayError('Publication series not found')
 
-	messages = {0: 'Show earliest year first',
+        messages = {0: 'Show earliest year first',
                     1: 'Show last year first',
                     2: 'Sort by series number',
                     3: 'Show covers'
                     }
-	display_order = SESSION.Parameter(1, 'int', 0, (0, 1, 2, 3))
+        display_order = SESSION.Parameter(1, 'int', 0, (0, 1, 2, 3))
 
         user = User()
         user.load()
 
-	title = 'Publication Series: %s' % pub_series[PUB_SERIES_NAME]
-	PrintHeader(title)
-	PrintNavbar('pub_series', pub_series_id, pub_series_id, 'pubseries.cgi', pub_series_id)
+        title = 'Publication Series: %s' % pub_series[PUB_SERIES_NAME]
+        PrintHeader(title)
+        PrintNavbar('pub_series', pub_series_id, pub_series_id, 'pubseries.cgi', pub_series_id)
 
-	print '<div class="ContentBox">'
+        print '<div class="ContentBox">'
         other_series = SQLGetDisambiguatedRecords(pub_series_id, pub_series[PUB_SERIES_NAME], 'pub_series', 'pub_series_id', 'pub_series_name')
         if other_series:
                 print '<h3>Note: There are other publication series with the same name:'
                 displayRecordList('pub_series', other_series)
                 print '</h3>'
-	print '<ul>'
+        print '<ul>'
         # Transliterated name(s)
         trans_names = SQLloadTransPubSeriesNames(pub_series_id)
         print '<li><b>Publication Series: </b>%s' % ISFDBMouseover(trans_names, pub_series[PUB_SERIES_NAME], '')
         printRecordID('Pub. Series', pub_series_id, user.id)
 
-	# Webpages
-	webpages = SQLloadPubSeriesWebpages(int(pub_series_id))
-	PrintWebPages(webpages)
+        # Webpages
+        webpages = SQLloadPubSeriesWebpages(int(pub_series_id))
+        PrintWebPages(webpages)
 
-	# Note
-	if pub_series[PUB_SERIES_NOTE]:
-		print '<li>'
-		notes = SQLgetNotes(pub_series[PUB_SERIES_NOTE])
-		print FormatNote(notes, 'Note', 'short', pub_series_id, 'Pubseries')
+        # Note
+        if pub_series[PUB_SERIES_NOTE]:
+                print '<li>'
+                notes = SQLgetNotes(pub_series[PUB_SERIES_NOTE])
+                print FormatNote(notes, 'Note', 'short', pub_series_id, 'Pubseries')
 
-	print '</ul>'
-	print '</div>'
+        print '</ul>'
+        print '</div>'
 
-	print '<div class="ContentBox">'
-	output = ''
-	for message_number in sorted(messages.keys()):
+        print '<div class="ContentBox">'
+        output = ''
+        for message_number in sorted(messages.keys()):
                 if message_number != display_order:
                         if output:
                                 output += ' %s ' % SESSION.ui.bullet
@@ -81,6 +81,6 @@ if __name__ == '__main__':
         else:
                 pubs = SQLGetPubSeriesPubs(pub_series_id, display_order)
                 PrintPubsTable(pubs, 'pubseries')
-	print '</div>'
+        print '</div>'
 
-	PrintTrailer('pub_series', pub_series_id, pub_series_id)
+        PrintTrailer('pub_series', pub_series_id, pub_series_id)

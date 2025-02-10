@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2022   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,8 +23,8 @@ class AdvancedIDSearch(AdvancedSearch):
         def display_selection(self):
                 PrintHeader('Publication Search by Identifier')
                 PrintNavbar('adv_id_search', 0, 0, 0, 0)
-		self.user = User()
-		self.user.load()
+                self.user = User()
+                self.user.load()
                 if not self.user.id:
                         print '<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>'
                 else:

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2021   Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2009-2025   Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 713 $
 #     Date: $Date: 2021-08-27 10:38:44 -0400 (Fri, 27 Aug 2021) $
 
-	
+        
 import cgi
 import sys
 from login import *
@@ -21,15 +21,15 @@ def DoError(message):
         PrintNavbar("preferences", 0, 0, 0, 0)
         print '<h2>%s</h2>' % message
         sys.exit(0)
-	
+        
 if __name__ == '__main__':
 
         user = User()
         user.load()
-	if not user.id:
+        if not user.id:
                 DoError('You must be logged in to modify your preferences')
         user_id = int(user.id)
-	
+        
         sys.stderr = sys.stdout
         form = cgi.FieldStorage()
 
@@ -46,7 +46,7 @@ if __name__ == '__main__':
         # Set the default language to 17 (English) even though the HTML form should always have a language code defined
         default_language = 17
         if form.has_key("default_language"):
-		default_language = int(form["default_language"].value)
+                default_language = int(form["default_language"].value)
 
         #Initialize the value of the "Do not display translation warnings on Bibliography pages" user preference
         suppress_translation_warnings = 0

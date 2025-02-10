@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2021   Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2009-2025   Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,11 +19,11 @@ if __name__ == '__main__':
 
         user = User()
         user.load()
-	if not user.id:
+        if not user.id:
                 SESSION.DisplayError('You must be logged in to modify your user preferences')
 
-	PrintHeader("User Preferences")
-	PrintNavbar('mypreferences', 0, 0, 'mypreferences.cgi', 0)
+        PrintHeader("User Preferences")
+        PrintNavbar('mypreferences', 0, 0, 'mypreferences.cgi', 0)
        
         print '<p>'
         print '<form id="data" METHOD="POST" ACTION="/cgi-bin/submitpreferences.cgi">'
@@ -34,8 +34,8 @@ if __name__ == '__main__':
         print '<li><b>Publication Pages</b>'
         
         print '<ul>'
-	concise_checked = ''
-	if user.concise_display:
+        concise_checked = ''
+        if user.concise_display:
                 concise_checked = 'checked'
         print '<li><input type="checkbox" name="concise_display" value="on" %s>%s</li>' % (concise_checked,
                                                                                            "Use concise Publication listing by default")
@@ -44,32 +44,32 @@ if __name__ == '__main__':
         print '<li><b>Title Pages</b>'
         print '<ul>'
         
-	covers_checked = ''
-	if user.covers_display:
+        covers_checked = ''
+        if user.covers_display:
                 covers_checked = 'checked'
         print '<li><input type="checkbox" name="covers_display" value="on" %s>%s</li>' % (covers_checked,
                                                                                           "Display cover images on Title pages")
 
-	suppress_bibliographic_warnings = ''
-	if user.suppress_bibliographic_warnings:
+        suppress_bibliographic_warnings = ''
+        if user.suppress_bibliographic_warnings:
                 suppress_bibliographic_warnings = 'checked'
         print '<li><input type="checkbox" name="suppress_bibliographic_warnings" value="on" %s>%s</li>' % (suppress_bibliographic_warnings,
                                                                                                            "Do not display bibliographic warnings on Title pages")
 
-	suppress_awards = ''
-	if user.suppress_awards:
+        suppress_awards = ''
+        if user.suppress_awards:
                 suppress_awards = 'checked'
         print '<li><input type="checkbox" name="suppress_awards" value="on" %s>%s</li>' % (suppress_awards,
                                                                                            "Do not display awards on Title pages")
 
-	suppress_reviews = ''
-	if user.suppress_reviews:
+        suppress_reviews = ''
+        if user.suppress_reviews:
                 suppress_reviews = 'checked'
         print '<li><input type="checkbox" name="suppress_reviews" value="on" %s>%s</li>' % (suppress_reviews,
                                                                                             "Do not display reviews on Title pages")
 
-	cover_links_display = ''
-	if user.cover_links_display:
+        cover_links_display = ''
+        if user.cover_links_display:
                 cover_links_display = 'checked'
         print '<li><input type="checkbox" name="cover_links_display" value="on" %s>%s</li>' % (cover_links_display,
                                                                                                "Display cover scan indicators on Title and search pages")
@@ -78,8 +78,8 @@ if __name__ == '__main__':
         print '<li><b>Searching</b>'
         print '<ul>'
         
-	keep_spaces_in_searches = ''
-	if user.keep_spaces_in_searches:
+        keep_spaces_in_searches = ''
+        if user.keep_spaces_in_searches:
                 keep_spaces_in_searches = 'checked'
         print '<li><input type="checkbox" name="keep_spaces_in_searches" value="on" %s>%s</li>' % (keep_spaces_in_searches,
                                                                                                    "Keep leading and trailing spaces when searching")
@@ -89,7 +89,7 @@ if __name__ == '__main__':
         print '<ul>'
         
         suppress_help_bubbles = ''
-	if user.suppress_help_bubbles:
+        if user.suppress_help_bubbles:
                 suppress_help_bubbles = 'checked'
         print '<li><input type="checkbox" name="suppress_help_bubbles" value="on" %s>%s</li>' % (suppress_help_bubbles,
                                                                                                  "Do not display mouseover help on Edit pages")
@@ -131,14 +131,14 @@ if __name__ == '__main__':
         print '</select>'
         print ' (if you chose "Selected", you should also set up %s)' % ISFDBLink('mylanguages.cgi', '', 'Translation Preferences')
 
-	display_title_translations = ''
-	if user.display_title_translations:
+        display_title_translations = ''
+        if user.display_title_translations:
                 display_title_translations = 'checked'
         print '<li><input type="checkbox" name="display_title_translations" value="on" %s>%s</li>' % (display_title_translations,
                                                                                                       "Display translations on Title pages")
 
-	suppress_translation_warnings = ''
-	if user.suppress_translation_warnings:
+        suppress_translation_warnings = ''
+        if user.suppress_translation_warnings:
                 suppress_translation_warnings = 'checked'
         print '<li><input type="checkbox" name="suppress_translation_warnings" value="on" %s>%s</li>' % (suppress_translation_warnings,
                                                                                                          "Do not display translation warnings on Author and Series pages")
@@ -147,8 +147,8 @@ if __name__ == '__main__':
 
         print '</ul>'
         print '<p>'
-	print '<input type="SUBMIT" value="Update Preferences">'
+        print '<input type="SUBMIT" value="Update Preferences">'
         print '</form>'
 
-	PrintTrailer('mypreferences', 0, 0)
+        PrintTrailer('mypreferences', 0, 0)
 

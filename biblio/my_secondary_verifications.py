@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,15 +20,15 @@ if __name__ == '__main__':
 
         start = SESSION.Parameter(0, 'int', 0)
 
-	PrintHeader('My Secondary Verifications')
-	PrintNavbar('my_secondary_verifications', 0, 0, 'my_secondary_verifications.cgi', 0)
+        PrintHeader('My Secondary Verifications')
+        PrintNavbar('my_secondary_verifications', 0, 0, 'my_secondary_verifications.cgi', 0)
 
         user = User()
         user.load()
         if not user.id:
-		print '<h3>You must be logged in to view your secondary verifications</h3>'
-		PrintTrailer('my_secondary_verifications', 0, 0)
-		sys.exit(0)
+                print '<h3>You must be logged in to view your secondary verifications</h3>'
+                PrintTrailer('my_secondary_verifications', 0, 0)
+                sys.exit(0)
 
         per_page = 200
         # First select 200 verification IDs -- needs to be done as a separate query since the SQL optimizer
@@ -39,12 +39,12 @@ if __name__ == '__main__':
                 order by ver_time desc
                 limit %d, %d""" % (int(user.id), start, per_page)
 
-	db.query(query)
-	result0 = db.store_result()
-	if result0.num_rows() == 0:
-		print '<h3>No verifications present</h3>'
-		PrintTrailer('recentver', 0, 0)
-		sys.exit(0)
+        db.query(query)
+        result0 = db.store_result()
+        if result0.num_rows() == 0:
+                print '<h3>No verifications present</h3>'
+                PrintTrailer('recentver', 0, 0)
+                sys.exit(0)
         ver = result0.fetch_row()
         ver_set = []
         while ver:
@@ -89,9 +89,9 @@ if __name__ == '__main__':
                         print '</tr>'
                         record = result.fetch_row()
 
-	print '</table>'
-	if result0.num_rows() > (per_page - 1):
+        print '</table>'
+        if result0.num_rows() > (per_page - 1):
                 print '<p> [%s]' % ISFDBLink('my_secondary_verifications.cgi', start + per_page, 'MORE')
 
-	PrintTrailer('my_secondary_verifications', 0, 0)
+        PrintTrailer('my_secondary_verifications', 0, 0)
 

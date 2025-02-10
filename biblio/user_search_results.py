@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2017-2022   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,9 +31,9 @@ if __name__ == '__main__':
                 print '<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>'
                 sys.exit(0)
 
-	form = cgi.FieldStorage()
-	try:
-		user_name = form['USER_NAME'].value
+        form = cgi.FieldStorage()
+        try:
+                user_name = form['USER_NAME'].value
                 user_name = string.strip(user_name)
         except:
                 print "<h2>No user name specified</h2>"
@@ -62,6 +62,6 @@ if __name__ == '__main__':
         print '</tr>'
         print '</table>'
 
-	print '<p>'
-	PrintTrailer('search', 0, 0)
+        print '<p>'
+        PrintTrailer('search', 0, 0)
 

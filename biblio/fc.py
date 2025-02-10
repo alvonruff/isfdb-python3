@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2024   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,7 +21,7 @@ from login import User
 
 
 class PublicationMonth:
-	def __init__(self):
+        def __init__(self):
                 # List of publication IDs
                 self.pub_ids = []
                 # Dictionary of publications indexed by pub_id
@@ -543,7 +543,7 @@ if __name__ == '__main__':
 
         pub_month = PublicationMonth()
         pub_month.parseArguments()
-	PrintHeader('Monthly Bibliography')
-	PrintNavbar('forthcoming', 0, 0, 0, 0)
+        PrintHeader('Monthly Bibliography')
+        PrintNavbar('forthcoming', 0, 0, 0, 0)
         pub_month.load_data()
         pub_month.PrintPage()

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2022   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,12 +22,12 @@ from library import *
 
 if __name__ == '__main__':
 
-	PrintHeader('My Verifications')
-	PrintNavbar('my_verifications_menu', 0, 0, 'my_verifications_menu.cgi', 0)
+        PrintHeader('My Verifications')
+        PrintNavbar('my_verifications_menu', 0, 0, 'my_verifications_menu.cgi', 0)
 
-	(userid, username, usertoken) = GetUserData()
+        (userid, username, usertoken) = GetUserData()
 
-	print '<ul>'
+        print '<ul>'
         print '<li>%s' % ISFDBLink('userver.cgi', '', 'My Primary Verifications')
         print '<li>%s' % ISFDBLink('changed_verified_pubs.cgi', '', 'My Changed Primary Verifications')
         if SQLChangedVerifications(userid):
@@ -36,7 +36,7 @@ if __name__ == '__main__':
         print '<li>%s' % ISFDBLink('my_unstable_verifications.cgi', '', 'My Primary Verifications with Possibly Unstable "/G/" Amazon URLs')
         print '<li>%s' % ISFDBLink('my_secondary_verifications.cgi', '', 'My Secondary Verifications')
         print '<li>%s' % ISFDBLink('my_removed_secondary_verifications.cgi', '', 'My Removed Secondary Verifications')
-	print '</ul>'
+        print '</ul>'
 
-	PrintTrailer('my_verifications_menu', 0, 0)
+        PrintTrailer('my_verifications_menu', 0, 0)
 

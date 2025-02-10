@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,20 +21,20 @@ if __name__ == '__main__':
 
         start = SESSION.Parameter(0, 'int', 0)
 
-	PrintHeader('Recently Added Secondary Verifications')
-	PrintNavbar('recentver', 0, 0, 'recentver.cgi', 0)
+        PrintHeader('Recently Added Secondary Verifications')
+        PrintNavbar('recentver', 0, 0, 'recentver.cgi', 0)
 
         per_page = 200
         # First select 200 verification IDs -- needs to be done as a separate query since the SQL optimizer
         # in MySQL 5.0 is not always smart enough to use all available indices for multi-table queries
         query = "select verification.* from verification where ver_status = 1 order by ver_time desc limit %d, %d" % (start, per_page)
 
-	db.query(query)
-	result0 = db.store_result()
-	if result0.num_rows() == 0:
-		print '<h3>No verifications present</h3>'
-		PrintTrailer('recentver', 0, 0)
-		sys.exit(0)
+        db.query(query)
+        result0 = db.store_result()
+        if result0.num_rows() == 0:
+                print '<h3>No verifications present</h3>'
+                PrintTrailer('recentver', 0, 0)
+                sys.exit(0)
         ver = result0.fetch_row()
         ver_set = []
         while ver:
@@ -83,9 +83,9 @@ if __name__ == '__main__':
                         print '</tr>'
                         record = result.fetch_row()
 
-	print '</table>'
-	if result0.num_rows() > (per_page - 1):
+        print '</table>'
+        if result0.num_rows() > (per_page - 1):
                 print '<p> [%s]' % ISFDBLink('recentver.cgi', start + per_page, 'MORE')
 
-	PrintTrailer('recentver', 0, 0)
+        PrintTrailer('recentver', 0, 0)
 

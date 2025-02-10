@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,16 +21,16 @@ if __name__ == '__main__':
 
         author_id = SESSION.Parameter(0, 'int')
 
-	user = User()
-	user.load()
-	if not user:
+        user = User()
+        user.load()
+        if not user:
                 SESSION.DisplayError('Only ISFDB moderators can view author edit history at this time')
         user.load_moderator_flag()
         if not user.moderator:
                 SESSION.DisplayError('Only ISFDB moderators can view author edit history at this time')
 
-	PrintHeader('Author Edit History')
-	PrintNavbar('author_history', 0, 0, 'author_history.cgi', author_id)
+        PrintHeader('Author Edit History')
+        PrintNavbar('author_history', 0, 0, 'author_history.cgi', author_id)
 
         print """<h3>The list below displays Edit Author, Merge Authors and Make/Remove
                 Alternate Name submissions. Note that author records are created and
@@ -42,12 +42,12 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d, %d, %d)
                 order by sub_reviewed desc
                 """ % (author_id, MOD_AUTHOR_UPDATE, MOD_AUTHOR_PSEUDO, MOD_REMOVE_PSEUDO, MOD_AUTHOR_MERGE)
-	db.query(query)
-	result = db.store_result()
-	if not result.num_rows():
-		print '<h3>No submission data on file for this author</h3>'
+        db.query(query)
+        result = db.store_result()
+        if not result.num_rows():
+                print '<h3>No submission data on file for this author</h3>'
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 
-	PrintTrailer('author_history', 0, 0)
+        PrintTrailer('author_history', 0, 0)
 

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2017-2022   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,19 +19,19 @@ if __name__ == '__main__':
 
         start = SESSION.Parameter(0, 'int', 0)
 
-	PrintHeader('Recent Primary Verifications')
-	PrintNavbar('recent', 0, 0, 'recent_primary_ver.cgi', 0)
+        PrintHeader('Recent Primary Verifications')
+        PrintNavbar('recent', 0, 0, 'recent_primary_ver.cgi', 0)
 
         # First select 200 verification IDs -- needs to be done as a separate query since the SQL optimizer
         # in MySQL 5.0 is not always smart enough to use all available indices for multi-table queries
         query = "select * from primary_verifications order by ver_time desc limit %d,200" % start
 
-	db.query(query)
-	result0 = db.store_result()
-	if result0.num_rows() == 0:
-		print '<h3>No primary verifications present</h3>'
-		PrintTrailer('recent', 0, 0)
-		sys.exit(0)
+        db.query(query)
+        result0 = db.store_result()
+        if result0.num_rows() == 0:
+                print '<h3>No primary verifications present</h3>'
+                PrintTrailer('recent', 0, 0)
+                sys.exit(0)
         ver = result0.fetch_row()
         ver_set = []
         while ver:
@@ -74,8 +74,8 @@ if __name__ == '__main__':
                         print '</tr>'
                         record = result.fetch_row()
 
-	print '</table>'
-	print '<p> %s' % ISFDBLinkNoName('recent_primary_ver.cgi', start+200, 'MORE', True)
+        print '</table>'
+        print '<p> %s' % ISFDBLinkNoName('recent_primary_ver.cgi', start+200, 'MORE', True)
 
-	PrintTrailer('recent', 0, 0)
+        PrintTrailer('recent', 0, 0)
 

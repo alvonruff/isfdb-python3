@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,10 +17,10 @@ from SQLparsing import *
 
 if __name__ == '__main__':
 
-	title_id = SESSION.Parameter(0, 'int')
+        title_id = SESSION.Parameter(0, 'int')
 
-	PrintHeader('Title Edit History')
-	PrintNavbar('title_history', 0, 0, 'title_history.cgi', title_id)
+        PrintHeader('Title Edit History')
+        PrintNavbar('title_history', 0, 0, 'title_history.cgi', title_id)
 
         print """<h3>The list below displays all Edit Title, Make Variant, 
                 Delete Title, Title Merge, Title Unmerge, and Link Review submissions
@@ -36,12 +36,12 @@ if __name__ == '__main__':
                 """ % (title_id, MOD_TITLE_UPDATE, MOD_TITLE_DELETE,
                        MOD_TITLE_MKVARIANT, MOD_REVIEW_LINK,
                        MOD_VARIANT_TITLE, MOD_TITLE_UNMERGE, MOD_TITLE_MERGE)
-	db.query(query)
-	result = db.store_result()
-	if not result.num_rows():
-		print '<h3>No submission data on file for this title.</h3>'
+        db.query(query)
+        result = db.store_result()
+        if not result.num_rows():
+                print '<h3>No submission data on file for this title.</h3>'
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 
-	PrintTrailer('title_history', 0, 0)
+        PrintTrailer('title_history', 0, 0)
 

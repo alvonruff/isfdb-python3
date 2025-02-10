@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2022   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,8 +17,8 @@ from login import User
 
 class AdvancedSearchMenu:
         def __init__(self):
-		self.user = User()
-		self.user.load()
+                self.user = User()
+                self.user.load()
         
         def display_selection(self):
                 PrintHeader('Advanced Search')

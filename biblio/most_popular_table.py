@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,8 +32,8 @@ if __name__ == '__main__':
         elif code == 6:
                 title_type = 'Other Title Types'
 
-	PrintHeader('%s Ranked by Awards and Nominations' % title_type)
-	PrintNavbar('top', 0, 0, 'most_reviewed.cgi', 0)
+        PrintHeader('%s Ranked by Awards and Nominations' % title_type)
+        PrintNavbar('top', 0, 0, 'most_reviewed.cgi', 0)
 
         print '<h3>%s</h3>' % ISFDBLinkNoName('most_popular.cgi', '%d+all' % code, 'Highest Ranked %s of All Time' % title_type)
         print '<h3>%s</h3>' % ISFDBLinkNoName('most_popular.cgi', '%d+pre1950' % code, 'Highest Ranked %s Prior to 1950' % title_type)
@@ -62,6 +62,6 @@ if __name__ == '__main__':
                 print '</tr>'
                 bgcolor ^= 1
         print '</table>'
-	
-	PrintTrailer('top', 0, 0)
+        
+        PrintTrailer('top', 0, 0)
 

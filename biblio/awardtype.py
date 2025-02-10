@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2013-2022   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,16 +22,16 @@ if __name__ == '__main__':
         award_type.award_type_id = award_type_id
         award_type.load()
         if not award_type.award_type_name:
-		if SQLDeletedAwardType(award_type_id):
+                if SQLDeletedAwardType(award_type_id):
                         SESSION.DisplayError('This award type has been deleted. See %s for details.' % ISFDBLink('awardtype_history.cgi', award_type_id, 'Edit History'))
                 else:
                         SESSION.DisplayError('Award Type Does Not Exist')
 
-	title = 'Overview of %s' % award_type.award_type_name
-	PrintHeader(title)
-	PrintNavbar('award_type', award_type.award_type_id, 0, 'awardtype.cgi', award_type.award_type_id)
+        title = 'Overview of %s' % award_type.award_type_name
+        PrintHeader(title)
+        PrintNavbar('award_type', award_type.award_type_id, 0, 'awardtype.cgi', award_type.award_type_id)
 
-	print '<ul>'
+        print '<ul>'
 
         if award_type.award_type_short_name:
                 print '<li><b>Short Name:</b>', ISFDBText(award_type.award_type_short_name)
@@ -56,22 +56,22 @@ if __name__ == '__main__':
         if award_type.award_type_non_genre:
                 print '<li><b>Covers more than just SF:</b>', ISFDBText(award_type.award_type_non_genre)
 
-	# Webpages
-	webpages = SQLloadAwardTypeWebpages(award_type.award_type_id)
-	PrintWebPages(webpages)
+        # Webpages
+        webpages = SQLloadAwardTypeWebpages(award_type.award_type_id)
+        PrintWebPages(webpages)
 
-	# Note
-	if award_type.award_type_note:
-		print '<li>'
-		print FormatNote(award_type.award_type_note, 'Note', 'short', award_type.award_type_id, 'AwardType')
+        # Note
+        if award_type.award_type_note:
+                print '<li>'
+                print FormatNote(award_type.award_type_note, 'Note', 'short', award_type.award_type_id, 'AwardType')
 
-	print '</ul>'
+        print '</ul>'
 
-	print '<p>'
+        print '<p>'
                 
         # Display a grid of all years when the award was given
         award_type.display_table_grid()
         # Display a list of all categories for this award
         award_type.display_categories()
 
-	PrintTrailer('award_type', award_type.award_type_id, award_type.award_type_id)
+        PrintTrailer('award_type', award_type.award_type_id, award_type.award_type_id)

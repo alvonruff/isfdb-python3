@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2018-2022   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,8 +39,8 @@ class NoteSearch:
                         'Award Categories': ('award_cat_id', 'award_cat_name', 'award_cat_note_id', 'award_category', 'award_cats', 'award_cat_name'),
                         'Award Types': ('award_type_id', 'award_type_name', 'award_type_note_id', 'awardtype', 'award_types', 'award_type_name')
                         }
-		self.user = User()
-		self.user.load()
+                self.user = User()
+                self.user.load()
 
         def get_search_parameters(self):
                 form = cgi.FieldStorage()

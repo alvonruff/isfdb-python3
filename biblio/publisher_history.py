@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,8 +20,8 @@ if __name__ == '__main__':
 
         publisher_id = SESSION.Parameter(0, 'int')
 
-	PrintHeader('Publisher Edit History')
-	PrintNavbar('publisher_history', 0, 0, 'publisher_history.cgi', publisher_id)
+        PrintHeader('Publisher Edit History')
+        PrintNavbar('publisher_history', 0, 0, 'publisher_history.cgi', publisher_id)
 
         print """<h3>The list below displays Edit Publisher and Publisher Merge submissions for this publisher.
                 Note that publisher records are created and deleted automatically when
@@ -33,12 +33,12 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d)
                 order by sub_reviewed desc
                 """ % (publisher_id, MOD_PUBLISHER_UPDATE, MOD_PUBLISHER_MERGE)
-	db.query(query)
-	result = db.store_result()
-	if not result.num_rows():
-		print '<h3>No submission data on file for this publisher.</h3>'
-	else:
+        db.query(query)
+        result = db.store_result()
+        if not result.num_rows():
+                print '<h3>No submission data on file for this publisher.</h3>'
+        else:
                 ISFDBprintSubmissionTable(result, 'I')
 
-	PrintTrailer('publisher_history', 0, 0)
+        PrintTrailer('publisher_history', 0, 0)
 

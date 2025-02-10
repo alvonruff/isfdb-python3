@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -66,7 +66,7 @@ if __name__ == '__main__':
 
         stats = Stats()
         stats.params()
-	PrintHeader(stats.header)
-	PrintNavbar('stats', 0, 0, 'stats.cgi', 0)
-	stats.output()
-	PrintTrailer('frontpage', 0, 0)
+        PrintHeader(stats.header)
+        PrintNavbar('stats', 0, 0, 'stats.cgi', 0)
+        stats.output()
+        PrintTrailer('frontpage', 0, 0)

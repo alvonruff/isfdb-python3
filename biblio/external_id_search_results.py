@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2017-2022   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,8 +29,8 @@ class ExtIDSearch:
                 self.clause = ''
                 self.id_value = ''
                 self.id_type = 0
-		self.user = User()
-		self.user.load()
+                self.user = User()
+                self.user.load()
 
         def get_search_parameters(self):
                 if not self.user.id:
@@ -124,5 +124,5 @@ if __name__ == '__main__':
         search.get_pubs()
         search.print_pubs()
         print '<p>'
-	PrintTrailer('search', 0, 0)
+        PrintTrailer('search', 0, 0)
 

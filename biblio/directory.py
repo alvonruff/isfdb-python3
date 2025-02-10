@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2023   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -15,11 +15,11 @@ from library import ISFDBText
 from login import *
 
 def PrintPublisherTableColumns():
-	print '<table class="generic_table">'
-	print '<tr class="generic_table_header">'
-	print '<td><b>Publisher</b></td>'
- 	print '</tr>'
- 	return
+        print '<table class="generic_table">'
+        print '<tr class="generic_table_header">'
+        print '<td><b>Publisher</b></td>'
+        print '</tr>'
+        return
 
 def PrintPublisherRecord(publisher_id, publisher_name, bgcolor):
         if bgcolor:
@@ -30,12 +30,12 @@ def PrintPublisherRecord(publisher_id, publisher_name, bgcolor):
         print '</tr>'
 
 def PrintMagazineTableColumns():
-	print '<table class="generic_table">'
-	print '<tr class="generic_table_header">'
-	print '<th>Magazine</th>'
-	print '<th>Parent Series</th>'
- 	print '</tr>'
- 	return
+        print '<table class="generic_table">'
+        print '<tr class="generic_table_header">'
+        print '<th>Magazine</th>'
+        print '<th>Parent Series</th>'
+        print '</tr>'
+        return
 
 def PrintMagazineRecord(title_title, series_id, parent_id, series_title, bgcolor):
         if bgcolor:
@@ -47,13 +47,13 @@ def PrintMagazineRecord(title_title, series_id, parent_id, series_title, bgcolor
         if title_title != series_title:
                 print '*'
         print ' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', series_id, '(issue grid)')
-	if parent_id:
-		parent_title = SQLgetSeriesName(int(parent_id))
-        	print '<td>'
-        	print ISFDBLink('pe.cgi', parent_id, parent_title)
+        if parent_id:
+                parent_title = SQLgetSeriesName(int(parent_id))
+                print '<td>'
+                print ISFDBLink('pe.cgi', parent_id, parent_title)
                 print ' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', parent_id, '(issue grid)')
-	else:
-		print '<td>-</td>'
+        else:
+                print '<td>-</td>'
         print '</tr>'
 
 
@@ -64,14 +64,14 @@ if __name__ == '__main__':
         title = "%s Directory" % dir_type.title()
         if len(SESSION.parameters) == 1:
                 section= ''
-	else:
+        else:
                 section = SESSION.Parameter(1, 'str')
                 title += ": %s" % ISFDBText(section.title())
         if dir_type == 'author' and section:
                 SESSION.DisplayError('Second Parameter Not Allowed for Author Directory')
 
-	PrintHeader(title)
-	PrintNavbar('directory', 0, 0, 'directory.cgi', dir_type)
+        PrintHeader(title)
+        PrintNavbar('directory', 0, 0, 'directory.cgi', dir_type)
 
         user = User()
         user.load()
@@ -90,7 +90,7 @@ if __name__ == '__main__':
                 first_characters += "*"
         second_characters = first_characters + "." + "/"
         
-	if section == '':
+        if section == '':
                 if dir_type == 'publisher':
                         print """Also see the ISFDB Wiki
                                 <a href="%s://%s/index.php/Category:Publishers">category</a> for publishers""" % (PROTOCOL, WIKILOC)
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                         print """Also see the ISFDB Wiki pages for
                                 <a href="%s://%s/index.php/Magazines">magazines</a>
                                 and <a href="%s://%s/index.php/Fanzines">fanzines</a>""" % (PROTOCOL, WIKILOC, PROTOCOL, WIKILOC)
-		if dir_type != 'magazine':
+                if dir_type != 'magazine':
                         if dir_type == 'author' and not user.id:
                                 warning = ' (you will need to be logged in to access the sub-pages below)'
                         else:
@@ -107,11 +107,11 @@ if __name__ == '__main__':
                 else:
                         print '<h2>Directory of magazine and fanzine names starting with:</h2><p>'
                 print '<table class="authordirectory">'
-		for x in first_characters:
-			print '<tr>'
-			for y in second_characters:
+                for x in first_characters:
+                        print '<tr>'
+                        for y in second_characters:
                                 key = x + y
-				if key in records_map:
+                                if key in records_map:
                                         if dir_type == 'author':
                                                 output = '<td>%s' % AdvSearchLink((('USE_1', 'author_lastname'),
                                                                                    ('OPERATOR_1', 'starts_with'),
@@ -126,11 +126,11 @@ if __name__ == '__main__':
                                                                                       '%s+%s%s' % (dir_type, x, y),
                                                                                       '%s%s' % (x.upper(), y),
                                                                                       False, 'class = "bold"')
-				else:
-					print '<td class="authordirectorynolink">%s%s</td>' % (x.upper(), y)
-			print '</tr>'
-		print '</table>'
-		print '<p>'
+                                else:
+                                        print '<td class="authordirectorynolink">%s%s</td>' % (x.upper(), y)
+                        print '</tr>'
+                print '</table>'
+                print '<p>'
 
         else:
                 if len(section) == 1:
@@ -201,22 +201,22 @@ if __name__ == '__main__':
                         and tp.trans_publisher_name like _utf8"%s"
                         COLLATE 'utf8_general_ci'
                         order by publisher_name""" % (search_string, search_string)
-		db.query(query)
-		result = db.store_result()
-		number_of_records = result.num_rows()
-		if number_of_records:
+                db.query(query)
+                result = db.store_result()
+                number_of_records = result.num_rows()
+                if number_of_records:
                         print '<h3>Number of publisher names starting with "%s": %d </h3>' % (section, number_of_records)
-			bgcolor = 1
+                        bgcolor = 1
                         PrintPublisherTableColumns()
                         record = result.fetch_row()
                         while record:
                                 record_name = record[0][1]
                                 record_id = record[0][0]
                                 PrintPublisherRecord(record_id, record_name, bgcolor)
-				bgcolor ^= 1
+                                bgcolor ^= 1
                                 record = result.fetch_row()
                         print '</table><p>'
-		else:
-			print '<h3>No %s names found starting with: %s</h3>' % (dir_type, ISFDBText(section))
+                else:
+                        print '<h3>No %s names found starting with: %s</h3>' % (dir_type, ISFDBText(section))
 
-	PrintTrailer('directory', 0, 0)
+        PrintTrailer('directory', 0, 0)

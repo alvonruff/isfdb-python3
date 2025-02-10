@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2004-2013   Al von Ruff and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,8 +18,8 @@ from isfdb import *
 #==========================================================
 
 def DecodeArg(arg):
-	arg = string.replace(arg, '_', ' ')
-	arg = string.replace(arg, '\\', '')
-	return arg
+        arg = string.replace(arg, '_', ' ')
+        arg = string.replace(arg, '\\', '')
+        return arg
 
 

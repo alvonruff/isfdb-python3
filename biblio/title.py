@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Bill Longley, Uzume, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley, Uzume, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -197,31 +197,31 @@ if __name__ == '__main__':
                 default_variant_display = 1
         variant_display = SESSION.Parameter(1, 'int', default_variant_display, (0, 1, 2))
 
-	########################################
-	# STEP 1 - Get the title record
-	########################################
-	title = SQLloadTitle(title_id)
-	if not title:
-		if SQLDeletedTitle(title_id):
+        ########################################
+        # STEP 1 - Get the title record
+        ########################################
+        title = SQLloadTitle(title_id)
+        if not title:
+                if SQLDeletedTitle(title_id):
                         SESSION.DisplayError('This title has been deleted. See %s for details.' % ISFDBLink('title_history.cgi', title_id, 'Edit History'))
                 else:
                         SESSION.DisplayError('Unknown Title Record')
 
         browser_title = "Title: " + title[TITLE_TITLE]
         PrintHeader(browser_title)
-	PrintNavbar('title', title[TITLE_TTYPE], title_id, 'title.cgi', title_id)
+        PrintNavbar('title', title[TITLE_TTYPE], title_id, 'title.cgi', title_id)
 
-	SQLupdateTitleViews(title_id)
+        SQLupdateTitleViews(title_id)
 
         # Retrieve this title's variants
-	titles = SQLgetTitleVariants(title_id)
+        titles = SQLgetTitleVariants(title_id)
 
-	print '<div class="ContentBox">'
+        print '<div class="ContentBox">'
 
         # Transliterated title(s)
         trans_titles = SQLloadTransTitles(title_id)
 
-	if title[TITLE_TTYPE] == 'REVIEW':
+        if title[TITLE_TTYPE] == 'REVIEW':
                 reviewed_title = SQLfindReviewedTitle(title_id)
                 # If this is a VT'd REVIEW and not linked to a regular title, check
                 # if its parent is linked to a regular title
@@ -235,54 +235,54 @@ if __name__ == '__main__':
                 else:
                         print "<b>Review of:</b>", ISFDBMouseover(trans_titles, title[TITLE_TITLE], '')
                 displayCommon(title, user)
-		authors = SQLReviewBriefAuthorRecords(title_id)
-		displayPersonLabel('Author', authors)
-		displayPersons(authors)
-	elif title[TITLE_TTYPE] == 'INTERVIEW':
-		print "<b>Interview Title:</b>", ISFDBMouseover(trans_titles, title[TITLE_TITLE], '')
+                authors = SQLReviewBriefAuthorRecords(title_id)
+                displayPersonLabel('Author', authors)
+                displayPersons(authors)
+        elif title[TITLE_TTYPE] == 'INTERVIEW':
+                print "<b>Interview Title:</b>", ISFDBMouseover(trans_titles, title[TITLE_TITLE], '')
                 displayCommon(title, user)
-		authors = SQLInterviewBriefAuthorRecords(title_id)
-		displayPersonLabel('Interviewee', authors)
-		displayPersons(authors)
-	else:
-		print "<b>Title:</b>", ISFDBMouseover(trans_titles, title[TITLE_TITLE], '')
+                authors = SQLInterviewBriefAuthorRecords(title_id)
+                displayPersonLabel('Interviewee', authors)
+                displayPersons(authors)
+        else:
+                print "<b>Title:</b>", ISFDBMouseover(trans_titles, title[TITLE_TITLE], '')
                 displayCommon(title, user)
 
-	########################################
-	# STEP 2 - Get the title's authors
-	########################################
-	authors = SQLTitleBriefAuthorRecords(title_id)
-	if title[TITLE_TTYPE] in ('ANTHOLOGY', 'EDITOR'):
-		displayPersonLabel('Editor', authors)
-	elif title[TITLE_TTYPE] == 'REVIEW':
-		displayPersonLabel('Reviewer', authors)
-	elif title[TITLE_TTYPE] == 'INTERVIEW':
-		displayPersonLabel('Interviewer', authors)
-	else:
-		displayPersonLabel('Author', authors)
+        ########################################
+        # STEP 2 - Get the title's authors
+        ########################################
+        authors = SQLTitleBriefAuthorRecords(title_id)
+        if title[TITLE_TTYPE] in ('ANTHOLOGY', 'EDITOR'):
+                displayPersonLabel('Editor', authors)
+        elif title[TITLE_TTYPE] == 'REVIEW':
+                displayPersonLabel('Reviewer', authors)
+        elif title[TITLE_TTYPE] == 'INTERVIEW':
+                displayPersonLabel('Interviewer', authors)
+        else:
+                displayPersonLabel('Author', authors)
         displayPersons(authors)
-	print '<br>'
+        print '<br>'
 
-	print '<b>Date:</b> ', ISFDBconvertDate(title[TITLE_YEAR], 1)
+        print '<b>Date:</b> ', ISFDBconvertDate(title[TITLE_YEAR], 1)
 
-	if title[TITLE_PARENT]:
-		parent_title = SQLloadTitle(title[TITLE_PARENT])
-		if parent_title == []:
-			print "<br>"
-			print '<b>Variant Title ERROR:</b> Parent Title=%d' % title[TITLE_PARENT]
-		else:
-			print "<br>"
-			label = 'Variant Title of'
-			if title[TITLE_TTYPE] == 'COVERART' and parent_title[TITLE_TTYPE] == 'INTERIORART':
+        if title[TITLE_PARENT]:
+                parent_title = SQLloadTitle(title[TITLE_PARENT])
+                if parent_title == []:
+                        print "<br>"
+                        print '<b>Variant Title ERROR:</b> Parent Title=%d' % title[TITLE_PARENT]
+                else:
+                        print "<br>"
+                        label = 'Variant Title of'
+                        if title[TITLE_TTYPE] == 'COVERART' and parent_title[TITLE_TTYPE] == 'INTERIORART':
                                 label = '%s interior art' % label
-			if parent_title[TITLE_TTYPE] == 'COVERART' and title[TITLE_TTYPE] == 'INTERIORART':
+                        if parent_title[TITLE_TTYPE] == 'COVERART' and title[TITLE_TTYPE] == 'INTERIORART':
                                 label = '%s cover art for' % label
-			print '<b>%s:</b> %s' % (label, ISFDBLink('title.cgi', title[TITLE_PARENT], parent_title[TITLE_TITLE]))
-			if parent_title[TITLE_LANGUAGE] and title[TITLE_LANGUAGE] != parent_title[TITLE_LANGUAGE]:
+                        print '<b>%s:</b> %s' % (label, ISFDBLink('title.cgi', title[TITLE_PARENT], parent_title[TITLE_TITLE]))
+                        if parent_title[TITLE_LANGUAGE] and title[TITLE_LANGUAGE] != parent_title[TITLE_LANGUAGE]:
                                 print '[%s]' % LANGUAGES[int(parent_title[TITLE_LANGUAGE])]
-			if title[TITLE_YEAR] != parent_title[TITLE_YEAR]:
+                        if title[TITLE_YEAR] != parent_title[TITLE_YEAR]:
                                 print '(%s)' % ISFDBconvertYear(parent_title[TITLE_YEAR][:4])
-			vauthors = SQLTitleBriefAuthorRecords(parent_title[TITLE_PUBID])
+                        vauthors = SQLTitleBriefAuthorRecords(parent_title[TITLE_PUBID])
                         if set(authors) != set(vauthors):
                                 output = ' (by '
                                 counter = 0
@@ -293,11 +293,11 @@ if __name__ == '__main__':
                                         counter += 1
                                 output += ')'
                                 print output
-			print ' [may list more publications, awards, reviews, votes and covers]'
+                        print ' [may list more publications, awards, reviews, votes and covers]'
 
-	if title[TITLE_TTYPE]:
-		print "<br>"
-		print "<b>Type:</b>", title[TITLE_TTYPE]
+        if title[TITLE_TTYPE]:
+                print "<br>"
+                print "<b>Type:</b>", title[TITLE_TTYPE]
                 if title[TITLE_JVN] == 'Yes':
                         print ' [juvenile]'
                 if title[TITLE_NVZ] == 'Yes':
@@ -307,60 +307,60 @@ if __name__ == '__main__':
                 if title[TITLE_GRAPHIC] == 'Yes':
                         print ' [graphic format]'
 
-	if title[TITLE_STORYLEN]:
+        if title[TITLE_STORYLEN]:
                 print "<br>"
                 print "<b>Length:</b>"
                 print title[TITLE_STORYLEN]
 
-	if title[TITLE_CONTENT]:
+        if title[TITLE_CONTENT]:
                 print '<br>'
                 print '<b>Content:</b>'
-		print ISFDBText(title[TITLE_CONTENT])
+                print ISFDBText(title[TITLE_CONTENT])
 
-	if title[TITLE_SERIES]:
-		series = SQLget1Series(title[TITLE_SERIES])
-		print '<br>'
-		print '<b>Series:</b> %s' % ISFDBLink('pe.cgi', series[SERIES_PUBID], series[SERIES_NAME])
-		if title[TITLE_SERIESNUM] is not None:
-			print "<br>"
-			output = '<b>Series Number:</b> %d' % title[TITLE_SERIESNUM]
-			if title[TITLE_SERIESNUM_2] is not None:
+        if title[TITLE_SERIES]:
+                series = SQLget1Series(title[TITLE_SERIES])
+                print '<br>'
+                print '<b>Series:</b> %s' % ISFDBLink('pe.cgi', series[SERIES_PUBID], series[SERIES_NAME])
+                if title[TITLE_SERIESNUM] is not None:
+                        print "<br>"
+                        output = '<b>Series Number:</b> %d' % title[TITLE_SERIESNUM]
+                        if title[TITLE_SERIESNUM_2] is not None:
                                 output += '.%s' % title[TITLE_SERIESNUM_2]
                         print output
-	elif title[TITLE_PARENT]:
-		parent_title = SQLloadTitle(title[TITLE_PARENT])
-		if parent_title == []:
-			# Already generated an error message above
-			pass
-		else:
-			if parent_title[TITLE_SERIES]:
-				series = SQLget1Series(parent_title[TITLE_SERIES])
-				print '<br>'
-				print '<b>Series:</b> %s' % ISFDBLink('pe.cgi', series[SERIES_PUBID], series[SERIES_NAME])
-			if parent_title[TITLE_SERIESNUM] is not None:
-				print "<br>"
+        elif title[TITLE_PARENT]:
+                parent_title = SQLloadTitle(title[TITLE_PARENT])
+                if parent_title == []:
+                        # Already generated an error message above
+                        pass
+                else:
+                        if parent_title[TITLE_SERIES]:
+                                series = SQLget1Series(parent_title[TITLE_SERIES])
+                                print '<br>'
+                                print '<b>Series:</b> %s' % ISFDBLink('pe.cgi', series[SERIES_PUBID], series[SERIES_NAME])
+                        if parent_title[TITLE_SERIESNUM] is not None:
+                                print "<br>"
                                 output = '<b>Series Number:</b> %d' % parent_title[TITLE_SERIESNUM]
                                 if parent_title[TITLE_SERIESNUM_2] is not None:
                                         output += '.%s' % parent_title[TITLE_SERIESNUM_2]
                                 print output
 
 
-	# Webpages
-	webpages = SQLloadTitleWebpages(int(title_id))
+        # Webpages
+        webpages = SQLloadTitleWebpages(int(title_id))
         PrintWebPages(webpages, '<br>')
 
         if title[TITLE_LANGUAGE]:
                 print '<br><b>Language:</b> %s' % (LANGUAGES[int(title[TITLE_LANGUAGE])])
 
         br_required = 1
-	if title[TITLE_NOTE]:
-		note = SQLgetNotes(title[TITLE_NOTE])
-		print FormatNote(note, "Note", 'short', title_id, 'Title')
-		br_required = 0
-	if title[TITLE_SYNOP]:
-		note = SQLgetNotes(title[TITLE_SYNOP])
-		print FormatNote(note, "Synopsis", 'short', title_id, 'Synopsis')
-		br_required = 0
+        if title[TITLE_NOTE]:
+                note = SQLgetNotes(title[TITLE_NOTE])
+                print FormatNote(note, "Note", 'short', title_id, 'Title')
+                br_required = 0
+        if title[TITLE_SYNOP]:
+                note = SQLgetNotes(title[TITLE_SYNOP])
+                print FormatNote(note, "Synopsis", 'short', title_id, 'Synopsis')
+                br_required = 0
 
         if br_required:
                 print '<br>'
@@ -388,31 +388,31 @@ if __name__ == '__main__':
                         print user_vote
                 else:
                         print 'Not cast'
-	else:
-		print 'This title has no votes.'
-	print ISFDBLink('edit/vote.cgi', title[TITLE_PUBID], 'VOTE', False, 'class="inverted bold"')
+        else:
+                print 'This title has no votes.'
+        print ISFDBLink('edit/vote.cgi', title[TITLE_PUBID], 'VOTE', False, 'class="inverted bold"')
 
         # Retrieve all tags for this title and its parent (if present)
-	tags = SQLgetAllTitleTags(title[TITLE_PUBID], title[TITLE_PARENT], int(user.id))
-	print '<br>'
+        tags = SQLgetAllTitleTags(title[TITLE_PUBID], title[TITLE_PARENT], int(user.id))
+        print '<br>'
         print '<b>Current Tags:</b>'
-	if not tags:
-		print 'None'
-	else:
-		first = 1
-		output = ''
-		for tag in tags:
-			if first:
-				output = '%s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
-				first = 0
-			else:
-				output += ', %s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
-		print output
-		if SQLisUserModerator(user.id):
+        if not tags:
+                print 'None'
+        else:
+                first = 1
+                output = ''
+                for tag in tags:
+                        if first:
+                                output = '%s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
+                                first = 0
+                        else:
+                                output += ', %s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
+                print output
+                if SQLisUserModerator(user.id):
                         print ISFDBLink('mod/tag_breakdown.cgi', title[TITLE_PUBID], 'View Tag Breakdown', False, 'class="inverted" ')
 
-	# Only allow adding tags if the current title is not a variant of another one
-	if not title[TITLE_PARENT]:
+        # Only allow adding tags if the current title is not a variant of another one
+        if not title[TITLE_PARENT]:
                 if user.id:
                         my_tags = SQLgetUserTags(title_id, user.id)
                         print '<br>'
@@ -460,12 +460,12 @@ if __name__ == '__main__':
                         print '</form>'
                 else:
                         print '%s ' % ISFDBLink('edit/edittags.cgi', title[TITLE_PUBID], 'Add Tags', False, 'class="inverted bold"')
-       	print '</div>'
+                print '</div>'
 
-	########################################
-	# STEP 3 - Get any variants
-	########################################
-	if titles:
+        ########################################
+        # STEP 3 - Get any variants
+        ########################################
+        if titles:
                 headers = []
                 variants = []
                 translations = []
@@ -477,13 +477,13 @@ if __name__ == '__main__':
                 translated_interiorart = []
                 print '<div class="ContentBox">'
                 print '<h3 class="contentheader">Other Titles</h3>'
-		# Split the list of variants into four lists:
-		#   variants
-		#   translations
-		#   serializations
-		#   translated serializations
-		# Each list is displayed in its own table column
-		for variant in titles:
+                # Split the list of variants into four lists:
+                #   variants
+                #   translations
+                #   serializations
+                #   translated serializations
+                # Each list is displayed in its own table column
+                for variant in titles:
                         if not variant[TITLE_LANGUAGE]:
                                 same_language = 1
                         elif not title[TITLE_LANGUAGE]:
@@ -492,7 +492,7 @@ if __name__ == '__main__':
                                 same_language = 1
                         else:
                                 same_language = 0
-			if variant[TITLE_TTYPE] == 'SERIAL':
+                        if variant[TITLE_TTYPE] == 'SERIAL':
                                 if same_language:
                                         serials.append(variant)
                                 else:
@@ -507,7 +507,7 @@ if __name__ == '__main__':
                                         interiorart.append(variant)
                                 else:
                                         translated_interiorart.append(variant)
-			else :
+                        else :
                                 if same_language:
                                         variants.append(variant)
                                 else:
@@ -555,10 +555,10 @@ if __name__ == '__main__':
                 print '</table>'
                 print '</div>'
 
-	########################################
-	# STEP 4 - Get the title's award data
-	########################################
-	if not user.suppress_awards:
+        ########################################
+        # STEP 4 - Get the title's award data
+        ########################################
+        if not user.suppress_awards:
                 awards_list = SQLTitleAwards(title_id)
                 if awards_list:
                         print '<div class="ContentBox">'
@@ -567,15 +567,15 @@ if __name__ == '__main__':
                         award.PrintAwardTable(awards_list, 0)
                         print '</div>'
 
-	########################################################
-	# STEP 5 - Get the title's pub data and display all pubs
-	########################################################
-	print '<div class="ContentBox">'
-	print '<h3 class="contentheader">Publications</h3>'
-	retrieval_function = SQLGetPubsByTitle
-	# If there are variants and/or translations, let the user limit
-	# the list if displayed pubs in different ways
-	if titles:
+        ########################################################
+        # STEP 5 - Get the title's pub data and display all pubs
+        ########################################################
+        print '<div class="ContentBox">'
+        print '<h3 class="contentheader">Publications</h3>'
+        retrieval_function = SQLGetPubsByTitle
+        # If there are variants and/or translations, let the user limit
+        # the list if displayed pubs in different ways
+        if titles:
                 options = {}
                 options[0] = ('Displaying all variants and translations',
                               'Display all variants and translations',
@@ -599,12 +599,12 @@ if __name__ == '__main__':
                                                     {})
                 print output
                 print '<p>'
-	pubs = retrieval_function(title_id)
-	PrintPubsTable(pubs, "title", user)
+        pubs = retrieval_function(title_id)
+        PrintPubsTable(pubs, "title", user)
 
-	###################################################################
-	# STEP 6a - Display cover art of the pubs for COVERART records only
-	###################################################################
+        ###################################################################
+        # STEP 6a - Display cover art of the pubs for COVERART records only
+        ###################################################################
         if title[TITLE_TTYPE] == 'COVERART':
                 title_ids = [title_id]
                 for one_title in titles:
@@ -622,9 +622,9 @@ if __name__ == '__main__':
                                         eligible = 1
                         if eligible:
                                 print ISFDBScan(pub[PUB_PUBID], pub[PUB_IMAGE])
-	#####################################################################
-	# STEP 6b - Display a link to the cover page for non-COVERART records
-	#####################################################################
+        #####################################################################
+        # STEP 6b - Display a link to the cover page for non-COVERART records
+        #####################################################################
         elif pubs:
                 for pub in pubs:
                         if pub[PUB_IMAGE]:
@@ -639,57 +639,57 @@ if __name__ == '__main__':
                                         else:
                                                 print ' (logged in users can change User Preferences to always display covers on this page)'
                                         break
-	print '</div>'
+        print '</div>'
 
-	########################################
-	# STEP 7 - Get the title's reviews
-	########################################
-	if user.suppress_reviews:
+        ########################################
+        # STEP 7 - Get the title's reviews
+        ########################################
+        if user.suppress_reviews:
                 pass
         else:
                 reviews = SQLloadAllTitleReviews(title[TITLE_PUBID])
                 PrintReviews(reviews, title[TITLE_LANGUAGE])
 
-	###################################################################################
-	# STEP 8 - Print bibliographic warnings only if this user's Preferences call for it
-	###################################################################################
-	if user.id and not user.suppress_bibliographic_warnings and len(pubs):
+        ###################################################################################
+        # STEP 8 - Print bibliographic warnings only if this user's Preferences call for it
+        ###################################################################################
+        if user.id and not user.suppress_bibliographic_warnings and len(pubs):
 
                 print '<div class="ContentBox">'
                 print '<h3 class="contentheader">Bibliographic Warnings</h3>'
                 print '<ul class="noindent">'
-		nonefound = 1
-		for pub in pubs:
+                nonefound = 1
+                for pub in pubs:
 
-			# Check to make sure that if the title is a collection, then the 
-			# pub is a collection, an omnibus or a magazine
-			if title[TITLE_TTYPE] == 'COLLECTION':
-				if pub[PUB_CTYPE] not in ('COLLECTION', 'OMNIBUS', 'MAGAZINE'):
-					print '<li> Type Mismatch (Pub=<i>%s</i>, should be <i>%s</i>): ' % (pub[PUB_CTYPE], title[TITLE_TTYPE])
-					print ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE])
-					nonefound = 0
+                        # Check to make sure that if the title is a collection, then the 
+                        # pub is a collection, an omnibus or a magazine
+                        if title[TITLE_TTYPE] == 'COLLECTION':
+                                if pub[PUB_CTYPE] not in ('COLLECTION', 'OMNIBUS', 'MAGAZINE'):
+                                        print '<li> Type Mismatch (Pub=<i>%s</i>, should be <i>%s</i>): ' % (pub[PUB_CTYPE], title[TITLE_TTYPE])
+                                        print ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE])
+                                        nonefound = 0
 
-			# Check to make sure that if the title is an anthology, then the 
-			# pub is an anthology, an omnibus or a magazine
-			if title[TITLE_TTYPE] == 'ANTHOLOGY':
-				if pub[PUB_CTYPE] not in ('ANTHOLOGY', 'OMNIBUS', 'MAGAZINE'):
-					print '<li> Type Mismatch (Pub=<i>%s</i>, should be <i>%s</i>): ' % (pub[PUB_CTYPE], title[TITLE_TTYPE])
-					print ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE])
-					nonefound = 0
+                        # Check to make sure that if the title is an anthology, then the 
+                        # pub is an anthology, an omnibus or a magazine
+                        if title[TITLE_TTYPE] == 'ANTHOLOGY':
+                                if pub[PUB_CTYPE] not in ('ANTHOLOGY', 'OMNIBUS', 'MAGAZINE'):
+                                        print '<li> Type Mismatch (Pub=<i>%s</i>, should be <i>%s</i>): ' % (pub[PUB_CTYPE], title[TITLE_TTYPE])
+                                        print ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE])
+                                        nonefound = 0
 
-			if pub[PUB_YEAR] == '0000-00-00':
-				print '<li> Unknown Publication Date:'
-				print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
-				nonefound = 0
+                        if pub[PUB_YEAR] == '0000-00-00':
+                                print '<li> Unknown Publication Date:'
+                                print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
+                                nonefound = 0
 
                         year_num = int(pub[PUB_YEAR][0:4])
                         # If the book has an ISBN or a catalog ID or is an e-book, magazine, fanzine, then we are OK
-			if (pub[PUB_ISBN]
+                        if (pub[PUB_ISBN]
                             or pub[PUB_CATALOG]
                             or pub[PUB_PTYPE] in ('ebook', 'digital audio download')
                             or pub[PUB_CTYPE] in ('MAGAZINE', 'FANZINE')):
-				pass
-			elif year_num > 1950:
+                                pass
+                        elif year_num > 1950:
                                 # Do not check for catalog ID/ISBN for hardcovers published prior to 1972
                                 if (year_num < 1972) and (pub[PUB_PTYPE] == 'hc'):
                                         pass
@@ -698,32 +698,32 @@ if __name__ == '__main__':
                                         print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
                                         nonefound = 0
 
-			if pub[PUB_PRICE] or pub[PUB_PTYPE] == 'webzine':
-				pass
-			else:
-				print '<li> Missing price:'
-				print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
-				nonefound = 0
+                        if pub[PUB_PRICE] or pub[PUB_PTYPE] == 'webzine':
+                                pass
+                        else:
+                                print '<li> Missing price:'
+                                print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
+                                nonefound = 0
 
-			if (pub[PUB_PAGES]
+                        if (pub[PUB_PAGES]
                             or (pub[PUB_PTYPE] in ('ebook', 'webzine'))
                             or ('audio' in pub[PUB_PTYPE])
                             or ('digital' in pub[PUB_PTYPE])):
-				pass
-			else:
-				print '<li> Missing page count:'
-				print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
-				nonefound = 0
+                                pass
+                        else:
+                                print '<li> Missing page count:'
+                                print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
+                                nonefound = 0
 
-			if pub[PUB_PTYPE]:
-				if pub[PUB_PTYPE] == 'unknown':
-					print '<li> Unknown publication format:'
-					print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
-					nonefound = 0
+                        if pub[PUB_PTYPE]:
+                                if pub[PUB_PTYPE] == 'unknown':
+                                        print '<li> Unknown publication format:'
+                                        print '%s (%s)' % (ISFDBLink("pl.cgi", pub[PUB_PUBID], pub[PUB_TITLE]), ISFDBconvertDate(pub[PUB_YEAR], 1))
+                                        nonefound = 0
 
-		if nonefound:
-			print "<li> None."
-        	print "</ul>"
+                if nonefound:
+                        print "<li> None."
+                print "</ul>"
                 print '</div>'
         
-	PrintTrailer('title', title_id, title_id)
+        PrintTrailer('title', title_id, title_id)

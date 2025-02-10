@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2014-2025   Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,10 +20,10 @@ if __name__ == '__main__':
         title_id = SESSION.Parameter(0, 'int')
         title = SQLgetTitle(title_id)
         if not title:
-		SESSION.DisplayError('Title Does Not Exist')
+                SESSION.DisplayError('Title Does Not Exist')
 
-	PrintHeader('All Covers for %s' % title)
-	PrintNavbar('titlecovers', 0, 0, 'titlecovers.cgi', title_id)
+        PrintHeader('All Covers for %s' % title)
+        PrintNavbar('titlecovers', 0, 0, 'titlecovers.cgi', title_id)
 
         pubs = SQLGetPubsByTitle(title_id)
         count = 0
@@ -36,4 +36,4 @@ if __name__ == '__main__':
 
         print '<p>%s' % ISFDBLinkNoName('title.cgi', title_id, 'Back to the Title page for %s' % title, True, 'class="bold"')
 
-	PrintTrailer('titlecovers', title_id, title_id)
+        PrintTrailer('titlecovers', title_id, title_id)

@@ -25,6 +25,7 @@ install:
 	make -f local.mk install
 
 clean:
+	cat TARGETS | sed -e s/DIR/local/g > .TARGETS
 	make -f local.mk clean
 	rm -f *.cgi
 	rm -f *.pyc

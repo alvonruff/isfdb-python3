@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2022   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,14 +19,14 @@ if __name__ == '__main__':
 
         start = SESSION.Parameter(0, 'int', 0)
 
-	PrintHeader('My Removed Secondary Verifications')
-	PrintNavbar('my_removed_secondary_verifications', 0, 0, 'my_removed_secondary_verifications.cgi', 0)
+        PrintHeader('My Removed Secondary Verifications')
+        PrintNavbar('my_removed_secondary_verifications', 0, 0, 'my_removed_secondary_verifications.cgi', 0)
 
         user = User()
         user.load()
-	if not user.id:
+        if not user.id:
                 print 'You must be logged in to view your removed secondary verifications'
-        	PrintTrailer('my_removed_secondary_verifications', 0, 0)
+                PrintTrailer('my_removed_secondary_verifications', 0, 0)
                 sys.exit(0)
 
         per_page = 200
@@ -37,12 +37,12 @@ if __name__ == '__main__':
                 order by deletion_time desc
                 limit %d, %d""" % (int(user.id), start, per_page)
 
-	db.query(query)
-	result0 = db.store_result()
-	if result0.num_rows() == 0:
-		print '<h3>No removed secondary verifications present for the specified ID range</h3>'
-		PrintTrailer('my_removed_secondary_verifications', 0, 0)
-		sys.exit(0)
+        db.query(query)
+        result0 = db.store_result()
+        if result0.num_rows() == 0:
+                print '<h3>No removed secondary verifications present for the specified ID range</h3>'
+                PrintTrailer('my_removed_secondary_verifications', 0, 0)
+                sys.exit(0)
         deleted = result0.fetch_row()
         deleted_verifications = []
         while deleted:
@@ -95,9 +95,9 @@ if __name__ == '__main__':
                         print '</tr>'
                         record = result.fetch_row()
 
-	print '</table>'
-	if result0.num_rows() > (per_page - 1):
+        print '</table>'
+        if result0.num_rows() > (per_page - 1):
                 print '<p> [%s]' % ISFDBLink('my_removed_secondary_verifications.cgi', start + per_page, 'MORE')
 
-	PrintTrailer('my_removed_secondary_verifications', 0, 0)
+        PrintTrailer('my_removed_secondary_verifications', 0, 0)
 

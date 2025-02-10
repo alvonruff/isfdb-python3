@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,12 +29,12 @@ if __name__ == '__main__':
         if year == 0:
                 display_year = '0000'
 
-	title = "Publisher %s: Books Published in %s" % (publisher, ISFDBconvertYear(display_year))
+        title = "Publisher %s: Books Published in %s" % (publisher, ISFDBconvertYear(display_year))
 
         PrintHeader(title)
-	PrintNavbar('publisheryear', publisher_id, publisher_id, 'publisheryear.cgi', 0)
-	pubs = SQLGetPubsByPublisherYear(publisher_id, year)
-	if show_covers:
+        PrintNavbar('publisheryear', publisher_id, publisher_id, 'publisheryear.cgi', 0)
+        pubs = SQLGetPubsByPublisherYear(publisher_id, year)
+        if show_covers:
                 print ISFDBLinkNoName('publisheryear.cgi', '%d+%d' % (publisher_id, year), 'View publication list for this year')
                 print SESSION.ui.bullet
                 print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
@@ -48,12 +48,12 @@ if __name__ == '__main__':
                         print '<h3>No covers for %s</h3>' % year
                 PrintTrailer('publisheryear', publisher_id, publisher_id)
                 sys.exit(0)
-	if len(pubs):
-		print '<p>'
-		print ISFDBLinkNoName('publisheryear.cgi', '%d+%d+1' % (publisher_id, year), 'View covers for this year')
-		print SESSION.ui.bullet
-		print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
+        if len(pubs):
                 print '<p>'
-		PrintPubsTable(pubs, 'publisher')
+                print ISFDBLinkNoName('publisheryear.cgi', '%d+%d+1' % (publisher_id, year), 'View covers for this year')
+                print SESSION.ui.bullet
+                print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
+                print '<p>'
+                PrintPubsTable(pubs, 'publisher')
 
-	PrintTrailer('publisheryear', publisher_id, publisher_id)
+        PrintTrailer('publisheryear', publisher_id, publisher_id)

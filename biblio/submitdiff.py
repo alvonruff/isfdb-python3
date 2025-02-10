@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 991 $
 #     Date: $Date: 2022-09-07 18:27:14 -0400 (Wed, 07 Sep 2022) $
 
-	
+        
 import cgi
 import sys
 from login import *
@@ -21,16 +21,16 @@ def DoError(message):
         print '<h3>%s</h3>' % message
         PrintTrailer('pubdiff', 0, 0)
         sys.exit(0)
-	
+        
 if __name__ == '__main__':
 
-	PrintHeader("Publication Comparison")
-	PrintNavbar('pubdiff', 0, 0, 0, 0)
+        PrintHeader("Publication Comparison")
+        PrintNavbar('pubdiff', 0, 0, 0, 0)
 
-	form = cgi.FieldStorage()
+        form = cgi.FieldStorage()
 
-	pub_ids = {}
-	try:
+        pub_ids = {}
+        try:
                 for key in form.keys():
                         # Retrieve and save all pub IDs
                         if key.startswith('pub'):
@@ -40,8 +40,8 @@ if __name__ == '__main__':
         except:
                 DoError('Invalid Publication ID specified')
 
-	# If the user selected fewer than 2 pubs, display an error message and abort
-	if len(pub_ids.keys()) < 2:
+        # If the user selected fewer than 2 pubs, display an error message and abort
+        if len(pub_ids.keys()) < 2:
                 DoError('You must select at least 2 publications to compare')
 
         pubs = []
@@ -71,29 +71,29 @@ if __name__ == '__main__':
                         page_number = pc[PUB_CONTENTS_PAGE]
                         pages[pub_id][title_id] = page_number
 
-	print '<table class="pub_comparison_table">'
-	# Publication title
-	print '<tr>'
-	print '<th>Pub. Title:</th>'
-	for pub in pubs:
+        print '<table class="pub_comparison_table">'
+        # Publication title
+        print '<tr>'
+        print '<th>Pub. Title:</th>'
+        for pub in pubs:
                 pub_id = int(pub[PUB_PUBID])
                 pub_title = pub[PUB_TITLE]
                 pub_date = pub[PUB_YEAR]
                 print '<th>%s</th>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-	print '</tr>'
+        print '</tr>'
 
         # Publication Date
-	print '<tr>'
-	print '<th>Pub. Date:</th>'
-	for pub in pubs:
+        print '<tr>'
+        print '<th>Pub. Date:</th>'
+        for pub in pubs:
                 pub_date = pub[PUB_YEAR]
                 print '<td>%s</td>' % pub_date
-	print '</tr>'
+        print '</tr>'
 
         # Publisher
-	print '<tr>'
-	print '<th>Publisher:</th>'
-	for pub in pubs:
+        print '<tr>'
+        print '<th>Publisher:</th>'
+        for pub in pubs:
                 print '<td>'
                 publisher_id = pub[PUB_PUBLISHER]
                 if publisher_id:
@@ -103,23 +103,23 @@ if __name__ == '__main__':
                 else:
                         print '&nbsp;'
                 print '</td>'
-	print '</tr>'
+        print '</tr>'
 
         # Publication Note
-	print '<tr>'
-	print '<th>Pub. Note:</th>'
-	for pub in pubs:
+        print '<tr>'
+        print '<th>Pub. Note:</th>'
+        for pub in pubs:
                 note_id = pub[PUB_NOTE]
                 note_data = SQLgetNotes(note_id)
                 print '<td>'
                 print note_data
                 print '</td>'
-	print '</tr>'
+        print '</tr>'
 
         # Cover images
-	print '<tr>'
-	print '<th>Pub. Cover:</th>'
-	for pub in pubs:
+        print '<tr>'
+        print '<th>Pub. Cover:</th>'
+        for pub in pubs:
                 pub_image = ISFDBHostCorrection(pub[PUB_IMAGE])
                 print '<td>'
                 if not pub_image:
@@ -127,7 +127,7 @@ if __name__ == '__main__':
                 else:
                         print '<img src="%s" height="250" alt="cover image"><br>' % (pub_image.split("|")[0])
                 print '</td>'
-	print '</tr>'
+        print '</tr>'
 
         # Contents titles
         for title_id in titles_dict:
@@ -156,16 +156,16 @@ if __name__ == '__main__':
                         print '</td>'
                 print '</tr>'
 
-	print '<tr>'
-	print '<td>&nbsp;</td>'
-	for pub in pubs:
+        print '<tr>'
+        print '<td>&nbsp;</td>'
+        for pub in pubs:
                 pub_id = int(pub[PUB_PUBID])
                 pub_title = pub[PUB_TITLE]
                 print '<td>'
                 print ISFDBLink('edit/editpub.cgi', pub_id, 'Edit %s' % pub_title, True)
                 print '</td>'
-	print '</tr>'
-	print '</table>'
+        print '</tr>'
+        print '</table>'
 
-	PrintTrailer('login', 0, 0)
-	sys.exit(0)
+        PrintTrailer('login', 0, 0)
+        sys.exit(0)

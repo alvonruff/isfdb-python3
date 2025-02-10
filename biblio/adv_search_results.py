@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,23 +22,23 @@ from advSearchClass import AdvancedSearch
 
 class AdvancedSearchResults(AdvancedSearch):
         def __init__(self):
-        	self.action = 'query'
-        	self.conjunction = 'AND'
-        	self.dbases = []
+                self.action = 'query'
+                self.conjunction = 'AND'
+                self.dbases = []
                 self.form = {}
                 self.id_field = ''
-        	self.joins = set()
-        	self.num = 0
-        	self.query = ''
-        	self.records = []
+                self.joins = set()
+                self.num = 0
+                self.query = ''
+                self.records = []
                 self.search_type = ''
                 self.selection_criteria = set()
                 self.sort = ''
                 self.sort_name = ''
                 self.start = 0
-        	self.term_list = []
-        	self.terms = ''
-        	self.wildcards = '%*_'
+                self.term_list = []
+                self.terms = ''
+                self.wildcards = '%*_'
 
                 user = User()
                 user.load()
@@ -856,22 +856,22 @@ class AdvancedSearchResults(AdvancedSearch):
                 return (clause, dbases)
 
 class tableInfo:
-	def __init__(self, tname='', hints=None):
-		self.tname = tname
-		if hints == None:
-			self.hints = []
-		else:
-			self.hints = hints
+        def __init__(self, tname='', hints=None):
+                self.tname = tname
+                if hints == None:
+                        self.hints = []
+                else:
+                        self.hints = hints
 
-	def __cmp__(self, ti):
-		if (self.tname == ti.tname):
-			return 0
-		if (self.tname < ti.tiname):
-			return -1
-		return 1
+        def __cmp__(self, ti):
+                if (self.tname == ti.tname):
+                        return 0
+                if (self.tname < ti.tiname):
+                        return -1
+                return 1
 
-	def __eq__(self, ti):
-		return self.tname == ti.tname
+        def __eq__(self, ti):
+                return self.tname == ti.tname
 
         def merge_hints(self, other):
             for hint in other.hints:

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2022   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         author_name = author_data[AUTHOR_CANONICAL]
 
         PrintHeader('Publications for Author %s Published by %s' % (author_name, publisher_name))
-	PrintNavbar('publisher_one_author', publisher_id, publisher_id, 'publisher_one_author.cgi', 0)
+        PrintNavbar('publisher_one_author', publisher_id, publisher_id, 'publisher_one_author.cgi', 0)
 
         print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
         print ' %s ' % SESSION.ui.bullet
@@ -40,22 +40,22 @@ if __name__ == '__main__':
                 Only the currently selected form of the author's name is counted, e.g.
                 'Mary Shelley' does not include books published as by 'Mary W. Shelley'."""
 
-	pubs = SQLGetPubsForAuthorPublisher(publisher_id, author_id)
-	decades = {}
-	years = {}
-	for pub in pubs:
+        pubs = SQLGetPubsForAuthorPublisher(publisher_id, author_id)
+        decades = {}
+        years = {}
+        for pub in pubs:
                 pub_date = pub[PUB_YEAR]
                 year = int(pub_date[:4])
                 decade = year/10
                 years[year] = years.get(year, 0) + 1
                 decades[decade] = decades.get(decade, 0) + 1
 
-	table = ISFDBTable()
-	table.display_count = 0
-	table.headers = ['Decade', 'Years']
-	table.headers_colspan = [1, 13]
-	table.table_css = 'seriesgrid'
-	for decade in sorted(decades):
+        table = ISFDBTable()
+        table.display_count = 0
+        table.headers = ['Decade', 'Years']
+        table.headers_colspan = [1, 13]
+        table.table_css = 'seriesgrid'
+        for decade in sorted(decades):
                 if decade == 888:
                         row = ['unpublished (%d)' % decades[decade]]
                         for x in range(0,10):
@@ -77,4 +77,4 @@ if __name__ == '__main__':
         print '<p>'
         PrintPubsTable(pubs, 'publisher')
 
-	PrintTrailer('publisher_one_author', publisher_id, publisher_id)
+        PrintTrailer('publisher_one_author', publisher_id, publisher_id)

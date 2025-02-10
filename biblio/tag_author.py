@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,11 +28,11 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Author Does Not Exist')
 
         PrintHeader('Titles marked with tag %s for author %s' % (tag[TAG_NAME], author_data[AUTHOR_CANONICAL]))
-	PrintNavbar('tag_author', 0, 0, 'tag_author.cgi', tag_id)
+        PrintNavbar('tag_author', 0, 0, 'tag_author.cgi', tag_id)
 
         print ISFDBLink('tag.cgi', tag_id, 'View all users and titles for this tag', False, 'class="inverted bold"')
-	print '<h3>Titles by %s marked with tag: <i>%s</i></h3>' % (author_data[AUTHOR_CANONICAL], tag[TAG_NAME])
-	print '<ul>'
+        print '<h3>Titles by %s marked with tag: <i>%s</i></h3>' % (author_data[AUTHOR_CANONICAL], tag[TAG_NAME])
+        print '<ul>'
         title_list = SQLgetTitlesForAuthorAndTag(tag_id, author_id)
         for title_record in title_list:
                 print '<li>%s - %s ' % (ISFDBconvertYear(title_record[0][:4]), ISFDBLink('title.cgi', title_record[2], title_record[1]))
@@ -49,6 +49,6 @@ if __name__ == '__main__':
                                 need_and = 1
                 print '</li>'
 
-	print '</ul>'
+        print '</ul>'
 
-	PrintTrailer('tag', tag_id, tag_id)
+        PrintTrailer('tag', tag_id, tag_id)

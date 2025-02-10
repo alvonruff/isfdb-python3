@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2013-2022   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -37,10 +37,10 @@ if __name__ == '__main__':
                 header = 'Most-Reviewed Titles Prior to 1900'
         query += ' order by reviews desc limit 500'
 
-	PrintHeader('Most-Reviewed Titles Details')
-	PrintNavbar('top', 0, 0, 'most_reviewed.cgi', 0)
+        PrintHeader('Most-Reviewed Titles Details')
+        PrintNavbar('top', 0, 0, 'most_reviewed.cgi', 0)
 
-	print '<h3>%s</h3>' % header
+        print '<h3>%s</h3>' % header
 
         print '<h3>This report is generated once a day</h3>'
 
@@ -88,6 +88,6 @@ if __name__ == '__main__':
                         bgcolor = bgcolor ^ 1
                         count += 1
                 print '</table>'
-	
-	PrintTrailer('top', 0, 0)
+        
+        PrintTrailer('top', 0, 0)
 

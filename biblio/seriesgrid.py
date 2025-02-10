@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2010-2022   Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2010-2025   Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -219,4 +219,4 @@ if __name__ == '__main__':
         grid.DetermineDefaultFormat()
         grid.PrintHeader()
         grid.PrintTable()
-	PrintTrailer('series', 0, 0)
+        PrintTrailer('series', 0, 0)

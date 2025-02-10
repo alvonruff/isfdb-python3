@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2007-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,12 +19,12 @@ if __name__ == '__main__':
         tag_id = SESSION.Parameter(0, 'int')
         start = SESSION.Parameter(1, 'int', 0)
 
-	tag = SQLGetTagById(tag_id)
-	if not tag:
+        tag = SQLGetTagById(tag_id)
+        if not tag:
                 SESSION.DisplayError('Tag Does Not Exist')
 
         PrintHeader('Titles marked with tag %s' % (tag[TAG_NAME]))
-	PrintNavbar('tag', 0, 0, 'tag.cgi', tag_id)
+        PrintNavbar('tag', 0, 0, 'tag.cgi', tag_id)
 
         current_user = User()
         current_user.load()
@@ -68,24 +68,24 @@ if __name__ == '__main__':
                 print '</div>'
                 print '</form>'
 
-	print '<h3>Users of this Tag:</h3>'
-	tag_users = SQLgetUsersForTag(tag_id)
-	need_comma = 0
-	for tag_user in tag_users:
+        print '<h3>Users of this Tag:</h3>'
+        tag_users = SQLgetUsersForTag(tag_id)
+        need_comma = 0
+        for tag_user in tag_users:
                 output = ''
-		if need_comma:
-			output += ', '
-		else:
-			need_comma = 1
+                if need_comma:
+                        output += ', '
+                else:
+                        need_comma = 1
                 output += ISFDBLink('usertag.cgi', tag_user[0], tag_user[2])
                 output += ' (%s)' % ISFDBLink('usertitles.cgi', '%d+%d' % (tag_user[0], tag_id), tag_user[1])
-		print output
+                print output
 
-	print '<h3>Titles Marked With This Tag:</h3>'
-	titles = SQLgetTitlesForTag(tag_id, start)
-	PrintTitleTable(titles, 0, 100, current_user)
+        print '<h3>Titles Marked With This Tag:</h3>'
+        titles = SQLgetTitlesForTag(tag_id, start)
+        PrintTitleTable(titles, 0, 100, current_user)
 
-	if len(titles) > 100:
+        if len(titles) > 100:
                 print ISFDBLink('tag.cgi', '%d+%d' % (tag_id, start+100), 'Next page (%d - %d)' % (start+101, start+200))
 
-	PrintTrailer('tag', tag_id, tag_id)
+        PrintTrailer('tag', tag_id, tag_id)

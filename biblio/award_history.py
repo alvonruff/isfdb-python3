@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,8 +19,8 @@ if __name__ == '__main__':
 
         award_id = SESSION.Parameter(0, 'int')
 
-	PrintHeader('Award Edit History')
-	PrintNavbar('award_history', 0, 0, 'award_history.cgi', award_id)
+        PrintHeader('Award Edit History')
+        PrintNavbar('award_history', 0, 0, 'award_history.cgi', award_id)
 
         print """<h3>The list below displays the following types of submissions: Add Award,
                 Edit Award, Delete Award, Link Award. The submission which created this
@@ -31,12 +31,12 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d, %d, %d)
                 order by sub_reviewed desc
                 """ % (award_id, MOD_AWARD_NEW, MOD_AWARD_UPDATE, MOD_AWARD_DELETE, MOD_AWARD_LINK)
-	db.query(query)
-	result = db.store_result()
-	if not result.num_rows():
-		print '<h3>No submission data on file for this award.</h3>'
+        db.query(query)
+        result = db.store_result()
+        if not result.num_rows():
+                print '<h3>No submission data on file for this award.</h3>'
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 
-	PrintTrailer('award_history', 0, 0)
+        PrintTrailer('award_history', 0, 0)
 

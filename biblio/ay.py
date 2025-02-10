@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -45,8 +45,8 @@ if __name__ == '__main__':
 
         title = '%s %s' % (year, award_Type.award_type_name)
         PrintHeader(title)
-	PrintNavbar('award', 0, award_Type.award_type_id, 'ay.cgi', 0)
-	award_Type.display_awards_for_year(year)
-	print '<p>'
-	PrintTrailer('award', 0, 0)
+        PrintNavbar('award', 0, award_Type.award_type_id, 'ay.cgi', 0)
+        award_Type.display_awards_for_year(year)
+        print '<p>'
+        PrintTrailer('award', 0, 0)
 

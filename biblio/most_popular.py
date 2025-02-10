@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -45,8 +45,8 @@ if __name__ == '__main__':
         elif span == 'pre1950':
                 header = 'Highest Ranked %s Prior to 1950' % displayed_type
 
-	PrintHeader(header)
-	PrintNavbar('top', 0, 0, 'most_popular.cgi', 0)
+        PrintHeader(header)
+        PrintNavbar('top', 0, 0, 'most_popular.cgi', 0)
 
         print '<h3>This report is generated once a day</h3>'
 
@@ -112,6 +112,6 @@ if __name__ == '__main__':
                 place += 1
                 bgcolor = bgcolor ^ 1
         print '</table>'
-	
-	PrintTrailer('top', 0, 0)
+        
+        PrintTrailer('top', 0, 0)
 

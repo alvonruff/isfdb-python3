@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2024   Al von Ruff, Ahasuerus, Uzume and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Uzume and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,37 +23,37 @@ def displayLinks():
                 ISFDBLink("fc.cgi", "", "View All Forthcoming Books", argument='class="inverted"'),
                 ISFDBLink("stats.cgi?24", "", "View Top Forthcoming", argument='class="inverted"')
                 )
-	return
+        return
 
 if __name__ == '__main__':
 
-	PrintHeader('The Internet Speculative Fiction Database')
-	PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
+        PrintHeader('The Internet Speculative Fiction Database')
+        PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
 
-	print 'The <i><b>ISFDB</b></i> is a community effort to catalog works of science '
-	print 'fiction, fantasy, and horror. '
-	print 'It links together various types of bibliographic data: author bibliographies, '
-	print 'publication bibliographies, award listings, magazine content listings, anthology '
-	print 'and collection content listings, and forthcoming books.'
+        print 'The <i><b>ISFDB</b></i> is a community effort to catalog works of science '
+        print 'fiction, fantasy, and horror. '
+        print 'It links together various types of bibliographic data: author bibliographies, '
+        print 'publication bibliographies, award listings, magazine content listings, anthology '
+        print 'and collection content listings, and forthcoming books.'
 
         # Authors who were born and died on this day
         calendar_day = CalendarDay()
         calendar_day.padded_day = ISFDBDate()
         calendar_day.print_authors_section()
-	# Forthcoming Books
-	displayLinks()
-	print '<div class="divider">'
-	print '<b>Selected Forthcoming Books:</b>'
-	print '</div>'
+        # Forthcoming Books
+        displayLinks()
+        print '<div class="divider">'
+        print '<b>Selected Forthcoming Books:</b>'
+        print '</div>'
 
-	print '<div id="Intro">'
-	print '<table>'
+        print '<div id="Intro">'
+        print '<table>'
 
-	leftcolumn = 1
-	# Retrieve publication list from front_page_pubs which is built by the nightly job
-	pubs = SQLGetFrontPagePubs(1)
-	# If the nightly job hasn't run recently, retrieve publication list directly from the database
-	if len(pubs) < SESSION.front_page_pubs:
+        leftcolumn = 1
+        # Retrieve publication list from front_page_pubs which is built by the nightly job
+        pubs = SQLGetFrontPagePubs(1)
+        # If the nightly job hasn't run recently, retrieve publication list directly from the database
+        if len(pubs) < SESSION.front_page_pubs:
                 pubs = SQLGetNextMonthPubs()
         for pub in pubs:
                 if leftcolumn:
@@ -95,14 +95,14 @@ if __name__ == '__main__':
                         print '</tr>'
                         leftcolumn = 1
 
-	if leftcolumn == 0:
-		print '</tr>'
-		print '<tr>'
-		print '<td></td>'
-		print '<td></td>'
-		print '</tr>'
-	print '</table>'
-	print '</div>'
-	displayLinks()
+        if leftcolumn == 0:
+                print '</tr>'
+                print '<tr>'
+                print '<td></td>'
+                print '<td></td>'
+                print '</tr>'
+        print '</table>'
+        print '</div>'
+        displayLinks()
 
-	PrintTrailer('frontpage', 0, 0)
+        PrintTrailer('frontpage', 0, 0)

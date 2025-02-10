@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2007-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,7 +23,7 @@ if __name__ == '__main__':
         tag = SQLGetTagById(tag_id)
         if not tag:
                 SESSION.DisplayError('Tag Does Not Exist')
-	user_name = SQLgetUserName(user_id)
+        user_name = SQLgetUserName(user_id)
         if user_name == 'UNKNOWN':
                 SESSION.DisplayError('Unknown User')
 
@@ -32,14 +32,14 @@ if __name__ == '__main__':
         current_user.load_moderator_flag()
 
         PrintHeader("%s's Tags" % user_name)
-	PrintNavbar('usertitles', 0, 0, 'usertitles.cgi', 0)
+        PrintNavbar('usertitles', 0, 0, 'usertitles.cgi', 0)
 
         print """<h3>Titles marked by user %s with tag %s</h3>""" % (ISFDBLink('usertag.cgi', user_id, user_name),
                                                                 ISFDBLink('tag.cgi', tag_id, tag[TAG_NAME]))
-	titles = SQLgetTitlesForTagForUser(tag_id, user_id, start)
-	PrintTitleTable(titles, 0, 100, current_user)
+        titles = SQLgetTitlesForTagForUser(tag_id, user_id, start)
+        PrintTitleTable(titles, 0, 100, current_user)
 
-	if len(titles) > 100:
+        if len(titles) > 100:
                 print ISFDBLink('usertitles.cgi', '%d+%d+%d' % (user_id, tag_id, start+100), 'Next page (%d - %d)' % (start+101, start+200))
 
-	PrintTrailer('usertitles', user_id, user_id)
+        PrintTrailer('usertitles', user_id, user_id)

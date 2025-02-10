@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,7 +17,7 @@ import operator
 
 
 def printTableBody(author_dict):
-	bgcolor = 0
+        bgcolor = 0
         count = 0
         for author_id in sorted(author_dict, key=author_dict.get, reverse=True):
                 score = author_dict[author_id]
@@ -60,8 +60,8 @@ if __name__ == '__main__':
         elif span == 'pre1950':
                 header = 'Highest Ranked %s Prior to 1950' % displayed_type
 
-	PrintHeader(header)
-	PrintNavbar('top', 0, 0, 'popular_authors.cgi', 0)
+        PrintHeader(header)
+        PrintNavbar('top', 0, 0, 'popular_authors.cgi', 0)
 
         query = """select title_id, score from award_titles_report where 1 """
         if span == 'decade':
@@ -90,16 +90,16 @@ if __name__ == '__main__':
 
         # Retrieve the author IDs for the identified titles
         query = "select title_id, author_id from canonical_author where ca_status=1 and title_id in (%s)" % dict_to_in_clause(title_dict)
-	db.query(query)
-	result = db.store_result()
+        db.query(query)
+        result = db.store_result()
         record = result.fetch_row()
         author_dict = {}
-	while record:
+        while record:
                 title_id = str(record[0][0])
                 author_id = record[0][1]
                 score = title_dict[title_id]
                 author_dict[author_id] = author_dict.get(author_id, 0) + score
-        	record = result.fetch_row()
+                record = result.fetch_row()
 
         print '<h3>This report is generated once a day</h3>'
         print '<b>Note</b>: Some recent awards are yet to be integrated into the database. Only title-based awards are used for ranking purposes.<br>'
@@ -116,6 +116,6 @@ if __name__ == '__main__':
         print '</tr>'
         printTableBody(author_dict)
         print '</table>'
-	
-	PrintTrailer('top', 0, 0)
+        
+        PrintTrailer('top', 0, 0)
 

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2021   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,8 +25,8 @@ def printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                 variantTitles, variantSerials, parentsWithPubs,
                 variantAuthors, translit_titles, translit_authors, ser, user):
         output = '<li>'
-	if ser.series_parentposition > 0:
-		output += '%s ' % ser.series_parentposition
+        if ser.series_parentposition > 0:
+                output += '%s ' % ser.series_parentposition
         output += ISFDBLink('pe.cgi', ser.series_id, ser.series_name)
         print output
         magazine_found = 0
@@ -55,28 +55,28 @@ def printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                         displayTitle(title, 0, parentAuthors, SERIES_TYPE_UNKNOWN, variantTitles,
                                      variantSerials, parentsWithPubs, variantAuthors, translit_titles,
                                      translit_authors, user)
-	print "</ul>"
+        print "</ul>"
 
-	children = seriesTree[ser.series_id]
-	if children:
-		print "<ul>"
-		for child_id in children:
+        children = seriesTree[ser.series_id]
+        if children:
+                print "<ul>"
+                for child_id in children:
                         ser1 = seriesData[child_id]
-			printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
+                        printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                                     variantTitles, variantSerials, parentsWithPubs,
                                     variantAuthors, translit_titles, translit_authors,
                                     ser1, user)
-		print "</ul>"
+                print "</ul>"
 
 if __name__ == '__main__':
 
-	# Get the series parameter. May be a series name or a series record number.
+        # Get the series parameter. May be a series name or a series record number.
         parameter = SESSION.Parameter(0, 'unescape')
 
-	# Translate the series name to its series number if necessary
-	try:
-		series_id = int(parameter)
-	except:
+        # Translate the series name to its series number if necessary
+        try:
+                series_id = int(parameter)
+        except:
                 series_id = 0
         
         if series_id:
@@ -85,10 +85,10 @@ if __name__ == '__main__':
                                 SESSION.DisplayError('This series has been deleted. See %s for details' % ISFDBLink('series_history.cgi', series_id, 'Edit History'))
                         else:
                                 SESSION.DisplayError('Specified Series Does Not Exist')
-	else:
-		series_id = SQLFindSeriesId(parameter)
+        else:
+                series_id = SQLFindSeriesId(parameter)
 
-	if not series_id:
+        if not series_id:
                 SESSION.DisplayError('Specified Series Does Not Exist')
 
         ser = series(db)
@@ -104,8 +104,8 @@ if __name__ == '__main__':
                 if translations:
                         user.translation_cookies(translations)
 
-	PrintHeader('Series: %s' % ser.series_name)
-	PrintNavbar('series', series_id, 0, 'pe.cgi', ser.series_id)
+        PrintHeader('Series: %s' % ser.series_name)
+        PrintNavbar('series', series_id, 0, 'pe.cgi', ser.series_id)
 
         (seriesData, seriesTitles, seriesTree, parentAuthors,
          seriesTags, variantTitles, variantSerials, parentsWithPubs,
@@ -128,4 +128,4 @@ if __name__ == '__main__':
 
         print '</div>'
 
-	PrintTrailer('series', 0, 0)
+        PrintTrailer('series', 0, 0)

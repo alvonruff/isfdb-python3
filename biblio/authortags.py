@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,8 +23,8 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Author Does Not Exist')
         author_name = author_data[AUTHOR_CANONICAL]
 
-	PrintHeader('All Tags for %s' % author_name)
-	PrintNavbar('authortags', 0, 0, 'authortags.cgi', author_id)
+        PrintHeader('All Tags for %s' % author_name)
+        PrintNavbar('authortags', 0, 0, 'authortags.cgi', author_id)
 
         # Determine the current user
         (userid, username, usertoken) = GetUserData()
@@ -44,4 +44,4 @@ if __name__ == '__main__':
 
         print '<p><b>Back to the Summary Bibliography page for %s</b>' % ISFDBLink('ea.cgi', author_id, author_name)
 
-	PrintTrailer('authortags', author_id, author_id)
+        PrintTrailer('authortags', author_id, author_id)
