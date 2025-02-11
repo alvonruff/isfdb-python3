@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2010-2022   Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2010-2025   Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,36 +22,36 @@ def _question_mark():
         return '<img src="%s://%s/question_mark_icon.gif" alt="Question mark" class="help">' % (PROTOCOL, HTMLLOC)
 
 def printtitletype(current_value, help):
-	print '<tr>'
-	printContentHeader('Title Type', help)
+        print '<tr>'
+        printContentHeader('Title Type', help)
         print '<td><select tabindex="1" name="title_ttype">'
-	for ttype in ['ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'COVERART',
+        for ttype in ['ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'COVERART',
                       'EDITOR', 'ESSAY', 'INTERIORART', 'NONFICTION',
                       'NOVEL', 'OMNIBUS', 'POEM', 'SERIAL', 'SHORTFICTION']:
-		if current_value == ttype:
-        		print '<option value="%s" selected="selected">%s</option>' % (ttype, ttype)
-		else:
-        		print '<option value="%s">%s</option>' % (ttype, ttype)
-		
+                if current_value == ttype:
+                        print '<option value="%s" selected="selected">%s</option>' % (ttype, ttype)
+                else:
+                        print '<option value="%s">%s</option>' % (ttype, ttype)
+                
         print '</select></td></tr>'
 
 def printlength(current_value, help):
-	print '<tr>'
-	printContentHeader('Length', help)
+        print '<tr>'
+        printContentHeader('Length', help)
         print '<td><select tabindex="1" name="title_storylen">'
-	for storylen in SESSION.db.storylen_codes:
-		if current_value == storylen:
-        		print '<option selected>%s</option>' % storylen
-		else:
-        		print '<option>%s</option>' % storylen
+        for storylen in SESSION.db.storylen_codes:
+                if current_value == storylen:
+                        print '<option selected>%s</option>' % storylen
+                else:
+                        print '<option>%s</option>' % storylen
         print '</select></td>'
         print '</tr>'
 
 def printlanguage(current_language_code='', field='language', label='Language', help = None):
-	(myID, username, usertoken) = GetUserData()
-	# Get the currently defined preferences for the logged-in user
-	preferences = SQLLoadUserPreferences(myID)
-	# Get this user's default language code and name
+        (myID, username, usertoken) = GetUserData()
+        # Get the currently defined preferences for the logged-in user
+        preferences = SQLLoadUserPreferences(myID)
+        # Get this user's default language code and name
         default_language_code = preferences[USER_DEFAULT_LANGUAGE]
         default_language_name = LANGUAGES[default_language_code]
 
@@ -60,8 +60,8 @@ def printlanguage(current_language_code='', field='language', label='Language', 
         if current_language_code:
                 current_language_name = LANGUAGES[current_language_code]
 
-	print '<tr>'
-	printfieldlabel(label, help)
+        print '<tr>'
+        printfieldlabel(label, help)
 
         print '<td><select tabindex="1" class="metainputselect" name="%s">' %(field)
 
@@ -69,14 +69,14 @@ def printlanguage(current_language_code='', field='language', label='Language', 
         # and display them in a drop-down list
         for language_name in sorted(LANGUAGES[1:]):
                 # If the current record's language is defined and we are processing it, then select it
-		if current_language_name and language_name == current_language_name:
-        		print '<option value="%s" selected="selected">%s</option>' % (language_name, language_name)
-        	# If the current title has no language code and this language is the user's default language, then select it
-		elif not current_language_name and language_name == default_language_name:
-        		print '<option value="%s" selected="selected">%s</option>' % (language_name, language_name)
+                if current_language_name and language_name == current_language_name:
+                        print '<option value="%s" selected="selected">%s</option>' % (language_name, language_name)
+                # If the current title has no language code and this language is the user's default language, then select it
+                elif not current_language_name and language_name == default_language_name:
+                        print '<option value="%s" selected="selected">%s</option>' % (language_name, language_name)
                 # Otherwise this language is displayed, but is not "selected"
-		else:
-        		print '<option value="%s">%s</option>' % (language_name, language_name)
+                else:
+                        print '<option value="%s">%s</option>' % (language_name, language_name)
 
         print '</select>'
         print '</td>'
@@ -85,17 +85,17 @@ def printlanguage(current_language_code='', field='language', label='Language', 
 def printformat(field='pub_ptype', label='Format', help = None, value='unknown'):
         if not value:
                 value = 'unknown'
-	print '<tr>'
-	printfieldlabel(label, help)
+        print '<tr>'
+        printfieldlabel(label, help)
 
         print '<td><select tabindex="1" name="%s">' %(field)
 
         # Iterate over the list of recognized formats and display them in a drop-down list
         for format in SESSION.db.formats:
-		if format.lower() == value.lower():
-        		print '<option value="%s" selected="selected">%s</option>' % (format, format)
-		else:
-        		print '<option value="%s">%s</option>' % (format, format)
+                if format.lower() == value.lower():
+                        print '<option value="%s" selected="selected">%s</option>' % (format, format)
+                else:
+                        print '<option value="%s">%s</option>' % (format, format)
 
         print '</select>'
         print '</td>'
@@ -193,18 +193,18 @@ def printtitlerecord(record, index, pub_id, help = None, reuse_page_numbers = 1)
         print "<tr><td>"
         print '<input name="title_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	if page and reuse_page_numbers:
-		print '<input name="title_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
-	else:
-		print '<input name="title_page%d" tabindex="1" class="contentpageinput"></td>' % (index)
+        if page and reuse_page_numbers:
+                print '<input name="title_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
+        else:
+                print '<input name="title_page%d" tabindex="1" class="contentpageinput"></td>' % (index)
 
         print '<td><input name="title_title%d" value="%s"%s></td>' % (index, escape_string(record[TITLE_TITLE]), args % "contentinput")
         print '<td><input name="title_date%d" value="%s"%s></td>' % (index, record[TITLE_YEAR], args % "contentyearinput")
         print '<td><input name="title_ttype%d" value="%s"%s></td>' % (index, record[TITLE_TTYPE], args % "contenttypeinput")
 
-	###################################
-	# STORYLEN
-	###################################
+        ###################################
+        # STORYLEN
+        ###################################
         length = ''
         for storylen in SESSION.db.storylen_codes:
                 if record and record[TITLE_STORYLEN] == storylen:
@@ -224,7 +224,7 @@ def printtitlerecord(record, index, pub_id, help = None, reuse_page_numbers = 1)
                         print '</tr>'
                         counter += 1
 
-	printSpacer(5, 'title', index)
+        printSpacer(5, 'title', index)
 
 def printblanktitlerecord(index, help = None, pub_type = 'NOVEL'):
         if not help:
@@ -233,11 +233,11 @@ def printblanktitlerecord(index, help = None, pub_type = 'NOVEL'):
 
         # Use the publication type to determine the default title type for
         # contents titles
-	if pub_type == 'OMNIBUS':
+        if pub_type == 'OMNIBUS':
                 default_title_type = 'NOVEL'
-	elif pub_type == 'NONFICTION':
+        elif pub_type == 'NONFICTION':
                 default_title_type = 'ESSAY'
-	else:
+        else:
                 default_title_type = 'SHORTFICTION'
 
         print '<tr>'
@@ -267,7 +267,7 @@ def printblanktitlerecord(index, help = None, pub_type = 'NOVEL'):
         counter +=1
 
         printAddContentAuthor('Author', help, index)
-	printSpacer(5, 'title', index)
+        printSpacer(5, 'title', index)
 
 def printeditabletitlerecord(record, index, container, help, pub_id):
         args = ' class="%s"'
@@ -290,7 +290,7 @@ def printeditabletitlerecord(record, index, container, help, pub_id):
         print '<tr><td>'
         print '<input name="title_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	# Container titles shouldn't have page numbers, so the page field is not editable
+        # Container titles shouldn't have page numbers, so the page field is not editable
         if container:
                 print '<input name="title_page%d" tabindex="0" READONLY class="contentpageinput titlemultiple"></td>' % index
         # Non-container page numbers are always editable even for read-only titles
@@ -303,10 +303,10 @@ def printeditabletitlerecord(record, index, container, help, pub_id):
         print '<td><input name="title_title%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, escape_string(record[TITLE_TITLE]), args % "contentinput")
         print '<td><input name="title_date%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, record[TITLE_YEAR], args % "contentyearinput")
 
-	###################################
-	# Title type
-	###################################
-	if readonly:
+        ###################################
+        # Title type
+        ###################################
+        if readonly:
                 print '<td><input name="title_ttype%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, record[TITLE_TTYPE], args % "contenttypeinput")
         else:
                 print '<td><select name="title_ttype%d" tabindex="%d" %s>' % (index, taborder, args % "contenttypeinput")
@@ -317,13 +317,13 @@ def printeditabletitlerecord(record, index, container, help, pub_id):
                                 print '<option>%s</option>' % ttype
                 print '</select></td>'
 
-	###################################
-	# STORYLEN
-	###################################
+        ###################################
+        # STORYLEN
+        ###################################
         length = ''
         if record[TITLE_STORYLEN]:
                 length = record[TITLE_STORYLEN]
-	if readonly:
+        if readonly:
                 print '<td><input name="title_storylen%d" value="%s" tabindex="%d"%s></td>' % (index, length, taborder, args % "contentleninput")
         else:
                 print '<td><select name="title_storylen%d" tabindex="%d"%s>' % (index, taborder, args % "contentleninput")
@@ -335,27 +335,27 @@ def printeditabletitlerecord(record, index, container, help, pub_id):
                 print '</select></td>'
         print '</tr>'
 
-	###################################
-	# AUTHORS
-	###################################
+        ###################################
+        # AUTHORS
+        ###################################
 
         authors = SQLTitleAuthors(record[TITLE_PUBID])
         counter = 1
         if len(authors):
                 for author in authors:
                         print '<tr id="title_author%d.%d.row">' % (index, counter)
-			printContentHeader('Author%d:'% counter, help)
-			print """<td><input id="title_author%d.%d" name="title_author%d.%d" tabindex="%d"
+                        printContentHeader('Author%d:'% counter, help)
+                        print """<td><input id="title_author%d.%d" name="title_author%d.%d" tabindex="%d"
                         value="%s"%s></td>""" % (index, counter, index, counter, taborder, escape_string(author), args % "contentinput")
-			print '</tr>'
+                        print '</tr>'
                         counter += 1
-	else:
-		print '<tr id="title_author%d.%d.row">' % (index, counter)
-		printContentHeader('Author%d:'% counter, help)
-		print """<td><input id="title_author%d.%d" name="title_author%d.%d" tabindex="%d"
+        else:
+                print '<tr id="title_author%d.%d.row">' % (index, counter)
+                printContentHeader('Author%d:'% counter, help)
+                print """<td><input id="title_author%d.%d" name="title_author%d.%d" tabindex="%d"
                         %s></td>""" % (index, counter, index, counter, taborder, args % "contentinput")
-		print '</tr>'
-		counter += 1
+                print '</tr>'
+                counter += 1
 
         if not readonly:
                 printAddContentAuthor('Author', help, index)
@@ -408,7 +408,7 @@ def printbriefblankcoverart(index, help = None):
         print '</tr>'
         counter += 1
         printAddContentAuthor('Artist', help, index)
-	printSpacer(2, 'cover', index)
+        printSpacer(2, 'cover', index)
 
 def printreviewrecord(record, index, pub_id, help = None, reuse_page_numbers = 1):
         if not help:
@@ -418,16 +418,16 @@ def printreviewrecord(record, index, pub_id, help = None, reuse_page_numbers = 1
         print '<tr><td>'
         print '<input name="review_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	if page and reuse_page_numbers:
-		print '<input name="review_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
-	else:
-		print '<input name="review_page%d" tabindex="1" class="contentpageinput"></td>' % index
+        if page and reuse_page_numbers:
+                print '<input name="review_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
+        else:
+                print '<input name="review_page%d" tabindex="1" class="contentpageinput"></td>' % index
 
         print '<td><input name="review_title%d" value="%s"%s></td>' % (index, escape_string(record[TITLE_TITLE]), args % "contentinput")
         print '<td><input name="review_date%d" value="%s"%s></td>' % (index, record[TITLE_YEAR], args % "contentyearinput")
         print '</tr>'
 
-	counter = 1
+        counter = 1
         authors = SQLReviewAuthors(record[TITLE_PUBID])
         if len(authors):
                 for author in authors:
@@ -449,7 +449,7 @@ def printreviewrecord(record, index, pub_id, help = None, reuse_page_numbers = 1
                         print '</tr>'
                         counter += 1
 
-	printSpacer(3, 'review', index)
+        printSpacer(3, 'review', index)
 
 def printblankreviewrecord(index, help = None):
         if not help:
@@ -462,7 +462,7 @@ def printblankreviewrecord(index, help = None):
         print '<td><input name="review_date%d" tabindex="1" class="contentyearinput"></td>' % int(index)
         print '</tr>'
 
-	counter = 1
+        counter = 1
         print '<tr id="review_author%d.%d.row">' % (index, counter)
         printContentHeader('Author1:', help)
         print """<td><input id="review_author%d.%d" name="review_author%d.%d" tabindex="1"
@@ -480,7 +480,7 @@ def printblankreviewrecord(index, help = None):
         counter += 1
         printAddSecondaryAuthor('Reviewer', help, index)
 
-	printSpacer(3, 'review', index)
+        printSpacer(3, 'review', index)
 
 def printeditablereviewrecord(record, index, help, pub_id):
         # Find out if this title is in more than 1 publication
@@ -497,17 +497,17 @@ def printeditablereviewrecord(record, index, help, pub_id):
         print '<tr><td>'
         print '<input name="review_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	# Page numbers are always editable and included in the tab order
-	if page:
-		print '<input name="review_page%d" value="%s" tabindex="1" class="contentpageinput"></td>' % (index, escape_string(page))
-	else:
-		print '<input name="review_page%d" tabindex="1" class="contentpageinput"></td>' % (index)
+        # Page numbers are always editable and included in the tab order
+        if page:
+                print '<input name="review_page%d" value="%s" tabindex="1" class="contentpageinput"></td>' % (index, escape_string(page))
+        else:
+                print '<input name="review_page%d" tabindex="1" class="contentpageinput"></td>' % (index)
 
         print '<td><input name="review_title%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, escape_string(record[TITLE_TITLE]), args % "contentinput")
         print '<td><input name="review_date%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, record[TITLE_YEAR], args % "contentyearinput")
         print '</tr>'
 
-	counter = 1
+        counter = 1
         authors = SQLReviewAuthors(record[TITLE_PUBID])
         if len(authors):
                 for author in authors:
@@ -546,10 +546,10 @@ def printinterviewrecord(record, index, pub_id, help = None, reuse_page_numbers 
         print '<input name="interview_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
 
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	if page and reuse_page_numbers:
-		print '<input name="interview_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
-	else:
-		print '<input name="interview_page%d" tabindex="1" class="contentpageinput"></td>' % index
+        if page and reuse_page_numbers:
+                print '<input name="interview_page%d" tabindex="1" value="%s" class="contentpageinput"></td>' % (index, escape_string(page))
+        else:
+                print '<input name="interview_page%d" tabindex="1" class="contentpageinput"></td>' % index
 
         print '<td><input name="interview_title%d" value="%s"%s></td>' % (index, escape_string(record[TITLE_TITLE]), args % "contentinput")
         print '<td><input name="interview_date%d" value="%s"%s></td>' % (index, record[TITLE_YEAR], args % "contentyearinput")
@@ -577,7 +577,7 @@ def printinterviewrecord(record, index, pub_id, help = None, reuse_page_numbers 
                         print '</tr>'
                         counter += 1
 
-	printSpacer(3, 'interview', index)
+        printSpacer(3, 'interview', index)
 
 def printblankinterviewrecord(index, help = None):
         if not help:
@@ -608,7 +608,7 @@ def printblankinterviewrecord(index, help = None):
         counter += 1
         printAddSecondaryAuthor('Interviewer', help, index)
 
-	printSpacer(3, 'interview', index)
+        printSpacer(3, 'interview', index)
 
 def printeditableinterviewrecord(record, index, help, pub_id):
         # Find out if this title is in more than 1 publication
@@ -625,11 +625,11 @@ def printeditableinterviewrecord(record, index, help, pub_id):
         print '<tr><td>'
         print '<input name="interview_id%d" value="%s" type="HIDDEN">' % (index, record[TITLE_PUBID])
         page = SQLGetPageNumber(record[TITLE_PUBID], pub_id)
-	# Page numbers are always editable and belong to the primary tab group
-	if page:
-		print '<input name="interview_page%d" value="%s" tabindex="1" class="contentpageinput"></td>' % (index, escape_string(page))
-	else:
-		print '<input name="interview_page%d" tabindex="1" class="contentpageinput"></td>' % index
+        # Page numbers are always editable and belong to the primary tab group
+        if page:
+                print '<input name="interview_page%d" value="%s" tabindex="1" class="contentpageinput"></td>' % (index, escape_string(page))
+        else:
+                print '<input name="interview_page%d" tabindex="1" class="contentpageinput"></td>' % index
 
         print '<td><input name="interview_title%d" tabindex="%d" value="%s"%s></td>' % (index, taborder, escape_string(record[TITLE_TITLE]), args % "contentinput")
 
@@ -664,7 +664,7 @@ def printeditableinterviewrecord(record, index, help, pub_id):
         if not readonly:
                 printAddSecondaryAuthor('Interviewer', help, index)
 
-	printSpacer(3, 'interview', index)
+        printSpacer(3, 'interview', index)
 
 def printtextarea(label, fieldname, help, notes = '', rows = 4, readonly = 0):
         print '<tr>'
@@ -684,26 +684,26 @@ def printtextarea(label, fieldname, help, notes = '', rows = 4, readonly = 0):
         print '</tr>'
 
 def printsource(help):
-	print '<tr>'
-	if help.get("Source"):
+        print '<tr>'
+        if help.get("Source"):
                 print '<td class="hint" title="%s"><b>Source of the data: </b>' % (help['Source'][0])
                 print _question_mark()
                 print '</td>'
         else:
                 print '<td><b>Source of the data: </b></td>'
-	print '<td>'
-	print '<input type="radio" name="Source" value="Primary">I own this publication (will be auto-verified as Primary)<br>'
-	print '<input type="radio" name="Source" value="Transient">I am working from this publication but will not have it permanently (will be auto-verified as Transient)<br>'
-	print '<input type="radio" name="Source" value="PublisherWebsite">Publisher\'s website<br>'
-	print '<input type="radio" name="Source" value="AuthorWebsite">Author\'s website<br>'
-	print '<input type="radio" tabindex="1" name="Source" value="Other" CHECKED>Other website, later printing/edition or another source (please explain in Publication Note)'
-	print '</td>'
-	print '</tr>'
+        print '<td>'
+        print '<input type="radio" name="Source" value="Primary">I own this publication (will be auto-verified as Primary)<br>'
+        print '<input type="radio" name="Source" value="Transient">I am working from this publication but will not have it permanently (will be auto-verified as Transient)<br>'
+        print '<input type="radio" name="Source" value="PublisherWebsite">Publisher\'s website<br>'
+        print '<input type="radio" name="Source" value="AuthorWebsite">Author\'s website<br>'
+        print '<input type="radio" tabindex="1" name="Source" value="Other" CHECKED>Other website, later printing/edition or another source (please explain in Publication Note)'
+        print '</td>'
+        print '</tr>'
 
 def printAddContentAuthor(type, help, index):
-	print '<tr id="Add%s%d">' % (type, int(index))
-	print '<td>&nbsp;</td>'
-	if type == 'Author':
+        print '<tr id="Add%s%d">' % (type, int(index))
+        print '<td>&nbsp;</td>'
+        if type == 'Author':
                 button_id = 'addContentTitleAuthor'
                 label = 'Author'
         elif type == 'Reviewee':
@@ -718,25 +718,25 @@ def printAddContentAuthor(type, help, index):
 
         # Only display the help pop-up for the first occurence of this button
         if help.get(('Add '+label)) and int(index) < 2:
-        	print '<td class="hint" title="%s">' % help[('Add '+label)][0]
-        	print '<input id="%s.button.%d" type="button" tabindex="1" value="Add %s">' % (button_id, int(index), label)
-        	print _question_mark()
-        	print '</td>'
+                print '<td class="hint" title="%s">' % help[('Add '+label)][0]
+                print '<input id="%s.button.%d" type="button" tabindex="1" value="Add %s">' % (button_id, int(index), label)
+                print _question_mark()
+                print '</td>'
         else:
                 print '<td><input id="%s.button.%d" type="button" tabindex="1" value="Add %s"></td>' % (button_id, int(index), label)
-	print '</tr>'
+        print '</tr>'
 
 def printAddSecondaryAuthor(type, help, index):
-	print '<tr id="Add%s%d">' % (type, int(index))
-	print '<td>&nbsp;</td>'
-	if help.get(('Add '+type)) and int(index) < 2:
-        	print '<td class="hint" title="%s">' % help[('Add '+type)][0]
-        	print '<input id="add%s.button.%d" type="button" tabindex="1" value="Add %s">' % (type, int(index), type)
-        	print _question_mark()
-        	print '</td>'
+        print '<tr id="Add%s%d">' % (type, int(index))
+        print '<td>&nbsp;</td>'
+        if help.get(('Add '+type)) and int(index) < 2:
+                print '<td class="hint" title="%s">' % help[('Add '+type)][0]
+                print '<input id="add%s.button.%d" type="button" tabindex="1" value="Add %s">' % (type, int(index), type)
+                print _question_mark()
+                print '</td>'
         else:
                 print '<td><input id="add%s.button.%d" type="button" tabindex="1" value="Add %s"></td>' % (type, int(index), type)
-	print '</tr>'
+        print '</tr>'
 
 
 def printContentHeader(label, help, index = 1):
@@ -766,9 +766,9 @@ def printNewRecordButton(record_type, listener):
 
 def printfieldlabel(label, help, index = 1, colon = ':', addbutton = None):
         # Only display the help pop-up for the first occurrence of repeating fields
-       	if help and help.get(label) and (int(index) < 2):
+        if help and help.get(label) and (int(index) < 2):
                 text = escape_string(help[label][0])
-               	display = '<td class="hint" title="%s"><b>%s%s </b>' % (text, label, colon)
+                display = '<td class="hint" title="%s"><b>%s%s </b>' % (text, label, colon)
                 image = _question_mark()
                 if help[label][1]:
                         display += '<a tabindex="0" href="%s">%s</a>' % (help[label][1], image)
@@ -786,19 +786,19 @@ def printfield(label, fieldname, help = None, value = '', readonly = 0, addbutto
                 args = ' READONLY class="%s titlemultiple"'
         else:
                 args = ' class="%s"'
-	print '<tr id="%s.row">' % fieldname
+        print '<tr id="%s.row">' % fieldname
 
-	printfieldlabel(label, help, 1, ":", addbutton)
+        printfieldlabel(label, help, 1, ":", addbutton)
 
         if value is not None:
-               	print '<td><INPUT tabindex="1" name="%s" id="%s" value="%s"%s></td>' % (fieldname, fieldname, escape_string(value), args % "metainput")
+                       print '<td><INPUT tabindex="1" name="%s" id="%s" value="%s"%s></td>' % (fieldname, fieldname, escape_string(value), args % "metainput")
         else:
-               	print '<td><INPUT tabindex="1" name="%s" id="%s"%s></td>' % (fieldname, fieldname, args % "metainput")
-	print '</tr>'
+                       print '<td><INPUT tabindex="1" name="%s" id="%s"%s></td>' % (fieldname, fieldname, args % "metainput")
+        print '</tr>'
 
 def printAwardName(field, label, help):
-	print '<tr>'
-	printfieldlabel(label, help)
+        print '<tr>'
+        printfieldlabel(label, help)
         print '<td><select name="%s" tabindex="1">' % (field)
         award_types = SQLListAwardTypes()
         for award_type in award_types:
@@ -807,8 +807,8 @@ def printAwardName(field, label, help):
         print '</tr>'
 
 def printAwardCategory(field, label, award_type_id, default_award_cat_id, help):
-	print '<tr>'
-	printfieldlabel(label, help)
+        print '<tr>'
+        printfieldlabel(label, help)
         print '<td><select name="%s" tabindex="1">' % (field)
         award_cats = SQLGetAwardCategories(award_type_id)
         for award_cat in award_cats:
@@ -821,11 +821,11 @@ def printAwardCategory(field, label, award_type_id, default_award_cat_id, help):
 
 def printAwardLevel(label, value, poll, help):
         from awardClass import awardShared
-	print '<tr>'
-	printfieldlabel(label, help)
-	print '<td>'
-	# For non-poll awards, display Win/Nomination radio buttons
-	if poll == 'No':
+        print '<tr>'
+        printfieldlabel(label, help)
+        print '<td>'
+        # For non-poll awards, display Win/Nomination radio buttons
+        if poll == 'No':
                 if value == '1':
                         print '<INPUT TYPE="radio" NAME="LEVEL" ID="LEVEL_WIN" VALUE="WIN" CHECKED tabindex="1">Win'
                         print '<br><INPUT TYPE="radio" NAME="LEVEL" ID="LEVEL_NOM" VALUE="NOM" tabindex="1">Nomination'
@@ -854,13 +854,13 @@ def printAwardLevel(label, value, poll, help):
                 print '<br><INPUT TYPE="radio" NAME="LEVEL" ID="LEVEL_SPECIAL" VALUE="SPECIAL" tabindex="1">Special:'
         special_levels = awardShared.SpecialAwards()
         print '<select NAME="award_special" tabindex="1">'
-	for special_level in sorted(special_levels.keys()):
-		if special_level == value:
-        		print '<option selected="selected" value="%s">%s</option>' % (special_level, special_levels[special_level])
-        	else:
+        for special_level in sorted(special_levels.keys()):
+                if special_level == value:
+                        print '<option selected="selected" value="%s">%s</option>' % (special_level, special_levels[special_level])
+                else:
                         print '<option value="%s">%s</option>' % (special_level, special_levels[special_level])
-	print '</select></td>'
-	print '</tr>'
+        print '</select></td>'
+        print '</tr>'
 
 def printSpacer(rows, row_id, index):
         print '<tr id="%s_id%d.row" class="titleeditspacer"><td colspan="%d"> </td></tr>' % (row_id, index, rows)
@@ -868,7 +868,7 @@ def printSpacer(rows, row_id, index):
 def printmultiple(values, label, field_name, help = None, readonly = 0):
         if not help:
                 help = {}
-	counter = 1
+        counter = 1
         for value in values:
                 if not readonly and counter == len(values):
                         addbutton = createaddbutton(field_name)
@@ -893,26 +893,26 @@ def printWebPages(webpages, web_page_type, help, display_name = '', readonly = 0
                 printmultiple(webpages, "Web Page", "%s_webpages" % web_page_type, help, readonly)
 
 def printHelpBox(record_type, helplink, new_flag = 0):
-	print '<div id="HelpBox">'
-	if new_flag:
+        print '<div id="HelpBox">'
+        if new_flag:
                 print '<b>Help on adding new %s records:</b>' % record_type
         else:
                 print '<b>Help on editing %s records:</b>' % record_type
-	print '<ul>'
-	print '<li><a href="%s://%s/index.php/Help:Screen:%s">Help:Screen:%s</a>' % (PROTOCOL, WIKILOC, helplink, helplink)
-	print '<li><a href="%s://%s/index.php/Help:Using_Templates_and_HTML_in_Note_Fields">List of supported templates and HTML tags in notes</a>' % (PROTOCOL, WIKILOC)
-	print '</ul>'
-	print '</div>'
+        print '<ul>'
+        print '<li><a href="%s://%s/index.php/Help:Screen:%s">Help:Screen:%s</a>' % (PROTOCOL, WIKILOC, helplink, helplink)
+        print '<li><a href="%s://%s/index.php/Help:Using_Templates_and_HTML_in_Note_Fields">List of supported templates and HTML tags in notes</a>' % (PROTOCOL, WIKILOC)
+        print '</ul>'
+        print '</div>'
 
 def printISBN(help, isbn):
         from isbn import convertISBN, validISBN
-	if isbn:
+        if isbn:
                 if not validISBN(isbn):
                         printfield("ISBN", "pub_isbn", help, isbn)
                 else:
                         printfield("ISBN", "pub_isbn", help, convertISBN(isbn))
-	else:
-		printfield("ISBN", "pub_isbn", help)
+        else:
+                printfield("ISBN", "pub_isbn", help)
         
 def printdropdown(label, fieldname, values, help):
         # 'values' is a dictionary where the dictionary keys are the supported values
@@ -920,8 +920,8 @@ def printdropdown(label, fieldname, values, help):
         print '<tr>'
         printfieldlabel(label, help)
         print '<td>'
-	print '<select name="%s" tabindex="1">' % fieldname
-	for value in values:
+        print '<select name="%s" tabindex="1">' % fieldname
+        for value in values:
                 if values[value]:
                         print '<option selected="selected">%s</option>' % value
                 else:

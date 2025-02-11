@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2019-2020   Ahasuerus
+#     (C) COPYRIGHT 2019-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -101,11 +101,11 @@ class ExternalIdRanges:
 
 if __name__ == '__main__':
 
-	PrintPreSearch('Numeric External Identifier Ranges')
-	PrintNavBar('edit/numeric_external_id_ranges.cgi', 0)
+        PrintPreSearch('Numeric External Identifier Ranges')
+        PrintNavBar('edit/numeric_external_id_ranges.cgi', 0)
 
         external_id_ranges = ExternalIdRanges()
         external_id_ranges.load_ids()
         external_id_ranges.create_ranges()
         external_id_ranges.display_ranges()
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

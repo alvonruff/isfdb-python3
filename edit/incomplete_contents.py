@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,15 +17,15 @@ from SQLparsing import *
 
 
 def PrintTableColumns(columns, user):
-	print '<table class="generic_table">'
-	print '<tr class="table2">'
-	for column in columns:
+        print '<table class="generic_table">'
+        print '<tr class="table2">'
+        for column in columns:
                 if not column:
                         data = '&nbsp;'
                 else:
                         data = column
                 print '<td><b>%s</b></td>' % data
- 	print '</tr>'
+         print '</tr>'
 
 if __name__ == '__main__':
 
@@ -47,8 +47,8 @@ if __name__ == '__main__':
                 display_range = '0000-00'
         report_id = SESSION.Parameter(2, 'int', None, (277, ))
 
-	PrintPreSearch('Publications with Incomplete Contents')
-	PrintNavBar('edit/incomplete_contents.cgi', 0)
+        PrintPreSearch('Publications with Incomplete Contents')
+        PrintNavBar('edit/incomplete_contents.cgi', 0)
 
         print '<h3>Date range: %s</h3>' % display_range
         query = """select c.cleanup_id, p.*
@@ -115,5 +115,5 @@ if __name__ == '__main__':
                 count += 1
                 bgcolor ^= 1
                 record = result.fetch_row()
-	
+        
         PrintPostSearch(0, 0, 0, 0, 0)

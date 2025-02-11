@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,39 +25,39 @@ if __name__ == '__main__':
         if not award.award_title:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Link Award')
-	PrintNavBar('edit/linkaward.cgi', award_id)
+        PrintPreSearch('Link Award')
+        PrintNavBar('edit/linkaward.cgi', award_id)
 
         help = HelpGeneral()
 
-	print '<div id="HelpBox">'
+        print '<div id="HelpBox">'
         print '<b>Help on linking awards: </b>'
         print '<a href="%s://%s/index.php/Help:Screen:LinkAward">Help:Screen:LinkAward</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        print '</div>'
 
-	print 'Linking the following award to a title:<p>'
+        print 'Linking the following award to a title:<p>'
 
         award.PrintAwardSummary()
 
-	print 'Enter the record number of the title that this award refers to or 0 to break the link:'
-	print '<p>'
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitlinkaward.cgi">'
-	print '<table border="0">'
+        print 'Enter the record number of the title that this award refers to or 0 to break the link:'
+        print '<p>'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitlinkaward.cgi">'
+        print '<table border="0">'
         print '<tbody id="tagBody">'
 
-	printfield('Title #', 'title_id', help, award.title_id)
+        printfield('Title #', 'title_id', help, award.title_id)
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
         print '</tbody>'
         print '</table>'
-	print '<p>'
+        print '<p>'
 
-	print '<input NAME="award_id" VALUE="%d" TYPE="HIDDEN">' % award_id
-	print '<input TYPE="SUBMIT" VALUE="Link Award to Title" tabindex="1">'
-	print '</form>'
+        print '<input NAME="award_id" VALUE="%d" TYPE="HIDDEN">' % award_id
+        print '<input TYPE="SUBMIT" VALUE="Link Award to Title" tabindex="1">'
+        print '</form>'
 
-	print '<p>'
-	print '<hr>'
-	print '<p>'
+        print '<p>'
+        print '<hr>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

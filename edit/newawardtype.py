@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2018   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,33 +25,33 @@ if __name__ == '__main__':
 
         (userid, username, usertoken) = GetUserData()
         if SQLisUserBureaucrat(userid) == 0:
-		PrintPreSearch("Add New Award Type - Limited to Bureaucrats")
-		PrintNavBar("edit/newawardtype.cgi", 0)
-		PrintPostSearch(0, 0, 0, 0, 0)
-		sys.exit(0)
+                PrintPreSearch("Add New Award Type - Limited to Bureaucrats")
+                PrintNavBar("edit/newawardtype.cgi", 0)
+                PrintPostSearch(0, 0, 0, 0, 0)
+                sys.exit(0)
 
-	##################################################################
-	# Output the leading HTML stuff
-	##################################################################
-	PrintPreSearch("Add New Award Type")
-	PrintNavBar("edit/addawardtype.cgi", 0)
+        ##################################################################
+        # Output the leading HTML stuff
+        ##################################################################
+        PrintPreSearch("Add New Award Type")
+        PrintNavBar("edit/addawardtype.cgi", 0)
 
         help = HelpAwardType()
 
         printHelpBox('Award Type', 'AwardType')
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewawardtype.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewawardtype.cgi">'
 
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Short Name',      'award_type_short_name', help)
+        printfield('Short Name',      'award_type_short_name', help)
 
-	printfield('Full Name',       'award_type_name',       help)
+        printfield('Full Name',       'award_type_name',       help)
 
-	printfield('Awarded For',     'award_type_for',        help)
+        printfield('Awarded For',     'award_type_for',        help)
 
-	printfield('Awarded By',      'award_type_by',         help)
+        printfield('Awarded By',      'award_type_by',         help)
 
         values = {}
         values['No'] = 1
@@ -67,12 +67,12 @@ if __name__ == '__main__':
 
         printtextarea('Note', 'award_type_note', help)
 
-	print '</table>'
+        print '</table>'
 
-	print '<p>'
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '<p>'
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0)
 

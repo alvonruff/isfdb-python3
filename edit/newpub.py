@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2022   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -24,21 +24,21 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Invalid Publication Type')
 
         PrintPreSearch('New %s' % pub_type)
-	PrintNavBar('edit/newpub.cgi', pub_type)
+        PrintNavBar('edit/newpub.cgi', pub_type)
 
         printHelpBox('publication', 'NewPub', 1)
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewpub.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewpub.cgi">'
 
         # Retrieve the Help text for publication metadata
         help = HelpPub()
 
         # Title level data
-	print '<h2>Title Data</h2>'
-	print '<table border="0" id="referenceTitle">'
-	print '<tbody id="referenceBody">'
+        print '<h2>Title Data</h2>'
+        print '<table border="0" id="referenceTitle">'
+        print '<tbody id="referenceBody">'
 
-	printfield("Title", "pub_title", help)
+        printfield("Title", "pub_title", help)
 
         printmultiple([], "Transliterated Title", "trans_titles", help)
 
@@ -48,14 +48,14 @@ if __name__ == '__main__':
 
         # CHAPBOOK records cannot have series or Synopsis data
         readonly = 0
-	if pub_type == 'Chapbook':
-		readonly = 1
+        if pub_type == 'Chapbook':
+                readonly = 1
 
-	printfield("Series", "title_series", help, '', readonly)
-	printfield("Series Num", "title_seriesnum", help, '', readonly)
+        printfield("Series", "title_series", help, '', readonly)
+        printfield("Series Num", "title_seriesnum", help, '', readonly)
 
         # Only Omnibus titles can have Content data
-	if pub_type == 'Omnibus':
+        if pub_type == 'Omnibus':
                 printfield("Content", "title_content", help, '')
         else:
                 printfield("Content", "title_content", help, '', 1)
@@ -65,32 +65,32 @@ if __name__ == '__main__':
         printtextarea('Title Note', 'title_note', help, '', 2)
         printWebPages([], 'shared_title', help, 'Title')
 
-	print '</tbody>'
+        print '</tbody>'
         print '</table>'
 
         # At this point we are done with title-specific data. The next section is publication-specific data.
-	print '<h2>Publication Data</h2>'
-	print '<table border="0" id="metadata">'
-	print '<tbody id="pubBody">'
+        print '<h2>Publication Data</h2>'
+        print '<table border="0" id="metadata">'
+        print '<tbody id="pubBody">'
 
         printfield("Publication Type", "pub_ctype", help, pub_ctype, 1)
-	printfield("Date", "pub_year", help)
-	printfield("Publisher", "pub_publisher", help)
-	printfield("Pages", "pub_pages", help)
-	printformat("pub_ptype", "Format", help)
-	printfield("ISBN", "pub_isbn", help)
-	printfield("Catalog ID", "pub_catalog", help)
+        printfield("Date", "pub_year", help)
+        printfield("Publisher", "pub_publisher", help)
+        printfield("Pages", "pub_pages", help)
+        printformat("pub_ptype", "Format", help)
+        printfield("ISBN", "pub_isbn", help)
+        printfield("Catalog ID", "pub_catalog", help)
         printfield("Price", "pub_price", help)
-	printfield("Image URL", "pub_image", help)
-	printfield("Pub Series", "pub_series", help)
-	printfield("Pub Series #", "pub_series_num", help)
+        printfield("Image URL", "pub_image", help)
+        printfield("Pub Series", "pub_series", help)
+        printfield("Pub Series #", "pub_series_num", help)
         printWebPages([], 'shared_pub', help, 'Pub')
         printsource(help)
         printtextarea('Pub Note', 'pub_note', help)
         printExternalIDs(None, "External ID", "external_id", help)
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</tbody>'
+        print '</tbody>'
         print '</table>'
         print '<p>'
         print '<hr>'
@@ -210,12 +210,12 @@ if __name__ == '__main__':
         print "</tbody>"
         print "</table>"
 
-	print "<p>"
-	print "<hr>"
-	print "<p>"
-	print '<input name="pub_id" VALUE="0" type="HIDDEN">'
-	print '<input tabindex="1" type="SUBMIT" VALUE="Submit Data">'
-	print "</form>"
-	print "<p>"
+        print "<p>"
+        print "<hr>"
+        print "<p>"
+        print '<input name="pub_id" VALUE="0" type="HIDDEN">'
+        print '<input tabindex="1" type="SUBMIT" VALUE="Submit Data">'
+        print "</form>"
+        print "<p>"
 
         PrintPostSearch(tableclose=False)

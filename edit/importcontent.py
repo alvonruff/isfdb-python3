@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2008-2021   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2008-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,60 +23,60 @@ if __name__ == '__main__':
         if not pub_data:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Import Content - %s' % pub_data[PUB_TITLE])
-	PrintNavBar('edit/importcontent.cgi', pub_id)
+        PrintPreSearch('Import Content - %s' % pub_data[PUB_TITLE])
+        PrintNavBar('edit/importcontent.cgi', pub_id)
 
-	print '<div id="HelpBox">'
+        print '<div id="HelpBox">'
         print '<a href="%s://%s/index.php/Help:Screen:ImportContent">Help on importing content</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        print '</div>'
 
-	print '<hr class="divider">'
-	print '<p>'
-	print '<h2>Option 1</h2>'
-	print '<p>'
+        print '<hr class="divider">'
+        print '<p>'
+        print '<h2>Option 1</h2>'
+        print '<p>'
 
-	print "Enter the publication ID/record number you would like to import from:"
+        print "Enter the publication ID/record number you would like to import from:"
 
-	print '<form class="topspace" id="data" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">'
-	print '<table>'
-	
-	printfield('Import From', 'ExportFrom')
+        print '<form class="topspace" id="data" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">'
+        print '<table>'
+        
+        printfield('Import From', 'ExportFrom')
 
-	print '<tr>'
+        print '<tr>'
         print '<td><b>Include COVERART title(s)?</b></td>'
         print '<td><input type="checkbox" NAME="IncludeCoverArt" value="on" checked></td>'
-	print '</tr>'
-	
-	print '<tr>'
+        print '</tr>'
+        
+        print '<tr>'
         print '<td><b>Include INTERIORART titles?</b></td>'
         print '<td><input type="checkbox" NAME="IncludeInteriorArt" value="on" checked></td>'
-	print '</tr>'
+        print '</tr>'
 
-	print '<tr>'
+        print '<tr>'
         print '<td><b>Include page numbers?</b></td>'
         print '<td><input type="checkbox" NAME="IncludePages" value="on" checked></td>'
-	print '</tr>'
-	print '</table>'
-	print '<p>'
-	
-	print '<input NAME="ExportTo" VALUE="%d" TYPE="HIDDEN">' % pub_id
-	print '<input TYPE="SUBMIT" VALUE="Import Content">'
-	print '</form>'
+        print '</tr>'
+        print '</table>'
+        print '<p>'
+        
+        print '<input NAME="ExportTo" VALUE="%d" TYPE="HIDDEN">' % pub_id
+        print '<input TYPE="SUBMIT" VALUE="Import Content">'
+        print '</form>'
 
-	print '<hr class="divider">'
-	print '<p>'
-	print '<h2>Option 2</h2>'
-	print '<p>'
+        print '<hr class="divider">'
+        print '<p>'
+        print '<h2>Option 2</h2>'
+        print '<p>'
 
-	print '<p>Enter the title ID(s) you would like to import:'
+        print '<p>Enter the title ID(s) you would like to import:'
 
-	print '<form class="topspace" id="singledata" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">'
-	print '<table>'
+        print '<form class="topspace" id="singledata" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">'
+        print '<table>'
         printmultiple([], "Title", "ImportTitles")
-	print '</table>'
-	print '<p>'
-	print '<input NAME="ExportTo" VALUE="%d" TYPE="HIDDEN">' % pub_id
-	print '<input TYPE="SUBMIT" VALUE="Import Titles">'
-	print '</form>'
+        print '</table>'
+        print '<p>'
+        print '<input NAME="ExportTo" VALUE="%d" TYPE="HIDDEN">' % pub_id
+        print '<input TYPE="SUBMIT" VALUE="Import Titles">'
+        print '</form>'
 
-	PrintPostSearch(tableclose=False)
+        PrintPostSearch(tableclose=False)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -26,72 +26,72 @@ if __name__ == '__main__':
         if not title.title_title:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Make Variant Title')
-	PrintNavBar('edit/mkvariant.cgi', title_id)
+        PrintPreSearch('Make Variant Title')
+        PrintNavBar('edit/mkvariant.cgi', title_id)
 
         help = HelpMakeVariant()
 
-	print '<div id="HelpBox">'
+        print '<div id="HelpBox">'
         print '<b>Help on making variant titles: </b>'
         print '<a href="%s://%s/index.php/Help:Screen:MakeVariant">Help:Screen:MakeVariant</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        print '</div>'
 
-	print 'Current Title:<br>'
+        print 'Current Title:<br>'
 
-	print '<b>Title:</b>', ISFDBLink('title.cgi', title.title_id, title.title_title)
-	print '<br>'
+        print '<b>Title:</b>', ISFDBLink('title.cgi', title.title_id, title.title_title)
+        print '<br>'
 
-	print '<b>Author:</b>', FormatAuthors(title.title_author_tuples)
-	print '<br>'
+        print '<b>Author:</b>', FormatAuthors(title.title_author_tuples)
+        print '<br>'
 
-	print '<b>Date:</b>', title.title_year
-	print '<br>'
-	print '<b>Type:</b>', title.title_ttype
-	print '<p>'
+        print '<b>Date:</b>', title.title_year
+        print '<br>'
+        print '<b>Type:</b>', title.title_ttype
+        print '<p>'
 
-	##################################################################
-	# Data Entry Form 1
-	##################################################################
-	print '<hr class="divider">'
-	print '<p>'
-	print '<h2>Option 1</h2>'
-	print '<p>'
+        ##################################################################
+        # Data Entry Form 1
+        ##################################################################
+        print '<hr class="divider">'
+        print '<p>'
+        print '<h2>Option 1</h2>'
+        print '<p>'
 
-	print 'If the parent title already exists, enter its record number below.'
-	print 'To BREAK an existing Variant link, enter 0.'
-	print '<p>'
+        print 'If the parent title already exists, enter its record number below.'
+        print 'To BREAK an existing Variant link, enter 0.'
+        print '<p>'
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitmkvar1.cgi">'
-	print '<table border="0">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitmkvar1.cgi">'
+        print '<table border="0">'
         print '<tbody>'
-	if title.title_parent > 0:
-		printfield("Parent #", "Parent", help, title.title_parent)
-	else:
-		printfield("Parent #", "Parent", help)
+        if title.title_parent > 0:
+                printfield("Parent #", "Parent", help, title.title_parent)
+        else:
+                printfield("Parent #", "Parent", help)
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
         print '</tbody>'
         print '</table>'
-	print '<p>'
+        print '<p>'
 
-	print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % (title_id)
-	print '<input TYPE="SUBMIT" VALUE="Link to Existing Parent" tabindex="1">'
-	print '</form>'
+        print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % (title_id)
+        print '<input TYPE="SUBMIT" VALUE="Link to Existing Parent" tabindex="1">'
+        print '</form>'
 
-	print '<p>'
+        print '<p>'
 
-	##################################################################
-	# Data Entry Form 2
-	##################################################################
-	print '<hr class="divider">'
-	print '<p>'
-	print '<h2>Option 2</h2>'
-	print 'If the parent title does not exist, enter the title information below to create it.'
-	print '<p>'
+        ##################################################################
+        # Data Entry Form 2
+        ##################################################################
+        print '<hr class="divider">'
+        print '<p>'
+        print '<h2>Option 2</h2>'
+        print 'If the parent title does not exist, enter the title information below to create it.'
+        print '<p>'
 
-	print '<form id="data2" METHOD="POST" ACTION="/cgi-bin/edit/submitmkvar2.cgi">'
-	print '<table border="0">'
+        print '<form id="data2" METHOD="POST" ACTION="/cgi-bin/edit/submitmkvar2.cgi">'
+        print '<table border="0">'
         print '<tbody id="titleBody">'
 
         printfield('Title', 'title_title', help, title.title_title)
@@ -113,28 +113,28 @@ if __name__ == '__main__':
 
         printlanguage(title.title_language_id, 'language', 'Language', help)
 
-	print '<tr>'
-	printfieldlabel('Title Type', help)
+        print '<tr>'
+        printfieldlabel('Title Type', help)
         print '<td><select name="title_ttype" tabindex="1">'
-	for ttype in SESSION.db.all_title_types:
-		if ttype == title.title_ttype:
-			print '<option selected="selected">%s</option>' % ttype
-		else:
-        		print '<option>%s</option>' % ttype
+        for ttype in SESSION.db.all_title_types:
+                if ttype == title.title_ttype:
+                        print '<option selected="selected">%s</option>' % ttype
+                else:
+                        print '<option>%s</option>' % ttype
         print '</select></td>'
         print '</tr>'
 
         printtextarea('Title Note', 'title_note', help)
-	
+        
         printtextarea('Note to Moderator', 'mod_note', help)
 
         print '</tbody>'
         print '</table>'
-	print '<p>'
+        print '<p>'
 
         print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % title.title_id
-	print '<input TYPE="SUBMIT" VALUE="Create New Parent Title" tabindex="1">'
-	print '</form>'
+        print '<input TYPE="SUBMIT" VALUE="Create New Parent Title" tabindex="1">'
+        print '</form>'
 
 
-	PrintPostSearch(tableclose=False)
+        PrintPostSearch(tableclose=False)
