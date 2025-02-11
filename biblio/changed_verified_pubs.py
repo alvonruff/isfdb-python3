@@ -94,7 +94,7 @@ def PrintTableColumns():
         print '<th>Publication</th>'
         print '<th>Author/Editor</th>'
         print '<th>Transient?</th>'
-         print '</tr>'
+        print '</tr>'
 
 if __name__ == '__main__':
 

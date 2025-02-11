@@ -397,7 +397,7 @@ if __name__ == '__main__':
                         PrintNavbar('search', 0, 0, 0, 0, search_value, type)
                         if SQLisUserModerator(userid):
                                 moderator = 1
-                               print '<form METHOD="POST" ACTION="/cgi-bin/edit/pv_merge.cgi">'
+                                print '<form METHOD="POST" ACTION="/cgi-bin/edit/pv_merge.cgi">'
                         PrintSummary(arg, len(results), 300, 'Publisher', 'publisher')
                         if results:
                                 PrintPublisherResults(results, moderator)
