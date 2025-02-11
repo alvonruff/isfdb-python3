@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2022   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 972 $
 #     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
 
-	
+        
 import cgi
 import sys
 import MySQLdb
@@ -29,10 +29,10 @@ if __name__ == '__main__':
         submission.cgi_script = 'linkaward'
         submission.type = MOD_AWARD_LINK
 
-	form = cgi.FieldStorage()
+        form = cgi.FieldStorage()
 
-	try:
-		title_id = form['title_id'].value
+        try:
+                title_id = form['title_id'].value
                 # Drop everything to the left of the last question mark in case a title URL was entered
                 title_id = int(title_id.split('?')[-1])
                 if title_id < 0:
@@ -44,33 +44,33 @@ if __name__ == '__main__':
                         if not title:
                                 raise
                         title_title = title[TITLE_TITLE]
-	except:
+        except:
                 submission.error('Non-existent title record specified')
 
-	try:
-		award_id = int(form['award_id'].value)
-		award = awards(db)
-		award.load(award_id)
-		if not award.award_title:
+        try:
+                award_id = int(form['award_id'].value)
+                award = awards(db)
+                award.load(award_id)
+                if not award.award_title:
                         raise
-	except:
+        except:
                 submission.error('Non-existent award record specified')
 
-	if not submission.user.id:
+        if not submission.user.id:
                 submission.error('', award_id)
 
-	update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
-	update_string += "<IsfdbSubmission>\n"
-	update_string += "  <LinkAward>\n"
+        update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
+        update_string += "<IsfdbSubmission>\n"
+        update_string += "  <LinkAward>\n"
 
-	update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
 
-	update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title_title)))
-	update_string += "    <Award>%d</Award>\n" % (award_id)
-	update_string += "    <Title>%d</Title>\n" % (title_id)
-	if form.has_key('mod_note'):
-		update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
-	update_string += "  </LinkAward>\n"
-	update_string += "</IsfdbSubmission>\n"
+        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title_title)))
+        update_string += "    <Award>%d</Award>\n" % (award_id)
+        update_string += "    <Title>%d</Title>\n" % (title_id)
+        if form.has_key('mod_note'):
+                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
+        update_string += "  </LinkAward>\n"
+        update_string += "</IsfdbSubmission>\n"
 
-	submission.file(update_string)
+        submission.file(update_string)
