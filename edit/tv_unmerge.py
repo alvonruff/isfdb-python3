@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Bill Longley
-#	 ALL RIGHTS RESERVED
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Bill Longley
+#         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
@@ -19,24 +19,24 @@ from isbn import convertISBN
 
 if __name__ == '__main__':
         title_id = SESSION.Parameter(0, 'int')
-	pubs = SQLGetPubsByTitleNoParent(title_id)
-	if not pubs:
+        pubs = SQLGetPubsByTitleNoParent(title_id)
+        if not pubs:
                 SESSION.DisplayError('No Publications to Unmerge')
-	
-	PrintPreSearch('Title Unmerge Request')
-	PrintNavBar('edit/tv_unmerge.cgi', title_id)
+        
+        PrintPreSearch('Title Unmerge Request')
+        PrintNavBar('edit/tv_unmerge.cgi', title_id)
 
-	print '<div id="HelpBox">'
-	print '<b>Help on unmerging titles: </b>'
-	print '<a href="%s://%s/index.php/Help:Screen:UnmergeTitles">Help:Screen:UnmergeTitles</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
-	print '<b>Select titles to unmerge:</b>'
-	print '<p>'
-	print '<hr>'
+        print '<div id="HelpBox">'
+        print '<b>Help on unmerging titles: </b>'
+        print '<a href="%s://%s/index.php/Help:Screen:UnmergeTitles">Help:Screen:UnmergeTitles</a><p>' % (PROTOCOL, WIKILOC)
+        print '</div>'
+        print '<b>Select titles to unmerge:</b>'
+        print '<p>'
+        print '<hr>'
 
         help = HelpGeneral()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/ts_unmerge.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/ts_unmerge.cgi">'
         index = 1
         print '<ul>'
         for pub in pubs:
@@ -92,8 +92,8 @@ if __name__ == '__main__':
         print '</table>'
         print '<p>'
 
-	print '<input NAME="record" VALUE="%d" TYPE="HIDDEN">' % (title_id)
-	print '<input TYPE="SUBMIT" VALUE="Submit Unmerge" tabindex="1">'
-	print '</form>'
+        print '<input NAME="record" VALUE="%d" TYPE="HIDDEN">' % (title_id)
+        print '<input TYPE="SUBMIT" VALUE="Submit Unmerge" tabindex="1">'
+        print '</form>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, False)
+        PrintPostSearch(0, 0, 0, 0, 0, False)

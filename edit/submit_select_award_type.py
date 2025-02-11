@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -41,4 +41,4 @@ if __name__ == '__main__':
         except:
                 SESSION.DisplayError('Missing or Invalid Award Type ID')
 
-	ISFDBLocalRedirect('edit/addaward.cgi?%d+%d' % (title_id, award_type_id))
+        ISFDBLocalRedirect('edit/addaward.cgi?%d+%d' % (title_id, award_type_id))

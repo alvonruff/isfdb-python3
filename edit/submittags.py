@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 713 $
 #     Date: $Date: 2021-08-27 10:38:44 -0400 (Fri, 27 Aug 2021) $
 
-	
+        
 import cgi
 import sys
 from isfdb import *
@@ -22,9 +22,9 @@ from library import ISFDBLocalRedirect
 
 if __name__ == '__main__':
 
-	user = User()
-	user.load()
-	if not user.id:
+        user = User()
+        user.load()
+        if not user.id:
                 SESSION.DisplayError('You must be logged in to add tags')
 
         sys.stderr = sys.stdout
@@ -32,15 +32,15 @@ if __name__ == '__main__':
 
         try:
                 title_id = int(form['title_id'].value)
-	except:
+        except:
                 SESSION.DisplayError('Title ID not specified')
 
-	tags = []
-	counter = 1
-	while counter < 100:
-		key = "tag_name%d" % counter
-        	if form.has_key(key):
-                	tag = form[key].value
+        tags = []
+        counter = 1
+        while counter < 100:
+                key = "tag_name%d" % counter
+                if form.has_key(key):
+                        tag = form[key].value
                         # Strip off leading and trailing spaces. Normally it happens
                         # in XMLescape when a submission is created. However, title tags
                         # are filed into the database directly and do not go through the
@@ -52,17 +52,17 @@ if __name__ == '__main__':
                         # Only add the new tag to the list of tags if it's not already in the list
                         if tag not in tags:
                                 tags.append(tag)
-		counter += 1
+                counter += 1
 
-	# Delete the old tags
-	update = 'delete from tag_mapping where title_id=%d and user_id=%d' % (int(title_id), int(user.id))
+        # Delete the old tags
+        update = 'delete from tag_mapping where title_id=%d and user_id=%d' % (int(title_id), int(user.id))
         db.query(update)
 
-	# Insert the new tags
-	for tag in tags:
+        # Insert the new tags
+        for tag in tags:
                 result = SQLaddTagToTitle(tag, title_id, user.id)
 
-	# Delete all old tags that are now without an associated entry in the tag_mapping table
-	SQLDeteleOrphanTags()
+        # Delete all old tags that are now without an associated entry in the tag_mapping table
+        SQLDeteleOrphanTags()
 
         ISFDBLocalRedirect('title.cgi?%d' % int(title_id))

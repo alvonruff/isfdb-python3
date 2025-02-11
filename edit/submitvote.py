@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 713 $
 #     Date: $Date: 2021-08-27 10:38:44 -0400 (Fri, 27 Aug 2021) $
 
-	
+        
 import cgi
 import sys
 import MySQLdb
@@ -21,36 +21,36 @@ from login import *
 from library import ISFDBLocalRedirect
 
 def DoError(message):
-	PrintPreSearch("Vote Submission")
-	PrintNavBar(0, 0)
+        PrintPreSearch("Vote Submission")
+        PrintNavBar(0, 0)
         print "<h3>ERROR: %s</h3>" % message
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
-	
+        
 if __name__ == '__main__':
 
-	
+        
         sys.stderr = sys.stdout
         form = cgi.FieldStorage()
 
         try:
                 title_id = int(form['title_id'].value)
-		title_title = SQLgetTitle(title_id)
-		if not title_title:
+                title_title = SQLgetTitle(title_id)
+                if not title_title:
                         raise
-	except:
+        except:
                 DoError('Title ID not specified or invalid')
 
         try:
                 vote = int(form['vote'].value)
                 if vote < 0 or vote > 10:
                         raise
-	except:
+        except:
                 DoError('Vote not submitted or invalid')
 
-	(userid, username, usertoken) = GetUserData()
-	userid = int(userid)
-	if not userid:
+        (userid, username, usertoken) = GetUserData()
+        userid = int(userid)
+        if not userid:
                 DoError('You must be logged in in order to vote')
 
         # If the submitted vote was 0, then delete this user's vote

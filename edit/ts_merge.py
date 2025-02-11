@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2023   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,7 +28,7 @@ class Form:
                 self.targetID = 1000000000
 
         def get_form_data(self):
-        	self.form_data = cgi.FieldStorage()
+                self.form_data = cgi.FieldStorage()
 
         def parse_form_data(self):
                 # Retrieve all submitted IDs starting with "record" and sort them by number
@@ -141,4 +141,4 @@ if __name__ == '__main__':
         if form.dropped_parent():
                 submission.error('Specified parent title would be dropped, which would result in a title record with a non-existent parent')
 
-	submission.file(form.payload)
+        submission.file(form.payload)

@@ -25,7 +25,7 @@ def PrintTableColumns(columns, user):
                 else:
                         data = column
                 print '<td><b>%s</b></td>' % data
-         print '</tr>'
+        print '</tr>'
 
 if __name__ == '__main__':
 

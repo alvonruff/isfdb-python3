@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 972 $
 #     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
 
-	
+        
 import cgi
 import sys
 import MySQLdb
@@ -19,7 +19,7 @@ from SQLparsing import *
 from login import *
 from library import *
 from navbar import *
-	
+        
 
 if __name__ == '__main__':
 
@@ -30,22 +30,22 @@ if __name__ == '__main__':
 
         form = cgi.FieldStorage()
 
-	try:
-		pubid = int(form['pub_id'].value)
+        try:
+                pubid = int(form['pub_id'].value)
                 pub = SQLGetPubById(pubid)
                 pub_title = pub[PUB_TITLE]
-	except:
+        except:
                 submission.error("Valid publication ID must be provided")
 
-	if not submission.user.id:
+        if not submission.user.id:
                 submission.error("", pubid)
 
-	update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
-	update_string += "<IsfdbSubmission>\n"
-	update_string += "  <TitleRemove>\n"
-	update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(pub_title)))
-	update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-	update_string += "    <Record>%d</Record>\n" % (pubid)
+        update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
+        update_string += "<IsfdbSubmission>\n"
+        update_string += "  <TitleRemove>\n"
+        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(pub_title)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Record>%d</Record>\n" % (pubid)
 
         try:
                 entry = 1
@@ -90,16 +90,16 @@ if __name__ == '__main__':
         except:
                 submission.error("Selected title IDs must be integer numbers")
 
-	try:
+        try:
                 if val:
                         pass
         except:
                 submission.error("At least one title must be selected")
 
-	if form.has_key('mod_note'):
-		update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
+        if form.has_key('mod_note'):
+                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
 
-	update_string += "  </TitleRemove>\n"
-	update_string += "</IsfdbSubmission>\n"
+        update_string += "  </TitleRemove>\n"
+        update_string += "</IsfdbSubmission>\n"
 
-	submission.file(update_string)
+        submission.file(update_string)

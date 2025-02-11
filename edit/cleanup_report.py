@@ -337,7 +337,7 @@ def PrintTableColumns(columns):
                 if ('Ignore' in column or 'Resolve' in column) and not user.moderator:
                         continue
                 print '<td><b>%s</b></td>' % data
-         print '</tr>'
+        print '</tr>'
 
 def nonModeratorMessage():
         if not user.moderator:
