@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2016-2021   Ahasuerus
+#     (C) COPYRIGHT 2016-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,19 +23,19 @@ if __name__ == '__main__':
         if not publisher:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Non-Latin Titles for Publisher: %s' % publisher[PUBLISHER_NAME])
-	PrintNavBar('edit/publisher_exceptions.cgi', publisher_id)
+        PrintPreSearch('Non-Latin Titles for Publisher: %s' % publisher[PUBLISHER_NAME])
+        PrintNavBar('edit/publisher_exceptions.cgi', publisher_id)
 
         query = "select pub_id, pub_title from pubs where publisher_id = %d" % publisher_id
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	pubs_list = []
-	while record:
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        pubs_list = []
+        while record:
                 pub_id = record[0][0]
                 pub_title = record[0][1]
                 pubs_list.append(pub_id)
-		record = result.fetch_row()
+                record = result.fetch_row()
 
         in_clause = list_to_in_clause(pubs_list)
 
@@ -46,19 +46,19 @@ if __name__ == '__main__':
                 and t.title_language = l.lang_id
                 and l.latin_script = 'No'
                 order by t.title_title""" % in_clause
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	titles = {}
-	while record:
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        titles = {}
+        while record:
                 title_id = record[0][0]
                 pub_id = record[0][1]
                 if title_id not in titles:
                         titles[title_id] = []
-		titles[title_id].append(pub_id)
-		record = result.fetch_row()
+                titles[title_id].append(pub_id)
+                record = result.fetch_row()
 
-	if not titles:
+        if not titles:
                 print '<h2>No exceptions found</h2>'
         else:
                 print '<table class="generic_table">'
@@ -86,4 +86,4 @@ if __name__ == '__main__':
                         print '</tr>'
                 print '</table>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

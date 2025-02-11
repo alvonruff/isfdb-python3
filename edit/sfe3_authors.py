@@ -17,7 +17,7 @@ from library import *
 from sfe3 import Sfe3
 
 if __name__ == '__main__':
-	PrintPreSearch('SFE Author Articles without a matching SFE URL in ISFDB Author Records')
+        PrintPreSearch('SFE Author Articles without a matching SFE URL in ISFDB Author Records')
         PrintNavBar('edit/sfe3_authors.cgi', 0)
 
         sfe3 = Sfe3()
