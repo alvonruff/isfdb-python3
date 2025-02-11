@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -26,17 +26,17 @@ if __name__ == '__main__':
         awardType.award_type_id = award_type_id
         awardType.load()
         if not awardType.award_type_name:
-		SESSION.DisplayError('Specified Award Type ID Does Not Exist')
+                SESSION.DisplayError('Specified Award Type ID Does Not Exist')
 
         PrintPreSearch('New Award Category for %s Award' % awardType.award_type_short_name)
         PrintNavBar('edit/addawardcat.cgi', award_type_id)
 
-	print '<div id="HelpBox">'
+        print '<div id="HelpBox">'
         print '<b>Help on adding an award category: </b>'
         print '<a href="%s://%s/index.php/Help:Screen:AddAwardCat">Help:Screen:AddAwardCat</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        print '</div>'
 
-	print '<form id="data" method="POST" action="/cgi-bin/edit/submitnewawardcat.cgi">'
+        print '<form id="data" method="POST" action="/cgi-bin/edit/submitnewawardcat.cgi">'
         print '<table border="0">'
         print '<tbody id="tagBody">'
 
@@ -52,12 +52,12 @@ if __name__ == '__main__':
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</tbody>'
-	print '</table>'
-	print '<p>'
+        print '</tbody>'
+        print '</table>'
+        print '<p>'
 
-	print '<input name="award_cat_type_id" value="%d" type="HIDDEN">' % (award_type_id)
-	print '<input type="SUBMIT" value="Submit New Award Category" tabindex="1">'
-	print '</form>'
+        print '<input name="award_cat_type_id" value="%d" type="HIDDEN">' % (award_type_id)
+        print '<input type="SUBMIT" value="Submit New Award Category" tabindex="1">'
+        print '</form>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

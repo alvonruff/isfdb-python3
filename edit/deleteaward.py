@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -14,21 +14,21 @@ from isfdb import *
 from isfdblib import *
 from awardClass import *
 from SQLparsing import *
-	
+        
 
 if __name__ == '__main__':
 
         award_id = SESSION.Parameter(0, 'int')
-	award = SQLloadAwards(award_id)
-	if not award:
+        award = SQLloadAwards(award_id)
+        if not award:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Delete Award Submission')
-	PrintNavBar('edit/deleteaward.cgi', award_id)
+        PrintPreSearch('Delete Award Submission')
+        PrintNavBar('edit/deleteaward.cgi', award_id)
 
-	print '<b>Request to Delete:</b> <i>%s</i>' % award[0][AWARD_TITLE]
+        print '<b>Request to Delete:</b> <i>%s</i>' % award[0][AWARD_TITLE]
         print '<form METHOD="POST" ACTION="/cgi-bin/edit/submitdelaward.cgi">'
-	print '<p>'
+        print '<p>'
         print '<b>Deletion Reason</b><br>'
         print '<textarea name="reason" rows="4" cols="45"></textarea>'
         print '<p>'
@@ -36,4 +36,4 @@ if __name__ == '__main__':
         print '<input type="SUBMIT" value="Delete">'
         print '</form>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

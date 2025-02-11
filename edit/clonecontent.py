@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2008-2021   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2008-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,36 +29,36 @@ def printpubrecord(record):
         help = HelpGeneral()
         pub = pubs(db)
         pub.load(record[PUB_PUBID])
-	print '<h2 class="editheadline">Publication Metadata</h2>'
-	print '<table id="metadata">'
-	print '<tbody id="pubBody">'
-	printfield("Title", "pub_title", help, pub.pub_title, 1)
+        print '<h2 class="editheadline">Publication Metadata</h2>'
+        print '<table id="metadata">'
+        print '<tbody id="pubBody">'
+        printfield("Title", "pub_title", help, pub.pub_title, 1)
 
-	authors = SQLPubAuthors(pub.pub_id)
+        authors = SQLPubAuthors(pub.pub_id)
         printmultiple(authors, "Author", "pub_author", help, 1)
 
-	printfield("Date", "pub_year", help, pub.pub_year, 1)
+        printfield("Date", "pub_year", help, pub.pub_year, 1)
 
         printfield("Publisher", "pub_publisher", help, pub.pub_publisher, 1)
 
         printfield("Pub. Series", "pub_series", help, pub.pub_series, 1)
 
-	printfield("Pub. Series #", "pub_series_num", help, pub.pub_series_num, 1)
-	printfield("Pages", "pub_pages", help, pub.pub_pages, 1)
-	printfield("Pub Format", "pub_ptype", help, pub.pub_ptype, 1)
-	printfield("Pub Type", "pub_ctype", help, pub.pub_ctype, 1)
-	printfield("ISBN", "pub_isbn", help, pub.pub_isbn, 1)
-	printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog, 1)
-	printfield("Price", "pub_price", help, pub.pub_price, 1)
-	printfield("Image URL", "pub_image", help, pub.pub_image, 1)
+        printfield("Pub. Series #", "pub_series_num", help, pub.pub_series_num, 1)
+        printfield("Pages", "pub_pages", help, pub.pub_pages, 1)
+        printfield("Pub Format", "pub_ptype", help, pub.pub_ptype, 1)
+        printfield("Pub Type", "pub_ctype", help, pub.pub_ctype, 1)
+        printfield("ISBN", "pub_isbn", help, pub.pub_isbn, 1)
+        printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog, 1)
+        printfield("Price", "pub_price", help, pub.pub_price, 1)
+        printfield("Image URL", "pub_image", help, pub.pub_image, 1)
         printWebPages(pub.pub_webpages, 'pub', help, '', 1)
         printtextarea('Pub Note', 'pub_note', help, pub.pub_note, readonly=True)
-	printExternalIDs(pub.identifiers, 'External ID', 'external_id', help, 1)
+        printExternalIDs(pub.identifiers, 'External ID', 'external_id', help, 1)
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-	print '</tbody>'
-       	print '</table>'
+        print '</tbody>'
+        print '</table>'
 
 def errorPage(text):
         print "<h3>Error: %s</h3>" % (text)
@@ -69,11 +69,11 @@ if __name__ == '__main__':
 
         sys.stderr = sys.stdout
 
-	##################################################################
-	# Output the leading HTML stuff
-	##################################################################
-	PrintPreSearch("Import/Export Contents")
-	PrintNavBar('edit/editpub.cgi', 0)
+        ##################################################################
+        # Output the leading HTML stuff
+        ##################################################################
+        PrintPreSearch("Import/Export Contents")
+        PrintNavBar('edit/editpub.cgi', 0)
 
         print '<div id="HelpBox">'
         print '<a href="%s://%s/index.php/Help:Screen:EditPub">Help on entering additional contents</a><p>' % (PROTOCOL, WIKILOC)
@@ -84,9 +84,9 @@ if __name__ == '__main__':
                 ToTag = form['ExportTo'].value
                 # Drop everything to the left of the last question mark in case a pub URL was entered
                 ToTag = ToTag.split('?')[-1]
-	else:
+        else:
                 errorPage("Publication to import content into is not specified")
-		
+                
         try:
                 clone_to = int(ToTag)
         except:
@@ -95,7 +95,7 @@ if __name__ == '__main__':
                         errorPage("Specified tag/ID does not exist")
                 clone_to = publication[PUB_PUBID]
         publication_to = SQLGetPubById(clone_to)
-	if not publication_to:
+        if not publication_to:
                 errorPage("Publication ID to clone to does not exist")
 
         pub_id = 0
@@ -137,7 +137,7 @@ if __name__ == '__main__':
                 include_interiorart = 1
                 titles = []
                 titles_dict = {}
-      		for key in form.keys():
+                for key in form.keys():
                         if 'ImportTitles' not in key:
                                 continue
                         title_id = XMLescape(form[key].value)
@@ -164,17 +164,17 @@ if __name__ == '__main__':
         else:
                 errorPage("Publication or title to import content from is not specified")
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
-	printpubrecord(publication_to)
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
+        printpubrecord(publication_to)
 
-	# Retrieve the titles that are currently in publication_to and remove them from the
-	# list of "titles to import" in order to avoid title duplicates
-	current_titles = SQLloadTitlesXBT(publication_to[PUB_PUBID])
+        # Retrieve the titles that are currently in publication_to and remove them from the
+        # list of "titles to import" in order to avoid title duplicates
+        current_titles = SQLloadTitlesXBT(publication_to[PUB_PUBID])
         for current_title in current_titles:
                 if current_title in titles:
                         titles.remove(current_title)
 
-	print '<hr class="topspace">'
+        print '<hr class="topspace">'
         print '<h2 class="editheadline">Content</h2>'
         print '<p>'
         print 'This tool imports or exports titles to a publication. You may add titles, but you'
@@ -297,11 +297,11 @@ if __name__ == '__main__':
         print "</tbody>"
         print "</table>"
 
-	print "<hr class=\"topspace\">"
-	print "<p>"
-	print '<input name="pub_id" value="0" type="HIDDEN">'
-	print '<input name="child_id" value="%d" type="HIDDEN">' % int(clone_to)
-	print '<input type="SUBMIT" value="Submit Data" tabindex="1">'
-	print "</form>"
+        print "<hr class=\"topspace\">"
+        print "<p>"
+        print '<input name="pub_id" value="0" type="HIDDEN">'
+        print '<input name="child_id" value="%d" type="HIDDEN">' % int(clone_to)
+        print '<input type="SUBMIT" value="Submit Data" tabindex="1">'
+        print "</form>"
 
         PrintPostSearch(tableclose=False)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,34 +25,34 @@ if __name__ == '__main__':
         if not user.bureaucrat:
                 SESSION.DisplayError('The ability to add ISFDB templates is limited to ISFDB Bureaucrats')
 
-	PrintPreSearch('Add New ISFDB Template')
-	PrintNavBar('edit/add_template.cgi', 0)
+        PrintPreSearch('Add New ISFDB Template')
+        PrintNavBar('edit/add_template.cgi', 0)
 
         help = HelpTemplate()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_template.cgi">'
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_template.cgi">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Name', 'template_name', help)
+        printfield('Name', 'template_name', help)
 
-	printfield('Displayed Name', 'template_displayed_name', help)
+        printfield('Displayed Name', 'template_displayed_name', help)
 
         values = {}
         values['External URL'] = 1
         values['Internal URL'] = 0
         values['Substitute String'] = 0
-	printdropdown('Template Type', 'template_type', values, help)
+        printdropdown('Template Type', 'template_type', values, help)
 
-	printfield('Link URL', 'template_url', help)
+        printfield('Link URL', 'template_url', help)
 
-	printfield('Mouseover Help', 'template_mouseover', help)
+        printfield('Mouseover Help', 'template_mouseover', help)
 
-	print '</table>'
-	print '<p>'
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '</table>'
+        print '<p>'
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

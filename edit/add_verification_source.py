@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,26 +25,26 @@ if __name__ == '__main__':
         if not user.bureaucrat:
                 SESSION.DisplayError('The ability to add verification sources is limited to ISFDB Bureaucrats')
 
-	PrintPreSearch('Add New Verification Source')
-	PrintNavBar('edit/add_verification_source.cgi', 0)
+        PrintPreSearch('Add New Verification Source')
+        PrintNavBar('edit/add_verification_source.cgi', 0)
 
         help = HelpVerificationSource()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_verification_source.cgi">'
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_verification_source.cgi">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Source Label', 'source_label', help)
+        printfield('Source Label', 'source_label', help)
 
-	printfield('Source Name', 'source_name', help)
+        printfield('Source Name', 'source_name', help)
 
-	printfield('Source URL', 'source_url', help)
+        printfield('Source URL', 'source_url', help)
 
-	print '</table>'
-	print '<p>'
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '</table>'
+        print '<p>'
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

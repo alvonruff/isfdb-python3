@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2021   Ahasuerus
-#	 ALL RIGHTS RESERVED
+#     (C) COPYRIGHT 2009-2025   Ahasuerus
+#         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
@@ -20,8 +20,8 @@ from library import ISFDBLinkNoName, ISFDBLocalRedirect
 
 
 def DoError(error, title_id):
-	PrintPreSearch('Add Quick Tag')
-	PrintNavBar('edit/addquicktag.cgi', 0)
+        PrintPreSearch('Add Quick Tag')
+        PrintNavBar('edit/addquicktag.cgi', 0)
         print '<h2>ERROR: %s</h2>' % error
         if title_id:
                 print '<br>%s' % ISFDBLinkNoName('title.cgi', title_id, 'View This Title', True)
@@ -31,7 +31,7 @@ def DoError(error, title_id):
 
 if __name__ == '__main__':
 
-	(user_id, username, usertoken) = GetUserData()
+        (user_id, username, usertoken) = GetUserData()
 
         if not user_id:
                 DoError('You must be logged in to tag titles', 0)
@@ -41,19 +41,19 @@ if __name__ == '__main__':
 
         if form.has_key('title_id'):
                 title_id = form['title_id'].value
-	else:
+        else:
                 DoError('Specified title ID does not exit', 0)
 
         if form.has_key('tag'):
                 new_tag = form['tag'].value
-	else:
+        else:
                 DoError('No tag specified', 0)
 
-	##################################################################
-	# Retrieve all tags for this user/Title ID combination
-	##################################################################
-	tags = SQLgetUserTags(title_id, user_id)
-	for tag in tags:
+        ##################################################################
+        # Retrieve all tags for this user/Title ID combination
+        ##################################################################
+        tags = SQLgetUserTags(title_id, user_id)
+        for tag in tags:
                 if tag.lower() == new_tag.lower():
                         DoError('You have already added this Tag to this Title', title_id)
 

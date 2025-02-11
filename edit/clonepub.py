@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2022   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -27,48 +27,48 @@ from pubClass import pubs
 ###################################################################
 def printpubrecord(pub, image_url, reuse_external_ids):
         help = HelpPub()
-	print '<h2>Publication Metadata</h2>'
-	print '<table border="0" id="metadata">'
-	print '<tbody id="pubBody">'
-	printfield("Title", "pub_title", help, pub.pub_title, 1)
+        print '<h2>Publication Metadata</h2>'
+        print '<table border="0" id="metadata">'
+        print '<tbody id="pubBody">'
+        printfield("Title", "pub_title", help, pub.pub_title, 1)
 
         trans_titles = SQLloadTransPubTitles(pub.pub_id)
         printmultiple(trans_titles, "Transliterated Title", "trans_titles", help, 1)
 
-	authors = SQLPubAuthors(pub.pub_id)
+        authors = SQLPubAuthors(pub.pub_id)
         printmultiple(authors, "Author", "pub_author", help, 1)
 
-	printfield("Date", "pub_year", help, pub.pub_year)
+        printfield("Date", "pub_year", help, pub.pub_year)
 
         printfield("Publisher", "pub_publisher", help, pub.pub_publisher)
 
-	printfield("Pages", "pub_pages", help, pub.pub_pages)
-	
-	printformat("pub_ptype", "Format", help, pub.pub_ptype)
+        printfield("Pages", "pub_pages", help, pub.pub_pages)
+        
+        printformat("pub_ptype", "Format", help, pub.pub_ptype)
 
-	print '<tr>'
-	printContentHeader('Pub Type:', help)
+        print '<tr>'
+        printContentHeader('Pub Type:', help)
 
         print '<td><select tabindex="1" name="pub_ctype">'
         print '<option selected="selected">%s</option>' % pub.pub_ctype
         for ctype in ['ANTHOLOGY','CHAPBOOK','COLLECTION','FANZINE','MAGAZINE','NONFICTION','NOVEL','OMNIBUS']:
-		if ctype != pub.pub_ctype:
-        		print '<option>%s</option>' % (ctype)
+                if ctype != pub.pub_ctype:
+                        print '<option>%s</option>' % (ctype)
         print '</select>'
         print '</tr>'
-	
+        
         printISBN(help, pub.pub_isbn)
-	printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
-	printfield("Price", "pub_price", help, pub.pub_price)
+        printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
+        printfield("Price", "pub_price", help, pub.pub_price)
 
         if image_url:
                 cover_url = pub.pub_image
         else:
                 cover_url = ''
 
-	printfield("Image URL", "pub_image", help, cover_url)
-	printfield("Pub Series", "pub_series", help, pub.pub_series)
-	printfield("Pub Series #", "pub_series_num", help, pub.pub_series_num)
+        printfield("Image URL", "pub_image", help, cover_url)
+        printfield("Pub Series", "pub_series", help, pub.pub_series)
+        printfield("Pub Series #", "pub_series_num", help, pub.pub_series_num)
         printWebPages([], 'pub', help)
         printsource(help)
         printtextarea('Pub Note', 'pub_note', help, pub.pub_note)
@@ -80,13 +80,13 @@ def printpubrecord(pub, image_url, reuse_external_ids):
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</tbody>'
+        print '</tbody>'
         print '</table>'
 
 if __name__ == '__main__':
 
         form = cgi.FieldStorage()
-	try:
+        try:
                 pub_id = int(form['CloneTo'].value)
                 pub = pubs(db)
                 pub.load(pub_id)
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                         raise
                 titles = getSortedTitlesInPub(pub_id)
                 covers = SQLPubCovers(pub_id)
-	except:
+        except:
                 PrintPreSearch("Clone Publication")
                 PrintNavBar('edit/clonepub.cgi', 0)
                 print "<h3>Error: Publication to clone is not specified.</h3>"
@@ -127,33 +127,33 @@ if __name__ == '__main__':
         else:
                 reuse_external_ids = 0
 
-	##################################################################
-	# Output the leading HTML stuff
-	##################################################################
-	PrintPreSearch("Clone Publication")
-	PrintNavBar('edit/clonepub.cgi', pub_id)
+        ##################################################################
+        # Output the leading HTML stuff
+        ##################################################################
+        PrintPreSearch("Clone Publication")
+        PrintNavBar('edit/clonepub.cgi', pub_id)
 
         print '<div id="HelpBox">'
         print '<b>Help on cloning publications: </b>'
         print '<a href="%s://%s/index.php/Help:Screen:ClonePub">Help:Screen:ClonePub</a><p>' % (PROTOCOL, WIKILOC)
         print '</div>'
 
-	title_id = SQLgetTitleReferral(pub_id, pub.pub_ctype, 1)
-	if title_id == 0:
-        	print "<h3>Error: This publication is not in a cloneable state.</h3>"
-		print "<p>Unable to determine the parent title of this publication."
-		print "The most likely cause is that the parent title is missing or "
-		print "the publication type is wrong. For instance, if this publication "
-		print "is a COLLECTION, look to see that its type is set to COLLECTION "
-		print "and that the parent title is set to COLLECTION as well. If the type "
-		print "is wrong, edit the publication and change the type. "
-		print "Then the record will be cloneable."
-		PrintPostSearch(0, 0, 0, 0, 0)
-		sys.exit(0)
+        title_id = SQLgetTitleReferral(pub_id, pub.pub_ctype, 1)
+        if title_id == 0:
+                print "<h3>Error: This publication is not in a cloneable state.</h3>"
+                print "<p>Unable to determine the parent title of this publication."
+                print "The most likely cause is that the parent title is missing or "
+                print "the publication type is wrong. For instance, if this publication "
+                print "is a COLLECTION, look to see that its type is set to COLLECTION "
+                print "and that the parent title is set to COLLECTION as well. If the type "
+                print "is wrong, edit the publication and change the type. "
+                print "Then the record will be cloneable."
+                PrintPostSearch(0, 0, 0, 0, 0)
+                sys.exit(0)
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
 
-	printpubrecord(pub, image_url, reuse_external_ids)
+        printpubrecord(pub, image_url, reuse_external_ids)
 
         print '<p>'
         print '<hr>'
@@ -285,13 +285,13 @@ if __name__ == '__main__':
         print "</tbody>"
         print "</table>"
 
-	print "<p>"
-	print "<hr>"
-	print "<p>"
-	print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
-	print "<input NAME=\"title_id\" VALUE=\"%d\" TYPE=\"HIDDEN\">" % title_id
-	print '<input type="SUBMIT" tabindex="1" value="Clone Pub">'
-	print "</form>"
-	print "<p>"
+        print "<p>"
+        print "<hr>"
+        print "<p>"
+        print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
+        print "<input NAME=\"title_id\" VALUE=\"%d\" TYPE=\"HIDDEN\">" % title_id
+        print '<input type="SUBMIT" tabindex="1" value="Clone Pub">'
+        print "</form>"
+        print "<p>"
 
-	PrintPostSearch(tableclose=False)
+        PrintPostSearch(tableclose=False)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2021   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -26,48 +26,48 @@ if __name__ == '__main__':
         pub = 0
 
         pub_type = record[TITLE_TTYPE]
-	if pub_type not in ('NOVEL', 'COLLECTION', 'OMNIBUS', 'ANTHOLOGY', 'CHAPBOOK', 'NONFICTION'):
-		SESSION.DisplayError('Adding a publication to a %s record is not supported' % pub_type)
+        if pub_type not in ('NOVEL', 'COLLECTION', 'OMNIBUS', 'ANTHOLOGY', 'CHAPBOOK', 'NONFICTION'):
+                SESSION.DisplayError('Adding a publication to a %s record is not supported' % pub_type)
 
-	PrintPreSearch('Add Publication')
-	PrintNavBar('edit/addpub.cgi', title)
+        PrintPreSearch('Add Publication')
+        PrintNavBar('edit/addpub.cgi', title)
 
         print '<div id="HelpBox">'
         print '<b>Help on adding new publication records: </b>'
         print '<a href="%s://%s/index.php/Help:Screen:AddPublication">Help:Screen:AddPublication</a><p>' % (PROTOCOL, WIKILOC)
         print '</div>'
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitaddpub.cgi">'
-	print '<h2>Publication Metadata</h2>'
-	print '<table class="pub_metadata" id="metadata">'
-	print '<tbody id="pubBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitaddpub.cgi">'
+        print '<h2>Publication Metadata</h2>'
+        print '<table class="pub_metadata" id="metadata">'
+        print '<tbody id="pubBody">'
 
         help = HelpPub()
 
-	printfield("Title", "pub_title", help, record[TITLE_TITLE], 1)
+        printfield("Title", "pub_title", help, record[TITLE_TITLE], 1)
 
         trans_titles = SQLloadTransTitles(record[TITLE_PUBID])
         printmultiple(trans_titles, "Transliterated Title", "trans_titles", help, 1)
 
-	authors = SQLTitleAuthors(record[TITLE_PUBID])
+        authors = SQLTitleAuthors(record[TITLE_PUBID])
         printmultiple(authors, "Author", "pub_author", help, 1)
 
-	printfield("Date", "pub_year", help)
-	printfield("Publisher", "pub_publisher", help)
-	printfield("Pages", "pub_pages", help)
+        printfield("Date", "pub_year", help)
+        printfield("Publisher", "pub_publisher", help)
+        printfield("Pages", "pub_pages", help)
 
-	printformat("pub_ptype", "Format", help)
+        printformat("pub_ptype", "Format", help)
 
-	printfield("Pub Type", "pub_ctype", help, pub_type, 1)
+        printfield("Pub Type", "pub_ctype", help, pub_type, 1)
 
         printISBN(help, None)
-	printfield("Catalog ID", "pub_catalog", help)
-	printfield("Price", "pub_price", help)
+        printfield("Catalog ID", "pub_catalog", help)
+        printfield("Price", "pub_price", help)
 
-	printfield("Image URL", "pub_image", help)
+        printfield("Image URL", "pub_image", help)
 
-	printfield("Pub Series", "pub_series", help)
-	printfield("Pub Series #", "pub_series_num", help)
+        printfield("Pub Series", "pub_series", help)
+        printfield("Pub Series #", "pub_series_num", help)
         printWebPages([], 'pub', help)
 
         printsource(help)
@@ -76,7 +76,7 @@ if __name__ == '__main__':
         printExternalIDs(None, "External ID", "external_id", help)
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</tbody>'
+        print '</tbody>'
         print '</table>'
 
         print '<p>'
@@ -196,9 +196,9 @@ if __name__ == '__main__':
         print '</tbody>'
         print '</table>'
 
-	print '<p>'
-	print '<hr>'
-	print '<p>'
+        print '<p>'
+        print '<hr>'
+        print '<p>'
         print '<input tabindex="0" NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % (title)
         print '<input tabindex="0" name="editor" value="addpub" type="HIDDEN">'
         print '<input tabindex="0" NAME="pub_id" VALUE="%d" TYPE="HIDDEN">' % (pub)

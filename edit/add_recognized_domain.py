@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,38 +25,38 @@ if __name__ == '__main__':
         if not user.bureaucrat:
                 SESSION.DisplayError('The ability to add recognized domains is limited to ISFDB Bureaucrats')
 
-	PrintPreSearch('Add New Recognized Domain')
-	PrintNavBar('edit/add_recognized_domain.cgi', 0)
+        PrintPreSearch('Add New Recognized Domain')
+        PrintNavBar('edit/add_recognized_domain.cgi', 0)
 
         help = HelpRecognizedDomain()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_recognized_domain.cgi">'
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_recognized_domain.cgi">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Domain Name', 'domain_name', help)
+        printfield('Domain Name', 'domain_name', help)
 
-	printfield('Web Site Name', 'site_name', help)
+        printfield('Web Site Name', 'site_name', help)
 
-	printfield('Web Site URL', 'site_url', help)
+        printfield('Web Site URL', 'site_url', help)
 
         values = {}
         values['Yes'] = 0
         values['No'] = 1
         printdropdown('Linking Allowed', 'linking_allowed', values, help)
 
-	printfield('Required URL Segment', 'required_segment', help)
+        printfield('Required URL Segment', 'required_segment', help)
 
         values = {}
         values['Yes'] = 0
         values['No'] = 1
         printdropdown('Explicit Credit Page Link Required', 'explicit_link_required', values, help)
 
-	print '</table>'
-	print '<p>'
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '</table>'
+        print '<p>'
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

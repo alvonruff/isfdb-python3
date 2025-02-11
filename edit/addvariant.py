@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2021   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,17 +21,17 @@ from isfdblib_print import *
 def printtitlerecord(record):
         help = HelpTitle()
         
-	print '<table border="0">'
+        print '<table border="0">'
         print '<tbody id="titleBody">'
 
-	printfield("Title", "title_title", help, record[TITLE_TITLE])
+        printfield("Title", "title_title", help, record[TITLE_TITLE])
 
         printmultiple([], "Transliterated Title", "trans_titles", help)
 
-	authors = SQLTitleAuthors(record[TITLE_PUBID])
+        authors = SQLTitleAuthors(record[TITLE_PUBID])
         printmultiple(authors, "Author", "title_author", help)
 
-	printfield("Date", "title_copyright", help, record[TITLE_YEAR])
+        printfield("Date", "title_copyright", help, record[TITLE_YEAR])
 
         printlanguage(record[TITLE_LANGUAGE], 'language', 'Language', help)
 
@@ -55,23 +55,23 @@ if __name__ == '__main__':
         if title_data[TITLE_PARENT]:
                 SESSION.DisplayError('This title is currently a variant of another title. Variants of variants are not allowed')
 
-	PrintPreSearch('Add Variant Title')
-	PrintNavBar('edit/addvariant.cgi', title_id)
-	
-	print '<div id="HelpBox">'
-	print '<b>Help on adding variant titles: </b>'
-	print '<a href="%s://%s/index.php/Help:Screen:AddVariant">Help:Screen:AddVariant</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        PrintPreSearch('Add Variant Title')
+        PrintNavBar('edit/addvariant.cgi', title_id)
+        
+        print '<div id="HelpBox">'
+        print '<b>Help on adding variant titles: </b>'
+        print '<a href="%s://%s/index.php/Help:Screen:AddVariant">Help:Screen:AddVariant</a><p>' % (PROTOCOL, WIKILOC)
+        print '</div>'
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitvariant.cgi">'
-	printtitlerecord(title_data)
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitvariant.cgi">'
+        printtitlerecord(title_data)
 
-	print '<p>'
-	print '<hr>'
-	print '<p>'
-	print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % title_id
-	print '<input TYPE="SUBMIT" VALUE="Submit Data">'
-	print '</form>'
-	print '<p>'
+        print '<p>'
+        print '<hr>'
+        print '<p>'
+        print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % title_id
+        print '<input TYPE="SUBMIT" VALUE="Submit Data">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
