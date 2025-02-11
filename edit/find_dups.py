@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2007-2024   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,13 +19,13 @@ from library import ISFDBCompareTwoTitles
 def CheckOneList(titles, mode):
         counter = 0
         found = 0
-	for title in titles:
-		first = 1
-		delete_list = []
-		offset = counter+1
-		for target in titles[counter+1:]:
+        for title in titles:
+                first = 1
+                delete_list = []
+                offset = counter+1
+                for target in titles[counter+1:]:
                         match = ISFDBCompareTwoTitles(title, target, mode)
-			if match:
+                        if match:
                                 title_authors = SQLTitleBriefAuthorRecords(title[TITLE_PUBID])
                                 target_authors = SQLTitleBriefAuthorRecords(target[TITLE_PUBID])
                                 # Only titles with identical authors are potential duplicates
@@ -38,21 +38,21 @@ def CheckOneList(titles, mode):
                                                 first = 0
                                         PrintDuplicateTitleRecord(target, 0, target_authors)
                                         delete_list.append(offset)
-			offset += 1
+                        offset += 1
 
-		fudge = 0
-		for item in delete_list:
-			del titles[item-fudge]
-			fudge += 1
-		counter += 1
+                fudge = 0
+                for item in delete_list:
+                        del titles[item-fudge]
+                        fudge += 1
+                counter += 1
 
-		if first == 0:
-			print '</table>'
-			print '<p>'
-			print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-			print '</form>'
-			print '<p>'
-	return found
+                if first == 0:
+                        print '</table>'
+                        print '<p>'
+                        print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
+                        print '</form>'
+                        print '<p>'
+        return found
 
         
 if __name__ == '__main__':
@@ -68,23 +68,23 @@ if __name__ == '__main__':
         if (mode == 2) and (len(titles) > 1000):
                 SESSION.DisplayError('Aggressive mode disabled for authors with more than 1,000 titles for performance reasons')
 
-	PrintPreSearch('Duplicate Finder for %s' % author_data[AUTHOR_CANONICAL])
-	PrintNavBar('edit/find_dups.cgi', author_id)
+        PrintPreSearch('Duplicate Finder for %s' % author_data[AUTHOR_CANONICAL])
+        PrintNavBar('edit/find_dups.cgi', author_id)
 
-	print '<div id="HelpBox">'
-	print '<b>Help on merging titles: </b>'
-	print '<a href="%s://%s/index.php/Editing:Merging_Titles">Editing:Merging_Titles</a><p>' % (PROTOCOL, WIKILOC)
-	print '</div>'
+        print '<div id="HelpBox">'
+        print '<b>Help on merging titles: </b>'
+        print '<a href="%s://%s/index.php/Editing:Merging_Titles">Editing:Merging_Titles</a><p>' % (PROTOCOL, WIKILOC)
+        print '</div>'
 
-	if mode == 2:
-		print '<h2>Mode: Aggressive Title Match</h2>'
-		print 'Note that this mode will generate the most false positives.'
-		print """You can also try stricter %s or even stricter
+        if mode == 2:
+                print '<h2>Mode: Aggressive Title Match</h2>'
+                print 'Note that this mode will generate the most false positives.'
+                print """You can also try stricter %s or even stricter
                         %s.""" % (ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode'),
                                   ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode'))
-	elif mode == 1:
-		print '<h2>Mode: Similar Title Match</h2>'
-		if len(titles) <= 1000:
+        elif mode == 1:
+                print '<h2>Mode: Similar Title Match</h2>'
+                if len(titles) <= 1000:
                         print """You can also try %s or the most comprehensive
                                 %s""" % (ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode'),
                                          ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode'))
@@ -92,9 +92,9 @@ if __name__ == '__main__':
                         print """You can also try %s. Aggressive mode is disabled for authors
                                 with more than 1,000 titles for performance
                                 reasons.""" % ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode')
-	else:
-		print '<h2>Mode: Exact Title Match</h2>'
-		if len(titles) <= 1000:
+        else:
+                print '<h2>Mode: Exact Title Match</h2>'
+                if len(titles) <= 1000:
                         print """You can also try the more comprehensive %s or the most comprehensive 
                                  %s""" % (ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode'),
                                           ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode'))
@@ -102,8 +102,8 @@ if __name__ == '__main__':
                         print """You can also try the more comprehensive %s. Aggressive mode is disabled for
                                  authors with more than 1,000 titles for performance
                                  reasons.""" % ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode')
-	print '<p>Be sure to check the title types and languages carefully before merging.'
-	print '<p><hr>'
+        print '<p>Be sure to check the title types and languages carefully before merging.'
+        print '<p><hr>'
 
         found = 0
         if mode != 2:
@@ -181,8 +181,8 @@ if __name__ == '__main__':
         else:
                 found = CheckOneList(titles, mode)
 
-	if not found:
-		print '<h2>No duplicate candidates found.</h2>'
+        if not found:
+                print '<h2>No duplicate candidates found.</h2>'
 
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

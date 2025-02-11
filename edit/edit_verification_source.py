@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,27 +31,27 @@ if __name__ == '__main__':
         if not source:
                 SESSION.DisplayError('Specified Verification Source does not exist')
 
-	PrintPreSearch('Edit Verification Source')
-	PrintNavBar('edit/edit_verification_source.cgi', 0)
+        PrintPreSearch('Edit Verification Source')
+        PrintNavBar('edit/edit_verification_source.cgi', 0)
 
         help = HelpVerificationSource()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_verification_source.cgi">'
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_verification_source.cgi">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Source Label', 'source_label', help, source[REFERENCE_LABEL])
+        printfield('Source Label', 'source_label', help, source[REFERENCE_LABEL])
 
-	printfield('Source Name', 'source_name', help, source[REFERENCE_NAME])
+        printfield('Source Name', 'source_name', help, source[REFERENCE_NAME])
 
-	printfield('Source URL', 'source_url', help, source[REFERENCE_URL])
+        printfield('Source URL', 'source_url', help, source[REFERENCE_URL])
 
-	print '</table>'
-	print '<p>'
-	print '<input NAME="source_id" VALUE="%d" TYPE="HIDDEN">' % source_id
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '</table>'
+        print '<p>'
+        print '<input NAME="source_id" VALUE="%d" TYPE="HIDDEN">' % source_id
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2022   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,43 +21,43 @@ from isfdblib_print import *
 
 def printpubrecord(pub):
         help = HelpPub()
-	print '<h2>Publication Metadata</h2>'
-	print '<table id="metadata">'
-	print '<tbody id="pubBody">'
-	printfield("Title", "pub_title", help, pub.pub_title)
+        print '<h2>Publication Metadata</h2>'
+        print '<table id="metadata">'
+        print '<tbody id="pubBody">'
+        printfield("Title", "pub_title", help, pub.pub_title)
         trans_titles = SQLloadTransPubTitles(pub.pub_id)
         printmultiple(trans_titles, "Transliterated Title", "trans_titles", help)
 
-	authors = SQLPubAuthors(pub.pub_id)
+        authors = SQLPubAuthors(pub.pub_id)
         printmultiple(authors, "Author", "pub_author", help)
 
-	printfield("Date", "pub_year", help, pub.pub_year)
+        printfield("Date", "pub_year", help, pub.pub_year)
         printfield("Publisher", "pub_publisher", help, pub.pub_publisher)
-	printfield("Pages", "pub_pages", help, pub.pub_pages)
-	printformat("pub_ptype", "Format", help, pub.pub_ptype)
+        printfield("Pages", "pub_pages", help, pub.pub_pages)
+        printformat("pub_ptype", "Format", help, pub.pub_ptype)
 
-	print '<tr>'
-	printContentHeader('Pub Type:', help)
+        print '<tr>'
+        printContentHeader('Pub Type:', help)
         print '<td><select tabindex="1" name="pub_ctype" class="metainputselect">'
         print '<option value="%s" selected="selected">%s</option>' % (pub.pub_ctype, pub.pub_ctype)
         for ctype in SESSION.db.pub_types:
-		if ctype != pub.pub_ctype:
-        		print '<option value="%s">%s</option>' % (ctype, ctype)
+                if ctype != pub.pub_ctype:
+                        print '<option value="%s">%s</option>' % (ctype, ctype)
         print '</select>'
         print '</tr>'
 
         printISBN(help, pub.pub_isbn)
-	printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
-	printfield("Price", "pub_price", help, pub.pub_price)
-	printfield("Image URL", "pub_image", help, pub.pub_image)
-	printfield("Pub Series", "pub_series", help, pub.pub_series)
+        printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
+        printfield("Price", "pub_price", help, pub.pub_price)
+        printfield("Image URL", "pub_image", help, pub.pub_image)
+        printfield("Pub Series", "pub_series", help, pub.pub_series)
         printfield("Pub Series #", "pub_series_num", help, pub.pub_series_num)
         printWebPages(pub.pub_webpages, 'pub', help)
         printtextarea('Pub Note', 'pub_note', help, pub.pub_note)
         printExternalIDs(pub.identifiers, "External ID", "external_id", help)
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</tbody>'
+        print '</tbody>'
         print '</table>'
 
 if __name__ == '__main__':
@@ -68,15 +68,15 @@ if __name__ == '__main__':
         if pub.error:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Publication Editor')
-	PrintNavBar('edit/editpub.cgi', pub_id)
+        PrintPreSearch('Publication Editor')
+        PrintNavBar('edit/editpub.cgi', pub_id)
 
         titles = getSortedTitlesInPub(pub_id)
         covers = SQLPubCovers(pub_id)
 
         printHelpBox('publication', 'EditPub')
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpub.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpub.cgi">'
         printpubrecord(pub)
 
         print '<hr class="topspace">'
@@ -138,10 +138,10 @@ if __name__ == '__main__':
         printContentHeader('Length', help)
         print '</tr>'
 
-	normal_titles = []
-	container_titles = []
-	review_titles = []
-	interview_titles = []
+        normal_titles = []
+        container_titles = []
+        review_titles = []
+        interview_titles = []
 
         for title in titles:
                 if title[TITLE_TTYPE] == 'COVERART':
@@ -164,12 +164,12 @@ if __name__ == '__main__':
                         normal_titles.append(title)
 
         index = 1
-	if container_titles:
+        if container_titles:
                 for title in container_titles:
                         printeditabletitlerecord(title, index, 1, help, pub_id)
                         index += 1
 
-	if normal_titles:
+        if normal_titles:
                 for title in normal_titles:
                         printeditabletitlerecord(title, index, 0, help, pub_id)
                         index += 1
@@ -228,13 +228,13 @@ if __name__ == '__main__':
         print '</table>'
 
         print '<hr class="topspace">'
-	print '<p>'
-	print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
-	print '<input name="editor" value="editpub" type="HIDDEN">'
-	print '<input type="SUBMIT" value="Submit Changed Data" tabindex="1">'
+        print '<p>'
+        print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
+        print '<input name="editor" value="editpub" type="HIDDEN">'
+        print '<input type="SUBMIT" value="Submit Changed Data" tabindex="1">'
         pub.printModNoteRequired()
-	print '</form>'
+        print '</form>'
         print '<hr class="topspace">'
-	print ISFDBLink("edit/deletepub.cgi", pub_id, "Delete record")
+        print ISFDBLink("edit/deletepub.cgi", pub_id, "Delete record")
 
         PrintPostSearch(tableclose=False)

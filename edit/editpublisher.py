@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -24,26 +24,26 @@ if __name__ == '__main__':
         record = SQLGetPublisher(publisherID)
         if not record:
                 SESSION.DisplayError('Record Does Not Exist')
-		
-	PrintPreSearch('Publisher Editor')
-	PrintNavBar('edit/editpublisher.cgi', publisherID)
+                
+        PrintPreSearch('Publisher Editor')
+        PrintNavBar('edit/editpublisher.cgi', publisherID)
 
         help = HelpPublisher()
 
         printHelpBox('publisher', 'EditPublisher')
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpublisher.cgi">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpublisher.cgi">'
 
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
         # Limit the ability to edit publisher names to moderators
         user = User()
         user.load()
-	display_only = 1
-	if SQLisUserModerator(user.id):
+        display_only = 1
+        if SQLisUserModerator(user.id):
                 display_only = 0
-	printfield("Publisher Name", "publisher_name", help, record[PUBLISHER_NAME], display_only)
+        printfield("Publisher Name", "publisher_name", help, record[PUBLISHER_NAME], display_only)
 
         trans_publisher_names = SQLloadTransPublisherNames(record[PUBLISHER_ID])
         printmultiple(trans_publisher_names, "Transliterated Name", "trans_publisher_names", help)
@@ -55,14 +55,14 @@ if __name__ == '__main__':
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-	print '</tbody>'
-	print '</table>'
+        print '</tbody>'
+        print '</table>'
 
-	print '<p>'
-	print '<input NAME="publisher_id" VALUE="%d" TYPE="HIDDEN">' % publisherID
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '<p>'
+        print '<input NAME="publisher_id" VALUE="%d" TYPE="HIDDEN">' % publisherID
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

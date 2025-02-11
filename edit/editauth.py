@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2021   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,39 +23,39 @@ if __name__ == '__main__':
         record = SQLloadAuthorData(author_id)
         if not record:
                 SESSION.DisplayError('Record Does Not Exist')
-	
-	PrintPreSearch('Author Editor')
-	PrintNavBar('edit/editauth.cgi', author_id)
+        
+        PrintPreSearch('Author Editor')
+        PrintNavBar('edit/editauth.cgi', author_id)
         help = HelpAuthor()
 
         printHelpBox('author', 'AuthorData')
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitauth.cgi">'
-	
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitauth.cgi">'
+        
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
         # Limit the ability to edit canonical author names to moderators
         user = User()
         user.load()
-	display_only = 1
-	if SQLisUserModerator(user.id):
+        display_only = 1
+        if SQLisUserModerator(user.id):
                 display_only = 0
-	printfield("Canonical Name", "author_canonical",  help, record[AUTHOR_CANONICAL], display_only)
+        printfield("Canonical Name", "author_canonical",  help, record[AUTHOR_CANONICAL], display_only)
 
         trans_names = SQLloadTransAuthorNames(record[AUTHOR_ID])
         printmultiple(trans_names, "Transliterated Name", "trans_names", help)
 
-	printfield("Legal Name",     "author_legalname",  help, record[AUTHOR_LEGALNAME])
+        printfield("Legal Name",     "author_legalname",  help, record[AUTHOR_LEGALNAME])
         trans_legal_names = SQLloadTransLegalNames(record[AUTHOR_ID])
         printmultiple(trans_legal_names, "Trans. Legal Name", "trans_legal_names", help)
 
-	printfield("Directory Entry","author_lastname",   help, record[AUTHOR_LASTNAME])
-	printfield("Birth Place",    "author_birthplace", help, record[AUTHOR_BIRTHPLACE])
-	printfield("Birth Date",     "author_birthdate",  help, record[AUTHOR_BIRTHDATE])
-	printfield("Death Date",     "author_deathdate",  help, record[AUTHOR_DEATHDATE])
+        printfield("Directory Entry","author_lastname",   help, record[AUTHOR_LASTNAME])
+        printfield("Birth Place",    "author_birthplace", help, record[AUTHOR_BIRTHPLACE])
+        printfield("Birth Date",     "author_birthdate",  help, record[AUTHOR_BIRTHDATE])
+        printfield("Death Date",     "author_deathdate",  help, record[AUTHOR_DEATHDATE])
 
-	printlanguage(record[AUTHOR_LANGUAGE], "author_language", "Working Language", help)
+        printlanguage(record[AUTHOR_LANGUAGE], "author_language", "Working Language", help)
 
         emails = SQLloadEmails(record[AUTHOR_ID])
         printmultiple(emails, "Email Address", "author_emails", help)
@@ -63,19 +63,19 @@ if __name__ == '__main__':
         webpages = SQLloadWebpages(record[AUTHOR_ID])
         printWebPages(webpages, 'author', help)
 
-	printfield("Author Image",          "author_image",     help, record[AUTHOR_IMAGE])
-	
+        printfield("Author Image",          "author_image",     help, record[AUTHOR_IMAGE])
+        
         printtextarea('Note', 'author_note', help, record[AUTHOR_NOTE])
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
-	print '</table>'
+        print '</table>'
 
-	print '<p>'
-	print '<input NAME="author_id" VALUE="%d" TYPE="HIDDEN">' % author_id
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '<p>'
+        print '<input NAME="author_id" VALUE="%d" TYPE="HIDDEN">' % author_id
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

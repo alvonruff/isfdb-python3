@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,20 +31,20 @@ if __name__ == '__main__':
         if not template_id:
                 SESSION.DisplayError('Specified Template does not exist')
 
-	PrintPreSearch('Edit ISFDB Template')
-	PrintNavBar('edit/edit_template.cgi', 0)
+        PrintPreSearch('Edit ISFDB Template')
+        PrintNavBar('edit/edit_template.cgi', 0)
 
         print """Note that HTML entity references like "&amp;amp;" are curently automatically
                 converted to their ASCII equivalents. See SVN Bug 514 for details."""
         help = HelpTemplate()
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_template.cgi">'
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
+        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_template.cgi">'
+        print '<table border="0">'
+        print '<tbody id="tagBody">'
 
-	printfield('Name', 'template_name', help, template[TEMPLATE_NAME])
+        printfield('Name', 'template_name', help, template[TEMPLATE_NAME])
 
-	printfield('Displayed Name', 'template_displayed_name', help, template[TEMPLATE_DISPLAYED_NAME])
+        printfield('Displayed Name', 'template_displayed_name', help, template[TEMPLATE_DISPLAYED_NAME])
 
         values = {}
         for template_type in ('External URL', 'Internal URL', 'Substitute String'):
@@ -52,18 +52,18 @@ if __name__ == '__main__':
                         values[template_type] = 1
                 else:
                         values[template_type] = 0
-	printdropdown('Template Type', 'template_type', values, help)
+        printdropdown('Template Type', 'template_type', values, help)
 
-	printfield('Link URL', 'template_url', help, template[TEMPLATE_URL])
+        printfield('Link URL', 'template_url', help, template[TEMPLATE_URL])
 
-	printfield('Mouseover Help', 'template_mouseover', help, template[TEMPLATE_MOUSEOVER])
+        printfield('Mouseover Help', 'template_mouseover', help, template[TEMPLATE_MOUSEOVER])
 
-	print '</table>'
-	print '<p>'
-	print '<input NAME="template_id" VALUE="%d" TYPE="HIDDEN">' % template_id
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print '</table>'
+        print '<p>'
+        print '<input NAME="template_id" VALUE="%d" TYPE="HIDDEN">' % template_id
+        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
+        print '</form>'
+        print '<p>'
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

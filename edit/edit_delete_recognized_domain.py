@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -34,20 +34,20 @@ if __name__ == '__main__':
         if domain.error:
                 SESSION.DisplayError(domain.error)
 
-	PrintPreSearch('Edit/Delete Recognized Domain')
-	PrintNavBar('edit/edit_delete_recognized_domain.cgi', 0)
+        PrintPreSearch('Edit/Delete Recognized Domain')
+        PrintNavBar('edit/edit_delete_recognized_domain.cgi', 0)
 
         help = HelpRecognizedDomain()
 
-	print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_recognized_domain.cgi">')
-	print('<table border="0">')
-	print('<tbody id="tagBody">')
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_recognized_domain.cgi">')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
-	printfield('Domain Name', 'domain_name', help, domain.domain_name)
+        printfield('Domain Name', 'domain_name', help, domain.domain_name)
 
-	printfield('Web Site Name', 'site_name', help, domain.site_name)
+        printfield('Web Site Name', 'site_name', help, domain.site_name)
 
-	printfield('Web Site URL', 'site_url', help, domain.site_url)
+        printfield('Web Site URL', 'site_url', help, domain.site_url)
 
         values = {}
         if domain.linking_allowed:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
                 values['No'] = 1
         printdropdown('Linking Allowed', 'linking_allowed', values, help)
 
-	printfield('Required URL Segment', 'required_segment', help, domain.required_segment)
+        printfield('Required URL Segment', 'required_segment', help, domain.required_segment)
 
         values = {}
         if domain.explicit_link_required:
@@ -69,13 +69,13 @@ if __name__ == '__main__':
                 values['No'] = 1
         printdropdown('Explicit Credit Page Link Required', 'explicit_link_required', values, help)
 
-	print('</table>')
-	print('<p>')
-	print('<input NAME="domain_id" VALUE="%d" TYPE="HIDDEN">' % domain_id)
-	print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
-	print('</form>')
-	print('<p>')
-	print(ISFDBLink('edit/submit_delete_recognized_domain.cgi', domain_id, 'Delete This Recognized Domain'))
+        print('</table>')
+        print('<p>')
+        print('<input NAME="domain_id" VALUE="%d" TYPE="HIDDEN">' % domain_id)
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
+        print(ISFDBLink('edit/submit_delete_recognized_domain.cgi', domain_id, 'Delete This Recognized Domain'))
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 
