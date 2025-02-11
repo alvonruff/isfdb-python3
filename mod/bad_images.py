@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus 
+#     (C) COPYRIGHT 2014-2025   Ahasuerus 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,11 +32,11 @@ def PrintPubRecord(count, pub_id, url, pub_title, bgcolor):
         print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
         print '<td>%s</td>' % (url)
         print '<td>%s</td>' % ISFDBLink('mod/resolve_bad_url.cgi', pub_id, 'Click Once Resolved')
-	print '</tr>'
+        print '</tr>'
 
 if __name__ == '__main__':
 
-	PrintPreMod('Publications with Suspect Images')
+        PrintPreMod('Publications with Suspect Images')
         PrintNavBar()
 
         query = """select bad_images.pub_id, bad_images.image_url, pubs.pub_title
@@ -44,9 +44,9 @@ if __name__ == '__main__':
                 where pubs.pub_id=bad_images.pub_id
                 order by pubs.pub_title"""
 
-	db.query(query)
-	result = db.store_result()
-	num = result.num_rows()
+        db.query(query)
+        result = db.store_result()
+        num = result.num_rows()
 
         if num:
                 PrintTableHeaders()
@@ -62,8 +62,8 @@ if __name__ == '__main__':
                         bgcolor ^= 1
                         count += 1
 
-		print '</table>'
-	else:
-		print '<h2>No publications with bad images found</h2>'
+                print '</table>'
+        else:
+                print '<h2>No publications with bad images found</h2>'
 
         PrintPostMod(0)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2013-2021   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2013-2025   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,31 +22,31 @@ submitter     = 0
 reviewer      = 0
 
 def UpdateColumn(doc, tag, column, id):
-	if TagPresent(doc, tag):
+        if TagPresent(doc, tag):
 
-		###########################################
-		# Get the old value
-		###########################################
-		query = "select %s from award_types where award_type_id=%s" % (column, id)
-       		db.query(query)
-		result = db.store_result()
-		record = result.fetch_row()
-		from_value = record[0][0]
+                ###########################################
+                # Get the old value
+                ###########################################
+                query = "select %s from award_types where award_type_id=%s" % (column, id)
+                db.query(query)
+                result = db.store_result()
+                record = result.fetch_row()
+                from_value = record[0][0]
 
-		value = GetElementValue(doc, tag)
-        	if value:
-			update = "update award_types set %s='%s' where award_type_id=%s" % (column, db.escape_string(value), id)
-		else:
-			update = "update award_types set %s = NULL where award_type_id=%s" % (column, id)
-		print "<li> ", update
-       		db.query(update)
+                value = GetElementValue(doc, tag)
+                if value:
+                        update = "update award_types set %s='%s' where award_type_id=%s" % (column, db.escape_string(value), id)
+                else:
+                        update = "update award_types set %s = NULL where award_type_id=%s" % (column, id)
+                print "<li> ", update
+                db.query(update)
 
 
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Award Type Update - SQL Statements')
+        PrintPreMod('Award Type Update - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
@@ -61,9 +61,9 @@ if __name__ == '__main__':
                 PrintPostMod()
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
         merge = doc.getElementsByTagName('AwardTypeUpdate')
         subname = GetElementValue(merge, 'Submitter')
         submitter = SQLgetSubmitterID(subname)
@@ -166,5 +166,5 @@ if __name__ == '__main__':
         print ISFDBLinkNoName('edit/editawardtype.cgi', current.award_type_id, 'Edit This Award Type', True)
         print ISFDBLinkNoName('awardtype.cgi', current.award_type_id, 'View This Award Type', True)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 

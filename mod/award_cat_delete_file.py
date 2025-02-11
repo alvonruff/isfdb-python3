@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Award Category Delete - SQL Statements')
+        PrintPreMod('Award Category Delete - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
@@ -32,15 +32,15 @@ if __name__ == '__main__':
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('AwardCategoryDelete')
         if not merge:
-		print '<div id="ErrorBox">'
-		print '<h3>Error: Bad argument</h3>'
-		print '</div>'
-		PrintPostMod()
-		sys.exit(0)
+                print '<div id="ErrorBox">'
+                print '<h3>Error: Bad argument</h3>'
+                print '</div>'
+                PrintPostMod()
+                sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
         current = award_cat()
         current.award_cat_id = int(GetElementValue(merge, 'AwardCategoryId'))
@@ -70,4 +70,4 @@ if __name__ == '__main__':
 
         markIntegrated(db, submission, current.award_cat_id)
 
-	PrintPostMod(0)
+        PrintPostMod(0)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2014-2025   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,31 +22,31 @@ submitter     = 0
 reviewer      = 0
 
 def UpdateColumn(doc, tag, column, id):
-	if TagPresent(doc, tag):
+        if TagPresent(doc, tag):
 
-		###########################################
-		# Get the old value
-		###########################################
-		query = "select %s from award_cats where award_cat_id=%d" % (column, int(id))
-       		db.query(query)
-		result = db.store_result()
-		record = result.fetch_row()
-		from_value = record[0][0]
+                ###########################################
+                # Get the old value
+                ###########################################
+                query = "select %s from award_cats where award_cat_id=%d" % (column, int(id))
+                db.query(query)
+                result = db.store_result()
+                record = result.fetch_row()
+                from_value = record[0][0]
 
-		value = GetElementValue(doc, tag)
-        	if value:
-			update = "update award_cats set %s='%s' where award_cat_id=%d" % (column, db.escape_string(value), int(id))
-		else:
-			update = "update award_cats set %s = NULL where award_cat_id=%d" % (column, int(id))
-		print "<li> ", update
-       		db.query(update)
+                value = GetElementValue(doc, tag)
+                if value:
+                        update = "update award_cats set %s='%s' where award_cat_id=%d" % (column, db.escape_string(value), int(id))
+                else:
+                        update = "update award_cats set %s = NULL where award_cat_id=%d" % (column, int(id))
+                print "<li> ", update
+                db.query(update)
 
 
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Award Category Update - SQL Statements')
+        PrintPreMod('Award Category Update - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
@@ -55,15 +55,15 @@ if __name__ == '__main__':
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if not doc.getElementsByTagName('AwardCategoryUpdate'):
-		print '<div id="ErrorBox">'
-		print '<h3>Error: Bad argument</h3>'
-		print '</div>'
-		PrintPostMod()
-		sys.exit(0)
+                print '<div id="ErrorBox">'
+                print '<h3>Error: Bad argument</h3>'
+                print '</div>'
+                PrintPostMod()
+                sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
         merge = doc.getElementsByTagName('AwardCategoryUpdate')
         subname = GetElementValue(merge, 'Submitter')
         submitter = SQLgetSubmitterID(subname)
@@ -160,5 +160,5 @@ if __name__ == '__main__':
         print ISFDBLinkNoName('edit/editawardcat.cgi', current.award_cat_id, 'Edit This Award Category', True)
         print ISFDBLinkNoName('award_category.cgi', current.award_cat_id, 'View This Award Category', True)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2023   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,7 +23,7 @@ class Bureaucrat:
                 pass
         
         def display_options(self):
-        	PrintPreMod('Bureaucrat Menu')
+                PrintPreMod('Bureaucrat Menu')
                 PrintNavBar()
                 print('<ul>')
                 print('<li>User Management')

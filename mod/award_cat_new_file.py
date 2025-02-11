@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2014-2025   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Add New Award Category - SQL Statements')
+        PrintPreMod('Add New Award Category - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
@@ -32,15 +32,15 @@ if __name__ == '__main__':
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('NewAwardCat')
         if not merge:
-		print '<div id="ErrorBox">'
-		print '<h3>Error: Bad argument</h3>'
-		print '</div>'
-		PrintPostMod()
-		sys.exit(0)
+                print '<div id="ErrorBox">'
+                print '<h3>Error: Bad argument</h3>'
+                print '</div>'
+                PrintPostMod()
+                sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
         subname = GetElementValue(merge, 'Submitter')
         submitter = SQLgetSubmitterID(subname)
         AwardCatName = GetElementValue(merge, 'AwardCatName')
@@ -90,4 +90,4 @@ if __name__ == '__main__':
         print ISFDBLinkNoName('award_category.cgi', '%d+1' % award_cat_id, 'View This Category', True)
         print ISFDBLinkNoName('awardtype.cgi', AwardTypeId, 'View This Category\'s Award Type', True)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
