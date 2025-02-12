@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,7 +22,7 @@ class WebAPIUsers:
                 self.user.load()
         
         def display_current_web_api_users(self):
-        	PrintPreMod('Manage Web API Users')
+                PrintPreMod('Manage Web API Users')
                 PrintNavBar()
 
                 web_api_users = SQLGetWebAPIUsers()

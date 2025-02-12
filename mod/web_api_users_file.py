@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -24,7 +24,7 @@ def PrintError(message):
 
         
 if __name__ == '__main__':
-	PrintPreMod('Manage Web API Users - SQL Statements')
+        PrintPreMod('Manage Web API Users - SQL Statements')
         PrintNavBar()
         
         sys.stderr = sys.stdout
@@ -68,4 +68,4 @@ if __name__ == '__main__':
         message += 'an authorized Web API user.</h3>'
         print(message)
 
-	PrintPostMod(0)
+        PrintPostMod(0)

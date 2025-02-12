@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2021   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,9 +30,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))

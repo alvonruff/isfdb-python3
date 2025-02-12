@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2021   Al von Ruff, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,65 +22,65 @@ from library import *
 debug = 0
 
 def UpdateColumn(doc, tag, column, id):
-	if TagPresent(doc, tag):
-		value = GetElementValue(doc, tag)
-		if value:
-			value = XMLunescape(value)
-			value = db.escape_string(value)
-			update = "update awards set %s='%s' where award_id=%s" % (column, value, id)
-		else:
-			update = "update awards set %s=NULL where award_id=%s" % (column, id)
-		print "<li> ", update
-		if debug == 0:
-			db.query(update)
+        if TagPresent(doc, tag):
+                value = GetElementValue(doc, tag)
+                if value:
+                        value = XMLunescape(value)
+                        value = db.escape_string(value)
+                        update = "update awards set %s='%s' where award_id=%s" % (column, value, id)
+                else:
+                        update = "update awards set %s=NULL where award_id=%s" % (column, id)
+                print "<li> ", update
+                if debug == 0:
+                        db.query(update)
 
 
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Award Update - SQL Statements')
-	PrintNavBar()
+        PrintPreMod('Award Update - SQL Statements')
+        PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
-	xml = SQLloadXML(submission)
-	doc = minidom.parseString(XMLunescape2(xml))
-	if doc.getElementsByTagName('AwardUpdate'):
-		merge = doc.getElementsByTagName('AwardUpdate')
-		Record = GetElementValue(merge, 'Record')
+        xml = SQLloadXML(submission)
+        doc = minidom.parseString(XMLunescape2(xml))
+        if doc.getElementsByTagName('AwardUpdate'):
+                merge = doc.getElementsByTagName('AwardUpdate')
+                Record = GetElementValue(merge, 'Record')
 
-		UpdateColumn(merge, 'AwardTitle',    'award_title', Record)
-		UpdateColumn(merge, 'AwardYear',     'award_year',  Record)
-		UpdateColumn(merge, 'AwardType',     'award_type_id', Record)
-		UpdateColumn(merge, 'AwardCategory', 'award_cat_id', Record)
-		UpdateColumn(merge, 'AwardLevel',    'award_level', Record)
-		UpdateColumn(merge, 'AwardMovie',    'award_movie', Record)
+                UpdateColumn(merge, 'AwardTitle',    'award_title', Record)
+                UpdateColumn(merge, 'AwardYear',     'award_year',  Record)
+                UpdateColumn(merge, 'AwardType',     'award_type_id', Record)
+                UpdateColumn(merge, 'AwardCategory', 'award_cat_id', Record)
+                UpdateColumn(merge, 'AwardLevel',    'award_level', Record)
+                UpdateColumn(merge, 'AwardMovie',    'award_movie', Record)
 
-		##########################################################
-		# AUTHORS
-		##########################################################
-		value = GetElementValue(merge, 'AwardAuthors')
-		NewAuthors = []
-		if value:
-			counter = 0
-			austring = ""
-			authors = doc.getElementsByTagName('AwardAuthor')
-			for author in authors:
-				data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
-				if counter:
-					austring += "+"
-				austring += data
-				counter += 1
-			update = "update awards set award_author='%s' where award_id=%s" % (db.escape_string(austring), Record)
-			print "<li> ", update
-			if debug == 0:
-				db.query(update)
+                ##########################################################
+                # AUTHORS
+                ##########################################################
+                value = GetElementValue(merge, 'AwardAuthors')
+                NewAuthors = []
+                if value:
+                        counter = 0
+                        austring = ""
+                        authors = doc.getElementsByTagName('AwardAuthor')
+                        for author in authors:
+                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                if counter:
+                                        austring += "+"
+                                austring += data
+                                counter += 1
+                        update = "update awards set award_author='%s' where award_id=%s" % (db.escape_string(austring), Record)
+                        print "<li> ", update
+                        if debug == 0:
+                                db.query(update)
 
                 if TagPresent(merge, 'AwardNote'):
                         value = GetElementValue(merge, 'AwardNote')
@@ -123,12 +123,12 @@ if __name__ == '__main__':
                                         print "<li> ", update
                                         db.query(update)
 
-		submitter = GetElementValue(merge, 'Submitter')
-		markIntegrated(db, submission, Record)
+                submitter = GetElementValue(merge, 'Submitter')
+                markIntegrated(db, submission, Record)
 
-	# Load the award data
-	award = awards(db)
-	award.load(int(Record))
+        # Load the award data
+        award = awards(db)
+        award.load(int(Record))
 
         # Only display title links if this award was entered for a Title record
         if award.title_id:
@@ -137,6 +137,6 @@ if __name__ == '__main__':
         print ISFDBLinkNoName('award_details.cgi', award.award_id, 'View This Award', True)
         print ISFDBLinkNoName('edit/editaward.cgi', award.award_id, 'Edit This Award', True)
         print ISFDBLinkNoName('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), 'View Award Year', True)
-	print '<p>'
+        print '<p>'
 
-	PrintPostMod(0)
+        PrintPostMod(0)

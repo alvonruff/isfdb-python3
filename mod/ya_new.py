@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -27,31 +27,31 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
-	submitter = ''
-	try:
-		xml = SQLloadXML(submission)
-		doc = minidom.parseString(XMLunescape2(xml))
-        	if doc.getElementsByTagName('MakePseudonym'):
-			merge = doc.getElementsByTagName('MakePseudonym')
-        		Record = GetElementValue(merge, 'Record')
-        		submitter = GetElementValue(merge, 'Submitter')
-       			if TagPresent(merge, 'Parent'):
-        			parent = GetElementValue(merge, 'Parent')
-				insert = "insert into pseudonyms(author_id, pseudonym) values(%d,%d)" % (int(parent), int(Record))
+        submitter = ''
+        try:
+                xml = SQLloadXML(submission)
+                doc = minidom.parseString(XMLunescape2(xml))
+                if doc.getElementsByTagName('MakePseudonym'):
+                        merge = doc.getElementsByTagName('MakePseudonym')
+                        Record = GetElementValue(merge, 'Record')
+                        submitter = GetElementValue(merge, 'Submitter')
+                        if TagPresent(merge, 'Parent'):
+                                parent = GetElementValue(merge, 'Parent')
+                                insert = "insert into pseudonyms(author_id, pseudonym) values(%d,%d)" % (int(parent), int(Record))
                                 print "<li> ", insert
                                 if debug == 0:
                                         db.query(insert)
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
-	except:
-		submitter = 'unknown'
+        except:
+                submitter = 'unknown'
 
-	print ISFDBLinkNoName('ea.cgi', parent, 'View Canonical Name', True)
-	print ISFDBLinkNoName('ea.cgi', Record, 'View Alternate Name', True)
+        print ISFDBLinkNoName('ea.cgi', parent, 'View Canonical Name', True)
+        print ISFDBLinkNoName('ea.cgi', Record, 'View Alternate Name', True)
         print '<p>'
 
         PrintPostMod(0)
