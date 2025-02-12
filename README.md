@@ -93,46 +93,55 @@ These instructions will also change when the code work is complete in the github
 * make
 
 <h1>PHP</h1>
-dnf module reset php
-dnf module enable php:7.4
-dnf install php php-common php-opcache php-cli php-gd php-curl php-mysqlnd
-systemctl start php-fpm
-systemctl enable php-fpm
-php -v
-systemctl stop httpd
-systemctl start httpd
+PHP is a prerequisite for MediaWiki. To install:
+
+* dnf module reset php
+* dnf module enable php:7.4
+* dnf install php php-common php-opcache php-cli php-gd php-curl php-mysqlnd
+* systemctl start php-fpm
+* systemctl enable php-fpm
+* php -v
+* systemctl stop httpd
+* systemctl start httpd
 
 <h1>Add Users</h1>
-Add the necessary users to the new system
-Give them sudo access by adding them to the wheel group
+Add the necessary users to the new system. These are the users that will administer the website, so the number of users should be relatively small.
+Give them sudo access by adding them to the wheel group.
 
 <h1>MediaWiki</h1>
-cd to /var/www/html
-Fetch the current stable long-term support release of MediaWiki:
-wget https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.6.zip
-unzip mediawiki-1.35.6.zip
-mv mediawiki-1.35.6 wiki
-cd wiki && place the old isfdb version of LocalSettings.php here
-Edit LocalSettings.php and make the follow changes:
-Change wgServer
-Change wgDBuser
-Change wgDBpassword
-Comment out the ConfirmEdit extension
-Comment out the SyntaxHighlight extension
-Comment out the SVGtag extension
-mkdir wiki/images
-chown apache images
-chgrp apache images
-Copy all image subdirectory content from isfdb.org:/var/www/html/wiki/images to the new server.
-php maintenance/update.php
-Wait a very long time for the update to finish (about 3.5 hours). This will perform hundreds of thousands of revision updates, but it issues a constant stream of progress lines. There is a web-based alternative, but I recommend against that, as the long processing time will generate a 504 error from Apache.
+Install the Wiki:
+
+* cd to /var/www/html
+* Fetch the current stable long-term support release of MediaWiki:
+> wget https://releases.wikimedia.org/mediawiki/1.35/mediawiki-1.35.6.zip
+* unzip mediawiki-1.35.6.zip
+* mv mediawiki-1.35.6 wiki
+* cd wiki && place the old isfdb version of LocalSettings.php here
+* Edit LocalSettings.php and make the follow changes:
+> Change wgServer
+> <br>
+> Change wgDBuser
+> <br>
+> Change wgDBpassword
+> <br>
+> Comment out the ConfirmEdit extension
+> <br>
+> Comment out the SyntaxHighlight extension
+> <br>
+> Comment out the SVGtag extension
+* mkdir wiki/images
+* chown apache images
+* chgrp apache images
+* Copy all image subdirectory content from isfdb.org:/var/www/html/wiki/images to the new server.
+* php maintenance/update.php
+* Wait a very long time for the update to finish (about 3.5 hours). This will perform hundreds of thousands of revision updates, but it issues a constant stream of progress lines. There is a web-based alternative, but I recommend against that, as the long processing time will generate a 504 error from Apache.
 It helps to ssh into the system with the "-o ServerAliveInterval=600" option, which will generate a null keep alive packet every 10 minutes, keeping the session alive.
-cp isfdb.gif to wiki/skins/common/images
-Add the following lines to the end of LocalSettings.php and remove the old commented out versions:
-wfLoadSkin( 'Vector' );
-wfLoadExtension( 'ConfirmEdit' );
-wfLoadExtension( 'SyntaxHighlight_GeSHi' );
-wfLoadExtension( 'WikiEditor' );
-$wgExtraSignatureNamespaces = [ NS_MAIN, NS_USER, NS_TALK, NS_PROJECT ];
-Uncomment and change to: $wgImageMagickConvertCommand = "/usr/bin/convert";
-Uncomment and change to: $wgLogo = "$wgStylePath/common/images/isfdb.gif";
+* cp isfdb.gif to wiki/skins/common/images
+* Add the following lines to the end of LocalSettings.php and remove the old commented out versions:
+* wfLoadSkin( 'Vector' );
+* wfLoadExtension( 'ConfirmEdit' );
+* wfLoadExtension( 'SyntaxHighlight_GeSHi' );
+* wfLoadExtension( 'WikiEditor' );
+* $wgExtraSignatureNamespaces = [ NS_MAIN, NS_USER, NS_TALK, NS_PROJECT ];
+* Uncomment and change to: $wgImageMagickConvertCommand = "/usr/bin/convert";
+* Uncomment and change to: $wgLogo = "$wgStylePath/common/images/isfdb.gif";
