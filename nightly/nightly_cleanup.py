@@ -60,7 +60,7 @@ def nightly_cleanup():
         standardReport(query, 6)
 
         #   Report 7: Authors with invalid spaces
-	query = """select author_id from authors
+        query = """select author_id from authors
                 where author_canonical like ' %'
                 or author_canonical like '% '
                 or author_canonical like '%  %'
@@ -70,8 +70,8 @@ def nightly_cleanup():
                 and author_canonical NOT LIKE '%.co.uk'
                 and """
 
-	suffixes = []
-	for suffix in SESSION.recognized_suffixes:
+        suffixes = []
+        for suffix in SESSION.recognized_suffixes:
                 if suffix.count('.') < 2:
                         continue
                 period_letter = 0
@@ -94,13 +94,13 @@ def nightly_cleanup():
         standardReport(query, 7)
 
         #   Report 8: Authors that exist only due to reviews
-	query =  "select ca.title_id from canonical_author ca, authors a, titles t"
-	query += " WHERE ca.ca_status = 3 and ca.author_id = a.author_id and ca.title_id = t.title_id"
-	query += " AND NOT EXISTS (SELECT 1 from canonical_author ca2, titles t"
-	query += "                 where ca.author_id = ca2.author_id"
-	query += " 		AND  ca2.title_id = t.title_id"
-	query += " 		AND  t.title_ttype != 'REVIEW'"
-	query += " 		and  ca2.ca_status = 1)"
+        query =  "select ca.title_id from canonical_author ca, authors a, titles t"
+        query += " WHERE ca.ca_status = 3 and ca.author_id = a.author_id and ca.title_id = t.title_id"
+        query += " AND NOT EXISTS (SELECT 1 from canonical_author ca2, titles t"
+        query += "                 where ca.author_id = ca2.author_id"
+        query += "                 AND  ca2.title_id = t.title_id"
+        query += "                 AND  t.title_ttype != 'REVIEW'"
+        query += "                 and  ca2.ca_status = 1)"
         standardReport(query, 8)
 
         #   Report 10: Pseudonyms with Canonical Titles
@@ -147,7 +147,7 @@ def nightly_cleanup():
         standardReport(query, 12)
 
         #   Report 16: Empty Series
-	query =  """select series_id from series s1
+        query =  """select series_id from series s1
                     where not exists
                     (select 1 from titles t where t.series_id = s1.series_id)
                     and not exists
@@ -163,7 +163,7 @@ def nightly_cleanup():
         standardReport(query, 17)
 
         #   Report 19: Interviews of Pseudonyms
-	query = "select ca.title_id from titles t, canonical_author ca, authors a \
+        query = "select ca.title_id from titles t, canonical_author ca, authors a \
                 where t.title_ttype = 'INTERVIEW' and ca.title_id = t.title_id \
                 and ca.author_id = a.author_id and ca.ca_status = 2 \
                 and a.author_canonical != 'uncredited' and exists \
@@ -171,7 +171,7 @@ def nightly_cleanup():
         standardReport(query, 19)
 
         #   Report 22: SERIALs without a Parent Title
-	query = "select title_id from titles where title_ttype='SERIAL' and title_parent=0"
+        query = "select title_id from titles where title_ttype='SERIAL' and title_parent=0"
         standardReport(query, 22)
 
         #   Report 25: Empty Award Types
@@ -185,14 +185,14 @@ def nightly_cleanup():
         standardReport(query, 26)
 
         #   Report 30: Chapbooks with Mismatched Variant Types
-	query = "select t1.title_id from titles t1, titles t2 where t1.title_ttype='CHAPBOOK' \
+        query = "select t1.title_id from titles t1, titles t2 where t1.title_ttype='CHAPBOOK' \
                 and t2.title_parent=t1.title_id and t2.title_ttype!='CHAPBOOK' \
                 UNION select t1.title_id from titles t1, titles t2 where t1.title_ttype!='CHAPBOOK' \
                 and t2.title_parent=t1.title_id and t2.title_ttype='CHAPBOOK'"
         standardReport(query, 30)
 
         #   Report 31: Pre-2005 pubs with ISBN-13s and post-2007 pubs with ISBN-10s
-	query = """select pub_id from pubs
+        query = """select pub_id from pubs
                 where (pub_isbn like '97%'
                 and length(replace(pub_isbn,'-',''))=13
                 and pub_year<'2005-00-00'
@@ -205,7 +205,7 @@ def nightly_cleanup():
         standardReport(query, 31)
 
         #   Report 33: Publication Authors that are not the Title Author
-	query = """select distinct p.pub_id
+        query = """select distinct p.pub_id
                 from pub_authors pa, pubs p, pub_content pc, titles t, authors a
                 where pa.pub_id = p.pub_id 
                 and pa.author_id = a.author_id 
@@ -315,11 +315,11 @@ def nightly_cleanup():
         #   Report 47: Title Dates after Publication Dates
         query = """select distinct t.title_id from titles t, pubs p, pub_content pc
                 where pc.title_id = t.title_id
-		and pc.pub_id = p.pub_id
+                and pc.pub_id = p.pub_id
                 and p.pub_year != '0000-00-00'
                 and p.pub_year != '8888-00-00'
-		and t.title_copyright != '0000-00-00'
-		and t.title_copyright != '0000-00-00'
+                and t.title_copyright != '0000-00-00'
+                and t.title_copyright != '0000-00-00'
                 and
                 (
                         YEAR(t.title_copyright) > YEAR(p.pub_year)
@@ -329,13 +329,13 @@ def nightly_cleanup():
                                 and MONTH(p.pub_year) != '00'
                                 and MONTH(t.title_copyright) > MONTH(p.pub_year)
                         )
-		or
+                or
                         (
                                 YEAR(p.pub_year) = YEAR(t.title_copyright)
                                 and MONTH(p.pub_year) = MONTH(t.title_copyright)
                                 and MONTH(p.pub_year) != '00'
                                 and DAY(p.pub_year) != '00'
-				and DAY(t.title_copyright) > DAY(p.pub_year)
+                                and DAY(t.title_copyright) > DAY(p.pub_year)
                         )
                 )
                 limit 1000"""
@@ -368,16 +368,16 @@ def nightly_cleanup():
                  from pubs \
                  where LENGTH(REPLACE(pub_isbn,'-',''))=10) tmp \
                  where CONVERT((11-MOD( \
-        	 (substr(isbn,1,1)*10) \
-        	+(substr(isbn,2,1)*9) \
-        	+(substr(isbn,3,1)*8) \
-        	+(substr(isbn,4,1)*7) \
-        	+(substr(isbn,5,1)*6) \
-        	+(substr(isbn,6,1)*5) \
-        	+(substr(isbn,7,1)*4) \
-        	+(substr(isbn,8,1)*3) \
-        	+(substr(isbn,9,1)*2) \
-        	, 11)),CHAR) \
+                 (substr(isbn,1,1)*10) \
+                +(substr(isbn,2,1)*9) \
+                +(substr(isbn,3,1)*8) \
+                +(substr(isbn,4,1)*7) \
+                +(substr(isbn,5,1)*6) \
+                +(substr(isbn,6,1)*5) \
+                +(substr(isbn,7,1)*4) \
+                +(substr(isbn,8,1)*3) \
+                +(substr(isbn,9,1)*2) \
+                , 11)),CHAR) \
                  != REPLACE(REPLACE(SUBSTR(tmp.isbn,10,1),0,11),'X',10)) \
                 union \
                 (select tmp.pub_id from \
@@ -385,19 +385,19 @@ def nightly_cleanup():
                  from pubs \
                  where LENGTH(REPLACE(pub_isbn,'-',''))=13) tmp \
                  where MOD(10-MOD( \
-        	 (substr(isbn,1,1)*1) \
-        	+(substr(isbn,2,1)*3) \
-        	+(substr(isbn,3,1)*1) \
-        	+(substr(isbn,4,1)*3) \
-        	+(substr(isbn,5,1)*1) \
-        	+(substr(isbn,6,1)*3) \
-        	+(substr(isbn,7,1)*1) \
-        	+(substr(isbn,8,1)*3) \
-        	+(substr(isbn,9,1)*1) \
-        	+(substr(isbn,10,1)*3) \
-        	+(substr(isbn,11,1)*1) \
+                 (substr(isbn,1,1)*1) \
+                +(substr(isbn,2,1)*3) \
+                +(substr(isbn,3,1)*1) \
+                +(substr(isbn,4,1)*3) \
+                +(substr(isbn,5,1)*1) \
+                +(substr(isbn,6,1)*3) \
+                +(substr(isbn,7,1)*1) \
+                +(substr(isbn,8,1)*3) \
+                +(substr(isbn,9,1)*1) \
+                +(substr(isbn,10,1)*3) \
+                +(substr(isbn,11,1)*1) \
                 +(substr(isbn,12,1)*3) \
-        	,10),10) \
+                ,10),10) \
                  != SUBSTR(isbn,13,1))"
         standardReport(query, 50)
 
@@ -407,8 +407,8 @@ def nightly_cleanup():
         # column can only store integers
         query = """select record_id from cleanup where
                 report_type=51 and resolved IS NOT NULL"""
-	db.query(query)
-	result = db.store_result()
+        db.query(query)
+        result = db.store_result()
         resolved_ids = []
         record = result.fetch_row()
         while record:
@@ -421,13 +421,13 @@ def nightly_cleanup():
                 where pub_isbn IS NOT NULL 
                 and pub_isbn != '' 
                 and pub_ctype != 'MAGAZINE' 
-		and pub_id not in ('%s')
+                and pub_id not in ('%s')
                 group by pub_isbn 
                 having count(distinct(REPLACE(pub_title,'-',''))) > 1 
                 AND INSTR(MIN(pub_title), MAX(pub_title)) = 0 
                 AND INSTR(MAX(pub_title), MIN(pub_title)) = 0""" % resolved_string
-	db.query(query)
-	result = db.store_result()
+        db.query(query)
+        result = db.store_result()
         isbns = []
         record = result.fetch_row()
         while record:
@@ -497,8 +497,8 @@ def nightly_cleanup():
         #   Report 82: Invalid Record URLs in Notes
         query = """select note_id, note_note from notes
                 where note_note like '%isfdb.org%'"""
-	db.query(query)
-	result = db.store_result()
+        db.query(query)
+        result = db.store_result()
         problems = []
         notes = {}
         pub_tag_notes = {}
@@ -902,9 +902,9 @@ def nightly_cleanup():
                 where a1.author_id = p.author_id
                 and p.pseudonym = a2.author_id
                 and (
-        		(a1.author_language != a2.author_language)
-        		or (a1.author_language is NULL and a2.author_language is not null)
-        		or (a1.author_language is not NULL and a2.author_language is null)
+                        (a1.author_language != a2.author_language)
+                        or (a1.author_language is NULL and a2.author_language is not null)
+                        or (a1.author_language is not NULL and a2.author_language is null)
                 )
                 """
         standardReport(query, 198)
@@ -1096,7 +1096,7 @@ def nightly_cleanup():
         #   Report 275: Title Dates Before First Publication Dates
         query = """select t1.title_id from titles t1
                 where t1.title_ttype in ('ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'COVERART', 'OMNIBUS', 'SERIAL')
-		and t1.title_parent > 0
+                and t1.title_parent > 0
                 and YEAR(t1.title_copyright) <
                 (select YEAR(min(p.pub_year))
                 from pubs p, pub_content pc
@@ -1235,7 +1235,7 @@ def nightly_cleanup():
         standardReport(query, 300)
 
         #   Report 302: Author Names with an Unrecognized Suffix
-	query = """select author_id from authors
+        query = """select author_id from authors
                 where """
 
         subquery = ''

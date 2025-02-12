@@ -13,7 +13,7 @@ from SQLparsing import *
 from library import *
 
 class elapsedTime:
-	def __init__(self):
+        def __init__(self):
                 self.start = time()
                 # Save the system stdout
                 self.stdout = sys.stdout
@@ -35,14 +35,14 @@ def standardDelete(report_type):
 def standardReport(query, report_type):
         elapsed = elapsedTime()
         standardDelete(report_type)
-	db.query(query)
-	result = db.store_result()
+        db.query(query)
+        result = db.store_result()
         record = result.fetch_row()
 
         records = []
-	while record:
-		records.append(record[0][0])
-        	record = result.fetch_row()
+        while record:
+                records.append(record[0][0])
+                record = result.fetch_row()
 
         standardReportInsert(records, report_type)
         elapsed.print_elapsed(report_type, len(records))
@@ -57,13 +57,13 @@ def standardReportInsert(id_list, report_type):
         # First remove previously resolved/ignored records from the passed-in list of IDs
         query = "select record_id from cleanup where report_type=%d and resolved=1" % int(report_type)
         db.query(query)
-	result = db.store_result()
+        result = db.store_result()
         record = result.fetch_row()
-	while record:
-		resolved_id = record[0][0]
-		if resolved_id in id_list:
+        while record:
+                resolved_id = record[0][0]
+                if resolved_id in id_list:
                         id_list.remove(resolved_id)
-        	record = result.fetch_row()
+                record = result.fetch_row()
 
         # Next add the new IDs to the cleanup table
         for record_id in id_list:

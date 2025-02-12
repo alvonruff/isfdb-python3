@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -182,7 +182,7 @@ def wiki_stranded(report_number, namespace, table_name, linking_field):
                    from mw_page where mw_page.page_namespace=%d""" % int(namespace)
         db.query(query)
         result = db.store_result()
-	if not result.num_rows():
+        if not result.num_rows():
                 return
 
         record = result.fetch_row()
@@ -231,7 +231,7 @@ def wiki_report(report_number, namespace, record_id_field, linking_field, table_
                 """ % (table_name, record_id_field, table_name, int(namespace), table_name, linking_field)
         db.query(query)
         result = db.store_result()
-	if not result.num_rows():
+        if not result.num_rows():
                 return
         
         record = result.fetch_row()
@@ -258,7 +258,7 @@ def wiki_report(report_number, namespace, record_id_field, linking_field, table_
                         records.remove(record_id)
                 record = result.fetch_row()
 
-	if not records:
+        if not records:
                 return
         # Convert the trimmed list of records to a SQL "in" clause
         records_list = list_to_in_clause(records)

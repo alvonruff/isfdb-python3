@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,15 +17,15 @@ def suspect_data():
         #   Report 24: Suspect Untitled Awards
         # Ignore Locus awards for years prior to 2011, Aurealis awards for 2008, and Hugo awards for 1964
         # because they are known exceptions due to a single award given to multiple title records
-	query = "select a.award_id from awards as a, award_cats as c where c.award_cat_id=a.award_cat_id and \
-	         (c.award_cat_name like '%novel%' or c.award_cat_name like '% story%' \
-	         or c.award_cat_name like '% book%' or c.award_cat_name like '%collection%' or c.award_cat_name like \
-	         '%antholog%' or a.award_title like '%^%') and c.award_cat_name not like '%Traduction%' and \
-	         c.award_cat_name not like '%graphic%' and c.award_cat_name not like '%novelist%' and c.award_cat_name \
-	         not like '%publisher%' and c.award_cat_name not like '%editor%' and c.award_cat_name not like \
-	         '%illustrator%' and a.award_level<100 and not exists(select 1 from title_awards where a.award_id= \
-	         title_awards.award_id) and award_author not like '%****%' and award_title!='No Award' and \
-	         award_title!='untitled'"
+        query = "select a.award_id from awards as a, award_cats as c where c.award_cat_id=a.award_cat_id and \
+                 (c.award_cat_name like '%novel%' or c.award_cat_name like '% story%' \
+                 or c.award_cat_name like '% book%' or c.award_cat_name like '%collection%' or c.award_cat_name like \
+                 '%antholog%' or a.award_title like '%^%') and c.award_cat_name not like '%Traduction%' and \
+                 c.award_cat_name not like '%graphic%' and c.award_cat_name not like '%novelist%' and c.award_cat_name \
+                 not like '%publisher%' and c.award_cat_name not like '%editor%' and c.award_cat_name not like \
+                 '%illustrator%' and a.award_level<100 and not exists(select 1 from title_awards where a.award_id= \
+                 title_awards.award_id) and award_author not like '%****%' and award_title!='No Award' and \
+                 award_title!='untitled'"
         standardReport(query, 24)
 
         #   Report 48: Series with Numbering Gaps
@@ -255,20 +255,20 @@ def suspect_data():
 
         #   Report 290: Suspected Ineligible Reviewed NONFICTION Titles (first 1000)
         query = """select distinct t1.title_id
-        	from titles t1, title_relationships tr, titles t2, pubs p, pub_content pc
-        	where t1.title_ttype = 'NONFICTION'
-        	and t1.title_id = tr.title_id
-        	and t2.title_id = tr.review_id
-        	and t2.title_ttype = 'REVIEW'
-        	and t1.title_id = pc.title_id
-        	and p.pub_id = pc.pub_id
+                from titles t1, title_relationships tr, titles t2, pubs p, pub_content pc
+                where t1.title_ttype = 'NONFICTION'
+                and t1.title_id = tr.title_id
+                and t2.title_id = tr.review_id
+                and t2.title_ttype = 'REVIEW'
+                and t1.title_id = pc.title_id
+                and p.pub_id = pc.pub_id
                 and not exists (
                         select 1 from cleanup c
                         where c.report_type = 290
                         and c.record_id = t1.title_id
                         and c.resolved is not NULL
                         )
-        	limit 1000"""
+                limit 1000"""
         standardReport(query, 290)
 
         #   Report 291: Suspected Invalid Uses of the Narrator Template

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -35,21 +35,21 @@ def containers_cleanup():
                  where t1.title_ttype in ('ANTHOLOGY','COLLECTION')
                  and t1.title_id=pc1.title_id
                  and exists
-                	(select 1 from pub_content pc2, titles t2
-                	where pc1.pubc_id!=pc2.pubc_id
-                	and pc1.pub_id=pc2.pub_id
-                	and pc2.title_id=t2.title_id
-                	and t2.title_ttype in ('SHORTFICTION','POEM','SERIAL'))) tmp
+                        (select 1 from pub_content pc2, titles t2
+                        where pc1.pubc_id!=pc2.pubc_id
+                        and pc1.pub_id=pc2.pub_id
+                        and pc2.title_id=t2.title_id
+                        and t2.title_ttype in ('SHORTFICTION','POEM','SERIAL'))) tmp
                 where tmp.good in 
                 (select distinct t1.title_id from titles t1, pub_content pc1
                  where t1.title_ttype in ('ANTHOLOGY','COLLECTION')
                  and t1.title_id=pc1.title_id
                  and not exists
-                	(select 1 from pub_content pc2, titles t2
-                	where pc1.pubc_id!=pc2.pubc_id
-                	and pc1.pub_id=pc2.pub_id
-                	and pc2.title_id=t2.title_id
-                	and t2.title_ttype in ('SHORTFICTION','POEM','SERIAL')))"""
+                        (select 1 from pub_content pc2, titles t2
+                        where pc1.pubc_id!=pc2.pubc_id
+                        and pc1.pub_id=pc2.pub_id
+                        and pc2.title_id=t2.title_id
+                        and t2.title_ttype in ('SHORTFICTION','POEM','SERIAL')))"""
         standardReport(query, 54)
 
         #   Report 92: Primary-verified Anthologies/Collections without Contents Titles
@@ -99,13 +99,13 @@ def emptyContainers(report_id, container_types):
         # Remove previously resolved/ignored records from the dictionary of IDs
         query = "select record_id from cleanup where report_type=%d and resolved=1" % int(report_id)
         db.query(query)
-	result = db.store_result()
+        result = db.store_result()
         record = result.fetch_row()
-	while record:
-		resolved_id = record[0][0]
-		if resolved_id in containers:
+        while record:
+                resolved_id = record[0][0]
+                if resolved_id in containers:
                         del containers[resolved_id]
-        	record = result.fetch_row()
+                record = result.fetch_row()
 
         # Insert the new pub IDs and their months into the cleanup table
         for record_id in containers:

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,14 +31,14 @@ def database_corruption():
         standardReport(query, 13)
 
         #   Report 14: Missing Editors
-	query = "select DISTINCT pu.pub_id from pubs pu, pub_authors pa, authors a \
+        query = "select DISTINCT pu.pub_id from pubs pu, pub_authors pa, authors a \
                 where pu.pub_id = pa.pub_id and pa.author_id = a.author_id and a.author_canonical != 'unknown' \
                 and pub_ctype in ( 'MAGAZINE', 'FANZINE' ) and not exists (select * from titles t, pub_content pc \
                 where pu.pub_id = pc.pub_id and pc.title_id = t.title_id and t.title_ttype = 'EDITOR')"
         standardReport(query, 14)
 
         #   Report 15: Publications with Multiple EDITOR Records
-	query =  "select pc.pub_id from titles t, pub_content pc, pubs p \
+        query =  "select pc.pub_id from titles t, pub_content pc, pubs p \
                 where pc.title_id = t.title_id and pc.pub_id = p.pub_id  and t.title_ttype = 'EDITOR' \
                 group by pc.pub_id, p.pub_title HAVING COUNT(*) > 1"
         standardReport(query, 15)
@@ -48,37 +48,37 @@ def database_corruption():
         standardReport(query, 18)
 
         #   Report 20: Variant Titles of Variant Titles
-	query = "select t.title_id from titles t, titles tp \
+        query = "select t.title_id from titles t, titles tp \
                 where tp.title_id = t.title_parent and tp.title_parent != 0"
         standardReport(query, 20)
 
         #   Report 21: Variants of Missing Titles
-	query = "select t.title_id from titles t where t.title_parent<>0 and \
+        query = "select t.title_id from titles t where t.title_parent<>0 and \
                 not exists (select 1 from titles pt where t.title_parent=pt.title_id)"
         standardReport(query, 21)
 
         #   Report 23: Awards Associated with Invalid Titles
-	query = "select awards.award_id from awards, title_awards where \
+        query = "select awards.award_id from awards, title_awards where \
                 awards.award_id=title_awards.award_id and not exists \
                 (select 1 from titles where titles.title_id=title_awards.title_id)"
         standardReport(query, 23)
 
         #   Report 27: Series with Chapbooks in them
-	query = "select DISTINCT series_id from titles where title_ttype='CHAPBOOK' and series_id != 0"
+        query = "select DISTINCT series_id from titles where title_ttype='CHAPBOOK' and series_id != 0"
         standardReport(query, 27)
 
         #   Report 28: Chapbooks with Synopses
-	query = "select title_id from titles where title_ttype='CHAPBOOK' and title_synopsis !=0"
+        query = "select title_id from titles where title_ttype='CHAPBOOK' and title_synopsis !=0"
         standardReport(query, 28)
 
         #   Report 32: Duplicate Publication Tags
-	query = "select p1.pub_id from pubs p1, \
+        query = "select p1.pub_id from pubs p1, \
                 (select pub_tag, count(*) from pubs group by pub_tag having count(*) > 1) p2 \
                 where p1.pub_tag = p2.pub_tag"
         standardReport(query, 32)
 
         #   Report 34: Publications without Titles
-	query =  """select pub_id from pubs where not exists
+        query =  """select pub_id from pubs where not exists
                 (select 1 from pub_content pc, titles t
                 where pubs.pub_id = pc.pub_id
                 and pc.title_id = t.title_id
@@ -87,7 +87,7 @@ def database_corruption():
 
         #   Report 35: Invalid Publication Formats
         formats = "'" + "','".join(SESSION.db.formats) + "'"
-	query = "select pub_id from pubs where pub_ptype not in (%s) \
+        query = "select pub_id from pubs where pub_ptype not in (%s) \
                 and pub_ptype IS NOT NULL and pub_ptype!='' \
                 order by pub_ptype, pub_title" % (formats)
         standardReport(query, 35)
