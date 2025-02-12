@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus 
+#     (C) COPYRIGHT 2021-2025   Ahasuerus 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,21 +20,21 @@ if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Add New Verification Source - SQL Statements')
+        PrintPreMod('Add New Verification Source - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	xml = SQLloadXML(submission)
+        xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('VerificationSource')
         if not merge:
                 SESSION.DisplayError('Invalid Submission', 0)
 
-	print '<h1>SQL Updates:</h1>'
-	print '<hr>'
-	print '<ul>'
+        print '<h1>SQL Updates:</h1>'
+        print '<hr>'
+        print '<ul>'
 
         reference_label = GetElementValue(merge, 'SourceLabel')
         reference_fullname = GetElementValue(merge, 'SourceName')
@@ -50,7 +50,7 @@ if __name__ == '__main__':
 
         markIntegrated(db, submission, new_record)
 
-	print ISFDBLink('edit/edit_verification_source.cgi', new_record, 'Edit This Verification Source', 1)
-	print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
+        print ISFDBLink('edit/edit_verification_source.cgi', new_record, 'Edit This Verification Source', 1)
+        print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
 
-	PrintPostMod(0)
+        PrintPostMod(0)

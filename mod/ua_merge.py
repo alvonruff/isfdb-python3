@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2008-2021   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2008-2025   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,8 +22,8 @@ from xml.dom import Node
 
 def doColumn(KeepId, merge, label, column):
         # Retrieve the ID of the publisher whose data will be used for this field
-	selected_id = GetElementValue(merge, label)
-	if not selected_id:
+        selected_id = GetElementValue(merge, label)
+        if not selected_id:
                 return
         # If the editor chose to use the to-be-kept publisher's data for this
         # field, then there is no need to move the data and this function is done
@@ -40,21 +40,21 @@ def doColumn(KeepId, merge, label, column):
         
         # Retrieve the current value for this field for the publisher whose data
         # the editor chose to use for this field
-	query = "select %s from publishers where publisher_id=%d" % (column, int(selected_id))
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	new_value = record[0][0]
-	
-	# Update the to-be-kept publisher with the retrieved data
-	if new_value:
+        query = "select %s from publishers where publisher_id=%d" % (column, int(selected_id))
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        new_value = record[0][0]
+        
+        # Update the to-be-kept publisher with the retrieved data
+        if new_value:
                 update = "update publishers set %s='%s' where publisher_id=%d" % (column, db.escape_string(str(new_value)), int(KeepId))
-	else:
+        else:
                 update = "update publishers set %s=NULL where publisher_id=%d" % (column, int(KeepId))
-	print "<li> ", update
+        print "<li> ", update
         db.query(update)
 
-	if label == 'Note':
+        if label == 'Note':
                 # Delete the Note record that was originally associated with the to-be-kept publisher (if exists)
                 if old_value:
                         update = "delete from notes where note_id=%d" % int(old_value)
@@ -68,30 +68,30 @@ def doColumn(KeepId, merge, label, column):
                 db.query(update)
 
 def PublisherMerge(doc, merge):
-	KeepId = GetElementValue(merge, 'KeepId')
+        KeepId = GetElementValue(merge, 'KeepId')
 
         # Update all fields in the to-be-kept publisher record with any
         # data that the editor chose to copy from the to-be-dropped
         # publishers
-	doColumn(KeepId, merge, 'Publisher', 'publisher_name')
-	doColumn(KeepId, merge, 'Note',	 'note_id')
+        doColumn(KeepId, merge, 'Publisher', 'publisher_name')
+        doColumn(KeepId, merge, 'Note',         'note_id')
 
         # Load the data for the publisher that we will keep
         keep_publisher = publishers(db)
         keep_publisher.load(KeepId)
 
         # Load the IDs of the publishers that we will drop
-	dropped_ids = []
-	for dropid in doc.getElementsByTagName('DropId'):
-		dropped_ids.append(int(dropid.firstChild.data))
+        dropped_ids = []
+        for dropid in doc.getElementsByTagName('DropId'):
+                dropped_ids.append(int(dropid.firstChild.data))
 
-	for dropped_id in dropped_ids:
+        for dropped_id in dropped_ids:
                 # Repoint all publications from this to-be-dropped publisher to the to-be-kept publisher
-		update = "update pubs set publisher_id=%d where publisher_id=%d" % (int(KeepId), dropped_id)
-		print "<li> ", update
+                update = "update pubs set publisher_id=%d where publisher_id=%d" % (int(KeepId), dropped_id)
+                print "<li> ", update
                 db.query(update)
 
-		# Load the current data for the to-be-dropped publisher
+                # Load the current data for the to-be-dropped publisher
                 drop_publisher = publishers(db)
                 drop_publisher.load(dropped_id)
 
@@ -114,30 +114,30 @@ def PublisherMerge(doc, merge):
                                 print "<li> ", update
                 # Delete the to-be-dropped publisher
                 drop_publisher.delete()
-	return KeepId
+        return KeepId
 
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Publisher Merge - SQL Statements')
+        PrintPreMod('Publisher Merge - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
         KeepId = ''
-	xml = SQLloadXML(submission)
-	doc = minidom.parseString(XMLunescape2(xml))
-	if doc.getElementsByTagName('PublisherMerge'):
-		merge = doc.getElementsByTagName('PublisherMerge')
-		if merge:
-			KeepId = PublisherMerge(doc, merge)
-			submitter = GetElementValue(merge, 'Submitter')
+        xml = SQLloadXML(submission)
+        doc = minidom.parseString(XMLunescape2(xml))
+        if doc.getElementsByTagName('PublisherMerge'):
+                merge = doc.getElementsByTagName('PublisherMerge')
+                if merge:
+                        KeepId = PublisherMerge(doc, merge)
+                        submitter = GetElementValue(merge, 'Submitter')
                         markIntegrated(db, submission, KeepId)
         if not KeepId:
                 print '<div id="ErrorBox">'
@@ -148,6 +148,6 @@ if __name__ == '__main__':
 
         print ISFDBLinkNoName('publisher.cgi', KeepId, 'View Publisher', True)
         print ISFDBLinkNoName('edit/editpublisher.cgi', KeepId, 'Edit Publisher', True)
-	print '<hr>'
+        print '<hr>'
 
-	PrintPostMod(0)
+        PrintPostMod(0)

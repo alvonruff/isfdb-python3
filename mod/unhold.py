@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2009-2025   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,10 +17,10 @@ from login import GetUserData
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
-	(reviewerid, username, usertoken) = GetUserData()
+        (reviewerid, username, usertoken) = GetUserData()
 
         # Check that the submission is new
-	if SQLloadState(submission) != 'N':
+        if SQLloadState(submission) != 'N':
                 SESSION.DisplayError('Submission %d is not in NEW state' % submission)
 
         hold_id = SQLGetSubmissionHoldId(submission)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,7 +21,7 @@ if __name__ == '__main__':
 
         sub_id = SESSION.Parameter(0, 'int')
         sub_data = SQLloadSubmission(sub_id)
-	if not sub_data:
+        if not sub_data:
                 SESSION.DisplayError('Specified submission ID does not exist')
 
         if sub_data[SUB_STATE] != 'R':
@@ -30,13 +30,13 @@ if __name__ == '__main__':
         PrintPreMod('UnReject Submission')
         PrintNavBar()
 
-	update = """update submissions
+        update = """update submissions
                 set sub_state='N', sub_reason=NULL, sub_reviewer=0, sub_reviewed=NULL, sub_holdid=0
                 where sub_id=%d""" % int(sub_id)
-	print '<ul>'
+        print '<ul>'
         print '<li> ', update
-	db.query(update)
+        db.query(update)
         print '</ul>'
-	print '<p>'
-	print ISFDBLink('view_submission.cgi', sub_id, 'View Submission')
-	PrintPostMod(0)
+        print '<p>'
+        print ISFDBLink('view_submission.cgi', sub_id, 'View Submission')
+        PrintPostMod(0)

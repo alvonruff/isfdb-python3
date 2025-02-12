@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2021   Al von Ruff, Bill Longley and Ahasuerus
-#	 ALL RIGHTS RESERVED
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
+#         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
@@ -30,7 +30,7 @@ def UpdateTitle(TitleRecord, column, value):
 
 def doUnmerge(doc):
         # Perform the actual unmerge
-	if not doc.getElementsByTagName('TitleUnmerge'):
+        if not doc.getElementsByTagName('TitleUnmerge'):
                 return ('','')
         
         merge = doc.getElementsByTagName('TitleUnmerge')
@@ -80,7 +80,7 @@ def doUnmerge(doc):
                 #################################################
                 # STEP 3 - Create a new title record
                 #################################################
-		if title[TITLE_TTYPE] in ('COVERART','INTERIORART','ESSAY','INTERVIEW','POEM','REVIEW','SERIAL','SHORTFICTION'):
+                if title[TITLE_TTYPE] in ('COVERART','INTERIORART','ESSAY','INTERVIEW','POEM','REVIEW','SERIAL','SHORTFICTION'):
                         newTitle = title[TITLE_TITLE]
                 else:
                         newTitle = pub[PUB_TITLE]
@@ -104,28 +104,28 @@ def doUnmerge(doc):
                         db.query(query)
                 
                 # If this is a REVIEW and it was linked to its reviewed Title, then link the new Review record to the same reviewed Title
-		if title[TITLE_TTYPE] == 'REVIEW':
+                if title[TITLE_TTYPE] == 'REVIEW':
                         reviewed_title_id = SQLfindReviewedTitle(int(Record))
                         if reviewed_title_id:
                                 update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (int(reviewed_title_id), int(TitleRecord))
                                 print "<li> ", update
                                 db.query(update)
 
-		#################################################
-		# STEP 4 - Add author entries to canonical_author
-		#################################################
-		# Content titles use same authors: Container titles will use Publication Authors
-		if title[TITLE_TTYPE] in ('COVERART','INTERIORART','ESSAY','INTERVIEW','POEM','REVIEW','SERIAL','SHORTFICTION'):
-                	query =  "insert into canonical_author(title_id, author_id, ca_status) " 
-			query += "select %d, author_id, ca_status from canonical_author " % (int(TitleRecord))
-			query += "where title_id = %d "  % (int(Record))
-			print "<li> ", query
+                #################################################
+                # STEP 4 - Add author entries to canonical_author
+                #################################################
+                # Content titles use same authors: Container titles will use Publication Authors
+                if title[TITLE_TTYPE] in ('COVERART','INTERIORART','ESSAY','INTERVIEW','POEM','REVIEW','SERIAL','SHORTFICTION'):
+                        query =  "insert into canonical_author(title_id, author_id, ca_status) " 
+                        query += "select %d, author_id, ca_status from canonical_author " % (int(TitleRecord))
+                        query += "where title_id = %d "  % (int(Record))
+                        print "<li> ", query
                         db.query(query)
-		else:
-			query = "insert into canonical_author(title_id, author_id, ca_status) select %d, author_id, 1 from pub_authors pa where pa.pub_id = %d" % (int(TitleRecord), int(pub[PUB_PUBID]))
-			print "<li> ", query
+                else:
+                        query = "insert into canonical_author(title_id, author_id, ca_status) select %d, author_id, 1 from pub_authors pa where pa.pub_id = %d" % (int(TitleRecord), int(pub[PUB_PUBID]))
+                        print "<li> ", query
                         db.query(query)
-	
+        
                 #################################################
                 # STEP 5 - Add mapping to pub_content
                 #################################################
@@ -143,26 +143,26 @@ if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Title Unmerge - SQL Statements')
-	PrintNavBar()
+        PrintPreMod('Title Unmerge - SQL Statements')
+        PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
-	xml = SQLloadXML(submission)
-	doc = minidom.parseString(XMLunescape2(xml))
-	PubidList = []
+        xml = SQLloadXML(submission)
+        doc = minidom.parseString(XMLunescape2(xml))
+        PubidList = []
 
-	(merge, Record, unmergedTitles) = doUnmerge(doc)
+        (merge, Record, unmergedTitles) = doUnmerge(doc)
 
-	submitter = GetElementValue(merge, 'Submitter')
-	markIntegrated(db, submission, Record)
+        submitter = GetElementValue(merge, 'Submitter')
+        markIntegrated(db, submission, Record)
 
-	if Record:
+        if Record:
                 print ISFDBLinkNoName('title.cgi', Record, 'View Original Title', True)
         count_unmerged = 1
         duplicates_check = []
@@ -177,6 +177,6 @@ if __name__ == '__main__':
                 duplicates_check.append(str(unmergedTitle))
         duplicates_check_string = "+".join(duplicates_check)
         print ISFDBLinkNoName('edit/find_title_dups.cgi', duplicates_check_string, 'Check for Duplicate Titles', True)
-	print '<p>'
+        print '<p>'
 
-	PrintPostMod(0)
+        PrintPostMod(0)

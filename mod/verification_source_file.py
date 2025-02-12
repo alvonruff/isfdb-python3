@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus 
+#     (C) COPYRIGHT 2021-2025   Ahasuerus 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,49 +21,49 @@ submitter     = 0
 reviewer      = 0
 
 def UpdateColumn(doc, tag, column, record_id):
-	if TagPresent(doc, tag):
-		query = "select %s from reference where reference_id = %d" % (column, record_id)
-       		db.query(query)
-		result = db.store_result()
-		record = result.fetch_row()
+        if TagPresent(doc, tag):
+                query = "select %s from reference where reference_id = %d" % (column, record_id)
+                db.query(query)
+                result = db.store_result()
+                record = result.fetch_row()
 
-		value = GetElementValue(doc, tag)
-        	if value:
-			update = "update reference set %s = '%s' where reference_id = %d" % (column, db.escape_string(value), record_id)
-		else:
-			update = "update reference set %s = NULL where reference_id = %d" % (column, record_id)
-		print "<li> ", update
-       		db.query(update)
+                value = GetElementValue(doc, tag)
+                if value:
+                        update = "update reference set %s = '%s' where reference_id = %d" % (column, db.escape_string(value), record_id)
+                else:
+                        update = "update reference set %s = NULL where reference_id = %d" % (column, record_id)
+                print "<li> ", update
+                db.query(update)
 
 if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Verification Source Update - SQL Statements')
+        PrintPreMod('Verification Source Update - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	print "<h1>SQL Updates:</h1>"
-	print "<hr>"
-	print "<ul>"
+        print "<h1>SQL Updates:</h1>"
+        print "<hr>"
+        print "<ul>"
 
-	xml = SQLloadXML(submission)
+        xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('VerificationSource'):
-		merge = doc.getElementsByTagName('VerificationSource')
-        	Record = int(GetElementValue(merge, 'Record'))
-		subname = GetElementValue(merge, 'Submitter')
-		submitter = SQLgetSubmitterID(subname)
+                merge = doc.getElementsByTagName('VerificationSource')
+                Record = int(GetElementValue(merge, 'Record'))
+                subname = GetElementValue(merge, 'Submitter')
+                submitter = SQLgetSubmitterID(subname)
 
-		UpdateColumn(merge, 'SourceLabel', 'reference_label',  Record)
-		UpdateColumn(merge, 'SourceName',  'reference_fullname',  Record)
-		UpdateColumn(merge, 'SourceURL',   'reference_url',  Record)
+                UpdateColumn(merge, 'SourceLabel', 'reference_label',  Record)
+                UpdateColumn(merge, 'SourceName',  'reference_fullname',  Record)
+                UpdateColumn(merge, 'SourceURL',   'reference_url',  Record)
 
-		markIntegrated(db, submission, Record)
+                markIntegrated(db, submission, Record)
 
-	print ISFDBLink('edit/edit_verification_source.cgi', Record, 'Edit This Verification Source', 1)
-	print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
+        print ISFDBLink('edit/edit_verification_source.cgi', Record, 'Edit This Verification Source', 1)
+        print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
