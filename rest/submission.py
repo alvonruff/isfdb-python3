@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2023   Al von Ruff, Ahasuerus and Dirk Stoecker
-#	 ALL RIGHTS RESERVED
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
@@ -17,7 +17,7 @@ from library import normalizeInput, XMLunescape, XMLescape
 from login import User
 from xml.dom import minidom
 from xml.dom import Node
-	
+        
 
 class Submission:
         def __init__ (self):

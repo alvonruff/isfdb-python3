@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Lokal_Profil
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,34 +18,34 @@ from pubClass import pubs
 
 
 def pubOutput(pub_bodies):
-	print '<?xml version="1.0" encoding="iso-8859-1" ?>'
-	print '<ISFDB>'
-	print '  <Records>%d</Records>' % len(pub_bodies)
-	print '  <Publications>'
-	for pub_body in pub_bodies:
-		onePubOutput(pub_body)
-	print '  </Publications>'
-	print '</ISFDB>'
+        print '<?xml version="1.0" encoding="iso-8859-1" ?>'
+        print '<ISFDB>'
+        print '  <Records>%d</Records>' % len(pub_bodies)
+        print '  <Publications>'
+        for pub_body in pub_bodies:
+                onePubOutput(pub_body)
+        print '  </Publications>'
+        print '</ISFDB>'
 
-def onePubOutput(publication):	
+def onePubOutput(publication):        
 
         pub = pubs(db)
         pub.pub_id = publication[PUB_PUBID]
 
-	print '    <Publication>'
-	print '      <Record>%s</Record>' % pub.pub_id
-	print '      <Title>%s</Title>' % XMLescape(publication[PUB_TITLE], 1)
-	authors = SQLPubAuthors(pub.pub_id)
-	printMultiValued(authors, 'Authors', 'Author')
+        print '    <Publication>'
+        print '      <Record>%s</Record>' % pub.pub_id
+        print '      <Title>%s</Title>' % XMLescape(publication[PUB_TITLE], 1)
+        authors = SQLPubAuthors(pub.pub_id)
+        printMultiValued(authors, 'Authors', 'Author')
 
-	if publication[PUB_YEAR]:
+        if publication[PUB_YEAR]:
                 printTag(ISFDBconvertDate(publication[PUB_YEAR], 1), 'Year')
-	printTag(publication[PUB_ISBN], 'Isbn')
-	printTag(publication[PUB_CATALOG], 'Catalog')
-	if publication[PUB_PUBLISHER]:
-		publisher = SQLGetPublisher(publication[PUB_PUBLISHER])
-		printTag(publisher[PUBLISHER_NAME], 'Publisher')
-	if publication[PUB_SERIES]:
+        printTag(publication[PUB_ISBN], 'Isbn')
+        printTag(publication[PUB_CATALOG], 'Catalog')
+        if publication[PUB_PUBLISHER]:
+                publisher = SQLGetPublisher(publication[PUB_PUBLISHER])
+                printTag(publisher[PUBLISHER_NAME], 'Publisher')
+        if publication[PUB_SERIES]:
                 pubseries = SQLGetPubSeries(publication[PUB_SERIES])
                 printTag(pubseries[PUB_SERIES_NAME], 'PubSeries')
         printTag(publication[PUB_SERIES_NUM], 'PubSeriesNum')
@@ -56,12 +56,12 @@ def onePubOutput(publication):
         printTag(publication[PUB_TAG], 'Tag')
         printTag(ISFDBHostCorrection(publication[PUB_IMAGE]), 'Image')
 
-	artists = SQLPubArtists(pub.pub_id)
+        artists = SQLPubArtists(pub.pub_id)
         printMultiValued(artists, 'CoverArtists', 'Artist')
 
-	if publication[PUB_NOTE]:
-		notes = SQLgetNotes(publication[PUB_NOTE])
-		printTag(notes, 'Note')
+        if publication[PUB_NOTE]:
+                notes = SQLgetNotes(publication[PUB_NOTE])
+                printTag(notes, 'Note')
 
         pub.loadExternalIDs()
         if pub.identifiers:
@@ -72,7 +72,7 @@ def onePubOutput(publication):
         
         pub.loadTransTitles()
         printMultiValued(pub.pub_trans_titles, 'TransTitles', 'TransTitle')
-	print '    </Publication>'
+        print '    </Publication>'
 
 def printTag(value, tag):
         if not value:

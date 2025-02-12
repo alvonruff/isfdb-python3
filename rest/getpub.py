@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,12 +17,12 @@ from pub_output import pubOutput
 
 if __name__ == '__main__':
 
-	print 'Content-type: text/html\n'
+        print 'Content-type: text/html\n'
 
         isbns = isbnVariations(SESSION.Parameter(0, 'str'))
         if not isbns:
-		print "getpub.cgi: Bad ISBN"
-		sys.exit(1)
+                print "getpub.cgi: Bad ISBN"
+                sys.exit(1)
 
         pub_bodies = SQLFindPubsByIsbn(isbns)
         pubOutput(pub_bodies)
