@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2021   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,7 +20,7 @@ from library import *
 if __name__ == '__main__':
         PrintPreMod('ISFDB Control Panel Submission')
         PrintNavBar()
-	
+        
         query = "select * from metadata"
         db.query(query)
         result = db.store_result()
@@ -33,33 +33,33 @@ if __name__ == '__main__':
         sys.stderr = sys.stdout
         form = cgi.FieldStorage()
 
-	print '<pre>'
-	changes = 0
+        print '<pre>'
+        changes = 0
         if form.has_key('VERSION'):
-		newVersion = XMLescape(form['VERSION'].value)
-		if newVersion != oldVersion:
-			query = "update metadata set metadata_schemaversion='%s'" % db.escape_string(newVersion)
-			print query
-        		db.query(query)
-			changes += 1
+                newVersion = XMLescape(form['VERSION'].value)
+                if newVersion != oldVersion:
+                        query = "update metadata set metadata_schemaversion='%s'" % db.escape_string(newVersion)
+                        print query
+                        db.query(query)
+                        changes += 1
 
         if form.has_key('ONLINE'):
-		newDbOnline = int(form['ONLINE'].value)
-		if newDbOnline != oldDbOnline:
-			query = "update metadata set metadata_dbstatus=%d" % newDbOnline
-			print query
-        		db.query(query)
-			changes += 1
+                newDbOnline = int(form['ONLINE'].value)
+                if newDbOnline != oldDbOnline:
+                        query = "update metadata set metadata_dbstatus=%d" % newDbOnline
+                        print query
+                        db.query(query)
+                        changes += 1
 
         if form.has_key('EDITING'):
-		newEditOnline = int(form['EDITING'].value)
-		if newEditOnline != oldEditOnline:
-			query = "update metadata set metadata_editstatus=%d" % newEditOnline
-			print query
-        		db.query(query)
-			changes += 1
+                newEditOnline = int(form['EDITING'].value)
+                if newEditOnline != oldEditOnline:
+                        query = "update metadata set metadata_editstatus=%d" % newEditOnline
+                        print query
+                        db.query(query)
+                        changes += 1
 
-	print '%d changes made.' % changes
-	print '</pre>'
+        print '%d changes made.' % changes
+        print '</pre>'
 
-	PrintPostMod(0)
+        PrintPostMod(0)

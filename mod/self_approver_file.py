@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -27,7 +27,7 @@ def PrintError(message):
 
         
 if __name__ == '__main__':
-	PrintPreMod('Manage Self-Approvers - SQL Statements')
+        PrintPreMod('Manage Self-Approvers - SQL Statements')
         PrintNavBar()
         
         sys.stderr = sys.stdout
@@ -71,4 +71,4 @@ if __name__ == '__main__':
         message += 'a self-approver.</h3>'
         print message
 
-	PrintPostMod(0)
+        PrintPostMod(0)

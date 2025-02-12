@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2022   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,7 +22,7 @@ class SelfApprovers:
                 self.user.load()
         
         def display_current_self_approvers(self):
-        	PrintPreMod('Manage Self-Approvers')
+                PrintPreMod('Manage Self-Approvers')
                 PrintNavBar()
 
                 current_self_approvers = SQLGetSelfApprovers()

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,5 +40,5 @@ if __name__ == '__main__':
         queue = Queue()
         queue.display_pending_for_language(language_name)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 

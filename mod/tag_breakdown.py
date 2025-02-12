@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -64,6 +64,6 @@ if __name__ == '__main__':
                 PrintTable(tags, user)
         else:
                 print '<h3>There are no tags for the specified title. If this is a variant title, its parent may have tags associated with it.</h3>'
-	PrintPostMod(0)
+        PrintPostMod(0)
 
 

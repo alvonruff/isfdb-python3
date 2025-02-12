@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2023   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -105,8 +105,8 @@ if __name__ == '__main__':
         display_tag = ISFDBSubmissionType(xml_tag, submission_type, doc2)
         displayType = ISFDBSubmissionDisplayType(display_tag, xml_tag, submission_type)
 
-	PrintPreMod('Proposed %s Submission' % displayType)
-	PrintNavBar()
+        PrintPreMod('Proposed %s Submission' % displayType)
+        PrintNavBar()
 
         submission_filer = SUBMAP[submission_type][6]
         function_name = SUBMAP[submission_type][5]
@@ -117,11 +117,11 @@ if __name__ == '__main__':
                 from viewers import SubmissionViewer
                 submission_viewer = SubmissionViewer(function_name, submission_id)
                 submitter = submission_viewer.submitter
-	print '<b>Submitted by:</b> %s' % WikiLink(submitter)
+        print '<b>Submitted by:</b> %s' % WikiLink(submitter)
 
-	if not Approvable('%s.cgi' % submission_filer, submission_id):
+        if not Approvable('%s.cgi' % submission_filer, submission_id):
                 DisplayPublicLinks(submission_id)
 
-	if submission_filer in ('ca_new', 'pa_new'):
+        if submission_filer in ('ca_new', 'pa_new'):
                 display_sources(submission_id)
-	PrintPostMod(0)
+        PrintPostMod(0)

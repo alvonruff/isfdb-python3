@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2021   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2009-2025   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -27,12 +27,12 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-	xml = SQLloadXML(submission)
-	doc = minidom.parseString(XMLunescape2(xml))
+        xml = SQLloadXML(submission)
+        doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('SeriesDelete'):
-		merge = doc.getElementsByTagName('SeriesDelete')
-        	Record = GetElementValue(merge, 'Record')
-        	
+                merge = doc.getElementsByTagName('SeriesDelete')
+                Record = GetElementValue(merge, 'Record')
+                
                 #Check if the series has already been deleted
                 seriesRecord = SQLget1Series(int(Record))
                 if seriesRecord == 0:
@@ -65,29 +65,29 @@ if __name__ == '__main__':
                         PrintPostMod(0)
                         sys.exit(0)
 
-		##########################################################
-		# Delete the series
-		##########################################################
-        	print "<h1>SQL Updates:</h1>"
-        	print "<hr>"
-        	print "<ul>"
-		update = "delete from series where series_id=%d" % int(Record)
-		print "<li> ", update
-		db.query(update)
+                ##########################################################
+                # Delete the series
+                ##########################################################
+                print "<h1>SQL Updates:</h1>"
+                print "<hr>"
+                print "<ul>"
+                update = "delete from series where series_id=%d" % int(Record)
+                print "<li> ", update
+                db.query(update)
                 delete = 'delete from trans_series where series_id=%d' % int(Record)
                 print "<li> ", delete
                 db.query(delete)
-		update = "delete from webpages where series_id=%d" % int(Record)
-		print "<li> ", update
-		db.query(update)
-		if seriesRecord[SERIES_NOTE]:
+                update = "delete from webpages where series_id=%d" % int(Record)
+                print "<li> ", update
+                db.query(update)
+                if seriesRecord[SERIES_NOTE]:
                         update = "delete from notes where note_id=%d" % (int(seriesRecord[SERIES_NOTE]))
                         print "<li> ", update
                         db.query(update)
                         
-		submitter = GetElementValue(merge, 'Submitter')
-		markIntegrated(db, submission, Record)
+                submitter = GetElementValue(merge, 'Submitter')
+                markIntegrated(db, submission, Record)
 
-	print '<p>'
+        print '<p>'
 
-	PrintPostMod(0)
+        PrintPostMod(0)

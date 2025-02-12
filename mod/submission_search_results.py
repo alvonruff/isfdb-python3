@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2022   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -77,5 +77,5 @@ if __name__ == '__main__':
                 queue = Queue()
                 queue.display_pending_for_editor(submitter_id)
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 
