@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2021   Ahasuerus 
+#     (C) COPYRIGHT 2014-2025   Ahasuerus 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -14,13 +14,13 @@ from SQLparsing import *
 from library import ISFDBLocalRedirect
 from login import User
 
-	
+        
 if __name__ == '__main__':
 
-	user = User()
-	user.load()
-	user.load_moderator_flag()
-	if not user.moderator:
+        user = User()
+        user.load()
+        user.load_moderator_flag()
+        if not user.moderator:
                 SESSION.DisplayError('Only Moderators Can Resolve Cleanup Report Records')
 
         cleanup_id = SESSION.Parameter(0, 'int')
@@ -33,5 +33,5 @@ if __name__ == '__main__':
                 update = 'delete from cleanup where cleanup_id=%d' % cleanup_id
         else:
                 update = 'update cleanup set resolved=1 where cleanup_id=%d' % cleanup_id
-	db.query(update)
+        db.query(update)
         ISFDBLocalRedirect('edit/%s' % return_location)

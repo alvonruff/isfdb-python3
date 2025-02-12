@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2021   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,22 +32,22 @@ if __name__ == '__main__':
         if not pub_data:
                 SESSION.DisplayError('Invalid Publication')
 
-	PrintPreMod('Remove Secondary Verification')
-	PrintNavBar()
+        PrintPreMod('Remove Secondary Verification')
+        PrintNavBar()
 
         (deleter_id, username, usertoken) = GetUserData()
 
         delete = 'delete from verification where verification_id = %d' % ver_id
-	db.query(delete)
+        db.query(delete)
 
         insert = """insert into deleted_secondary_verifications(pub_id, reference_id, verifier_id, verification_time, deleter_id, deletion_time)
                     values(%d, %d, %d, '%s', %d, NOW())
                     """ % (int(pub_id), int(reference_id), int(verifier_id), verification_time, int(deleter_id))
-	db.query(insert)
+        db.query(insert)
 
         print 'Secondary Verification removed. <br>'
         print '[%s]' % ISFDBLink('pl.cgi', pub_id, 'View This Pub')
         print '[%s]' % ISFDBLink('edit/verify.cgi', pub_id, 'View/Add Verifications')
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 

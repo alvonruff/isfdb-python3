@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023   Ahasuerus 
+#     (C) COPYRIGHT 2023-2025   Ahasuerus 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,21 +20,21 @@ if __name__ == '__main__':
 
         submission = SESSION.Parameter(0, 'int')
 
-	PrintPreMod('Add New Recognized Domain - SQL Statements')
+        PrintPreMod('Add New Recognized Domain - SQL Statements')
         PrintNavBar()
 
         if NotApprovable(submission):
                 sys.exit(0)
 
-	xml = SQLloadXML(submission)
+        xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('AddRecognizedDomain')
         if not merge:
                 SESSION.DisplayError('Invalid Submission', 0)
 
-	print('<h1>SQL Updates:</h1>')
-	print('<hr>')
-	print('<ul>')
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
+        print('<ul>')
 
         domain_name = GetElementValue(merge, 'DomainName')
         site_name = GetElementValue(merge, 'SiteName')
@@ -62,7 +62,7 @@ if __name__ == '__main__':
 
         markIntegrated(db, submission, new_record)
 
-	print(ISFDBLink('edit/edit_delete_recognized_domain.cgi', new_record, 'Edit This Recognized Domain', 1))
-	print(ISFDBLink('mod/list_recognized_domains.cgi', '', 'View Recognized Domains', 1))
+        print(ISFDBLink('edit/edit_delete_recognized_domain.cgi', new_record, 'Edit This Recognized Domain', 1))
+        print(ISFDBLink('mod/list_recognized_domains.cgi', '', 'View Recognized Domains', 1))
 
-	PrintPostMod(0)
+        PrintPostMod(0)
