@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2005-2024   Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Bill Longley, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,43 +25,43 @@ def PrintPreMod(title):
 
 ##################################################
 #
-#	Function appears in three different locations
-#	See /edit/isfdblib.py for Edit PrintUserInfo function
-#	see /biblio/common.py for Regular PrintUserInfo function
+#        Function appears in three different locations
+#        See /edit/isfdblib.py for Edit PrintUserInfo function
+#        see /biblio/common.py for Regular PrintUserInfo function
 #
 ##################################################
 def PrintUserInfo():
-	(userid, username, usertoken) = GetUserData()
-	if username:
+        (userid, username, usertoken) = GetUserData()
+        if username:
                 PrintLoggedIn(userid, username)
-	else:
+        else:
                 PrintNotLoggedIn(0,0)
-	return username
+        return username
 #######################################################
 #
-#	Function appears in three different locations
-#	Moderator NavBar function.
-#	See /edit/isfdblib.py for Edit NavBar function
-#	see /biblio/common.py for Regular NavBar function
+#        Function appears in three different locations
+#        Moderator NavBar function.
+#        See /edit/isfdblib.py for Edit NavBar function
+#        see /biblio/common.py for Regular NavBar function
 #
 #######################################################
 def PrintNavBar():
-	print '<div id="nav">'
+        print '<div id="nav">'
 
         # Print the search box from module navbar
         PrintSearchBox('')
-	
+        
         (userid, username, usertoken) = GetUserData()
         moderator = SQLisUserModerator(userid)
         bureaucrat = SQLisUserBureaucrat(userid)
         self_approver = SQLisUserSelfApprover(userid)
 
-	username = PrintUserInfo()
+        username = PrintUserInfo()
 
         # Print the Other Pages section from module navbar
-	PrintOtherPages('')
+        PrintOtherPages('')
 
-	if moderator:
+        if moderator:
                 print '<div class="divider">'
                 print 'Moderator Links:'
                 print '</div>'
@@ -84,7 +84,7 @@ def PrintNavBar():
         if username == 0:
                 SESSION.DisplayError('%s required to perform moderator tasks.' % ISFDBLink('dologin.cgi', 'mod/list.cgi+N', 'Login'), 0)
 
-	if not moderator:
+        if not moderator:
                 if self_approver and SelfApprovalAllowed(userid):
                         pass
                 else:

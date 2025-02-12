@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,16 +25,16 @@ if __name__ == '__main__':
         PrintNavBar()
 
         # Retrieve user information for the moderator tring to reject this submission
-	(reviewerid, username, usertoken) = GetUserData()
+        (reviewerid, username, usertoken) = GetUserData()
 
         # Retrieve submission data
-	query = "select * from submissions where sub_id=%d" % int(sub_id)
-	db.query(query)
-	result = db.store_result()
-	if result.num_rows() == 0:
-		print '<h3>Specified submission ID does not exist</h3>'
-		PrintPostMod()
-		sys.exit(0)
+        query = "select * from submissions where sub_id=%d" % int(sub_id)
+        db.query(query)
+        result = db.store_result()
+        if result.num_rows() == 0:
+                print '<h3>Specified submission ID does not exist</h3>'
+                PrintPostMod()
+                sys.exit(0)
 
         record = result.fetch_row()
         # If the submission is on hold, determine who the holding moderator is
@@ -65,13 +65,13 @@ if __name__ == '__main__':
                 PrintPostMod(0)
                 sys.exit(0)
 
-	update = """update submissions
+        update = """update submissions
                 set sub_state='R', sub_reason='Forced', sub_reviewer=%d, sub_reviewed=NOW(), sub_holdid=0
                 where sub_id=%d""" % (int(reviewerid), int(sub_id))
-	print '<ul>'
+        print '<ul>'
         print '<li> ', update
-	db.query(update)
+        db.query(update)
         print '</ul>'
-	print '<p>'
-	PrintSubmissionLinks(sub_id, reviewerid)
-	PrintPostMod(0)
+        print '<p>'
+        PrintSubmissionLinks(sub_id, reviewerid)
+        PrintPostMod(0)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,20 +18,20 @@ from SQLparsing import *
 
 if __name__ == '__main__':
 
-	PrintPreMod('ISFDB Templates')
-	PrintNavBar()
+        PrintPreMod('ISFDB Templates')
+        PrintNavBar()
 
         table = ISFDBTable()
         table.headers.extend(('Template', ))
         table.row_align = 'left'
 
         templates = SQLLoadRawTemplates()
-	for template in templates:
+        for template in templates:
                 template_id = template[TEMPLATE_ID]
                 template_name = template[TEMPLATE_NAME]
                 table.rows.append((ISFDBLink('edit/edit_template.cgi', template_id, template_name), ))
 
         table.PrintTable()
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 

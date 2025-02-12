@@ -21,14 +21,14 @@ if __name__ == '__main__':
         PrintPreMod('Place Submission on Hold')
         PrintNavBar()
 
-	(reviewerid, username, usertoken) = GetUserData()
+        (reviewerid, username, usertoken) = GetUserData()
 
-	hold_id = SQLGetSubmissionHoldId(submission)
+        hold_id = SQLGetSubmissionHoldId(submission)
 
-	if SQLloadState(submission) != 'N':
-		print '<div id="ErrorBox">'
-		print "<h3>Submission %d not in NEW state</h3>" % (int(submission))
-		print '</div>'
+        if SQLloadState(submission) != 'N':
+                print '<div id="ErrorBox">'
+                print "<h3>Submission %d not in NEW state</h3>" % (int(submission))
+                print '</div>'
 
         else:
                 if int(hold_id) == int(reviewerid):
@@ -46,4 +46,4 @@ if __name__ == '__main__':
         print('<p><br>')
         PrintSubmissionLinks(submission, reviewerid)
 
-	PrintPostMod(0)
+        PrintPostMod(0)

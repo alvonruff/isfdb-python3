@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,20 +18,20 @@ from SQLparsing import *
 
 if __name__ == '__main__':
 
-	PrintPreMod('Secondary Verification Sources')
-	PrintNavBar()
+        PrintPreMod('Secondary Verification Sources')
+        PrintNavBar()
 
         table = ISFDBTable()
         table.headers.extend(('Verification Source', ))
         table.row_align = 'left'
 
         sources = SQLGetRefDetails()
-	for source in sources:
+        for source in sources:
                 source_id = source[REFERENCE_ID]
                 source_label = source[REFERENCE_LABEL]
                 table.rows.append((ISFDBLink('edit/edit_verification_source.cgi', source_id, source_label), ))
 
         table.PrintTable()
 
-	PrintPostMod(0)
+        PrintPostMod(0)
 
