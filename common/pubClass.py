@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
@@ -137,7 +138,7 @@ class titleEntry:
                 return retval
 
         def printTitle(self):
-                print self.xmlTitle()
+                print(self.xmlTitle())
 
 class reviewEntry:
         def __init__(self):
@@ -227,7 +228,7 @@ class reviewEntry:
                 return retval
 
         def printTitle(self):
-                print self.xmlTitle()
+                print(self.xmlTitle())
 
 class interviewEntry:
         def __init__(self):
@@ -317,7 +318,7 @@ class interviewEntry:
                 return retval
 
         def printTitle(self):
-                print self.xmlTitle()
+                print(self.xmlTitle())
 
 class pubs:
         def __init__(self, db):
@@ -713,7 +714,7 @@ class pubs:
 
                         container += "    </Publication>\n"
                 else:
-                        print "XML: pass"
+                        print("XML: pass")
                         container = ""
                 return container
 
@@ -1663,112 +1664,112 @@ class pubs:
                 primary_verifications = SQLPrimaryVerifiers(self.pub_id)
                 if not primary_verifications:
                         return
-                print '<div class="VerificationBox">'
-                print '<h2>Primary Verifications</h2>'
-                print '<table>'
-                print '<tr class="table1">'
-                print '<th>Verifier</th>'
-                print '<th>Date</th>'
-                print '<th>Type</th>'
-                print '<th>Last User Activity Date</th>'
-                print '</tr>'
+                print('<div class="VerificationBox">')
+                print('<h2>Primary Verifications</h2>')
+                print('<table>')
+                print('<tr class="table1">')
+                print('<th>Verifier</th>')
+                print('<th>Date</th>')
+                print('<th>Type</th>')
+                print('<th>Last User Activity Date</th>')
+                print('</tr>')
                 for verification in primary_verifications:
                         user_id = verification[0]
                         user_name = verification[1]
                         ver_time = verification[2]
                         ver_transient = verification[3]
-                        print '<tr class="table2">'
-                        print '<td>%s</td>' % WikiLink(user_name)
-                        print '<td class="keep">%s</td>' % ver_time
+                        print('<tr class="table2">')
+                        print('<td>%s</td>' % WikiLink(user_name))
+                        print('<td class="keep">%s</td>' % ver_time)
                         if ver_transient:
-                                print '<td class="keep">Transient</td>'
+                                print('<td class="keep">Transient</td>')
                         else:
-                                print '<td class="keep">Permanent</td>'
+                                print('<td class="keep">Permanent</td>')
                         last_user_activity = SQLLastUserActivity(user_id)
-                        print '<td>%s</td>' % last_user_activity
-                        print '</tr>'
-                print '</table>'
-                print '</div>'
+                        print('<td>%s</td>' % last_user_activity)
+                        print('</tr>')
+                print('</table>')
+                print('</div>')
 
         def PrintAllSecondaryVerifications(self):
-                print '<div class="VerificationBox">'
+                print('<div class="VerificationBox">')
                 secondary_verifications = SQLSecondaryVerifications(self.pub_id)
                 RefList = SQLGetRefDetails()
                 self.PrintSecondaryVerificationsHeaders()
                 for reference in RefList:
-                        print '<tr>'
-                        print '<td class="label"><a href="%s">%s</a></td>' % (reference[REFERENCE_URL], reference[REFERENCE_LABEL])
+                        print('<tr>')
+                        print('<td class="label"><a href="%s">%s</a></td>' % (reference[REFERENCE_URL], reference[REFERENCE_LABEL]))
                         found = 0
                         for verification in secondary_verifications:
                                 if verification[VERIF_REF_ID] == reference[REFERENCE_ID]:
                                         name = SQLgetUserName(verification[VERIF_USER_ID])
                                         if verification[VERIF_STATUS] == 0:
-                                                print '<td class="drop"><b>Not Verified</b></td>'
-                                                print '<td class="drop">&nbsp;</td>'
-                                                print '<td class="drop">&nbsp;</td>'
+                                                print('<td class="drop"><b>Not Verified</b></td>')
+                                                print('<td class="drop">&nbsp;</td>')
+                                                print('<td class="drop">&nbsp;</td>')
                                         elif verification[VERIF_STATUS] == 1:
-                                                print '<td class="keep">Verified</td>'
-                                                print '<td class="keep">%s</td>' % WikiLink(name)
-                                                print '<td class="keep">%s</td>' % verification[VERIF_TIME]
+                                                print('<td class="keep">Verified</td>')
+                                                print('<td class="keep">%s</td>' % WikiLink(name))
+                                                print('<td class="keep">%s</td>' % verification[VERIF_TIME])
                                         elif verification[VERIF_STATUS] == 2:
-                                                print '<td class="label">N/A</td>'
-                                                print '<td class="label">%s</td>' % WikiLink(name)
-                                                print '<td class="label">%s</td>' % verification[VERIF_TIME]
+                                                print('<td class="label">N/A</td>')
+                                                print('<td class="label">%s</td>' % WikiLink(name))
+                                                print('<td class="label">%s</td>' % verification[VERIF_TIME])
                                         found = 1
                                         break
                         if not found:
-                                print '<td class="drop"><b>Not Verified</b></td>'
-                                print '<td class="drop">&nbsp;</td>'
-                                print '<td class="drop">&nbsp;</td>'
-                        print '</tr>'
-                print '</table>'
-                print '</div>'
+                                print('<td class="drop"><b>Not Verified</b></td>')
+                                print('<td class="drop">&nbsp;</td>')
+                                print('<td class="drop">&nbsp;</td>')
+                        print('</tr>')
+                print('</table>')
+                print('</div>')
 
         def PrintActiveSecondaryVerifications(self):
                 # Returns 0 if there are no active Secondary Verifications, 1 otherwise
                 secondary_verifications = SQLActiveSecondaryVerifications(self.pub_id)
                 if not secondary_verifications:
                         return 0
-                print '<div class="VerificationBox">'
+                print('<div class="VerificationBox">')
                 self.PrintSecondaryVerificationsHeaders()
                 for verification in secondary_verifications:
-                        print '<tr>'
-                        print '<td class="label"><a href="%s">%s</a></td>' % (verification[3], verification[2])
-                        print '<td class="keep">Verified</td>'
+                        print('<tr>')
+                        print('<td class="label"><a href="%s">%s</a></td>' % (verification[3], verification[2]))
+                        print('<td class="keep">Verified</td>')
                         name = SQLgetUserName(verification[0])
-                        print '<td class="keep">%s</td>' % WikiLink(name)
-                        print '<td class="keep">%s</td>' % verification[1]
-                        print '</tr>'
-                print '</table>'
-                print '</div>'
+                        print('<td class="keep">%s</td>' % WikiLink(name))
+                        print('<td class="keep">%s</td>' % verification[1])
+                        print('</tr>')
+                print('</table>')
+                print('</div>')
                 return 1
 
         def PrintSecondaryVerificationsHeaders(self):
-                print '<h2>Secondary Verifications</h2>'
-                print '<table>'
-                print '<tr class="table1">'
-                print '<th>Source</th>'
-                print '<th>Status</th>'
-                print '<th>Verifier</th>'
-                print '<th>Date</th>'
-                print '</tr>'
+                print('<h2>Secondary Verifications</h2>')
+                print('<table>')
+                print('<tr class="table1">')
+                print('<th>Source</th>')
+                print('<th>Status</th>')
+                print('<th>Verifier</th>')
+                print('<th>Date</th>')
+                print('</tr>')
 
         def printExternalIDs(self, format = 'list'):
                 if not self.identifiers:
                         if format == 'list':
                                 # If this is an empty table cell, display a hyphen
-                                print '-'
+                                print('-')
                         return
                 formatted_ids = self.formatExternalIDs()
                 if format == 'list':
-                        print '  <ul class="noindent">'
+                        print('  <ul class="noindent">')
                 for formatted_id in formatted_ids:
                         if format == 'list':
-                                print '<li>',formatted_id
+                                print('<li>',formatted_id)
                         else:
-                                print formatted_id,'<br>'
+                                print(formatted_id,'<br>')
                 if format == 'list':
-                        print '  </ul>'
+                        print('  </ul>')
 
         def formatExternalIDs(self):
                 formatted_ids = []
@@ -1790,7 +1791,7 @@ class pubs:
                 mod_note_required = 0
                 if self.requiresModeratorNote(user.id):
                         mod_note_required = 1
-                print '<input name="mod_note_required" value="%d" type="HIDDEN">' % mod_note_required
+                print('<input name="mod_note_required" value="%d" type="HIDDEN">' % mod_note_required)
 
 
         def requiresModeratorNote(self, user_id):
@@ -1993,7 +1994,7 @@ class pubs:
                 else:
                         output += ISFDBFormatAllAuthors(title[TITLE_PUBID])
 
-                print output
+                print(output)
 
 
 class pubBody():

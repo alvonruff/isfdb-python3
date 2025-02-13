@@ -1,12 +1,13 @@
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
-#       ALL RIGHTS RESERVED
+#         (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#           ALL RIGHTS RESERVED
 #
-#     The copyright notice above does not evidence any actual or
-#     intended publication of such source code.
+#         The copyright notice above does not evidence any actual or
+#         intended publication of such source code.
 #
-#     Version: $Revision: 1205 $
-#     Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
+#         Version: $Revision: 1205 $
+#         Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
 
 import cgitb; cgitb.enable()
 import string
@@ -16,291 +17,291 @@ from localdefs import *
 import urllib
 
 def PrintHTMLHeaders(title):
-    from datetime import date
-    from library import ISFDBText
-    # Disallow the <base> directive
-    policy = "base-uri 'none';"
-    # Disallow <a> ping, Fetch, XMLHttpRequest, WebSocket, and EventSource
-    #   May need to be re-worked if we implement AJAX
-    policy += " connect-src 'none';"
-    # Disallow @font-face
-    policy += " font-src 'none';"
-    # Restrict form submission URLs to the ISFDB server
-    policy += " form-action 'self' %s://%s https://www.google.com;" % (PROTOCOL, HTMLHOST)
-    # Disable nested browsing contexts
-    policy += " frame-src 'none';"
-    # Disable <frame>, <iframe>, <object>, <embed>, and <applet>
-    policy += " frame-ancestors 'none';"
-    # Restrict sources of images and favicons to http and https
-    policy += " img-src http: https:;"
-    # Disallow <manifest>
-    policy += " manifest-src 'none';"
-    # Disallow <audio>, <track> and <video>
-    policy += " media-src 'none';"
-    # Disallow <object>, <embed>, and <applet>
-    policy += " object-src 'none';"
-    # Limit JS scripts to .js files served by the ISFDB server
-    policy += " script-src 'self' %s://%s;" % (PROTOCOL, HTMLHOST)
-    # Limit stylesheets to .css files served by the ISFDB server
-    policy += " style-src 'self' %s://%s;" % (PROTOCOL, HTMLHOST)
-    # Disable Worker, SharedWorker, or ServiceWorker scripts
-    #   May need to be re-worked if we implement workers
-    policy += " worker-src 'none';"
-    print """Content-Security-Policy: %s""" % policy
+        from datetime import date
+        from library import ISFDBText
+        # Disallow the <base> directive
+        policy = "base-uri 'none';"
+        # Disallow <a> ping, Fetch, XMLHttpRequest, WebSocket, and EventSource
+        #   May need to be re-worked if we implement AJAX
+        policy += " connect-src 'none';"
+        # Disallow @font-face
+        policy += " font-src 'none';"
+        # Restrict form submission URLs to the ISFDB server
+        policy += " form-action 'self' %s://%s https://www.google.com;" % (PROTOCOL, HTMLHOST)
+        # Disable nested browsing contexts
+        policy += " frame-src 'none';"
+        # Disable <frame>, <iframe>, <object>, <embed>, and <applet>
+        policy += " frame-ancestors 'none';"
+        # Restrict sources of images and favicons to http and https
+        policy += " img-src http: https:;"
+        # Disallow <manifest>
+        policy += " manifest-src 'none';"
+        # Disallow <audio>, <track> and <video>
+        policy += " media-src 'none';"
+        # Disallow <object>, <embed>, and <applet>
+        policy += " object-src 'none';"
+        # Limit JS scripts to .js files served by the ISFDB server
+        policy += " script-src 'self' %s://%s;" % (PROTOCOL, HTMLHOST)
+        # Limit stylesheets to .css files served by the ISFDB server
+        policy += " style-src 'self' %s://%s;" % (PROTOCOL, HTMLHOST)
+        # Disable Worker, SharedWorker, or ServiceWorker scripts
+        #   May need to be re-worked if we implement workers
+        policy += " worker-src 'none';"
+        print("""Content-Security-Policy: %s""" % policy)
     
-    # Declare content type and end the http headers section with a \n
-    print 'Content-type: text/html; charset=%s\n' % UNICODE
-    # The DTD Web page for the HTML standard redirects to https, but the standard
-    # and HTML validators still uses http in the page name, so that's what we use
-    print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
-    print '<html lang="en-us">'
-    print '<head>'
-    print '<meta http-equiv="content-type" content="text/html; charset=%s" >' % UNICODE
-    print '<link rel="shortcut icon" href="%s://%s/favicon.ico">' % (PROTOCOL, HTMLHOST)
-    print '<title>%s</title>' % ISFDBText(title)
-    print '<link href="%s://%s/biblio.css" rel="stylesheet" type="text/css" media="screen">' % (PROTOCOL, HTMLHOST)
-    print '</head>'
-    print '<body>'
-    print '<div id="wrap">'
-    print '<a class="topbanner" href="%s:/%s/index.cgi">' % (PROTOCOL, HTFAKE)
-    print '<span>'
-    # Get the number of days since January 1, 2000
-    millenium = date(2000, 1, 1)
-    today = date.today()
-    elapsed = today - millenium
-    # Calculate the banner number for today; the range is 1-12
-    banner_number = (elapsed.days % 12) + 1
-    print '<img src="%s://%s/IsfdbBanner%d.jpg" alt="ISFDB banner">' % (PROTOCOL, HTMLHOST, banner_number)
-    print '</span>'
-    print '</a>'
-    print '<div id="statusbar">'
-    print '<h2>%s</h2>' % ISFDBText(title)
+        # Declare content type and end the http headers section with a \n
+        print('Content-type: text/html; charset=%s\n' % UNICODE)
+        # The DTD Web page for the HTML standard redirects to https, but the standard
+        # and HTML validators still uses http in the page name, so that's what we use
+        print('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">')
+        print('<html lang="en-us">')
+        print('<head>')
+        print('<meta http-equiv="content-type" content="text/html; charset=%s" >' % UNICODE)
+        print('<link rel="shortcut icon" href="%s://%s/favicon.ico">' % (PROTOCOL, HTMLHOST))
+        print('<title>%s</title>' % ISFDBText(title))
+        print('<link href="%s://%s/biblio.css" rel="stylesheet" type="text/css" media="screen">' % (PROTOCOL, HTMLHOST))
+        print('</head>')
+        print('<body>')
+        print('<div id="wrap">')
+        print('<a class="topbanner" href="%s:/%s/index.cgi">' % (PROTOCOL, HTFAKE))
+        print('<span>')
+        # Get the number of days since January 1, 2000
+        millenium = date(2000, 1, 1)
+        today = date.today()
+        elapsed = today - millenium
+        # Calculate the banner number for today; the range is 1-12
+        banner_number = (elapsed.days % 12) + 1
+        print('<img src="%s://%s/IsfdbBanner%d.jpg" alt="ISFDB banner">' % (PROTOCOL, HTMLHOST, banner_number))
+        print('</span>')
+        print('</a>')
+        print('<div id="statusbar">')
+        print('<h2>%s</h2>' % ISFDBText(title))
 
 class _Db:
-    def __init__(self):
-        self.pub_types = ('ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'FANZINE', 'MAGAZINE', 'NONFICTION', 'NOVEL', 'OMNIBUS')
-        self.regular_title_types = ('ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'EDITOR', 'ESSAY',
-                       'INTERIORART', 'NONFICTION', 'NOVEL', 'OMNIBUS', 'POEM',
-                       'SERIAL', 'SHORTFICTION')
-        self.all_title_types = sorted(self.regular_title_types + ('COVERART', 'REVIEW', 'INTERVIEW'))
-        self.storylen_codes = ('', 'novella', 'short story', 'novelette')
-        # All supported format codes
-        self.formats = ('unknown','hc','tp','pb','ph','digest','dos','ebook','webzine','pulp',
+        def __init__(self):
+                self.pub_types = ('ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'FANZINE', 'MAGAZINE', 'NONFICTION', 'NOVEL', 'OMNIBUS')
+                self.regular_title_types = ('ANTHOLOGY', 'CHAPBOOK', 'COLLECTION', 'EDITOR', 'ESSAY',
+                        'INTERIORART', 'NONFICTION', 'NOVEL', 'OMNIBUS', 'POEM',
+                        'SERIAL', 'SHORTFICTION')
+                self.all_title_types = sorted(self.regular_title_types + ('COVERART', 'REVIEW', 'INTERVIEW'))
+                self.storylen_codes = ('', 'novella', 'short story', 'novelette')
+                # All supported format codes
+                self.formats = ('unknown','hc','tp','pb','ph','digest','dos','ebook','webzine','pulp',
                         'bedsheet','tabloid','A4','A5','quarto','octavo','audio CD','audio MP3 CD',
                         'audio MP3 DVD','audio MP3 USB Drive','audio cassette','audio LP',
                         'digital audio player', 'digital audio download','other')
 
 class _Ui:
-    # User interface elements used by all user-facing parts of the ISFDB software
-    def __init__(self):
-        self.bullet = '&#8226;'
-        self.enspace = '&#8194;'
-        # "More info" sign for mouseover bubbles
-        self.info_sign = '&#x24d8;'
-        # Possible alternative Unicode question marks: '&#10068;' (white) '&#10067;' (black)
-        self.question_mark = '?'
-        # Mouse-over bubbles for page numbers
-        self.page_numbers = {'fc': 'front cover',
-                             'fep': 'front end paper for books; inside front cover for magazines',
-                             'bp': 'before pagination',
-                             'ep': 'unnumbered pages that follow pagination',
-                             'bep': 'back end paper for books; inside back cover for magazines',
-                             'bc': 'back cover',
-                             'rj': 'reverse jacket, i.e. inside of dust jacket'
-                             }
+        # User interface elements used by all user-facing parts of the ISFDB software
+        def __init__(self):
+                self.bullet = '&#8226;'
+                self.enspace = '&#8194;'
+                # "More info" sign for mouseover bubbles
+                self.info_sign = '&#x24d8;'
+                # Possible alternative Unicode question marks: '&#10068;' (white) '&#10067;' (black)
+                self.question_mark = '?'
+                # Mouse-over bubbles for page numbers
+                self.page_numbers = {'fc': 'front cover',
+                        'fep': 'front end paper for books; inside front cover for magazines',
+                        'bp': 'before pagination',
+                        'ep': 'unnumbered pages that follow pagination',
+                        'bep': 'back end paper for books; inside back cover for magazines',
+                        'bc': 'back cover',
+                        'rj': 'reverse jacket, i.e. inside of dust jacket'
+                        }
 
 class _Currency:
-    # Recognized currency signs
-    def __init__(self):
-        self.baht = '&#3647;'
-        self.czech_koruna = 'K&#269;'
-        self.czechoslovak_koruna = 'K&#269;s'
-        self.euro = chr(128)
-        self.german_gold_mark = '&#8499;'
-        self.guilder = chr(131)
-        self.indian_rupee = '&#8377;'
-        self.pakistani_rupee = '&#8360;'
-        self.peso = '&#8369;'
-        self.pound = chr(163)
-        self.won = '&#8361;'
-        self.yen = chr(165)
-        self.yuan = '&#20803;'
-        self.zloty = 'z&#322;'
+        # Recognized currency signs
+        def __init__(self):
+                self.baht = '&#3647;'
+                self.czech_koruna = 'K&#269;'
+                self.czechoslovak_koruna = 'K&#269;s'
+                self.euro = chr(128)
+                self.german_gold_mark = '&#8499;'
+                self.guilder = chr(131)
+                self.indian_rupee = '&#8377;'
+                self.pakistani_rupee = '&#8360;'
+                self.peso = '&#8369;'
+                self.pound = chr(163)
+                self.won = '&#8361;'
+                self.yen = chr(165)
+                self.yuan = '&#20803;'
+                self.zloty = 'z&#322;'
 
 class Session:
-    def __init__(self):
-        self.cgi_dir = ''
-        self.cgi_script = ''
-        self.english_lower_case = ['and', 'or', 'the', 'a', 'an', 'for', 'of', 'in', 'on', 'by', 'at', 'from', 'with', 'to']
-        self.frame = 1 # Flag indicating whether the framing divs need to be displayed
-        self.front_page_pubs = 20
-        self.max_displayable_pubs_without_pub_series = 500
-        self.max_new_editor_submissions = 100
-        self.max_future_days = 90
-        self.new_editor_threshold = 20
-        self.parameters = []
-        self.query_string = ''
-        self.recognized_suffixes = (
-                       'II',
-                       'III',
-                       'IV',
-                       'V',
-                       'VI',
-                       'VII',
-                       'VIII',
-                       'IX',
-                       'X',
-                       'B.A.',
-                       'B.Sc.',
-                       'D.D.',
-                       'D.Sc.',
-                       'Ed.D.',
-                       'J.D.',
-                       'Jr.',
-                       'Lit.D.',
-                       'Litt.D.',
-                       'M.B.I.F.',
-                       'M.B.I.S.',
-                       'M.A.',
-                       'M.D.',
-                       'M.E.',
-                       'M.S.',
-                       'Ph.D.',
-                       'P.J.F.',
-                       'R.I.',
-                       'Sr.',
-                       'U.S.A.'
-                       )
-        # Irregular author names that should be ignored for cases like:
-        # * Setting author_marque to 1 to appear on the forthcoming books section
-        # * Cleanup report 11: Prolific Authors Without a Defined Language
-        # * Cleanup report 19: Interviews of Pseudonyms
-        # * Cleanup reports 58-61: Suspected X Authors without a Language Code
-        # * others...?
-        # If some of them need different sets of values, define them as separate
-        # lists here, then concatenate them all into SESSION.special_authors_to_ignore
-        self.special_authors_to_ignore = [
-                'unknown', # 2862
-                'uncredited', # 20754
-                'various', # 7311
-                'The Readers', # 25179
-                'Anonymous', # 6677
-                'Traditional', # 17640
-                'The Editors' # 38941
-                ]
-        self.ui = _Ui()
-        self.currency = _Currency()
-        self.db = _Db()
+        def __init__(self):
+                self.cgi_dir = ''
+                self.cgi_script = ''
+                self.english_lower_case = ['and', 'or', 'the', 'a', 'an', 'for', 'of', 'in', 'on', 'by', 'at', 'from', 'with', 'to']
+                self.frame = 1 # Flag indicating whether the framing divs need to be displayed
+                self.front_page_pubs = 20
+                self.max_displayable_pubs_without_pub_series = 500
+                self.max_new_editor_submissions = 100
+                self.max_future_days = 90
+                self.new_editor_threshold = 20
+                self.parameters = []
+                self.query_string = ''
+                self.recognized_suffixes = (
+                        'II',
+                        'III',
+                        'IV',
+                        'V',
+                        'VI',
+                        'VII',
+                        'VIII',
+                        'IX',
+                        'X',
+                        'B.A.',
+                        'B.Sc.',
+                        'D.D.',
+                        'D.Sc.',
+                        'Ed.D.',
+                        'J.D.',
+                        'Jr.',
+                        'Lit.D.',
+                        'Litt.D.',
+                        'M.B.I.F.',
+                        'M.B.I.S.',
+                        'M.A.',
+                        'M.D.',
+                        'M.E.',
+                        'M.S.',
+                        'Ph.D.',
+                        'P.J.F.',
+                        'R.I.',
+                        'Sr.',
+                        'U.S.A.'
+                        )
+                # Irregular author names that should be ignored for cases like:
+                # * Setting author_marque to 1 to appear on the forthcoming books section
+                # * Cleanup report 11: Prolific Authors Without a Defined Language
+                # * Cleanup report 19: Interviews of Pseudonyms
+                # * Cleanup reports 58-61: Suspected X Authors without a Language Code
+                # * others...?
+                # If some of them need different sets of values, define them as separate
+                # lists here, then concatenate them all into SESSION.special_authors_to_ignore
+                self.special_authors_to_ignore = [
+                        'unknown', # 2862
+                        'uncredited', # 20754
+                        'various', # 7311
+                        'The Readers', # 25179
+                        'Anonymous', # 6677
+                        'Traditional', # 17640
+                        'The Editors' # 38941
+                        ]
+                self.ui = _Ui()
+                self.currency = _Currency()
+                self.db = _Db()
     
-    def ParseParameters(self):
-        cgi_path = os.environ.get('SCRIPT_NAME')
-        # CGI script name is in the last "/" chunk
-        if cgi_path:
-            self.cgi_script = cgi_path.split('/')[-1]
-            if self.cgi_script.endswith('.cgi'):
-                self.cgi_script = self.cgi_script[0:-4] # Strip the trailing ".cgi" string
-            self.cgi_dir = cgi_path.split('/')[-2]
+        def ParseParameters(self):
+                cgi_path = os.environ.get('SCRIPT_NAME')
+                # CGI script name is in the last "/" chunk
+                if cgi_path:
+                        self.cgi_script = cgi_path.split('/')[-1]
+                        if self.cgi_script.endswith('.cgi'):
+                                self.cgi_script = self.cgi_script[0:-4] # Strip the trailing ".cgi" string
+                        self.cgi_dir = cgi_path.split('/')[-2]
 
-        self.query_string = os.environ.get('QUERY_STRING')
-        if self.query_string:
-                for parameter in self.query_string.split('+'):
-                        parameter = parameter.split('&fbclid=')[0] # Strip trailing Facebook IDs
-                        # Strip trailing '=' sometimes added by Facebook
-                        if parameter.endswith('='):
-                                parameter = parameter[:-1]
-                        self.parameters.append(parameter)
+                self.query_string = os.environ.get('QUERY_STRING')
+                if self.query_string:
+                        for parameter in self.query_string.split('+'):
+                                parameter = parameter.split('&fbclid=')[0] # Strip trailing Facebook IDs
+                                # Strip trailing '=' sometimes added by Facebook
+                                if parameter.endswith('='):
+                                        parameter = parameter[:-1]
+                                self.parameters.append(parameter)
 
-    def Parameter(self, param_number, param_type = 'str', default_value = None, allowed_values = []):
-        param_display_values = {0: 'First',
-                                1: 'Second',
-                                2: 'Third',
-                                3: 'Fourth',
-                                4: 'Fifth',
-                                5: 'Sixth',
-                                6: 'Seventh',
-                                7: 'Eight',
-                                8: 'Nineth',
-                                9: 'Tenth'
-                                }
-        if param_number not in param_display_values:
-            self.DisplayError('Invalid parameter. Only %d parameters are allowed.' % len(param_display_values))
-        param_order = param_display_values[param_number]
+        def Parameter(self, param_number, param_type = 'str', default_value = None, allowed_values = []):
+                param_display_values = {0: 'First',
+                        1: 'Second',
+                        2: 'Third',
+                        3: 'Fourth',
+                        4: 'Fifth',
+                        5: 'Sixth',
+                        6: 'Seventh',
+                        7: 'Eight',
+                        8: 'Nineth',
+                        9: 'Tenth'
+                        }
+                if param_number not in param_display_values:
+                        self.DisplayError('Invalid parameter. Only %d parameters are allowed.' % len(param_display_values))
+                param_order = param_display_values[param_number]
         
-        try:
-            value = self.parameters[param_number]
-            if not value:
-                raise
-        except:
-            value = ''
-        if not value and default_value is not None:
-            value = default_value
-        if value == '':
-            self.DisplayError('%s parameter not specified' % param_order)
+                try:
+                        value = self.parameters[param_number]
+                        if not value:
+                                raise
+                except:
+                        value = ''
+                if not value and default_value is not None:
+                        value = default_value
+                if value == '':
+                        self.DisplayError('%s parameter not specified' % param_order)
         
-        if param_type == 'int':
-            try:
-                value = int(value)
-                if value < 0:
-                    raise
-            except:
-                self.DisplayError('%s parameter must be a valid integer number' % param_order)
-        elif param_type == 'unescape':
-            value = string.replace(value, '%20', ' ')
-            value = string.replace(value, '&rsquo;', "'")
-            value = string.replace(value, '%E2%80%99', "'")
-            value = string.replace(value, '_', ' ')
-            value = string.replace(value, '\\', '')
-            value = string.replace(value, '=', '')
-            value = urllib.unquote(value).decode('utf-8').encode('iso-8859-1', 'xmlcharrefreplace')
+                if param_type == 'int':
+                        try:
+                                value = int(value)
+                                if value < 0:
+                                        raise
+                        except:
+                                self.DisplayError('%s parameter must be a valid integer number' % param_order)
+                elif param_type == 'unescape':
+                        value = string.replace(value, '%20', ' ')
+                        value = string.replace(value, '&rsquo;', "'")
+                        value = string.replace(value, '%E2%80%99', "'")
+                        value = string.replace(value, '_', ' ')
+                        value = string.replace(value, '\\', '')
+                        value = string.replace(value, '=', '')
+                        value = urllib.unquote(value).decode('utf-8').encode('iso-8859-1', 'xmlcharrefreplace')
         
-        if allowed_values and value not in allowed_values:
-            output = '%s parameter must be one of the following values: ' % param_order
-            for count, allowed_value in enumerate(allowed_values):
-                if count:
-                    output += ', '
-                output += '%s' % allowed_value
-            self.DisplayError(output)
-        return value
+                if allowed_values and value not in allowed_values:
+                        output = '%s parameter must be one of the following values: ' % param_order
+                        for count, allowed_value in enumerate(allowed_values):
+                                if count:
+                                        output += ', '
+                                output += '%s' % allowed_value
+                        self.DisplayError(output)
+                return value
 
-    def DisplayError(self, message, frame = 1):
-        self.frame = frame
-        if self.cgi_dir == 'cgi-bin':
-            self._DisplayBiblioError(message)
-        elif self.cgi_dir == 'edit':
-            self._DisplayEditError(message)
-        elif self.cgi_dir == 'mod':
-            self._DisplayModError(message)
-        elif self.cgi_dir == 'rest':
-            print '%s.cgi: Bad query. %s' % (self.cgi_script, message)
-        sys.exit(0)
+        def DisplayError(self, message, frame = 1):
+                self.frame = frame
+                if self.cgi_dir == 'cgi-bin':
+                        self._DisplayBiblioError(message)
+                elif self.cgi_dir == 'edit':
+                        self._DisplayEditError(message)
+                elif self.cgi_dir == 'mod':
+                        self._DisplayModError(message)
+                elif self.cgi_dir == 'rest':
+                        print('%s.cgi: Bad query. %s' % (self.cgi_script, message))
+                sys.exit(0)
 
-    def _DisplayBiblioError(self, message):
-        from common import PrintHeader, PrintNavbar, PrintTrailer
-        if self.frame:
-            PrintHeader('Error')
-            try:
-                record_id = int(self.parameter[0])
-            except:
-                record_id = 0
-            PrintNavbar(self.cgi_script, record_id, 0, '%s.cgi' % self.cgi_script, 0)
-        print """<h3>%s</h3>""" % message
-        PrintTrailer(self.cgi_script, record_id, 0)
+        def _DisplayBiblioError(self, message):
+                from common import PrintHeader, PrintNavbar, PrintTrailer
+                if self.frame:
+                        PrintHeader('Error')
+                        try:
+                                record_id = int(self.parameter[0])
+                        except:
+                                record_id = 0
+                        PrintNavbar(self.cgi_script, record_id, 0, '%s.cgi' % self.cgi_script, 0)
+                print("""<h3>%s</h3>""" % message)
+                PrintTrailer(self.cgi_script, record_id, 0)
 
-    def _DisplayEditError(self, message):
-        from isfdblib import PrintPreSearch, PrintNavBar, PrintPostSearch
-        if self.frame:
-            PrintPreSearch('Error')
-            PrintNavBar('%s/%s' % (self.cgi_dir, self.cgi_script), 0)
-        print """<h3>%s</h3>""" % message
-        PrintPostSearch(0, 0, 0, 0, 0, 0)
+        def _DisplayEditError(self, message):
+                from isfdblib import PrintPreSearch, PrintNavBar, PrintPostSearch
+                if self.frame:
+                        PrintPreSearch('Error')
+                        PrintNavBar('%s/%s' % (self.cgi_dir, self.cgi_script), 0)
+                print("""<h3>%s</h3>""" % message)
+                PrintPostSearch(0, 0, 0, 0, 0, 0)
 
-    def _DisplayModError(self, message):
-        from isfdblib import PrintPreMod, PrintNavBar, PrintPostMod
-        if self.frame:
-            PrintPreMod('Error')
-            PrintNavBar()
-        print """<h3>%s</h3>""" % message
-        PrintPostMod(0)
+        def _DisplayModError(self, message):
+                from isfdblib import PrintPreMod, PrintNavBar, PrintPostMod
+                if self.frame:
+                        PrintPreMod('Error')
+                        PrintNavBar()
+                print("""<h3>%s</h3>""" % message)
+                PrintPostMod(0)
 
 SCHEMA_VER = '0.02'
 ENGINE     = '<b>ISFDB Engine</b> - Version 4.00 (2006-04-24)'
@@ -671,55 +672,55 @@ SUBMAP = {
 }
 
 SUBMISSION_DISPLAY = {
-    'AuthorTransLegalNames': 'Trans. Legal Name',
-    'AuthorTransNames': 'Transliterated Name',
-    'AwardedBy': 'Awarded By',
-    'AwardedFor': 'Awarded For',
-    'AwardAuthors': 'Award Authors',
-    'AwardCategory': 'Category',
-    'AwardLevel': 'Award Level',
-    'AwardMovie': 'Award Movie',
-    'AwardNote': 'Note',
-    'AwardTitle': 'Award Title',
-    'AwardType': 'Award Type',
-    'AwardYear': 'Award Year',
-    'Binding': 'Format',
-    'Birthdate': 'Birth Date',
-    'Birthplace': 'Birth Place',
-    'Canonical': 'Canonical Name',
-    'CategoryName': 'Award Category',
-    'ContentIndicator': 'Content',
-    'Deathdate': 'Death Date',
-    'DisplayOrder': 'Display Order',
-    'Emails': 'Email Address',
-    'External_ID': 'External ID',
-    'Familyname': 'Directory Entry',
-    'FullName': 'Full Name',
-    'Graphic': 'Graphic Format',
-    'Isbn': 'ISBN',
-    'Catalog': 'Catalog ID',
-    'Legalname': 'Legal Name',
-    'NonGenre': 'Non-Genre',
-    'Parentposition': 'Series Parent Position',
-    'PublisherTransNames': 'Transliterated Name',
-    'PubSeries': 'Pub Series',
-    'PubSeriesNum': 'Pub Series #',
-    'PubSeriesTransNames': 'Transliterated Name',
-    'PubWebpages': 'Publication Web Page',
-    'PubType': 'Pub Type',
-    'Seriesnum': 'Series Number',
-    'SeriesNum': 'Series Number',
-    'SeriesTransNames': 'Transliterated Name',
-    'ShortName': 'Short Name',
-    'Storylen': 'Length',
-    'TitleNote': 'Title Note',
-    'TranslitTitles': 'Transliterated Title',
-    'TransTitles': 'Transliterated Title',
-    'Webpages': 'Web Page',
-    'Year': 'Date'
-    }
+        'AuthorTransLegalNames': 'Trans. Legal Name',
+        'AuthorTransNames': 'Transliterated Name',
+        'AwardedBy': 'Awarded By',
+        'AwardedFor': 'Awarded For',
+        'AwardAuthors': 'Award Authors',
+        'AwardCategory': 'Category',
+        'AwardLevel': 'Award Level',
+        'AwardMovie': 'Award Movie',
+        'AwardNote': 'Note',
+        'AwardTitle': 'Award Title',
+        'AwardType': 'Award Type',
+        'AwardYear': 'Award Year',
+        'Binding': 'Format',
+        'Birthdate': 'Birth Date',
+        'Birthplace': 'Birth Place',
+        'Canonical': 'Canonical Name',
+        'CategoryName': 'Award Category',
+        'ContentIndicator': 'Content',
+        'Deathdate': 'Death Date',
+        'DisplayOrder': 'Display Order',
+        'Emails': 'Email Address',
+        'External_ID': 'External ID',
+        'Familyname': 'Directory Entry',
+        'FullName': 'Full Name',
+        'Graphic': 'Graphic Format',
+        'Isbn': 'ISBN',
+        'Catalog': 'Catalog ID',
+        'Legalname': 'Legal Name',
+        'NonGenre': 'Non-Genre',
+        'Parentposition': 'Series Parent Position',
+        'PublisherTransNames': 'Transliterated Name',
+        'PubSeries': 'Pub Series',
+        'PubSeriesNum': 'Pub Series #',
+        'PubSeriesTransNames': 'Transliterated Name',
+        'PubWebpages': 'Publication Web Page',
+        'PubType': 'Pub Type',
+        'Seriesnum': 'Series Number',
+        'SeriesNum': 'Series Number',
+        'SeriesTransNames': 'Transliterated Name',
+        'ShortName': 'Short Name',
+        'Storylen': 'Length',
+        'TitleNote': 'Title Note',
+        'TranslitTitles': 'Transliterated Title',
+        'TransTitles': 'Transliterated Title',
+        'Webpages': 'Web Page',
+        'Year': 'Date'
+        }
 
 SUBMISSION_TYPE_DISPLAY = {
-    'MakePseudonym': 'Make Alternate Name',
-    'RemovePseud': 'Remove Alternate Name'    
-    }
+        'MakePseudonym': 'Make Alternate Name',
+        'RemovePseud': 'Remove Alternate Name'    
+        }

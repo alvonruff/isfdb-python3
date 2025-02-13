@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -112,7 +113,7 @@ class authors:
                                 self.used_note = 1
 
                 else:
-                        print "ERROR: author record not found: ", id
+                        print("ERROR: author record not found: ", id)
                         self.error = 'Author record not found'
                         return
 
@@ -170,7 +171,7 @@ class authors:
 
                         container += "</UpdateAuthor>\n"
                 else:
-                        print "XML: pass"
+                        print("XML: pass")
                         container = ""
                 return container
 

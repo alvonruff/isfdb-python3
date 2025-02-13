@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -460,7 +461,7 @@ class titles:
                 ##########################################################
                 if self.title_note_id:
                         update = "delete from notes where note_id=%d" % (self.title_note_id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
 
                 ##########################################################
@@ -468,7 +469,7 @@ class titles:
                 ##########################################################
                 if self.title_synop_id:
                         update = "delete from notes where note_id=%d" % (self.title_synop_id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
 
                 ##########################################################
@@ -505,66 +506,66 @@ class titles:
                 # Delete pub/title map
                 ##########################################################
                 query = "delete from pub_content where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete any title relationships
                 ##########################################################
                 query = "delete from title_relationships where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 query = "delete from title_relationships where review_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete Votes
                 ##########################################################
                 query = "delete from votes where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete Tag Mappings for this Title
                 ##########################################################
                 query = "delete from tag_mapping where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete any Tags that are no longer used by other Titles
                 ##########################################################
                 query = "delete from tags where not exists (select 1 from tag_mapping where tags.tag_id=tag_mapping.tag_id)"
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete Webpages
                 ##########################################################
                 query = "delete from webpages where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##########################################################
                 # Delete Transliterated Titles
                 ##########################################################
                 delete = 'delete from trans_titles where title_id=%d' % Record
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
 
                 ##########################################################
                 # Delete title views
                 ##########################################################
                 delete = 'delete from title_views where title_id=%d' % Record
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
 
                 ##########################################################
                 # Delete the title itself
                 ##########################################################
                 query = "delete from titles where title_id=%d" % (Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 return 1
 
@@ -576,7 +577,7 @@ class titles:
                 #          title from canonical_author
                 ##############################################
                 query = "delete from canonical_author where author_id=%d and title_id=%d" % (int(author_id), self.title_id)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##############################################
@@ -585,7 +586,7 @@ class titles:
                 ##############################################
                 for i in ['canonical_author', 'pub_authors']:
                         query = 'select COUNT(author_id) from %s where author_id=%d' % (i, int(author_id))
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                         res = db.store_result()
                         record = res.fetch_row()

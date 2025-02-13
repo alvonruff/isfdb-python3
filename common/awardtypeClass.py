@@ -1,5 +1,6 @@
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -179,12 +180,12 @@ class award_type(awardShared):
                 # If current_year is 0, then we are displaying a complete grid and will hyperlink all years
                 award_years = SQLGetAwardYears(self.award_type_id)
                 if award_years:
-                        print '<div class="generic_centered_div">'
+                        print('<div class="generic_centered_div">')
                         if current_year:
-                                print '<h3>Award Years for %s</h3>' % ISFDBLink('awardtype.cgi', self.award_type_id, self.award_type_name)
+                                print('<h3>Award Years for %s</h3>' % ISFDBLink('awardtype.cgi', self.award_type_id, self.award_type_name))
                         else:
-                                print '<h3>Award Years</h3>'
-                        print '<table class="generic_centered_table">'
+                                print('<h3>Award Years</h3>')
+                        print('<table class="generic_centered_table">')
                         decades = {}
                         for award_year in award_years:
                                 decade = award_year[:3]
@@ -192,66 +193,66 @@ class award_type(awardShared):
                                         decades[decade] = []
                                 decades[decade].append(award_year[:4])
                         for decade in sorted(decades.keys()):
-                                print '<tr align="center" class="generic_table_header">'
-                                print '<td>%s0\'s:</td>' % (decade)
+                                print('<tr align="center" class="generic_table_header">')
+                                print('<td>%s0\'s:</td>' % (decade))
                                 for i in range(0,10):
                                         award_year = decade+str(i)
-                                        print '<td>'
+                                        print('<td>')
                                         if award_year in decades[decade]:
                                                 if int(award_year) == int(current_year):
                                                         # If this is the year being displayed, don't hyperlink it
-                                                        print '<b>%s</b>' % award_year
+                                                        print('<b>%s</b>' % award_year)
                                                 else:
-                                                        print ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, award_year), award_year)
+                                                        print(ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, award_year), award_year))
                                         else:
-                                                print '&nbsp;-&nbsp;'
-                                        print '</td>'
-                                print '</tr>'
-                        print '</table>'
-                        print '</div>'
+                                                print('&nbsp;-&nbsp;')
+                                        print('</td>')
+                                print('</tr>')
+                        print('</table>')
+                        print('</div>')
 
         def display_categories(self):
                 categories = SQLGetAwardCatBreakdown(self.award_type_id)
                 if categories:
-                        print '<div class="generic_centered_div">'
-                        print '<h3>Categories</h3>'
-                        print '<table class="generic_centered_table">'
-                        print '<tr class="generic_table_header">'
-                        print '<th>Display Order</th>'
-                        print '<th>Category</th>'
-                        print '<th>Wins</th>'
-                        print '<th>All awards and nominations</th>'
-                        print '</tr>'
+                        print('<div class="generic_centered_div">')
+                        print('<h3>Categories</h3>')
+                        print('<table class="generic_centered_table">')
+                        print('<tr class="generic_table_header">')
+                        print('<th>Display Order</th>')
+                        print('<th>Category</th>')
+                        print('<th>Wins</th>')
+                        print('<th>All awards and nominations</th>')
+                        print('</tr>')
                         for category in categories:
-                                print '<tr class="generic_table_header">'
+                                print('<tr class="generic_table_header">')
                                 if category[2]:
                                         display_order = category[2]
                                 else:
                                         display_order = ''
-                                print '<td>%s</td>' % display_order
-                                print '<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % category[1], category[0])
-                                print '<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % category[1], category[3])
-                                print '<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+1' % category[1], category[4])
-                                print '</tr>'
-                        print '</table>'
-                        print '</div>'
+                                print('<td>%s</td>' % display_order)
+                                print('<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % category[1], category[0]))
+                                print('<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % category[1], category[3]))
+                                print('<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+1' % category[1], category[4]))
+                                print('</tr>')
+                        print('</table>')
+                        print('</div>')
                 
                 empty_categories = SQLGetEmptyAwardCategories(self.award_type_id)
                 if empty_categories:
-                        print '<div class="generic_centered_div">'
-                        print '<h3>Empty Categories</h3>'
-                        print '<table class="generic_centered_table">'
-                        print '<tr class="generic_table_header">'
-                        print '<th>Display Order</th>'
-                        print '<th>Category</th>'
-                        print '</tr>'
+                        print('<div class="generic_centered_div">')
+                        print('<h3>Empty Categories</h3>')
+                        print('<table class="generic_centered_table">')
+                        print('<tr class="generic_table_header">')
+                        print('<th>Display Order</th>')
+                        print('<th>Category</th>')
+                        print('</tr>')
                         for category in empty_categories:
-                                print '<tr class="generic_table_header">'
-                                print '<td>%s</td>' % category[AWARD_CAT_ORDER]
-                                print '<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+1' % category[AWARD_CAT_ID], category[AWARD_CAT_NAME])
-                                print '</tr>'
-                        print '</table>'
-                        print '</div>'
+                                print('<tr class="generic_table_header">')
+                                print('<td>%s</td>' % category[AWARD_CAT_ORDER])
+                                print('<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+1' % category[AWARD_CAT_ID], category[AWARD_CAT_NAME]))
+                                print('</tr>')
+                        print('</table>')
+                        print('</div>')
 
         def display_awards_for_year(self, year):
                 # Display a grid of all years when the award was given
@@ -260,10 +261,10 @@ class award_type(awardShared):
                 all_awards = SQLloadAwardsForYearType(self.award_type_id, year)
 
                 if not all_awards:
-                        print "<h2>No awards available for %s</h2>" % year
+                        print("<h2>No awards available for %s</h2>" % year)
                         return
 
-                print '<table>'
+                print('<table>')
                 while all_awards:
                         # Get the name of the category of the first award in the list;
                         # it will be the category that we will be processing in this iteration of the while loop
@@ -279,13 +280,13 @@ class award_type(awardShared):
                                         counter += 1
                         if awards_for_category:
                                 # Print awards for one category
-                                print '<tr>'
-                                print '<td colspan=3> </td>'
-                                print '</tr>'
-                                print '<tr>'
-                                print '<td colspan=3><b>%s</b></td>' % ISFDBLink('award_category.cgi',
+                                print('<tr>')
+                                print('<td colspan=3> </td>')
+                                print('</tr>')
+                                print('<tr>')
+                                print('<td colspan=3><b>%s</b></td>' % ISFDBLink('award_category.cgi',
                                                                                '%s+0' % awards_for_category[0][AWARD_CATID],
-                                                                               awards_for_category[0][AWARD_NOTEID+1])
-                                print '</tr>'
+                                                                               awards_for_category[0][AWARD_NOTEID+1]))
+                                print('</tr>')
                                 self.PrintOneAwardList(awards_for_category)
-                print '</table>'
+                print('</table>')

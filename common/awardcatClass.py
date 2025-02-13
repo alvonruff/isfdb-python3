@@ -1,5 +1,6 @@
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -129,44 +130,44 @@ class award_cat(awardShared):
 
         def PrintAwardCatYear(self, year):
                 self.PrintAwardCatPageHeader()
-                print 'Displaying awards and nominations for this category for %d.' % year
-                print 'You can also %s for this category for all years.' % ISFDBLink('award_category.cgi',
+                print('Displaying awards and nominations for this category for %d.' % year)
+                print('You can also %s for this category for all years.' % ISFDBLink('award_category.cgi',
                                                                                      '%d+1' % self.award_cat_id,
-                                                                                     'view all awards and nominations')
+                                                                                     'view all awards and nominations'))
                 years = {}
                 padded_year = '%d-00-00' % year
                 years[padded_year] = SQLloadAwardsForCatYear(self.award_cat_id, year)
                 self.PrintAwardCatTable(years)
 
         def PrintAwardCatTable(self, years):
-                print '<table>'
+                print('<table>')
                 for year in sorted(years.keys()):
-                        print '<tr>'
-                        print '<td colspan=3> </td>'
-                        print '</tr>'
-                        print '<tr>'
-                        print '<th colspan=3>%s</th>' % ISFDBLink('award_category_year.cgi', '%d+%s' % (self.award_cat_id, year[:4]), year[:4])
-                        print '</tr>'
+                        print('<tr>')
+                        print('<td colspan=3> </td>')
+                        print('</tr>')
+                        print('<tr>')
+                        print('<th colspan=3>%s</th>' % ISFDBLink('award_category_year.cgi', '%d+%s' % (self.award_cat_id, year[:4]), year[:4]))
+                        print('</tr>')
                         self.PrintOneAwardList(years[year])
-                print '</table>'
+                print('</table>')
 
         def PrintAwardCatSummary(self, win_nom):
                 self.PrintAwardCatPageHeader()
                 years = SQLloadAwardsForCat(self.award_cat_id, win_nom)
                 if win_nom == 0:
                         if years:
-                                print 'Displaying the'
+                                print('Displaying the')
                         else:
-                                print 'No'
-                        print ' wins for this category. '
-                        print 'You can also %s in this category.' % ISFDBLink('award_category.cgi', '%d+1' % self.award_cat_id, 'view all awards and nominations')
+                                print('No')
+                        print(' wins for this category. ')
+                        print('You can also %s in this category.' % ISFDBLink('award_category.cgi', '%d+1' % self.award_cat_id, 'view all awards and nominations'))
                 else:
                         if not years:
-                                print 'No wins or nominations for this category.'
+                                print('No wins or nominations for this category.')
                                 return
-                        print 'Displaying all wins and nominations for this category. '
-                        print 'You can also limit the list to the %s in this category.' % ISFDBLink('award_category.cgi', '%d+0' % self.award_cat_id, 'wins')
-                print '<p>'
+                        print('Displaying all wins and nominations for this category. ')
+                        print('You can also limit the list to the %s in this category.' % ISFDBLink('award_category.cgi', '%d+0' % self.award_cat_id, 'wins'))
+                print('<p>')
                 self.PrintAwardCatTable(years)
 
         def PrintAwardCatPageHeader(self):
@@ -176,17 +177,17 @@ class award_cat(awardShared):
                 awardType = award_type()
                 awardType.award_type_id = self.award_cat_type_id
                 awardType.load()
-                print '<ul>'
-                print '<li><b>Award Category: </b> %s' % ISFDBText(self.award_cat_name)
+                print('<ul>')
+                print('<li><b>Award Category: </b> %s' % ISFDBText(self.award_cat_name))
 
                 #Retrieve this user's data
                 user = User()
                 user.load()
                 printRecordID('Award Category', self.award_cat_id, user.id, user)
 
-                print '<li><b>Award Type: </b> %s' % ISFDBLink('awardtype.cgi', awardType.award_type_id, awardType.award_type_name)
+                print('<li><b>Award Type: </b> %s' % ISFDBLink('awardtype.cgi', awardType.award_type_id, awardType.award_type_name))
                 if self.award_cat_order:
-                        print '<li><b>Display Order: </b> %s' % ISFDBText(self.award_cat_order)
+                        print('<li><b>Display Order: </b> %s' % ISFDBText(self.award_cat_order))
 
                 # Webpages
                 if self.award_cat_webpages:
@@ -194,6 +195,6 @@ class award_cat(awardShared):
 
                 # Note
                 if self.award_cat_note:
-                        print '<li>'
-                        print FormatNote(self.award_cat_note, 'Note', 'short', self.award_cat_id, 'AwardCat')
-                print '</ul>'
+                        print('<li>')
+                        print(FormatNote(self.award_cat_note, 'Note', 'short', self.award_cat_id, 'AwardCat'))
+                print('</ul>')

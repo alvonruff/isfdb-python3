@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -79,7 +80,7 @@ class publishers:
                                                 (self.publisher_webpages)
                         container += "</UpdatePublisher>\n"
                 else:
-                        print "XML: pass"
+                        print("XML: pass")
                         container = ""
                 return container
 
@@ -171,7 +172,7 @@ class publishers:
 
                 query = 'select COUNT(publisher_id) from pubs where publisher_id=%d' % (int(self.publisher_id))
                 db.query(query)
-                print "<li> ", query
+                print("<li> ", query)
                 res = db.store_result()
                 record = res.fetch_row()
                 # Do not delete the publisher if there are pubs associated with it
@@ -179,15 +180,15 @@ class publishers:
                         return
 
                 delete = 'delete from publishers where publisher_id=%d' % int(self.publisher_id)
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
                 delete = 'delete from trans_publisher where publisher_id=%d' % int(self.publisher_id)
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
                 delete = "delete from webpages where publisher_id=%d" % int(self.publisher_id)
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
                 if self.publisher_note:
                         delete = "delete from notes where note_id=%d" % int(self.publisher_note_id)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)

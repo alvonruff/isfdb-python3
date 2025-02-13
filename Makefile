@@ -8,6 +8,10 @@
 #     Version: $Revision: 12 $
 #     Date: $Date: 2017-10-30 18:32:28 -0400 (Mon, 30 Oct 2017) $
 
+include INSTALLDIRS
+
+INSTALL = $(INSTALL_CGI)
+
 install:
 	cd common && $(MAKE) install;
 	cd biblio && $(MAKE) LOCAL;
@@ -21,6 +25,17 @@ install:
 	cd css    && $(MAKE) install;
 	cd rest   && $(MAKE) LOCAL;
 	cd rest   && $(MAKE) install;
+
+# make update will install all of the files, but will preserve
+# the contents of the installed localdefs.py, without private
+# content showing up in the local repo by accident
+
+update:
+	cp common/localdefs.py .
+	cp $(INSTALL)/localdefs.py common
+	make install
+	cp localdefs.py common
+	rm -f localdefs.py
 
 clean:
 	cd common && $(MAKE) clean;

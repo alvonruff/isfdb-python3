@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus, Bill Longley, Dirk Stoecker and Lokal_Profil
 #       ALL RIGHTS RESERVED
@@ -3547,22 +3548,22 @@ try:
         SQLUpdateQueries()
 except:
         PrintHTMLHeaders('ISFDB Maintenance')
-        print '</div>'
-        print '<div id="nav">'
-        print '<a href="%s:/%s/index.cgi">' % (PROTOCOL, HTFAKE)
-        print '<img src="%s://%s/isfdb.gif" width="90%%" alt="ISFDB logo">' % (PROTOCOL, HTMLLOC)
-        print '</a>'
-        print '</div>'
-        print '<div id="main2">'
-        print '<div id="ErrorBox">'
-        print """The ISFDB database is currently unavailable. If this is due to the daily
+        print('</div>')
+        print('<div id="nav">')
+        print('<a href="%s:/%s/index.cgi">' % (PROTOCOL, HTFAKE))
+        print('<img src="%s://%s/isfdb.gif" width="90%%" alt="ISFDB logo">' % (PROTOCOL, HTMLLOC))
+        print('</a>')
+        print('</div>')
+        print('<div id="main2">')
+        print('<div id="ErrorBox">')
+        print("""The ISFDB database is currently unavailable. If this is due to the daily
                 backups, check back in a few minutes. If this is unscheduled downtime,
-                http://isfdb.blogspot.com/ may have more information."""
-        print '</div>'
-        print '</div>'
-        print '</div>'
-        print '</body>'
-        print '</html>'
+                http://isfdb.blogspot.com/ may have more information.""")
+        print('</div>')
+        print('</div>')
+        print('</div>')
+        print('</body>')
+        print('</html>')
         sys.exit(0)
 
 LANGUAGES = SQLLoadAllLanguages()

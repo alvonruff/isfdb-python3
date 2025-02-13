@@ -1,5 +1,6 @@
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus
+#     (C) COPYRIGHT 2010-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -64,7 +65,7 @@ class pub_series:
                         if self.pub_series_webpages:
                                 self.used_webpages = 1
                 else:
-                        print "ERROR: publication series record not found: ", id
+                        print("ERROR: publication series record not found: ", id)
                         self.error = 'Publication series record not found'
                         return
 
@@ -81,7 +82,7 @@ class pub_series:
                                                 (self.pub_series_webpages)
                         container += "</UpdatePubSeries>\n"
                 else:
-                        print "XML: pass"
+                        print("XML: pass")
                         container = ""
                 return container
 
@@ -159,7 +160,7 @@ class pub_series:
 
                 query = 'select COUNT(pub_series_id) from pubs where pub_series_id=%d' % (int(self.pub_series_id))
                 db.query(query)
-                print "<li> ", query
+                print("<li> ", query)
                 res = db.store_result()
                 record = res.fetch_row()
                 # Do not delete the publication series if there are pubs associated with it
@@ -167,15 +168,15 @@ class pub_series:
                         return
 
                 query = 'delete from pub_series where pub_series_id=%d' % (int(self.pub_series_id))
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 query = 'delete from trans_pub_series where pub_series_id=%d' % (int(self.pub_series_id))
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 delete = "delete from webpages where pub_series_id=%d" % (int(self.pub_series_id))
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
                 if self.pub_series_note:
                         delete = "delete from notes where note_id=%d" % int(self.pub_series_note_id)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)

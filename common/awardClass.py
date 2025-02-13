@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -55,9 +56,9 @@ class awardShared:
                                         else:
                                                 # If this is the first occurrence of a new "special" level, display its special message
                                                 if str(level) in special_awards and level != last_level:
-                                                        print '<tr>'
-                                                        print '<td colspan=3><i>--- ' + special_awards[str(level)] + ' -------</i></td>'
-                                                        print '</tr>'
+                                                        print('<tr>')
+                                                        print('<td colspan=3><i>--- ' + special_awards[str(level)] + ' -------</i></td>')
+                                                        print('</tr>')
                                                 self.PrintOneAward(award)
                                         last_level = level
 
@@ -66,7 +67,7 @@ class awardShared:
                 award = awards(db)
                 award.load(record[AWARD_ID])
 
-                print '<tr>'
+                print('<tr>')
                 css_class = ''
                 # Do not display the award level of "special" levels; they are displayed separately as headers
                 if int(award.award_level) > 70:
@@ -80,34 +81,34 @@ class awardShared:
                         else:
                                 award_link = 'Nomination'
 
-                print('<td>%s</td>' % award.BuildDisplayLevel(award_link, css_class))
+                print(('<td>%s</td>' % award.BuildDisplayLevel(award_link, css_class)))
                 
-                print '<td>'
+                print('<td>')
 
                 if award.award_title == 'untitled':
-                        print '----'
+                        print('----')
                 else:
                         if award.title_id:
                                 # Retrieve the title data associated with this award
                                 title = SQLloadTitle(award.title_id)
-                                print ISFDBLink('title.cgi', award.title_id, title[TITLE_TITLE], False, css_class)
+                                print(ISFDBLink('title.cgi', award.title_id, title[TITLE_TITLE], False, css_class))
                                 if title[TITLE_PARENT]:
                                         parent = SQLloadTitle(title[TITLE_PARENT])
                                         if title[TITLE_LANGUAGE] and parent[TITLE_LANGUAGE] and title[TITLE_LANGUAGE] != parent[TITLE_LANGUAGE]:
-                                                print ' (translation of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE], False, css_class)
+                                                print(' (translation of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE], False, css_class))
                                         elif parent[TITLE_TITLE] != title[TITLE_TITLE]:
-                                                print ' (variant of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE], False, css_class)
+                                                print(' (variant of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE], False, css_class))
                         else:
-                                print ISFDBText(award.award_title)
+                                print(ISFDBText(award.award_title))
 
                 if award.award_movie:
-                        print '(%s)' %IMDBLink(award.award_movie)
-                print '</td>'
+                        print('(%s)' %IMDBLink(award.award_movie))
+                print('</td>')
 
-                print '<td>'
+                print('<td>')
                 award.PrintAwardAuthors()
-                print '</td>'
-                print '</tr>'
+                print('</td>')
+                print('</tr>')
 
 
 class awards(awardShared):
@@ -230,7 +231,7 @@ class awards(awardShared):
                                         self.used_note = 1
 
                 else:
-                        print "ERROR: award record not found: ", id
+                        print("ERROR: award record not found: ", id)
                         self.error = 'Award record not found'
                         return
 
@@ -343,16 +344,16 @@ class awards(awardShared):
                         self.used_note = 1
 
         def PrintAwardTable(self, award_list, print_title = 1, print_authors = 0, limit = 10000):
-                print '<table>'
-                print '<tr class="table2">'
-                print '<th>Place</th>'
-                print '<th>Year and Award</th>'
+                print('<table>')
+                print('<tr class="table2">')
+                print('<th>Place</th>')
+                print('<th>Year and Award</th>')
                 if print_title:
-                        print '<th>Title</th>'
+                        print('<th>Title</th>')
                 if print_authors:
-                        print '<th>Author(s)</th>'
-                print '<th>Category</th>'
-                print '</tr>'
+                        print('<th>Author(s)</th>')
+                print('<th>Category</th>')
+                print('</tr>')
                 counter = 1
                 bgcolor = 0
                 for fullaward in award_list:
@@ -363,33 +364,33 @@ class awards(awardShared):
                         if counter > limit:
                                 break
                         bgcolor ^= 1
-                print '</table>'
+                print('</table>')
 
         def PrintAwardRow(self, print_title, print_authors, bgcolor):
-                print '<tr class="table%d">' % (bgcolor+1)
+                print('<tr class="table%d">' % (bgcolor+1))
                 # Display the award level/place
-                print '<td>'
+                print('<td>')
                 self.PrintLevel(print_title)
-                print '</td>'
+                print('</td>')
                 # Display the award year and link it to the annual award page for that year/award
                 self.PrintYear()
                 if print_title:
-                        print '<td>'
+                        print('<td>')
                         self.PrintTitle()
-                        print '</td>'
+                        print('</td>')
                 if print_authors:
-                        print '<td>'
+                        print('<td>')
                         self.PrintAwardAuthors()
-                        print '</td>'
+                        print('</td>')
                 # Link to all awards for this category for this year
-                print '<td>%s</td>' % ISFDBLink('award_category_year.cgi', '%s+%s' % (self.award_cat_id, self.award_year[:4]), self.award_cat_name)
-                print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('award_category_year.cgi', '%s+%s' % (self.award_cat_id, self.award_year[:4]), self.award_cat_name))
+                print('</tr>')
 
         def PrintYear(self):
-                print '<td>'
+                print('<td>')
                 year = self.award_year[:4]
-                print ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, year), '%s %s' % (year, self.award_type_short_name))
-                print '</td>'
+                print(ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, year), '%s %s' % (year, self.award_type_short_name)))
+                print('</td>')
 
         def PrintLevel(self, print_title):
                 css_class = ''
@@ -412,14 +413,14 @@ class awards(awardShared):
                         argument = 'class="%s"' % css_class
                 else:
                         argument = ''
-                print self.BuildDisplayLevel(level, argument)
+                print(self.BuildDisplayLevel(level, argument))
                 # For title-based awards given to VTs, display the VT
                 if not print_title and self.title_id:
                         title = SQLloadTitle(self.title_id)
                         if title[TITLE_PARENT]:
                                 parent = SQLloadTitle(title[TITLE_PARENT])
                                 if parent[TITLE_TITLE] != title[TITLE_TITLE]:
-                                        print '(as %s)' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE])
+                                        print('(as %s)' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]))
 
         def BuildDisplayLevel(self, level, css_class):
                 level_link = ISFDBLink('award_details.cgi', self.award_id, level, False, css_class)
@@ -432,29 +433,29 @@ class awards(awardShared):
                 # For title-based awards, display and hyperlink the work's title
                 if self.title_id:
                         title = SQLloadTitle(self.title_id)
-                        print ISFDBLink('title.cgi', self.title_id, title[TITLE_TITLE])
+                        print(ISFDBLink('title.cgi', self.title_id, title[TITLE_TITLE]))
                         if title[TITLE_PARENT]:
                                 parent = SQLloadTitle(title[TITLE_PARENT])
                                 if title[TITLE_LANGUAGE] and parent[TITLE_LANGUAGE] and title[TITLE_LANGUAGE] != parent[TITLE_LANGUAGE]:
-                                        print ' (%s translation of %s)' % (LANGUAGES[title[TITLE_LANGUAGE]],
-                                                                           ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE]))
+                                        print(' (%s translation of %s)' % (LANGUAGES[title[TITLE_LANGUAGE]],
+                                                                           ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE])))
                                 elif parent[TITLE_TITLE] != title[TITLE_TITLE]:
-                                        print ' (variant of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE])
+                                        print(' (variant of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE]))
                 else:
                         if self.award_title and (self.award_title != "untitled"):
-                                print self.award_title
+                                print(self.award_title)
 
         def PrintAwardSummary(self):
                 from login import User
 
-                print '<ul>'
-                print '<li><b>Title: </b>'
+                print('<ul>')
+                print('<li><b>Title: </b>')
                 title_data = ''
                 if self.title_id:
                         title_data = SQLloadTitle(self.title_id)
-                        print ISFDBLink("title.cgi", self.title_id, title_data[TITLE_TITLE])
+                        print(ISFDBLink("title.cgi", self.title_id, title_data[TITLE_TITLE]))
                 else:
-                        print '%s (<i>no ISFDB title record</i>)' % ISFDBText(self.award_title)
+                        print('%s (<i>no ISFDB title record</i>)' % ISFDBText(self.award_title))
                 
                 #Retrieve this user's data
                 user = User()
@@ -463,33 +464,33 @@ class awards(awardShared):
 
                 if self.award_authors:
                         if len(self.award_authors) > 1:
-                                print '<li><b>Authors: </b> '
+                                print('<li><b>Authors: </b> ')
                         else:
-                                print '<li><b>Author: </b> '
+                                print('<li><b>Author: </b> ')
                         self.PrintAwardAuthors()
 
-                print '<li><b>Award Name: </b> %s' % ISFDBLink('awardtype.cgi', self.award_type_id, self.award_type_name)
-                print '<li><b>Year: </b> %s' % ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, self.award_year[:4]), self.award_year[:4])
-                print '<li><b>Category: </b> %s' % ISFDBLink('award_category.cgi', '%s+0' % self.award_cat_id, self.award_cat_name)
+                print('<li><b>Award Name: </b> %s' % ISFDBLink('awardtype.cgi', self.award_type_id, self.award_type_name))
+                print('<li><b>Year: </b> %s' % ISFDBLink('ay.cgi', '%s+%s' % (self.award_type_id, self.award_year[:4]), self.award_year[:4]))
+                print('<li><b>Category: </b> %s' % ISFDBLink('award_category.cgi', '%s+0' % self.award_cat_id, self.award_cat_name))
 
-                print '<li><b>Award Level: </b> '
+                print('<li><b>Award Level: </b> ')
                 if int(self.award_level) > 70:
-                        print '<i>%s</i>' % self.special_awards[self.award_level]
+                        print('<i>%s</i>' % self.special_awards[self.award_level])
                 elif self.award_type_poll == 'Yes':
-                                print "<i>Poll Place</i>: %s" % self.award_level
+                                print("<i>Poll Place</i>: %s" % self.award_level)
                 else:
                         if int(self.award_level) == 1:
-                                print " Win"
+                                print(" Win")
                         else:
-                                print " Nomination"
+                                print(" Nomination")
 
                 if self.award_movie:
-                        print '<li><b>IMDB record: </b> %s' % IMDBLink(self.award_movie, self.award_movie)
+                        print('<li><b>IMDB record: </b> %s' % IMDBLink(self.award_movie, self.award_movie))
 
                 if self.award_note:
-                        print '<li>'
-                        print FormatNote(self.award_note, 'Note', 'short', self.award_id, 'Award')
-                print '</ul>'
+                        print('<li>')
+                        print(FormatNote(self.award_note, 'Note', 'short', self.award_id, 'Award'))
+                print('</ul>')
                 
         def PrintAwardAuthors(self):
                 counter = 0
@@ -498,18 +499,18 @@ class awards(awardShared):
                         authors = SQLTitleBriefAuthorRecords(self.title_id)
                         for author in authors:
                                 if counter:
-                                        print " <b>and</b> "
-                                print ISFDBLink("ea.cgi", author[0], author[1])
+                                        print(" <b>and</b> ")
+                                print(ISFDBLink("ea.cgi", author[0], author[1]))
                                 counter += 1
                 else:
                         for author in self.award_authors:
                                 if counter:
-                                        print " <b>and</b> "
+                                        print(" <b>and</b> ")
                                 actual = string.split(author, '^')
                                 if string.find(actual[0], '***') > -1:
-                                        print '-'
+                                        print('-')
                                 elif actual[0] == 'No Award':
-                                        print 'No Award'
+                                        print('No Award')
                                 else:
                                         self.displayAuthor(actual[0])
                                 counter += 1
@@ -517,6 +518,6 @@ class awards(awardShared):
         def displayAuthor(self, author):
                 author_data = SQLgetAuthorData(author)
                 if author_data:
-                        print ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author)
+                        print(ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author))
                 else:
-                        print ISFDBText(author)
+                        print(ISFDBText(author))

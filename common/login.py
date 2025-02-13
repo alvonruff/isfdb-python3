@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Uzume
 #       ALL RIGHTS RESERVED
@@ -30,9 +31,9 @@ def setCookies(user_id, user_name, user_token):
 def setDomainCookies(domain, user_id, user_name, user_token):
         if not domain:
                 return
-        print 'Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_id, domain)
-        print 'Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_name, domain)
-        print 'Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_token, domain)
+        print('Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_id, domain))
+        print('Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_name, domain))
+        print('Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_token, domain))
 
 ####################################################################
 # clearCookies() clears user_id, user_name, and user_token
@@ -45,9 +46,9 @@ def clearCookies():
 def clearDomainCookies(domain):
         if not domain:
                 return
-        print 'Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
-        print 'Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
-        print 'Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain
+        print('Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
+        print('Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
+        print('Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
 
 
 ####################################################################
@@ -101,31 +102,31 @@ def GetUserData():
 # Emit the login page
 ####################################################################
 def LoginPage(executable, argument):
-        print '<h2>Login Page</h2>'
-        print """If you do not have an ISFDB account, you can create a free one
-                <a href="%s://%s/index.php?title=Special:Userlogin&amp;type=signup">here</a>.""" % (PROTOCOL, WIKILOC)
-        print '<br>Note that the user name and password for editing the ISFDB are the same as those for the ISFDB wiki.'
-        print '<p>'
-        print '<h3>Note: The first letter of your user name should be always capitalized.</h3>'
-        print '<form METHOD="POST" ACTION="/cgi-bin/submitlogin.cgi">'
-        print '<table border="0">'
-        print '<tbody>'
-        print '<tr>'
-        print '<td><b>User Name: </b></td>'
-        print '<td><input type="text" name="login" size="25"></td>'
-        print '</tr>'
-        print '<tr>'
-        print '<td><b>Password: </b></td>'
-        print '<td><input type="password" name="password" size="25"></td>'
-        print '</tr>'
-        print '</tbody>'
-        print '</table>'
-        print '<div>'
-        print '<input type="submit" value="submit">'
-        print '<input NAME="executable" VALUE="' +executable+ '" TYPE="HIDDEN">'
-        print '<input NAME="argument" VALUE="' +argument+ '" TYPE="HIDDEN">'
-        print '</div>'
-        print '</form>'
+        print('<h2>Login Page</h2>')
+        print("""If you do not have an ISFDB account, you can create a free one
+                <a href="%s://%s/index.php?title=Special:Userlogin&amp;type=signup">here</a>.""" % (PROTOCOL, WIKILOC))
+        print('<br>Note that the user name and password for editing the ISFDB are the same as those for the ISFDB wiki.')
+        print('<p>')
+        print('<h3>Note: The first letter of your user name should be always capitalized.</h3>')
+        print('<form METHOD="POST" ACTION="/cgi-bin/submitlogin.cgi">')
+        print('<table border="0">')
+        print('<tbody>')
+        print('<tr>')
+        print('<td><b>User Name: </b></td>')
+        print('<td><input type="text" name="login" size="25"></td>')
+        print('</tr>')
+        print('<tr>')
+        print('<td><b>Password: </b></td>')
+        print('<td><input type="password" name="password" size="25"></td>')
+        print('</tr>')
+        print('</tbody>')
+        print('</table>')
+        print('<div>')
+        print('<input type="submit" value="submit">')
+        print('<input NAME="executable" VALUE="' +executable+ '" TYPE="HIDDEN">')
+        print('<input NAME="argument" VALUE="' +argument+ '" TYPE="HIDDEN">')
+        print('</div>')
+        print('</form>')
 
 class User:
         def __init__(self):
@@ -234,7 +235,7 @@ class User:
                 # Validate the translation parameter
                 if translations not in ('All','None'):
                         return
-                print 'Set-Cookie: isfdbDisplayTranslations=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (translations, HTMLHOST)
+                print('Set-Cookie: isfdbDisplayTranslations=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (translations, HTMLHOST))
                 os.environ['HTTP_COOKIE'] = 'isfdbDisplayTranslations=%s;' % translations
                 self.display_all_languages = translations
 

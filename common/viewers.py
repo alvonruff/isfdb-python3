@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #       ALL RIGHTS RESERVED
@@ -29,17 +30,17 @@ class ContentTable():
                 if not self.rows:
                         return
                 if self.caption:
-                        print '<h2>%s</h2>' % self.caption
-                print '<table border="2" class="%s">' % self.css_table
-                print '<tr>'
+                        print('<h2>%s</h2>' % self.caption)
+                print('<table border="2" class="%s">' % self.css_table)
+                print('<tr>')
                 for header in self.headers:
-                        print '<td class="label"><b>%s</b></td>' % header
+                        print('<td class="label"><b>%s</b></td>' % header)
                 if self.warnings_exist:
-                        print '<td class="label"><b>Warnings</b></td>'
-                print '</tr>'
+                        print('<td class="label"><b>Warnings</b></td>')
+                print('</tr>')
 
                 for row in self.rows:
-                        print '<tr>'
+                        print('<tr>')
                         for cell in row.cells:
                                 cell_values = []
                                 for fragment in cell.fragments:
@@ -52,15 +53,15 @@ class ContentTable():
                                 cell_value = self.fragment_separator.join(cell_values)
                                 if not cell_value:
                                         cell_value = self.empty_cell
-                                print '<td class="%s">%s</td>' % (cell.background, cell_value)
+                                print('<td class="%s">%s</td>' % (cell.background, cell_value))
                         if self.warnings_exist:
                                 if row.warnings:
                                         warning_css = self.css_warning
                                 else:
                                         warning_css = self.css_blank_warning
-                                print '<td class="%s">%s</td>' % (warning_css, '<br>'.join(row.warnings))
-                        print '</tr>'
-                print '</table>'
+                                print('<td class="%s">%s</td>' % (warning_css, '<br>'.join(row.warnings)))
+                        print('</tr>')
+                print('</table>')
 
 class ContentRow():
         def __init__(self, table):
@@ -223,13 +224,13 @@ class SubmissionTable():
                 self.update = 1
 
         def PrintTable(self):
-                print '<table border="%s" class="%s">' % (self.border, self.css_table)
+                print('<table border="%s" class="%s">' % (self.border, self.css_table))
                 self._PrintHeaders()
                 self._PrintBody()
-                print '</table>'
+                print('</table>')
 
         def _PrintHeaders(self):
-                print '<tr align="left">'
+                print('<tr align="left">')
                 if not self.suppress_warnings:
                         for row in self.rows:
                                 for cell in row.cells:
@@ -255,8 +256,8 @@ class SubmissionTable():
                                 colspan = self.headers_colspan[count]
                         except:
                                 pass
-                        print '<th colspan="%d" class="%s">%s</th>' % (colspan, self.bold_label_css, header)
-                print '</tr>'
+                        print('<th colspan="%d" class="%s">%s</th>' % (colspan, self.bold_label_css, header))
+                print('</tr>')
 
         def _PrintBody(self):
                 for row in self.rows:
@@ -264,9 +265,9 @@ class SubmissionTable():
                                 separator = '<span class="mergesign">+</span>'
                         else:
                                 separator = '<br>'
-                        print '<tr align="%s">' % self.row_align
+                        print('<tr align="%s">' % self.row_align)
                         if row.label:
-                                print '<td class="%s">%s</td>' % (self.bold_label_css, row.label)
+                                print('<td class="%s">%s</td>' % (self.bold_label_css, row.label))
                         for cell in row.cells:
                                 cell_values = []
                                 for fragment in cell.fragments:
@@ -290,16 +291,16 @@ class SubmissionTable():
                                 cell_value = separator.join(cell_values)
                                 if not cell_value:
                                         cell_value = self.empty_cell
-                                print '<td class="%s">%s</td>' % (cell.background, cell_value)
+                                print('<td class="%s">%s</td>' % (cell.background, cell_value))
                         if self.display_warnings:
                                 if row.warnings:
                                         warning_css = self.css_warning
                                 else:
                                         warning_css = self.css_blank_warning
-                                print '<td class="%s">%s</td>' % (warning_css, '<br>'.join(row.warnings))
+                                print('<td class="%s">%s</td>' % (warning_css, '<br>'.join(row.warnings)))
                         if self.display_diffs:
-                                print '<td class="%s">%s</td>' % (self.css_info_background, '<br>'.join(row.diffs))
-                        print '</tr>'
+                                print('<td class="%s">%s</td>' % (self.css_info_background, '<br>'.join(row.diffs)))
+                        print('</tr>')
 
         def Add1MetadataRow(self, label, element_name, row_type = 'default', warning = ''):
                 row = SubmissionRow(self, label)
@@ -1291,21 +1292,21 @@ class SubmissionViewer():
         def _InvalidSubmission(self, message = ''):
                 from login import GetUserData
                 error_text = 'This submission is no longer valid. %s.' % message
-                print '<div id="ErrorBox">'
+                print('<div id="ErrorBox">')
                 submission = SQLloadSubmission(self.sub_id)
                 submitter_id = submission[SUB_SUBMITTER]
                 submitter = SQLgetUserName(submitter_id)
-                print '<b>Submitted by:</b> %s' % WikiLink(submitter)
-                print '<h3>Error: %s</h3>' % error_text
-                print '<h3>You can view the submission as %s.' % ISFDBLink('dumpxml.cgi', self.sub_id, 'raw XML')
+                print('<b>Submitted by:</b> %s' % WikiLink(submitter))
+                print('<h3>Error: %s</h3>' % error_text)
+                print('<h3>You can view the submission as %s.' % ISFDBLink('dumpxml.cgi', self.sub_id, 'raw XML'))
                 (userid, username, usertoken) = GetUserData()
                 # If the user is a moderator and the submission is "N"ew, allow the user to hard reject it
                 if SQLisUserModerator(userid) and submission[SUB_STATE] == 'N':
-                        print '<br>Use %s to reject it.' % ISFDBLink('mod/hardreject.cgi', self.sub_id, 'Hard Reject')
-                print '</h3>'
-                print '</div>'
-                print '</div>'
-                print '</div>'
+                        print('<br>Use %s to reject it.' % ISFDBLink('mod/hardreject.cgi', self.sub_id, 'Hard Reject'))
+                print('</h3>')
+                print('</div>')
+                print('</div>')
+                print('</div>')
                 sys.exit(0)
 
         def GetMetadata(self, element_names):
@@ -1355,7 +1356,7 @@ class SubmissionViewer():
         def PrintModNote(self, element_name = 'ModNote'):
                 mod_note = GetElementValue(self.merge, element_name)
                 if mod_note:
-                        print '<h3>Note to Moderator: </h3>%s<p><p>' % mod_note
+                        print('<h3>Note to Moderator: </h3>%s<p><p>' % mod_note)
 
         def DisplayNewAwardType(self):
                 self.GetMetadata(('ShortName', 'FullName', 'AwardedFor',
@@ -1869,15 +1870,15 @@ class SubmissionViewer():
                 table.PrintTable()
 
                 if reviews:
-                        print '<p><div id="WarningBox">'
-                        print '<br><b>Reviews of this title:</b>'
-                        print '<ul>'
+                        print('<p><div id="WarningBox">')
+                        print('<br><b>Reviews of this title:</b>')
+                        print('<ul>')
                         for review in reviews:
-                                print '<li>%s (%s)' % (ISFDBLinkNoName('title.cgi', review[TITLE_PUBID], review[TITLE_TITLE]),
-                                                       review[TITLE_YEAR])
-                        print '</ul>'
-                        print '</div>'
-                print '<p>'
+                                print('<li>%s (%s)' % (ISFDBLinkNoName('title.cgi', review[TITLE_PUBID], review[TITLE_TITLE]),
+                                                       review[TITLE_YEAR]))
+                        print('</ul>')
+                        print('</div>')
+                print('<p>')
 
         def DisplayMakePseudonym(self):
                 self.GetMetadata(('Record', 'Parent'))
@@ -1901,14 +1902,14 @@ class SubmissionViewer():
                 other_authors = SQLgetActualFromPseudo(alternate_id)
                 if other_authors:
                         duplicate = ''
-                        print 'This name is currently defined as an alternate name for the following authors:'
-                        print '<ul>'
+                        print('This name is currently defined as an alternate name for the following authors:')
+                        print('<ul>')
                         for other_author in other_authors:
                                 other_author_data = SQLgetAuthorData(other_author[0])
-                                print '<li>%s' % ISFDBLink('ea.cgi', other_author_data[AUTHOR_ID], other_author[0])
+                                print('<li>%s' % ISFDBLink('ea.cgi', other_author_data[AUTHOR_ID], other_author[0]))
                                 if parent_id == int(other_author_data[AUTHOR_ID]):
                                         duplicate = other_author_data[AUTHOR_CANONICAL]
-                        print '</ul>'
+                        print('</ul>')
                         if duplicate:
                                 self._InvalidSubmission('This author record is already set up as an alternate name of %s' % duplicate)
 
@@ -1937,12 +1938,12 @@ class SubmissionViewer():
 
                 authors = SQLgetActualFromPseudo(alternate_id)
                 if authors:
-                        print 'This name is currently labeled as an alternate name for the following authors:'
-                        print '<ul>'
+                        print('This name is currently labeled as an alternate name for the following authors:')
+                        print('<ul>')
                         for author in authors:
                                 author_data = SQLgetAuthorData(author[0])
-                                print '<li>%s' % ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author_data[AUTHOR_CANONICAL])
-                        print '</ul>'
+                                print('<li>%s' % ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author_data[AUTHOR_CANONICAL]))
+                        print('</ul>')
 
         def DisplayAwardLink(self):
                 from awardClass import awards
@@ -2125,14 +2126,14 @@ class SubmissionViewer():
                         if pub.error:
                                 self._InvalidSubmission(pub.error)
 
-                print '<h3>Unmerging from the following title:</h3>'
-                print '<br><b>Title:</b> %s' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE])
-                print '<br><b>Authors:</b> %s' % FormatAuthors(title_authors)
-                print '<br><b>Date:</b>', title[TITLE_YEAR]
-                print '<br><b>Type:</b>', title[TITLE_TTYPE]
-                print '<hr>'
+                print('<h3>Unmerging from the following title:</h3>')
+                print('<br><b>Title:</b> %s' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]))
+                print('<br><b>Authors:</b> %s' % FormatAuthors(title_authors))
+                print('<br><b>Date:</b>', title[TITLE_YEAR])
+                print('<br><b>Type:</b>', title[TITLE_TTYPE])
+                print('<hr>')
 
-                print '<h3>Unmerging the following works:</h3>'
+                print('<h3>Unmerging the following works:</h3>')
 
                 table = SubmissionTable(self)
                 table.headers.extend(['Publication', 'Proposed Unmerged Title'])
@@ -2160,7 +2161,7 @@ class SubmissionViewer():
                 pub.load(pub_id)
                 if pub.error:
                         self._InvalidSubmission(pub.error)
-                print 'Removing titles from publication %s<p>' % ISFDBLinkNoName('pl.cgi', pub_id, pub.pub_title)
+                print('Removing titles from publication %s<p>' % ISFDBLinkNoName('pl.cgi', pub_id, pub.pub_title))
 
                 # Get the list of titles in this publication and sort them by page number
                 current_contents = getPubContentList(pub_id)
@@ -2186,7 +2187,7 @@ class SubmissionViewer():
                 if not removalList:
                         return
                 
-                print '<h2>%s</h2>' % header
+                print('<h2>%s</h2>' % header)
                 table = SubmissionTable(self)
                 table.headers.extend(['Keep', 'Remove'])
                 for item in current_contents:
@@ -2393,44 +2394,44 @@ class SubmissionViewer():
                 # Get all publications for this title (but not its parent)
                 pubs = SQLGetPubsByTitleNoParent(title_id)
                 if not len(pubs):
-                        print '<br>There are no publications associated with this title.'
-                        print '<br>'
+                        print('<br>There are no publications associated with this title.')
+                        print('<br>')
                 else:
-                        print '<br>This title appears in %d publications:' % len(pubs)
+                        print('<br>This title appears in %d publications:' % len(pubs))
                         self.DisplayPubsForTitle(pubs)
                 # Get all publications for this title's parent
                 children_pubs = SQLGetPubsForChildTitles(title_id)
                 if len(children_pubs):
-                        print '<br>This title\'s VARIANTS appear in %d publications:' % len(children_pubs)
+                        print('<br>This title\'s VARIANTS appear in %d publications:' % len(children_pubs))
                         self.DisplayPubsForTitle(children_pubs)
 
                 self._DisplayPendingConflicts(title_id)
 
         def DisplayPubsForTitle(self, pub_list):
-                print '<table border="1">'
-                print '<tr>'
-                print '<th>Publication</th>'
-                print '<th>Verification Type</th>'
-                print '<th>Primary Verifiers</th>'
-                print '</tr>'
+                print('<table border="1">')
+                print('<tr>')
+                print('<th>Publication</th>')
+                print('<th>Verification Type</th>')
+                print('<th>Primary Verifiers</th>')
+                print('</tr>')
                 for pub in pub_list:
-                        print '<tr>'
-                        print '<td>%s (%s)</td>' % (ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE]), pub[PUB_YEAR])
+                        print('<tr>')
+                        print('<td>%s (%s)</td>' % (ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE]), pub[PUB_YEAR]))
                         verificationstatus = SQLVerificationStatus(pub[PUB_PUBID])
                         if verificationstatus == 1:
-                                print '<td class="warn">Primary</td>'
-                                print '<td>'
+                                print('<td class="warn">Primary</td>')
+                                print('<td>')
                                 verifiers = SQLPrimaryVerifiers(pub[PUB_PUBID])
                                 for verifier in verifiers:
-                                        print '%s<br>' % WikiLink(verifier[1])
-                                print '</td>'                                
+                                        print('%s<br>' % WikiLink(verifier[1]))
+                                print('</td>')                                
                         elif verificationstatus == 2:
-                                print '<td>Secondary</td>'
-                                print '<td></td>'
+                                print('<td>Secondary</td>')
+                                print('<td></td>')
                         else:
-                                print '<td>Not verified</td>'
-                                print '<td></td>'
-                print '</table>'
+                                print('<td>Not verified</td>')
+                                print('<td></td>')
+                print('</table>')
 
         def DisplayAwardDelete(self):
                 from awardClass import awards
@@ -2443,9 +2444,9 @@ class SubmissionViewer():
                         self._InvalidSubmission(award.error)
 
                 if award.title_id:
-                        print '<h3>This submission deletes an award for Title record #%s</h3>' % ISFDBLinkNoName('title.cgi', award.title_id, award.title_id)
+                        print('<h3>This submission deletes an award for Title record #%s</h3>' % ISFDBLinkNoName('title.cgi', award.title_id, award.title_id))
                 else:
-                        print '<h3>This award is not associated with an ISFDB title</h3>'
+                        print('<h3>This award is not associated with an ISFDB title</h3>')
 
                 table = SubmissionTable(self)
                 table.headers.extend(['Field', 'Award to Delete: %s' % ISFDBLinkNoName('award_details.cgi', award_id, award_id)])
@@ -2480,7 +2481,7 @@ class SubmissionViewer():
                         title = SQLloadTitle(title_id)
                         if not title:
                                 self._InvalidSubmission('Title no longer exists')
-                        print '<h3>Adding Award to Title %s</h3>' % ISFDBLinkNoName('title.cgi', title_id, title_id)
+                        print('<h3>Adding Award to Title %s</h3>' % ISFDBLinkNoName('title.cgi', title_id, title_id))
                         table.Add1AttributeRow('Award Title', title[TITLE_TITLE])
                         table.Add1AttributeMultiRow('Award Authors', 'author', SQLTitleAuthors(title_id))
                 else:
@@ -2521,12 +2522,12 @@ class SubmissionViewer():
                         self._InvalidSubmission(current.error)
 
                 if current.title_id:
-                        print """<h3>This submission edits a %s award for Title record #%s</h3>
+                        print("""<h3>This submission edits a %s award for Title record #%s</h3>
                                 """ % (ISFDBLink('awardtype.cgi', current.award_type_id, current.award_type_short_name),
-                                       ISFDBLinkNoName('title.cgi', current.title_id, current.title_id))
+                                       ISFDBLinkNoName('title.cgi', current.title_id, current.title_id)))
                 else:
-                        print """<h3>This %s award is not associated with an ISFDB Title record</h3>
-                              """ % ISFDBLink('awardtype.cgi', current.award_type_id, current.award_type_short_name)
+                        print("""<h3>This %s award is not associated with an ISFDB Title record</h3>
+                              """ % ISFDBLink('awardtype.cgi', current.award_type_id, current.award_type_short_name))
 
                 table = SubmissionTable(self)
                 table.headers.extend(['Field',
@@ -2587,16 +2588,16 @@ class SubmissionViewer():
                 except:
                         self._InvalidSubmission("Can't load record: %s" % KeepId)
 
-                print '<table border="2" class="generic_table">'
-                print '<tr>'
-                print '<td class="label"><b>Column</b></td>'
-                print '<td class="label"><b>KeepId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', KeepId, KeepId, True)
+                print('<table border="2" class="generic_table">')
+                print('<tr>')
+                print('<td class="label"><b>Column</b></td>')
+                print('<td class="label"><b>KeepId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', KeepId, KeepId, True))
         
                 index = 1
                 while RecordIds[index]:
-                        print '<td class="label"><b>DropId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', RecordIds[index], RecordIds[index], True)
+                        print('<td class="label"><b>DropId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', RecordIds[index], RecordIds[index], True))
                         index += 1
-                print '</tr>'
+                print('</tr>')
 
                 index = 1
                 while RecordIds[index]:
@@ -2606,18 +2607,18 @@ class SubmissionViewer():
                                 if Records[index].error:
                                         raise
                         except:
-                                print '</table>'
+                                print('</table>')
                                 self._InvalidSubmission("Can't load record: %s" % RecordIds[index])
                         index += 1
 
                 for label in ('Publisher', 'Trans_names', 'Webpages', 'Note'):
                         self._PrintPublisherMerge(label, KeepId, Records, RecordIds)
 
-                print '</table>'
+                print('</table>')
                 
         def _PrintPublisherMerge(self, Label, KeepId, Records, RecordIds):
-                print '<tr>'
-                print '<td class="label"><b>%s</b></td>' % Label
+                print('<tr>')
+                print('<td class="label"><b>%s</b></td>' % Label)
 
                 try:
                         keepId = int(GetElementValue(self.merge, Label))
@@ -2627,39 +2628,39 @@ class SubmissionViewer():
                 index = 0
                 while Records[index]:
                         if (RecordIds[index] == keepId) or (Label in ('Webpages', 'Trans_names')):
-                                print '<td class="keep">'
+                                print('<td class="keep">')
                         else:
-                                print '<td class="drop">'
+                                print('<td class="drop">')
 
                         if Label == 'Publisher':
                                 if Records[index].used_name:
-                                        print ISFDBText(Records[index].publisher_name)
+                                        print(ISFDBText(Records[index].publisher_name))
                                 else:
-                                        print '-'
+                                        print('-')
                         elif Label == 'Trans_names':
                                 if Records[index].used_trans_names:
                                         for count, trans_name in enumerate(Records[index].publisher_trans_names):
                                                 if count:
-                                                        print '<br>'
-                                                print ISFDBText(trans_name)
+                                                        print('<br>')
+                                                print(ISFDBText(trans_name))
                                 else:
-                                        print '-'
+                                        print('-')
                         elif Label == 'Webpages':
                                 if Records[index].used_webpages:
                                         for count, webpage in enumerate(Records[index].publisher_webpages):
                                                 if count:
-                                                        print '<br>'
-                                                print '<a href="%s" target="_blank">%s</a>' % (webpage, ISFDBText(webpage))
+                                                        print('<br>')
+                                                print('<a href="%s" target="_blank">%s</a>' % (webpage, ISFDBText(webpage)))
                                 else:
-                                        print '-'
+                                        print('-')
                         elif Label == 'Note':
                                 if Records[index].used_note:
-                                        print Records[index].publisher_note
+                                        print(Records[index].publisher_note)
                                 else:
-                                        print "-"
-                        print '</td>'
+                                        print("-")
+                        print('</td>')
                         index += 1
-                print '</tr>'
+                print('</tr>')
 
         def DisplayAuthorMerge(self):
                 from authorClass import authors
@@ -2668,22 +2669,22 @@ class SubmissionViewer():
                 KeepId = int(self.metadata['KeepId'])
                 DropId = int(self.metadata['DropId'])
 
-                print '<table border="2" class="generic_table">'
-                print '<tr>'
-                print '<td class="label"><b>Column</b></td>'
-                print '<td class="label"><b>Keepid [Record #%s]</b></td>' % ISFDBLinkNoName('ea.cgi', KeepId, KeepId)
-                print '<td class="label"><b>Dropid [Record #%s]</b></td>' % ISFDBLinkNoName('ea.cgi', DropId, DropId)
-                print '</tr>'
+                print('<table border="2" class="generic_table">')
+                print('<tr>')
+                print('<td class="label"><b>Column</b></td>')
+                print('<td class="label"><b>Keepid [Record #%s]</b></td>' % ISFDBLinkNoName('ea.cgi', KeepId, KeepId))
+                print('<td class="label"><b>Dropid [Record #%s]</b></td>' % ISFDBLinkNoName('ea.cgi', DropId, DropId))
+                print('</tr>')
 
                 keep = authors(db)
                 keep.load(int(KeepId))
                 if keep.error:
-                        print '</table>'
+                        print('</table>')
                         self._InvalidSubmission('One of the authors no longer exists')
                 drop = authors(db)
                 drop.load(int(DropId))
                 if drop.error:
-                        print '</table>'
+                        print('</table>')
                         self._InvalidSubmission('One of the authors no longer exists')
 
                 self._PrintAuthorMergeSingle('Canonical', KeepId, keep.used_canonical, drop.used_canonical, 
@@ -2711,83 +2712,83 @@ class SubmissionViewer():
                 self._PrintAuthorMergeSingle('Note', KeepId, keep.used_note, drop.used_note, 
                         keep.author_note, drop.author_note)
 
-                print '</table>'
-                print '<p>'
+                print('</table>')
+                print('<p>')
 
         def _PrintAuthorMergeMultiple(self, Label, values1, values2):
-                print '<tr>'
-                print '<td class="label"><b>%s</b></td>' % Label
-                print '<td class="keep">'
+                print('<tr>')
+                print('<td class="label"><b>%s</b></td>' % Label)
+                print('<td class="keep">')
                 if values1:
                         for count, value in enumerate(values1):
                                 if count:
-                                        print '<br>'
+                                        print('<br>')
                                 if Label == 'Web Pages':
-                                        print '<a href="%s" target="_blank">%s</a>' % (value, ISFDBText(value))
+                                        print('<a href="%s" target="_blank">%s</a>' % (value, ISFDBText(value)))
                                 else:
-                                        print ISFDBText(value)
+                                        print(ISFDBText(value))
                 else:
-                        print '-'
-                print '</td>'
-                print '<td class="keep">'
+                        print('-')
+                print('</td>')
+                print('<td class="keep">')
                 if values2:
                         for count, value in enumerate(values2):
                                 if count:
-                                        print '<br>'
+                                        print('<br>')
                                 if Label == 'Web Pages':
-                                        print '<a href="%s" target="_blank">%s</a>' % (value, ISFDBText(value))
+                                        print('<a href="%s" target="_blank">%s</a>' % (value, ISFDBText(value)))
                                 else:
-                                        print ISFDBText(value)
+                                        print(ISFDBText(value))
                 else:
-                        print '-'
-                print '</td>'
-                print '</tr>'
+                        print('-')
+                print('</td>')
+                print('</tr>')
 
         def _PrintAuthorMergeSingle(self, Label, KeepId, KeepUsed, DropUsed, KeepData, DropData):
-                print '<tr>'
+                print('<tr>')
                 self._PrintLabel(Label)
                 record_id = GetElementValue(self.merge, Label)
                 if not record_id:
                         record_id = KeepId
                 if int(record_id) != KeepId:
-                        print '<td class="drop">'
+                        print('<td class="drop">')
                         if KeepUsed:
                                 if Label == 'Note':
-                                        print KeepData
+                                        print(KeepData)
                                 else:
-                                        print ISFDBText(KeepData)
+                                        print(ISFDBText(KeepData))
                         else:
-                                print '-'
-                        print '</td>'
-                        print '<td class="keep">'
+                                print('-')
+                        print('</td>')
+                        print('<td class="keep">')
                         if DropUsed:
                                 if Label == 'Note':
-                                        print DropData
+                                        print(DropData)
                                 else:
-                                        print ISFDBText(DropData)
+                                        print(ISFDBText(DropData))
                         else:
-                                print '-'
-                        print '</td>'
+                                print('-')
+                        print('</td>')
                 else:
-                        print '<td class="keep">'
+                        print('<td class="keep">')
                         if KeepUsed:
                                 if Label == 'Note':
-                                        print KeepData
+                                        print(KeepData)
                                 else:
-                                        print ISFDBText(KeepData)
+                                        print(ISFDBText(KeepData))
                         else:
-                                print '-'
-                        print '</td>'
-                        print '<td class="drop">'
+                                print('-')
+                        print('</td>')
+                        print('<td class="drop">')
                         if DropUsed:
                                 if Label == 'Note':
-                                        print DropData
+                                        print(DropData)
                                 else:
-                                        print ISFDBText(DropData)
+                                        print(ISFDBText(DropData))
                         else:
-                                print '-'
-                        print '</td>'
-                print '</tr>'
+                                print('-')
+                        print('</td>')
+                print('</tr>')
 
         def DisplayMergeTitles(self):
                 from titleClass import titles
@@ -2827,14 +2828,14 @@ class SubmissionViewer():
                                                                 the title that you wish to remove""" % (title_id_1, title_id_1, pub1[PUB_TITLE])
                                                         self._InvalidSubmission(message)
 
-                print '<table border="2" class="generic_table">'
-                print '<tr>'
-                print '<td class="label"><b>Field</b></td>'
-                print '<td class="label"><b>KeepId %s</b></td>' % ISFDBLinkNoName('title.cgi', KeepId, KeepId, True)
+                print('<table border="2" class="generic_table">')
+                print('<tr>')
+                print('<td class="label"><b>Field</b></td>')
+                print('<td class="label"><b>KeepId %s</b></td>' % ISFDBLinkNoName('title.cgi', KeepId, KeepId, True))
                 for title_id in sorted(Records.keys()):
                         if title_id != KeepId:
-                                print '<td class="label"><b>DropId %s</b></td>' % ISFDBLinkNoName('title.cgi', title_id, title_id, True)
-                print '</tr>'
+                                print('<td class="label"><b>DropId %s</b></td>' % ISFDBLinkNoName('title.cgi', title_id, title_id, True))
+                print('</tr>')
 
                 self._PrintMergeField('Title',     KeepId, Records)
                 self._PrintMergeField('TranslitTitles',  KeepId, Records)
@@ -2854,7 +2855,7 @@ class SubmissionViewer():
                 self._PrintMergeField('Synopsis',  KeepId, Records)
                 self._PrintMergeField('Note',      KeepId, Records)
                 self._PrintMergeField('Parent',    KeepId, Records)
-                print '</table>'
+                print('</table>')
 
                 self._DisplayPendingTitleMerges(KeepId, Records)
 
@@ -2865,12 +2866,12 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions aim to merge one or more titles in this submission:')
                         print('<ul>')
                         for pending_merge_id in pending_merges:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_merge_id, pending_merge_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_merge_id, pending_merge_id)))
                         print('</ul>')
                         print('</div><p>')
 
         def _PrintMergeField(self, Label, KeepId, Records):
-                print '<tr>'
+                print('<tr>')
                 self._PrintLabel(Label)
                 # Try to retrieve the title ID whose data we will keep for this field
                 keep_id = GetElementValue(self.merge, Label)
@@ -3003,8 +3004,8 @@ class SubmissionViewer():
                                 css_class = 'keep'
                         else:
                                 css_class = 'drop'
-                        print '<td class="%s">%s</td>' % (css_class, output)
-                print '</tr>'
+                        print('<td class="%s">%s</td>' % (css_class, output))
+                print('</tr>')
 
         def DisplayNewPub(self):
                 from titleClass import titles
@@ -3059,15 +3060,15 @@ class SubmissionViewer():
                         # Set 'TitleDate', which will be later used by self._CheckPubDate
                         self.SetMetaData('TitleDate', title.title_year)
                         table.headers.extend(['Field', 'Current Value'])
-                        print 'Automerge with title '
+                        print('Automerge with title ')
                         pub = pubs(db)
                         # Specify the pub date to help the print logic decide whether
                         # to display the date of the parent title
                         pub.pub_year = self.metadata['Year']
                         pub.PrintTitleLine(title_data, None, None, 1)
-                        print '<h2>Automerge Title Data</h2>'
+                        print('<h2>Automerge Title Data</h2>')
                 else:
-                        print '<h2>Title Data</h2>'
+                        print('<h2>Title Data</h2>')
                         table.headers.extend(['Field', 'Proposed Value'])
 
                 table.Add1MetadataRow('Title', 'Title')
@@ -3089,7 +3090,7 @@ class SubmissionViewer():
                 table.Add1MetadataNoteRow('Title Note', 'TitleNote')
                 table.PrintTable()
 
-                print '<h2>Publication Data</h2>'
+                print('<h2>Publication Data</h2>')
 
                 table = SubmissionTable(self)
                 if self.metadata['Title'] != self.metadata['PubTitle']:
@@ -3234,10 +3235,10 @@ class SubmissionViewer():
                         self.SetMetaData('TitleDate', title_data[TITLE_YEAR])
                         cloned_pub_id = self.metadata['ClonedPubID']
                         if cloned_pub_id:
-                                print """Cloning Publication ID %s. New pub will be automerged with title 
-                                """ % ISFDBLinkNoName('pl.cgi', cloned_pub_id, cloned_pub_id)
+                                print("""Cloning Publication ID %s. New pub will be automerged with title 
+                                """ % ISFDBLinkNoName('pl.cgi', cloned_pub_id, cloned_pub_id))
                         else:
-                                print """Cloning Publication. New pub will be automerged with title """
+                                print("""Cloning Publication. New pub will be automerged with title """)
                         pub = pubs(db)
                         # Specify the new pub date to help PrintTitleLine decide whether
                         # to display the date of the parent title
@@ -3249,13 +3250,13 @@ class SubmissionViewer():
                         pub = SQLGetPubById(import_into_pub_id)
                         if not pub:
                                 self._InvalidSubmission('Publication %s is no longer in the database' % import_into_pub_id)
-                        print 'Importing content into publication record %s' % ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE])
+                        print('Importing content into publication record %s' % ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE]))
                         referral_title_id = SQLgetTitleReferral(pub[PUB_PUBID], pub[PUB_CTYPE], 1)
                         if referral_title_id:
                                 referral_title = SQLloadTitle(referral_title_id)
                                 referral_language = referral_title[TITLE_LANGUAGE]
 
-                print '<h2>Publication Data</h2>'
+                print('<h2>Publication Data</h2>')
 
                 table.Add1MetadataRow('Title', 'Title')
                 table.Add1MetadataMultiRow('', 'Transliterated Titles', 'TransTitles', 'TransTitle')
@@ -3444,11 +3445,11 @@ class SubmissionViewer():
                                         if record:
                                                 if needCover:
                                                         needCover = 0
-                                                        print '<h2>Modified Cover Art</h2>'
-                                                        print '<table border="2" class="generic_table">'
+                                                        print('<h2>Modified Cover Art</h2>')
+                                                        print('<table border="2" class="generic_table">')
                                                 self._DisplayCoverChanged(child, record)
                                 if needCover == 0:
-                                        print '</table>'
+                                        print('</table>')
 
                         ##########################################################
                         # Modified Regular Titles
@@ -3461,11 +3462,11 @@ class SubmissionViewer():
                                         if record:
                                                 if needTitle:
                                                         needTitle = 0
-                                                        print '<h2>Modified Regular Titles</h2>'
-                                                        print '<table border="2" class="generic_table">'
+                                                        print('<h2>Modified Regular Titles</h2>')
+                                                        print('<table border="2" class="generic_table">')
                                                 self._DisplayTitleContentChanged(child, record, current)
                                 if needTitle == 0:
-                                        print '</table>'
+                                        print('</table>')
                                 
                         ##########################################################
                         # Modified Reviews
@@ -3478,11 +3479,11 @@ class SubmissionViewer():
                                         if record:
                                                 if needTitle:
                                                         needTitle = 0
-                                                        print '<h2>Modified Reviews</h2>'
-                                                        print '<table border="2" class="generic_table">'
+                                                        print('<h2>Modified Reviews</h2>')
+                                                        print('<table border="2" class="generic_table">')
                                                 self._DisplayOtherContentChanged(child, 'review', record, current)
                                 if needTitle == 0:
-                                        print '</table>'
+                                        print('</table>')
 
                         ##########################################################
                         # Modified Interviews
@@ -3495,11 +3496,11 @@ class SubmissionViewer():
                                         if record:
                                                 if needTitle:
                                                         needTitle = 0
-                                                        print '<h2>Modified Interviews</h2>'
-                                                        print '<table border="2" class="generic_table">'
+                                                        print('<h2>Modified Interviews</h2>')
+                                                        print('<table border="2" class="generic_table">')
                                                 self._DisplayOtherContentChanged(child, 'interview', record, current)
                                 if needTitle == 0:
-                                        print '</table>'
+                                        print('</table>')
 
                         self._DisplayCoverAdded()
                         self._DisplayTitleContentAdded()
@@ -3526,7 +3527,7 @@ class SubmissionViewer():
                                 submissions since this submission was created:""")
                         print('<ul>')
                         for recent_submission_id in recent_submissions:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', recent_submission_id, recent_submission_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', recent_submission_id, recent_submission_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3547,7 +3548,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following Contents titles have dates after the proposed publication date:')
                         print('<ul>')
                         for problem_title_id in sorted(problem_titles, key=problem_titles.get):
-                                print('<li>%s' % ISFDBLink('title.cgi', problem_title_id, problem_titles[problem_title_id]))
+                                print(('<li>%s' % ISFDBLink('title.cgi', problem_title_id, problem_titles[problem_title_id])))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3558,7 +3559,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions also aim to change this record:')
                         print('<ul>')
                         for pending_submission_id in pending_submissions:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_submission_id, pending_submission_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_submission_id, pending_submission_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3569,7 +3570,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions aim to turn this title into a variant:')
                         print('<ul>')
                         for pending_vt in pending_vts:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_vt, pending_vt))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_vt, pending_vt)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3580,7 +3581,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions aim to change this record:')
                         print('<ul>')
                         for pending_pub_update_id in pending_pub_updates:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_pub_update_id, pending_pub_update_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_pub_update_id, pending_pub_update_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3591,7 +3592,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions aim to remove title(s) from this record:')
                         print('<ul>')
                         for pending_title_removal_id in pending_title_removals:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_title_removal_id, pending_title_removal_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_title_removal_id, pending_title_removal_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3602,7 +3603,7 @@ class SubmissionViewer():
                         print('<b>WARNING:</b> The following pending submissions aim to import title(s) into this record:')
                         print('<ul>')
                         for pending_import_id in pending_imports:
-                                print('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_import_id, pending_import_id))
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_import_id, pending_import_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3625,12 +3626,12 @@ class SubmissionViewer():
                 self._PrintComparison2('Year', date, titleData[TITLE_YEAR], warning)
 
         def _DisplayEditContentHeaders(self, record):
-                print '<tr>'
-                print '<td class="label"> </td>'
-                print '<td class="label"><b>Title #%s</b></td>' % ISFDBLinkNoName('title.cgi', record, record)
-                print '<td class="label"><b>Proposed Value</b></td>'
-                print '<td class="label"><b>Warnings</b></td>'
-                print '</tr>'
+                print('<tr>')
+                print('<td class="label"> </td>')
+                print('<td class="label"><b>Title #%s</b></td>' % ISFDBLinkNoName('title.cgi', record, record))
+                print('<td class="label"><b>Proposed Value</b></td>')
+                print('<td class="label"><b>Warnings</b></td>')
+                print('</tr>')
 
         def _DisplayTitleContentChanged(self, child, record, current):
                 title   = GetChildValue(child, 'cTitle')
@@ -3785,20 +3786,20 @@ class SubmissionViewer():
         def _DisplaySource(self):
                 source = self.metadata['Source']
                 if source:
-                        print '<h3>Source used:</h3>'
+                        print('<h3>Source used:</h3>')
                         if source == 'Primary': 
-                                print 'Data from an owned primary source (will be auto-verified)'
+                                print('Data from an owned primary source (will be auto-verified)')
                         elif source == 'Transient': 
-                                print 'Data from a transient primary source (will be auto-verified)'
+                                print('Data from a transient primary source (will be auto-verified)')
                         elif source == 'PublisherWebsite': 
-                                print 'Data from publisher\'s website (Note will be updated accordingly)'
+                                print('Data from publisher\'s website (Note will be updated accordingly)')
                         elif source == 'AuthorWebsite': 
-                                print 'Data from author\'s website (Note will be updated accordingly)'
+                                print('Data from author\'s website (Note will be updated accordingly)')
                         elif source == 'Other':
-                                print 'Data from another source (details should be provided in the submitted Note)'
+                                print('Data from another source (details should be provided in the submitted Note)')
                                 if not self.metadata['Note']:
-                                        print ' - <span class="warn">No Note data</span>'
-                        print '<p>'
+                                        print(' - <span class="warn">No Note data</span>')
+                        print('<p>')
 
         def _DisplayVerifications(self, pub_id, include_secondary = 1):
                 from pubClass import pubs
@@ -3806,9 +3807,9 @@ class SubmissionViewer():
                 pub.pub_id = pub_id
                 verificationstatus = SQLVerificationStatus(pub_id)
                 if verificationstatus == 1:
-                        print '<p><div id="WarningBox">'
-                        print '<b>WARNING:</b> This publication has been verified against the primary source.'
-                        print '</div><p>'
+                        print('<p><div id="WarningBox">')
+                        print('<b>WARNING:</b> This publication has been verified against the primary source.')
+                        print('</div><p>')
                 pub.PrintPrimaryVerifications()
                 if include_secondary:
                         pub.PrintActiveSecondaryVerifications()
@@ -3851,7 +3852,7 @@ class SubmissionViewer():
                 title_data = SQLloadTitle(int(title_id))
                 # If the title record is no longer on file, display an error and abort
                 if not title_data:
-                        print '</table>'
+                        print('</table>')
                         self._InvalidSubmission('Title %d is no longer in the database' % int(title_id))
 
         def _GetInterviewees(self, interview_id):
@@ -3899,24 +3900,24 @@ class SubmissionViewer():
                         display_author = 1
                 else:
                         display_author = 0
-                print '<tr>'
+                print('<tr>')
                 self._PrintLabel(Label)
                 if Changed:
-                        print '<td class="drop">'
+                        print('<td class="drop">')
                         if ExistsNow:
                                 if display_author:
                                         self._PrintAuthorNames(Current)
                                 else:
-                                        print ISFDBText(Current)
+                                        print(ISFDBText(Current))
                         else:
-                                print '-'
-                        print '</td>'
-                        print '<td class="keep">'
+                                print('-')
+                        print('</td>')
+                        print('<td class="keep">')
                         if display_author:
                                 self._PrintAuthorNames(value, 1)
                         else:
-                                print ISFDBText(value)
-                        print '</td>'
+                                print(ISFDBText(value))
+                        print('</td>')
                         # If the editor is trying to change a "container" title type, display a warning
                         if Label == 'Type' and (value != Current):
                                 if Current in ('ANTHOLOGY', 'COLLECTION', 'CHAPBOOK', 'EDITOR', 'OMNIBUS'):
@@ -3925,24 +3926,24 @@ class SubmissionViewer():
                                 if ISFDBdaysFromToday(value) > SESSION.max_future_days:
                                         self._AddRowWarning('Date more than %d days in the future' % SESSION.max_future_days)
                 else:
-                        print '<td class="keep">'
+                        print('<td class="keep">')
                         if ExistsNow:
                                 if display_author:
                                         self._PrintAuthorNames(Current)
                                 else:
-                                        print ISFDBText(Current)
+                                        print(ISFDBText(Current))
                         else:
-                                print '-'
-                        print '</td>'
-                        print '<td class="drop">'
-                        print '-'
-                        print '</td>'
+                                print('-')
+                        print('</td>')
+                        print('<td class="drop">')
+                        print('-')
+                        print('</td>')
 
                 if self.row_warnings:
-                        print '<td class="warn">%s</td>' % '<br>'.join(self.row_warnings)
+                        print('<td class="warn">%s</td>' % '<br>'.join(self.row_warnings))
                 else:
-                        print '<td class="blankwarning">&nbsp;</td>'
-                print '</tr>'
+                        print('<td class="blankwarning">&nbsp;</td>')
+                print('</tr>')
 
         def _AddRowWarning(self, warning):
                 if not warning:
@@ -3974,14 +3975,14 @@ class SubmissionViewer():
                                 displayed_names = name
                         else:
                                 displayed_names = displayed_names + Separator + name
-                print displayed_names
+                print(displayed_names)
 
         def _PrintLabel(self, Label):
                 if Label in SUBMISSION_DISPLAY:
                         display_label = SUBMISSION_DISPLAY[Label]
                 else:
                         display_label = Label
-                print '<td class="label"><b>%s</b></td>' % display_label
+                print('<td class="label"><b>%s</b></td>' % display_label)
 
         def DisplayRecognizedDomainEdit(self):
                 from recognizeddomainClass import RecognizedDomain

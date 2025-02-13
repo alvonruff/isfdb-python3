@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff
 #       ALL RIGHTS RESERVED
@@ -20,7 +21,7 @@ if __name__ == '__main__':
                 directory = sys.argv[2]
                 python    = sys.argv[3]
         except:
-                print "Usage: install.py <basename> <directory> <pythonloc>"
+                print("Usage: install.py <basename> <directory> <pythonloc>")
                 sys.exit(0)
 
         fd = open(basename+ '.py')

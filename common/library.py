@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -633,12 +634,12 @@ class ISFDBTable():
                 self.row_align = 'center'
 
         def PrintTable(self):
-                print '<table class="%s">' % self.table_css
-                print '<tr align="left" class="%s">' % self.header_css
+                print('<table class="%s">' % self.table_css)
+                print('<tr align="left" class="%s">' % self.header_css)
                 self._PrintHeaders()
-                print '</tr>'
+                print('</tr>')
                 self._PrintBody()
-                print '</table>'
+                print('</table>')
 
         def _PrintHeaders(self):
                 for count, header in enumerate(self.headers):
@@ -647,7 +648,7 @@ class ISFDBTable():
                                 colspan = self.headers_colspan[count]
                         except:
                                 pass
-                        print '<th colspan="%d">%s</th>' % (colspan, header)
+                        print('<th colspan="%d">%s</th>' % (colspan, header))
 
         def _PrintBody(self):
                 for index, row in enumerate(self.rows):
@@ -655,15 +656,15 @@ class ISFDBTable():
                                 row_css = 'table1'
                         else:
                                 row_css = 'table2'
-                        print '<tr align="%s" class="%s">' % (self.row_align, row_css)
+                        print('<tr align="%s" class="%s">' % (self.row_align, row_css))
                         if self.display_count:
-                                print '<td>%d</td>' % (index + 1)
+                                print('<td>%d</td>' % (index + 1))
                         for cell in row:
                                 if cell != '' and cell is not None:
-                                        print '<td>%s</td>' % cell
+                                        print('<td>%s</td>' % cell)
                                 else:
-                                        print '<td>&nbsp;</td>'
-                        print '</tr>'
+                                        print('<td>&nbsp;</td>')
+                        print('</tr>')
 
 class AutoVivification(dict):
         """Emulate Perl's autovivification feature"""
@@ -937,13 +938,13 @@ def ISFDBExternalRedirect(location):
         _ServerSideRedirect(location)
 
 def _ServerSideRedirect(location):
-        print 'Status: 303 See Other'
-        print 'Location: %s' % location
-        print 'Content-type: text/html; charset=%s\n' % (UNICODE)
-        print '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">'
-        print '<html lang="en-us">'
-        print '<body>'
-        print '</body>'
+        print('Status: 303 See Other')
+        print('Location: %s' % location)
+        print('Content-type: text/html; charset=%s\n' % (UNICODE))
+        print('<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">')
+        print('<html lang="en-us">')
+        print('<body>')
+        print('</body>')
         sys.exit(0)
 
 def ISFDBFormatAllAuthors(title_id, prefix = '', suffix = ''):
@@ -1482,7 +1483,7 @@ def ISFDBtranslatedReports():
         return reports
 
 def ISFDBprintTime():
-        print '<p><b>Current ISFDB time:</b> %s' % str(datetime.datetime.now()).split('.')[0]
+        print('<p><b>Current ISFDB time:</b> %s' % str(datetime.datetime.now()).split('.')[0])
 
 def ISFDBdaysFromToday(future_date):
         if future_date == '8888-00-00' or future_date == '0000-00-00':
@@ -1498,56 +1499,56 @@ def ISFDBdaysFromToday(future_date):
 def ISFDBprintSubmissionTable(result, status):
         from login import GetUserData
         ISFDBprintTime()
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
-        print '<th>Submission</th>'
-        print '<th>Type</th>'
-        print '<th>Time Submitted</th>'
-        print '<th>Submitter</th>'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
+        print('<th>Submission</th>')
+        print('<th>Type</th>')
+        print('<th>Time Submitted</th>')
+        print('<th>Submitter</th>')
 
         if status == 'I':
-                print '<th>Time Approved</th>'
+                print('<th>Time Approved</th>')
         if status == 'R':
-                print '<th>Time Rejected</th>'
+                print('<th>Time Rejected</th>')
 
         if status == 'N':
-                print '<th>Holder</th>'
+                print('<th>Holder</th>')
         else:
-                print '<th>Reviewer</th>'
+                print('<th>Reviewer</th>')
 
-        print '<th>Affected Record</th>'
+        print('<th>Affected Record</th>')
 
         if status == 'R':
-                print '<th>Reason</th>'
+                print('<th>Reason</th>')
         elif status == 'N':
-                print '<th>Cancel</th>'
+                print('<th>Cancel</th>')
 
         unreject = 0
         (userid, username, usertoken) = GetUserData()
         if status == 'R' and SQLisUserModerator(userid):
                 unreject = 1
-                print '<th>Unreject?</th>'
+                print('<th>Unreject?</th>')
         
-        print '</tr>'
+        print('</tr>')
         record = result.fetch_row()
         color = 0
         while record:
                 ISFDBprintSubmissionRecord(record, color, status, unreject)
                 color = color ^ 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
         if eccolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         subType=record[0][SUB_TYPE]
         subTypeName=SUBMAP[subType][1]
         subId=record[0][SUB_ID]
 
-        print '<td><a href="%s:/%s/view_submission.cgi?%s">%s</a></td>' % (PROTOCOL, HTFAKE, subId, subId)
+        print('<td><a href="%s:/%s/view_submission.cgi?%s">%s</a></td>' % (PROTOCOL, HTFAKE, subId, subId))
 
         try:
                 doc = minidom.parseString(XMLunescape2(record[0][SUB_DATA]))
@@ -1565,44 +1566,44 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
         except:
                 displayName = 'Unable to determine'
 
-        print '<td>%s</td>' % displayName
+        print('<td>%s</td>' % displayName)
 
-        print '<td>%s</td>' % record[0][SUB_TIME]
+        print('<td>%s</td>' % record[0][SUB_TIME])
 
-        print '<td>%s</td>' % WikiLink(submitter)
+        print('<td>%s</td>' % WikiLink(submitter))
 
         if status in ('I', 'R'):
                 if record[0][SUB_REVIEWED]:
-                        print '<td>%s</td>' % record[0][SUB_REVIEWED]
+                        print('<td>%s</td>' % record[0][SUB_REVIEWED])
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
 
         if status == 'N':
                 if record[0][SUB_HOLDID]:
                         holder = SQLgetUserName(record[0][SUB_HOLDID])
-                        print '<td>%s</td>' % WikiLink(holder)
+                        print('<td>%s</td>' % WikiLink(holder))
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
         else:
                 if record[0][SUB_REVIEWER]:
                         approver = SQLgetUserName(record[0][SUB_REVIEWER])
-                        print '<td>%s</td>' % WikiLink(approver)
+                        print('<td>%s</td>' % WikiLink(approver))
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
 
-        print '<td><i>%s</i></td>' % subjectLink
+        print('<td><i>%s</i></td>' % subjectLink)
 
         if status == 'R':
                 if record[0][SUB_REASON]:
-                        print '<td>%s</td>' % record[0][SUB_REASON]
+                        print('<td>%s</td>' % record[0][SUB_REASON])
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
         elif status == 'N':
-                print '<td><a href="%s:/%s/cancelsubmission.cgi?%d">Cancel submission</a></td>' % (PROTOCOL, HTFAKE, subId)
+                print('<td><a href="%s:/%s/cancelsubmission.cgi?%d">Cancel submission</a></td>' % (PROTOCOL, HTFAKE, subId))
 
         if unreject:
-                print '<td>%s</td>' % ISFDBLink('mod/unreject.cgi', subId, 'Unreject')
-        print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('mod/unreject.cgi', subId, 'Unreject'))
+        print('</tr>')
 
 def ISFDBSubmissionDoc(sub_data, xml_tag):
         try:
@@ -1663,7 +1664,7 @@ def EscapeParams(params):
         return param_string
 
 def printRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):
-        print buildRecordID(record_type, record_id, user_id, user, edit_mode)
+        print(buildRecordID(record_type, record_id, user_id, user, edit_mode))
 
 def buildRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):
         from login import User

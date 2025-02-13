@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley nad Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -96,7 +97,7 @@ class series:
                                         self.used_webpages = 1
 
                 else:
-                        print "ERROR: series record not found: ", id
+                        print("ERROR: series record not found: ", id)
                         self.error = 'Series record not found'
                         return
 
@@ -177,40 +178,40 @@ class series:
 
         def PrintMetaData(self, user, tags_type, seriesTags, display_type):
                 from common import PrintWebPages, displayRecordList
-                print '<div class="ContentBox">'
+                print('<div class="ContentBox">')
                 other_series = SQLGetDisambiguatedRecords(self.series_id, self.series_name, 'series', 'series_id', 'series_title')
                 if other_series:
-                        print '<h3>Note: There are other series with the same name:'
+                        print('<h3>Note: There are other series with the same name:')
                         displayRecordList('series', other_series)
-                        print '</h3>'
-                print '<ul>'
+                        print('</h3>')
+                print('<ul>')
                 trans_names = SQLloadTransSeriesNames(self.series_id)
-                print '<li><b>Series: </b>%s' % ISFDBMouseover(trans_names, self.series_name, '')
+                print('<li><b>Series: </b>%s' % ISFDBMouseover(trans_names, self.series_name, ''))
                 printRecordID('Series', self.series_id, user.id)
                 if self.series_parent:
-                        print '<li><b>Sub-series of:</b> %s' % ISFDBLink("pe.cgi", self.series_parent_id, self.series_parent)
+                        print('<li><b>Sub-series of:</b> %s' % ISFDBLink("pe.cgi", self.series_parent_id, self.series_parent))
                         if display_type == 'grid':
-                                print ISFDBLink('seriesgrid.cgi', self.series_parent_id, '(View Issue Grid)')
+                                print(ISFDBLink('seriesgrid.cgi', self.series_parent_id, '(View Issue Grid)'))
 
                 PrintWebPages(self.series_webpages, '<li>')
 
                 # Series Note
                 if self.series_note:
-                        print '<li>'
-                        print FormatNote(self.series_note, 'Note', 'short', self.series_id, 'Series')
+                        print('<li>')
+                        print(FormatNote(self.series_note, 'Note', 'short', self.series_id, 'Series'))
                 
                 if tags_type == 'brief':
                         self.PrintSeriesTagsBrief(seriesTags)
                 else:
                         self.PrintSeriesTagsFull(seriesTags)
 
-                print '</ul>'
-                print '</div>'
+                print('</ul>')
+                print('</div>')
 
         def PrintSeriesTagsBrief(self, seriesTags):
                 if not seriesTags:
                         return
-                print '<li><b>Series Tags:</b>'
+                print('<li><b>Series Tags:</b>')
                 print_string = ''
                 count = 0
                 total_tags = len(seriesTags)
@@ -225,13 +226,13 @@ class series:
                                                           'View all tags for %s' % self.series_name,
                                                           False, 'class="inverted bold"')
                                 break
-                print print_string
+                print(print_string)
 
         def PrintSeriesTagsFull(self, seriesTags):
                 if not seriesTags:
-                        print '<h3>No tags for series %s</h3>' % self.series_name
+                        print('<h3>No tags for series %s</h3>' % self.series_name)
                 else:
-                        print '<li><b>Series Tags:</b>'
+                        print('<li><b>Series Tags:</b>')
                         print_string = ''
                         count = 0
                         for tag in seriesTags:
@@ -239,10 +240,10 @@ class series:
                                         print_string += ', '
                                 print_string += '%s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
                                 count += 1
-                        print print_string
-                print '<p>%s' % ISFDBLink("pe.cgi", self.series_id,
+                        print(print_string)
+                print('<p>%s' % ISFDBLink("pe.cgi", self.series_id,
                                           'Back to the series page for %s' % self.series_name,
-                                          False, 'class="bold"')
+                                          False, 'class="bold"'))
 
         def BuildTreeData(self, user):
                 from common import buildVariants, buildVTAuthors, builtTranslitTitles, builtTranslitAuthors

@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -33,13 +34,13 @@ class Sfe3:
 
         def process(self):
                 self.load_URLs_in_author_records()
-                print 'Links in "webpages": ',len(self.URLs_in_author_records)
+                print('Links in "webpages": ',len(self.URLs_in_author_records))
                 self.load_resolved_and_unresolved_URLs()
-                print 'Unresolved URLs: ',len(self.unresolved_URLs)
-                print 'Resolved URLs: ',len(self.resolved_URLs)
+                print('Unresolved URLs: ',len(self.unresolved_URLs))
+                print('Resolved URLs: ',len(self.resolved_URLs))
                 self.reconcile_newly_entered_URLs()
                 self.delete_newly_entered_unresolved_URLs()
-                print 'Removed %d newly entered SFE links' % len(self.urls_to_delete_from_sfe3_authors)
+                print('Removed %d newly entered SFE links' % len(self.urls_to_delete_from_sfe3_authors))
 
                 self.download_URLs_from_SFE3()
                 self.remove_known_urls()
@@ -117,29 +118,29 @@ class Sfe3:
                                         if len(author_name) > 200:
                                                 author_name = '' # If the author name is longer than 200, something is wrong
                                 self.online_URLs[url] = author_name
-                        print '%s: %d ' % (category, count),
+                        print('%s: %d ' % (category, count), end=' ')
                         sleep(self.sleep_seconds)
 
         def remove_known_urls(self):
-                print 'Downloaded from the Web site: ',len(self.online_URLs)
+                print('Downloaded from the Web site: ',len(self.online_URLs))
                 for url in self.URLs_in_author_records:
                         if url in self.online_URLs:
                                 del self.online_URLs[url]
-                print 'New URLs after removing URLs already linked to author records: ',len(self.online_URLs)
+                print('New URLs after removing URLs already linked to author records: ',len(self.online_URLs))
                 for url in self.unresolved_URLs:
                         if url in self.online_URLs:
                                 del self.online_URLs[url]
                 for url in self.resolved_URLs:
                         if url in self.online_URLs:
                                 del self.online_URLs[url]
-                print 'New URLs after removing URLs in sfe3_authors: ',len(self.online_URLs)
+                print('New URLs after removing URLs in sfe3_authors: ',len(self.online_URLs))
 
         def file_new_urls(self):
                 for segment in self.online_URLs:
                         author_name = self.online_URLs[segment]
                         update = "insert into sfe3_authors(url, author_name) values('%s', '%s')" % (db.escape_string(segment), db.escape_string(author_name))
                         db.query(update)
-                print 'Updated'
+                print('Updated')
 
         def display_report(self):
                 self.load_URLs_in_author_records()
@@ -148,7 +149,7 @@ class Sfe3:
                 self.delete_newly_entered_unresolved_URLs()
                 self.print_header()
                 if not self.unresolved_URLs:
-                        print '<h2>No unresolved SFE author Web pages found</h2>'
+                        print('<h2>No unresolved SFE author Web pages found</h2>')
                         return
                 self.load_moderator_flag()
                 self.print_table_columns(('#', 'SFE URL', 'SFE Author Name', 'Possible ISFDB Name', 'Ignore'))
@@ -158,7 +159,7 @@ class Sfe3:
                         self.print_record(unresolved_url)
                         self.bgcolor ^= 1
                         self.count += 1
-                print '</table>'
+                print('</table>')
 
         def load_moderator_flag(self):
                 from login import User
@@ -167,17 +168,17 @@ class Sfe3:
                 self.user.load_moderator_flag()
 
         def print_header(self):
-                print """<h3>This cleanup report lists all  
+                print("""<h3>This cleanup report lists all  
                         <a href="%s://sf-encyclopedia.com/category/everyone">SFE author/editor/etc articles</a>
                         without a matching author URL in the ISFDB database. Note that some SFE authors may not
                         be eligible on the ISFDB side, e.g. if their only SF works are comics.
                         Also, the SFE spelling or canonical name may not match what's used in
                         the ISFDB database. For these reasons, this report lets moderators ignore SFE author
-                        URLs.</h3>""" % self.protocol
+                        URLs.</h3>""" % self.protocol)
 
         def print_table_columns(self, columns):
-                print '<table class="generic_table">'
-                print '<tr class="table2">'
+                print('<table class="generic_table">')
+                print('<tr class="table2">')
                 for column in columns:
                         if not column:
                                 data = '&nbsp;'
@@ -186,14 +187,14 @@ class Sfe3:
                         # Skip 'Ignore' and 'Resolve' columns if the user is not a moderator
                         if ('Ignore' in column or 'Resolve' in column) and not self.user.moderator:
                                 continue
-                        print '<td><b>%s</b></td>' % data
-                print '</tr>'
+                        print('<td><b>%s</b></td>' % data)
+                print('</tr>')
 
         def print_record(self, unresolved_url):
                 if self.bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
                 url = '%s://www.%s/entry/%s' % (self.protocol, self.host, unresolved_url)
                 sf3_author_name = self.unresolved_URLs[unresolved_url]
@@ -205,13 +206,13 @@ class Sfe3:
                                      ('ORDERBY', 'author_lastname'),
                                      ('C', 'AND')))
 
-                print '<td>%d</td>' % self.count
-                print '<td><a href="%s" target="_blank">%s</a></td>' % (url, url)
-                print '<td>%s</td>' % sf3_author_name
-                print '<td>%s%s</a></td>' % (author_link, isfdb_author_name)
+                print('<td>%d</td>' % self.count)
+                print('<td><a href="%s" target="_blank">%s</a></td>' % (url, url))
+                print('<td>%s</td>' % sf3_author_name)
+                print('<td>%s%s</a></td>' % (author_link, isfdb_author_name))
                 if self.user.moderator:
-                        print '<td>%s</a></td>' % ISFDBLink('mod/resolve_sfe3_url.cgi', unresolved_url, 'Ignore')
-                print '</tr>'
+                        print('<td>%s</a></td>' % ISFDBLink('mod/resolve_sfe3_url.cgi', unresolved_url, 'Ignore'))
+                print('</tr>')
 
         def normalize_author_name(self, sf3_author_name):
                 isfdb_author_name = sf3_author_name
