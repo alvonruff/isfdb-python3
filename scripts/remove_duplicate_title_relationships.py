@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2013   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,17 +28,17 @@ def IsfdbConvSetup():
 
 if __name__ == '__main__':
 
-	db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-	db.select_db(DBASE)
+        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
+        db.select_db(DBASE)
 
-	# Find all duplicate rows in the title_relationships table
-	query_main = "select * from title_relationships group by title_id,review_id having count(*)>1 order by review_id;"
-	db.query(query_main)
-	result_main = db.store_result()
-	row = result_main.fetch_row(0)
-	print len(row)
-	count = 0
-	for record in row:
+        # Find all duplicate rows in the title_relationships table
+        query_main = "select * from title_relationships group by title_id,review_id having count(*)>1 order by review_id;"
+        db.query(query_main)
+        result_main = db.store_result()
+        row = result_main.fetch_row(0)
+        print len(row)
+        count = 0
+        for record in row:
             print record
             count += 1
             # Remove ALL rows for this title/review combination

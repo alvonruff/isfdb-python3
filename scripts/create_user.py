@@ -1,5 +1,5 @@
 #!/usr/bin/python
-#    (C) COPYRIGHT 2008-2022   Al von Ruff, MaryD, RobertGl and Ahasuerus
+#    (C) COPYRIGHT 2008-2025   Al von Ruff, MaryD, RobertGl and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,31 +30,31 @@ def IsfdbConvSetup():
 if __name__ == '__main__':
 
 
-	try:
-		username = sys.argv[1]
-		password = sys.argv[2]
-	except:
-		print 'usage: create_user.py username password'
-		print '       The third parameter, if specified, should be 1 for moderator/bureaucrat users'
-		print '       and 0 for non-privileged users. The default is 1, i.e. moderator AND bureaucrat.'
-		sys.exit(1)
+        try:
+                username = sys.argv[1]
+                password = sys.argv[2]
+        except:
+                print 'usage: create_user.py username password'
+                print '       The third parameter, if specified, should be 1 for moderator/bureaucrat users'
+                print '       and 0 for non-privileged users. The default is 1, i.e. moderator AND bureaucrat.'
+                sys.exit(1)
 
         # By default, the new user is a moderator AND bureaucrat. The third parameter passed to this script (if '0')
         # overrides the default behavior and makes the new user a non-privileged user.
         privileged = 1
         try:
-		privileged = int(sys.argv[3])
-	except:
-		pass
+                privileged = int(sys.argv[3])
+        except:
+                pass
 
-	db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-	db.select_db(DBASE)
+        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
+        db.select_db(DBASE)
 
-	###############################################################
-	# Insert a username and password into mw_user
-	# 'try' for MediWiki 1.5-1.34, 'except' for 1.35+
-	###############################################################
-	try:
+        ###############################################################
+        # Insert a username and password into mw_user
+        # 'try' for MediWiki 1.5-1.34, 'except' for 1.35+
+        ###############################################################
+        try:
             query = """insert into mw_user(user_name,user_real_name,user_password,user_newpassword,user_email,user_options,user_token,user_touched)
                     values('%s','','','','','','','')""" % db.escape_string(username)
             db.query(query)
@@ -65,17 +65,17 @@ if __name__ == '__main__':
             db.query(query)
             user_id = db.insert_id()
 
-	hash = md5.new()
-	hash.update(password)
-	password = str(hash.hexdigest())
+        hash = md5.new()
+        hash.update(password)
+        password = str(hash.hexdigest())
 
-	newstr = "%d-%s" % (user_id, password)
-	hash2 = md5.new()
-	hash2.update(newstr)
-	submitted_password = hash2.hexdigest()
+        newstr = "%d-%s" % (user_id, password)
+        hash2 = md5.new()
+        hash2.update(newstr)
+        submitted_password = hash2.hexdigest()
 
-	query = "update mw_user set user_password='%s' where user_id=%d" % (db.escape_string(submitted_password), user_id)
-	db.query(query)
+        query = "update mw_user set user_password='%s' where user_id=%d" % (db.escape_string(submitted_password), user_id)
+        db.query(query)
 
         if privileged:
                 # Insert moderator/bureaucrat rights into mw_user_groups
@@ -88,5 +88,5 @@ if __name__ == '__main__':
         # mw_user_groups is an InnoDB table. We have to commit changes,
         # otherwise this insertion does nothing.
         ###############################################################
-	db.commit()
-	db.close()
+        db.commit()
+        db.close()

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2018   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,10 +28,10 @@ def IsfdbConvSetup():
 
 if __name__ == '__main__':
 
-	db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-	db.select_db(DBASE)
+        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
+        db.select_db(DBASE)
 
-	query = """select distinct pv1.pub_id, pv1.user_id,
+        query = """select distinct pv1.pub_id, pv1.user_id,
                     pv1.verification_id, pv1.ver_time, pv1.ver_transient,
                     pv2.verification_id, pv2.ver_time, pv2.ver_transient
                     from primary_verifications pv1, primary_verifications pv2
@@ -39,12 +39,12 @@ if __name__ == '__main__':
                     and pv1.pub_id = pv2.pub_id
                     and pv1.user_id = pv2.user_id
                 """
-	db.query(query)
-	result = db.store_result()
-	record = result.fetch_row()
-	count = 0
-	delete_vers = {}
-	while record:
+        db.query(query)
+        result = db.store_result()
+        record = result.fetch_row()
+        count = 0
+        delete_vers = {}
+        while record:
             pub_id = record[0][0]
             user_id = record[0][1]
             ver_id1 = record[0][2]

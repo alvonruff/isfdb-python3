@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009   Al von Ruff
+#     (C) COPYRIGHT 2009-2025   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,18 +28,18 @@ def IsfdbConvSetup():
 
 if __name__ == '__main__':
 
-	db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-	db.select_db(DBASE)
-	
-	query_main = "select * from titles where title_ttype = 'SERIAL' and title_parent =0;"
-	db.query(query_main)
-	result_main = db.store_result()
-	serials = result_main.fetch_row(0)
-	count_well_formed = 0
-	total = 0
-	count_with_matches = 0
-	count_matching_authors = 0
-	for serial in serials:
+        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
+        db.select_db(DBASE)
+        
+        query_main = "select * from titles where title_ttype = 'SERIAL' and title_parent =0;"
+        db.query(query_main)
+        result_main = db.store_result()
+        serials = result_main.fetch_row(0)
+        count_well_formed = 0
+        total = 0
+        count_with_matches = 0
+        count_matching_authors = 0
+        for serial in serials:
             total = total + 1
             found = 0
             serial_title = serial[1]
