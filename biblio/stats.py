@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -56,11 +57,11 @@ class Stats:
                 db.query(query)
                 result = db.store_result()
                 if result.num_rows():
-                        print '<h3>This report is generated once a week</h3>'
+                        print('<h3>This report is generated once a week</h3>')
                         record = result.fetch_row()
-                        print record[0][0]
+                        print(record[0][0])
                 else:
-                        print '<h3>This report is currently unavailable. It will be regenerated later.</h3>'
+                        print('<h3>This report is currently unavailable. It will be regenerated later.</h3>')
 
 if __name__ == '__main__':
 

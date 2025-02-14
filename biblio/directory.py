@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -15,46 +16,46 @@ from library import ISFDBText
 from login import *
 
 def PrintPublisherTableColumns():
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<td><b>Publisher</b></td>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<td><b>Publisher</b></td>')
+        print('</tr>')
         return
 
 def PrintPublisherRecord(publisher_id, publisher_name, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
-        print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher_name)
-        print '</tr>'
+                print('<tr align=left class="table2">')
+        print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher_name))
+        print('</tr>')
 
 def PrintMagazineTableColumns():
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>Magazine</th>'
-        print '<th>Parent Series</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>Magazine</th>')
+        print('<th>Parent Series</th>')
+        print('</tr>')
         return
 
 def PrintMagazineRecord(title_title, series_id, parent_id, series_title, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%s' % ISFDBLink('pe.cgi', series_id, title)
+        print('<td>%s' % ISFDBLink('pe.cgi', series_id, title))
         if title_title != series_title:
-                print '*'
-        print ' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', series_id, '(issue grid)')
+                print('*')
+        print(' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', series_id, '(issue grid)'))
         if parent_id:
                 parent_title = SQLgetSeriesName(int(parent_id))
-                print '<td>'
-                print ISFDBLink('pe.cgi', parent_id, parent_title)
-                print ' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', parent_id, '(issue grid)')
+                print('<td>')
+                print(ISFDBLink('pe.cgi', parent_id, parent_title))
+                print(' %s</td>' % ISFDBLinkNoName('seriesgrid.cgi', parent_id, '(issue grid)'))
         else:
-                print '<td>-</td>'
-        print '</tr>'
+                print('<td>-</td>')
+        print('</tr>')
 
 
 if __name__ == '__main__':
@@ -92,23 +93,23 @@ if __name__ == '__main__':
         
         if section == '':
                 if dir_type == 'publisher':
-                        print """Also see the ISFDB Wiki
-                                <a href="%s://%s/index.php/Category:Publishers">category</a> for publishers""" % (PROTOCOL, WIKILOC)
+                        print("""Also see the ISFDB Wiki
+                                <a href="%s://%s/index.php/Category:Publishers">category</a> for publishers""" % (PROTOCOL, WIKILOC))
                 elif dir_type == 'magazine':
-                        print """Also see the ISFDB Wiki pages for
+                        print("""Also see the ISFDB Wiki pages for
                                 <a href="%s://%s/index.php/Magazines">magazines</a>
-                                and <a href="%s://%s/index.php/Fanzines">fanzines</a>""" % (PROTOCOL, WIKILOC, PROTOCOL, WIKILOC)
+                                and <a href="%s://%s/index.php/Fanzines">fanzines</a>""" % (PROTOCOL, WIKILOC, PROTOCOL, WIKILOC))
                 if dir_type != 'magazine':
                         if dir_type == 'author' and not user.id:
                                 warning = ' (you will need to be logged in to access the sub-pages below)'
                         else:
                                 warning = ''
-                        print '<h2>Directory of %s names starting with%s:</h2><p>' % (dir_type, warning)
+                        print('<h2>Directory of %s names starting with%s:</h2><p>' % (dir_type, warning))
                 else:
-                        print '<h2>Directory of magazine and fanzine names starting with:</h2><p>'
-                print '<table class="authordirectory">'
+                        print('<h2>Directory of magazine and fanzine names starting with:</h2><p>')
+                print('<table class="authordirectory">')
                 for x in first_characters:
-                        print '<tr>'
+                        print('<tr>')
                         for y in second_characters:
                                 key = x + y
                                 if key in records_map:
@@ -120,21 +121,21 @@ if __name__ == '__main__':
                                                                                    ('TYPE', 'Author'),
                                                                                    ('C', 'AND')))
                                                 output += '<b>%s%s</b></a></td>' % (x.upper(), y)
-                                                print output
+                                                print(output)
                                         else:
-                                                print '<td>%s</td>' % ISFDBLinkNoName('directory.cgi',
+                                                print('<td>%s</td>' % ISFDBLinkNoName('directory.cgi',
                                                                                       '%s+%s%s' % (dir_type, x, y),
                                                                                       '%s%s' % (x.upper(), y),
-                                                                                      False, 'class = "bold"')
+                                                                                      False, 'class = "bold"'))
                                 else:
-                                        print '<td class="authordirectorynolink">%s%s</td>' % (x.upper(), y)
-                        print '</tr>'
-                print '</table>'
-                print '<p>'
+                                        print('<td class="authordirectorynolink">%s%s</td>' % (x.upper(), y))
+                        print('</tr>')
+                print('</table>')
+                print('<p>')
 
         else:
                 if len(section) == 1:
-                        print '<h3>ERROR: Single character directories are not allowed due to excessive load on the server</h3>'
+                        print('<h3>ERROR: Single character directories are not allowed due to excessive load on the server</h3>')
                         PrintTrailer('directory', 0, 0)
                         sys.exit(0)
                 # Display a link to the previous sub-directory if available
@@ -143,16 +144,16 @@ if __name__ == '__main__':
                         if key in records_map:
                                 first = key[0]
                                 second = key[1]
-                                print '<small>%s</small>' % ISFDBLinkNoName('directory.cgi',
+                                print('<small>%s</small>' % ISFDBLinkNoName('directory.cgi',
                                                                             '%s+%s%s' % (dir_type, first, second),
                                                                             'Back to %s%s' % (first.upper(), second),
                                                                             False,
-                                                                            'Class="bold"')
+                                                                            'Class="bold"'))
                                 break
 
-                print ISFDBLink('directory.cgi', dir_type,
+                print(ISFDBLink('directory.cgi', dir_type,
                                 'Up to %s Directory' % dir_type.title(),
-                                False, 'class = "bold"')
+                                False, 'class = "bold"'))
 
                 # Display a link to the next sub-directory if available
                 for char in range(second_characters.find(section[1])+1, len(second_characters)):
@@ -160,11 +161,11 @@ if __name__ == '__main__':
                         if key in records_map:
                                 first = key[0]
                                 second = key[1]
-                                print '<small>%s</small>' % ISFDBLinkNoName('directory.cgi',
+                                print('<small>%s</small>' % ISFDBLinkNoName('directory.cgi',
                                                                             '%s+%s%s' % (dir_type, first, second),
                                                                             'Forward to %s%s' % (first.upper(), second),
                                                                             False,
-                                                                            'class="bold"')
+                                                                            'class="bold"'))
                                 break
 
                 search_string = db.escape_string(section[0] + section[1] + '%')
@@ -172,11 +173,11 @@ if __name__ == '__main__':
                 # Magazine Directory
                 if dir_type == 'magazine':
                         (results, count) = SQLFindMagazine(search_string, 1)
-                        print '<br><br>'
+                        print('<br><br>')
                         if count:
-                                print """<b>Note: Matching magazines whose series titles do not match the
+                                print("""<b>Note: Matching magazines whose series titles do not match the
                                 entered value have asterisks next to their titles.<br><br>
-                                Number of %s names starting with "%s": %d </b>""" % (dir_type, ISFDBText(section), count)
+                                Number of %s names starting with "%s": %d </b>""" % (dir_type, ISFDBText(section), count))
                                 PrintMagazineTableColumns()
                                 bgcolor = 1
                                 for title in sorted(results.keys(), key=lambda x: x.lower()):
@@ -185,9 +186,9 @@ if __name__ == '__main__':
                                                 series_name = results[title][series_id][1]
                                                 PrintMagazineRecord(title, series_id, parent_id, series_name, bgcolor)
                                                 bgcolor ^= 1
-                                print '</table>'
+                                print('</table>')
                         else:
-                                print '<b>No %s names found starting with: %s</b>' % (dir_type, ISFDBText(section))
+                                print('<b>No %s names found starting with: %s</b>' % (dir_type, ISFDBText(section)))
                         PrintTrailer('directory', 0, 0)
                         sys.exit(0)
 
@@ -205,7 +206,7 @@ if __name__ == '__main__':
                 result = db.store_result()
                 number_of_records = result.num_rows()
                 if number_of_records:
-                        print '<h3>Number of publisher names starting with "%s": %d </h3>' % (section, number_of_records)
+                        print('<h3>Number of publisher names starting with "%s": %d </h3>' % (section, number_of_records))
                         bgcolor = 1
                         PrintPublisherTableColumns()
                         record = result.fetch_row()
@@ -215,8 +216,8 @@ if __name__ == '__main__':
                                 PrintPublisherRecord(record_id, record_name, bgcolor)
                                 bgcolor ^= 1
                                 record = result.fetch_row()
-                        print '</table><p>'
+                        print('</table><p>')
                 else:
-                        print '<h3>No %s names found starting with: %s</h3>' % (dir_type, ISFDBText(section))
+                        print('<h3>No %s names found starting with: %s</h3>' % (dir_type, ISFDBText(section)))
 
         PrintTrailer('directory', 0, 0)

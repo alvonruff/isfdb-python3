@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Dirk Stoecker, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,11 +30,11 @@ if __name__ == '__main__':
         count = 0
         for pub in pubs:
                 if pub[PUB_IMAGE]:
-                        print ISFDBScan(pub[PUB_PUBID], pub[PUB_IMAGE])
+                        print(ISFDBScan(pub[PUB_PUBID], pub[PUB_IMAGE]))
                         count += 1
         if not count:
-                print '<h3>No covers for %s</h3>' % title
+                print('<h3>No covers for %s</h3>' % title)
 
-        print '<p>%s' % ISFDBLinkNoName('title.cgi', title_id, 'Back to the Title page for %s' % title, True, 'class="bold"')
+        print('<p>%s' % ISFDBLinkNoName('title.cgi', title_id, 'Back to the Title page for %s' % title, True, 'class="bold"'))
 
         PrintTrailer('titlecovers', title_id, title_id)

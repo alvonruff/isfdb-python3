@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -34,12 +35,12 @@ if __name__ == '__main__':
         PrintHeader("%s's Tags" % user_name)
         PrintNavbar('usertitles', 0, 0, 'usertitles.cgi', 0)
 
-        print """<h3>Titles marked by user %s with tag %s</h3>""" % (ISFDBLink('usertag.cgi', user_id, user_name),
-                                                                ISFDBLink('tag.cgi', tag_id, tag[TAG_NAME]))
+        print("""<h3>Titles marked by user %s with tag %s</h3>""" % (ISFDBLink('usertag.cgi', user_id, user_name),
+                                                                ISFDBLink('tag.cgi', tag_id, tag[TAG_NAME])))
         titles = SQLgetTitlesForTagForUser(tag_id, user_id, start)
         PrintTitleTable(titles, 0, 100, current_user)
 
         if len(titles) > 100:
-                print ISFDBLink('usertitles.cgi', '%d+%d+%d' % (user_id, tag_id, start+100), 'Next page (%d - %d)' % (start+101, start+200))
+                print(ISFDBLink('usertitles.cgi', '%d+%d+%d' % (user_id, tag_id, start+100), 'Next page (%d - %d)' % (start+101, start+200)))
 
         PrintTrailer('usertitles', user_id, user_id)

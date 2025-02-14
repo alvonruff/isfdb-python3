@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -28,19 +29,19 @@ def printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
         if ser.series_parentposition > 0:
                 output += '%s ' % ser.series_parentposition
         output += ISFDBLink('pe.cgi', ser.series_id, ser.series_name)
-        print output
+        print(output)
         magazine_found = 0
         for ser_id in seriesTitles:
                 # If any of the Titles in this series or its sub-series is
                 # an EDITOR title, display a link to the magazine's issue grid
                 for title in seriesTitles[ser_id]:
                         if title[TITLE_TTYPE] == 'EDITOR':
-                                print ISFDBLink('seriesgrid.cgi', ser.series_id, ' (View Issue Grid)')
+                                print(ISFDBLink('seriesgrid.cgi', ser.series_id, ' (View Issue Grid)'))
                                 magazine_found = 1
                                 break
                 if magazine_found:
                         break
-        print "<ul>"
+        print("<ul>")
         if ser.series_id in seriesTitles:
                 for title in seriesTitles[ser.series_id]:
                         # Display the series number
@@ -49,24 +50,24 @@ def printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                                 output += '%s' % title[TITLE_SERIESNUM]
                         if title[TITLE_SERIESNUM_2] is not None:
                                 output += '.%s' % title[TITLE_SERIESNUM_2]
-                        print output
+                        print(output)
                         # The "non-genre" parameter is set to 0 because for series biblios the
                         # non-genre flag is always displayed
                         displayTitle(title, 0, parentAuthors, SERIES_TYPE_UNKNOWN, variantTitles,
                                      variantSerials, parentsWithPubs, variantAuthors, translit_titles,
                                      translit_authors, user)
-        print "</ul>"
+        print("</ul>")
 
         children = seriesTree[ser.series_id]
         if children:
-                print "<ul>"
+                print("<ul>")
                 for child_id in children:
                         ser1 = seriesData[child_id]
                         printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                                     variantTitles, variantSerials, parentsWithPubs,
                                     variantAuthors, translit_titles, translit_authors,
                                     ser1, user)
-                print "</ul>"
+                print("</ul>")
 
 if __name__ == '__main__':
 
@@ -113,19 +114,19 @@ if __name__ == '__main__':
 
         ser.PrintMetaData(user, 'brief', seriesTags, 'series')
 
-        print '<div class="ContentBox">'
+        print('<div class="ContentBox">')
         if seriesData:
-                print user.translation_message('series', ser)
+                print(user.translation_message('series', ser))
                 # Traverse and print series tree
-                print "<ul>"
+                print("<ul>")
                 printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                             variantTitles, variantSerials, parentsWithPubs,
                             variantAuthors, translit_titles, translit_authors,
                             ser, user)
-                print "</ul>"
+                print("</ul>")
         else:
-                print '<p><b>This series is empty and will be deleted.</b>'
+                print('<p><b>This series is empty and will be deleted.</b>')
 
-        print '</div>'
+        print('</div>')
 
         PrintTrailer('series', 0, 0)

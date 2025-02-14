@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
@@ -30,12 +31,12 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if result.num_rows() == 0:
-                print '<h3>No submissions present</h3>'
+                print('<h3>No submissions present</h3>')
                 PrintTrailer('recent', 0, 0)
                 sys.exit(0)
 
         ISFDBprintSubmissionTable(result, 'I')
-        print '<p> %s' % ISFDBLink('recent.cgi', start+200, 'MORE', True)
+        print('<p> %s' % ISFDBLink('recent.cgi', start+200, 'MORE', True))
 
         PrintTrailer('recent', 0, 0)
 

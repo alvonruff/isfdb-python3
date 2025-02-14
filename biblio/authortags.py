@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -31,7 +32,7 @@ if __name__ == '__main__':
 
         tags = SQLgetAuthorTags(author_id, int(userid))
         if not tags:
-                print '<h3>No tags for author %s</h3>' % author_name
+                print('<h3>No tags for author %s</h3>' % author_name)
         else:
                 print_string = ''
                 count = 0
@@ -40,8 +41,8 @@ if __name__ == '__main__':
                                 print_string += ', '
                         print_string += '%s (%d)' % (ISFDBLink('tag_author.cgi', '%d+%d' % (tag[0], author_id), tag[1]), tag[2])
                         count += 1
-                print print_string
+                print(print_string)
 
-        print '<p><b>Back to the Summary Bibliography page for %s</b>' % ISFDBLink('ea.cgi', author_id, author_name)
+        print('<p><b>Back to the Summary Bibliography page for %s</b>' % ISFDBLink('ea.cgi', author_id, author_name))
 
         PrintTrailer('authortags', author_id, author_id)

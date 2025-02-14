@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Bill Longley, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -18,7 +19,7 @@ from isbn import convertISBN, ISBNValidFormat, validISBN, toISBN10, toISBN13
 from pubClass import pubs, pubBody
 
 def PrintContents(titles, pub, concise):
-        print '<div class="ContentBox">'
+        print('<div class="ContentBox">')
 
         # Display the Container title if there is one
         reference_title = None
@@ -30,7 +31,7 @@ def PrintContents(titles, pub, concise):
                         reference_lang = reference_title[TITLE_LANGUAGE]
                         # NOVEL reference titles are not displayed here; they will be displayed in the Contents section below
                         if reference_title[TITLE_TTYPE] != 'NOVEL':
-                                print '<span class="containertitle">%s Title:</span>' % reference_title[TITLE_TTYPE].title()
+                                print('<span class="containertitle">%s Title:</span>' % reference_title[TITLE_TTYPE].title())
                                 pub.PrintTitleLine(reference_title, None, reference_lang, 1)
 
         # Determine if there are Contents titles to display
@@ -66,8 +67,8 @@ def PrintContents(titles, pub, concise):
                                           False,
                                           'class="listingtext"')
                 output += '</h2>'
-                print output
-                print '<ul>'
+                print(output)
+                print('<ul>')
                 printed = []
                 containers = ('OMNIBUS', 'COLLECTION', 'ANTHOLOGY', 'NONFICTION', 'CHAPBOOK')
                 first_container = 1
@@ -99,9 +100,9 @@ def PrintContents(titles, pub, concise):
                                                         continue
                                         pub.PrintTitleLine(title, displayed_page_num, reference_lang)
                                         printed.append(title[TITLE_PUBID])
-                print '</ul>'
+                print('</ul>')
 
-        print '</div>'
+        print('</div>')
 
 
 #==========================================================
@@ -157,9 +158,9 @@ if __name__ == '__main__':
         titles = SQLloadTitlesXBT(pub.pub_id)
         pub_body.titles = titles
         pub_body.build_page_body()
-        print pub_body.body
+        print(pub_body.body)
 
-        print '<li>'
+        print('<li>')
         authors = SQLPubBriefAuthorRecords(pub.pub_id)
         if pub.pub_ctype in ('ANTHOLOGY', 'MAGAZINE', 'FANZINE'):
                 displayPersonLabel('Editor', authors, '')
@@ -168,7 +169,7 @@ if __name__ == '__main__':
         displayAuthorList(authors)
 
         if pub.pub_year:
-                print '<li> <b>Date:</b> %s' % (ISFDBconvertDate(pub.pub_year, 1))
+                print('<li> <b>Date:</b> %s' % (ISFDBconvertDate(pub.pub_year, 1)))
 
         if pub.pub_isbn:
                 compact = string.replace(pub.pub_isbn, '-', '')
@@ -176,50 +177,50 @@ if __name__ == '__main__':
 
                 # Bad ISBN format
                 if not ISBNValidFormat(pub.pub_isbn):
-                        print '  <li id="badISBN">ISBN: %s  (Bad format)' % ISFDBText(pub.pub_isbn)
+                        print('  <li id="badISBN">ISBN: %s  (Bad format)' % ISFDBText(pub.pub_isbn))
                 else:
                         # ISBN fails checksum validation
                         if not validISBN(pub.pub_isbn):
-                                print '  <li id="badISBN">ISBN: %s  (Bad Checksum)' % ISFDBText(pub.pub_isbn)
+                                print('  <li id="badISBN">ISBN: %s  (Bad Checksum)' % ISFDBText(pub.pub_isbn))
                         # ISBN-10: display the ISBN-10 as well as the ISBN-13 in "small"
                         elif len(compact) == 10:
-                                print '  <li><b>ISBN:</b> %s [<small>%s</small>]' % (convertISBN(compact), convertISBN(toISBN13(compact)))
+                                print('  <li><b>ISBN:</b> %s [<small>%s</small>]' % (convertISBN(compact), convertISBN(toISBN13(compact))))
                         # ISBN-13
                         else:
                                 # ISBN-13s which start with 978 can be converted to ISBN-10, so we also display the ISBN-10
                                 if compact[:3] == '978':
-                                        print '  <li><b>ISBN:</b> %s [<small>%s</small>]' % (convertISBN(compact), convertISBN(toISBN10(compact)))
+                                        print('  <li><b>ISBN:</b> %s [<small>%s</small>]' % (convertISBN(compact), convertISBN(toISBN10(compact))))
                                 # ISBN-13s that do not start with 978 (currently 979), can't be converted to ISBN-10s
                                 else:
-                                        print '  <li><b>ISBN:</b> %s' % convertISBN(compact)
+                                        print('  <li><b>ISBN:</b> %s' % convertISBN(compact))
 
         if pub.pub_catalog:
-                print '  <li><b>Catalog ID:</b>', ISFDBText(pub.pub_catalog)
+                print('  <li><b>Catalog ID:</b>', ISFDBText(pub.pub_catalog))
 
         if pub.pub_publisher_id:
-                print '<li>'
-                print '  <b>Publisher:</b> %s' % ISFDBLink('publisher.cgi', pub.pub_publisher_id, pub.pub_publisher)
+                print('<li>')
+                print('  <b>Publisher:</b> %s' % ISFDBLink('publisher.cgi', pub.pub_publisher_id, pub.pub_publisher))
 
         if pub.pub_series_id:
-                print '<li>'
-                print '  <b>Pub. Series:</b> %s' % ISFDBLink('pubseries.cgi', pub.pub_series_id, pub.pub_series)
+                print('<li>')
+                print('  <b>Pub. Series:</b> %s' % ISFDBLink('pubseries.cgi', pub.pub_series_id, pub.pub_series))
 
         if pub.pub_series_num:
-                print '<li>'
-                print '  <b>Pub. Series #:</b>', ISFDBText(pub.pub_series_num)
+                print('<li>')
+                print('  <b>Pub. Series #:</b>', ISFDBText(pub.pub_series_num))
 
         if pub.pub_price:
-                print '<li>'
-                print '  <b>Price:</b>', ISFDBPrice(pub.pub_price)
+                print('<li>')
+                print('  <b>Price:</b>', ISFDBPrice(pub.pub_price))
         if pub.pub_pages:
-                print '<li>'
-                print '  <b>Pages:</b>', ISFDBText(pub.pub_pages)
+                print('<li>')
+                print('  <b>Pages:</b>', ISFDBText(pub.pub_pages))
         if pub.pub_ptype:
-                print '<li>'
-                print '  <b>Format:</b>', ISFDBPubFormat(pub.pub_ptype)
+                print('<li>')
+                print('  <b>Format:</b>', ISFDBPubFormat(pub.pub_ptype))
         if pub.pub_ctype:
-                print '<li>'
-                print '  <b>Type:</b>', ISFDBText(pub.pub_ctype)
+                print('<li>')
+                print('  <b>Type:</b>', ISFDBText(pub.pub_ctype))
 
         cover_art_titles = []
         cover_count = 1
@@ -228,7 +229,7 @@ if __name__ == '__main__':
                         cover_indicator = ''
                         if cover_count > 1:
                                 cover_indicator = str(cover_count)
-                        print '<li><b>Cover%s:</b>' % cover_indicator
+                        print('<li><b>Cover%s:</b>' % cover_indicator)
                         cover_art_titles.append(title[TITLE_PUBID])
                         pub.PrintTitleLine(title, None, None, 1)
                         cover_count += 1
@@ -238,17 +239,17 @@ if __name__ == '__main__':
         PrintWebPages(webpages)
 
         if pub.pub_note:
-                print '<li>'
-                print FormatNote(pub.pub_note, 'Notes', 'short', pub.pub_id, 'Publication')
+                print('<li>')
+                print(FormatNote(pub.pub_note, 'Notes', 'short', pub.pub_id, 'Publication'))
 
         if pub.identifiers:
-                print '<li>'
-                print '  <b>External IDs:</b>'
+                print('<li>')
+                print('  <b>External IDs:</b>')
                 pub.printExternalIDs()
 
         if pub.pub_tag and SQLwikiLinkExists('Publication', pub.pub_tag):
-                print "<li><b>Bibliographic Comments:</b>"
-                print '<a href="%s://%s/index.php/Publication:%s" dir="ltr"> View Publication comment</a> (%s)' % (PROTOCOL, WIKILOC, pub.pub_tag, pub.pub_tag)
+                print("<li><b>Bibliographic Comments:</b>")
+                print('<a href="%s://%s/index.php/Publication:%s" dir="ltr"> View Publication comment</a> (%s)' % (PROTOCOL, WIKILOC, pub.pub_tag, pub.pub_tag))
 
         #Only display the image upload link if the user is logged in
         if userid:
@@ -307,30 +308,30 @@ if __name__ == '__main__':
                 param += '\n|Source=Scanned by [[User:' + username + ']]'
                 param = urllib.quote("{{%s}}" % param)
                 upload = 'wpDestFile=%s.jpg&amp;wpUploadDescription=%s' % (tag, param)
-                print "<li>"
+                print("<li>")
                 if not pub.pub_image:
                         message = 'Upload cover scan'
                 else:
                         message = 'Upload new cover scan'
-                print '<a href="%s://%s/index.php/Special:Upload?%s" target="_blank">%s</a>' % (PROTOCOL, WIKILOC, upload, message)
+                print('<a href="%s://%s/index.php/Special:Upload?%s" target="_blank">%s</a>' % (PROTOCOL, WIKILOC, upload, message))
 
-        print '</ul>'
+        print('</ul>')
         if pub.pub_image:
-                print '</td>'
-                print '</table>'
+                print('</td>')
+                print('</table>')
                 (webpage, credit, home_page, linked_page) = BuildDisplayedURL(pub.pub_image)
-                print 'Cover art supplied by <a href="%s" target="_blank">%s</a>' % (home_page, credit)
+                print('Cover art supplied by <a href="%s" target="_blank">%s</a>' % (home_page, credit))
                 if linked_page:
-                        print ' on <a href="%s" target="_blank">this Web page</a>' % linked_page
+                        print(' on <a href="%s" target="_blank">this Web page</a>' % linked_page)
                 if 'amazon.com' in pub.pub_image:
                         if '/images/P/' in pub.pub_image:
-                                print """<br>The displayed Amazon image is based on the publication's ISBN. It may no
-                                        longer reflect the actual cover of this particular edition."""
+                                print("""<br>The displayed Amazon image is based on the publication's ISBN. It may no
+                                        longer reflect the actual cover of this particular edition.""")
                         elif '/images/G/' in pub.pub_image:
-                                print """<br>The displayed Amazon image is possibly unstable and may no
-                                        longer reflect the actual cover of this particular edition."""
+                                print("""<br>The displayed Amazon image is possibly unstable and may no
+                                        longer reflect the actual cover of this particular edition.""")
 
-        print '</div>'
+        print('</div>')
 
         PrintContents(titles, pub, concise)
 
@@ -339,9 +340,9 @@ if __name__ == '__main__':
         active_secondary_vers = pub.PrintActiveSecondaryVerifications()
         if userid:
                 if active_secondary_vers:
-                        print ISFDBLink('edit/verify.cgi', pub.pub_id, 'Show/Add other Verifications')
+                        print(ISFDBLink('edit/verify.cgi', pub.pub_id, 'Show/Add other Verifications'))
                 else:
-                        print ISFDBLink('edit/verify.cgi', pub.pub_id, 'Add Verifications')
+                        print(ISFDBLink('edit/verify.cgi', pub.pub_id, 'Add Verifications'))
 
         PrintTrailer('publication', 0, 0)
 

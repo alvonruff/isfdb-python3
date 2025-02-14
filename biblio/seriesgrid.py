@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2010-2025   Ahasuerus, Dirk Stoecker, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -108,42 +109,42 @@ class SeriesGrid:
 
                 self.ser.PrintMetaData(user, 'brief', seriesTags, 'grid')
 
-                print '<div class="ContentBox">'
-                print '<b>Format:</b> %s' % ISFDBPubFormat(self.default_format)
+                print('<div class="ContentBox">')
+                print('<b>Format:</b> %s' % ISFDBPubFormat(self.default_format))
                 if len(self.formats.keys()) > 1:
-                        print '(unless indicated otherwise)'
-                print '<br>'
-                print '<b>Legend:</b> Unverified issues are gold, secondary verifications are light blue.'
+                        print('(unless indicated otherwise)')
+                print('<br>')
+                print('<b>Legend:</b> Unverified issues are gold, secondary verifications are light blue.')
 
-                print '<p class="textindent"> %s %s ' % (ISFDBLinkNoName('pe.cgi', self.seriesId, 'View this magazine as a series'), SESSION.ui.bullet)
+                print('<p class="textindent"> %s %s ' % (ISFDBLinkNoName('pe.cgi', self.seriesId, 'View this magazine as a series'), SESSION.ui.bullet))
 
                 if self.displayOrder:
-                        print ISFDBLink("seriesgrid.cgi", "%s+0" % self.seriesId, "Show earliest year first")
+                        print(ISFDBLink("seriesgrid.cgi", "%s+0" % self.seriesId, "Show earliest year first"))
                 else:
-                        print ISFDBLink("seriesgrid.cgi", "%s+1" % self.seriesId, "Show last year first")
+                        print(ISFDBLink("seriesgrid.cgi", "%s+1" % self.seriesId, "Show last year first"))
 
         def PrintTable(self):
-                print '<table class="seriesgrid">'
-                print '<tr><th>&nbsp;</th>'
+                print('<table class="seriesgrid">')
+                print('<tr><th>&nbsp;</th>')
                 for month in sorted(ISFDBmonthmap.keys()):
-                        print '<th>%s</th>' % (ISFDBmonthmap[month])
-                print '<th>No month</th></tr>'
+                        print('<th>%s</th>' % (ISFDBmonthmap[month]))
+                print('<th>No month</th></tr>')
                 for year in sorted(self.arr.keys(), reverse=self.displayOrder):
                         self.bgcolor ^= 1
                         self.PrintOneYear(year)
                 
-                print '</table>'
-                print '</div>'
+                print('</table>')
+                print('</div>')
 
         def PrintOneYear(self, year):
-                print '<tr align=center class="table%d">' % (self.bgcolor+1)
-                print '<th class="year">%s</th>' % ISFDBconvertYear(year)
+                print('<tr align=center class="table%d">' % (self.bgcolor+1))
+                print('<th class="year">%s</th>' % ISFDBconvertYear(year))
                 for month in self.list_months:
                         if not self.arr[year].has_key(unicode(month)):
-                                print '<td>-</td>'
+                                print('<td>-</td>')
                                 continue
                         # Create a nested table
-                        print '<td class="seriesgridinner"><table class="seriesgridinner">'
+                        print('<td class="seriesgridinner"><table class="seriesgridinner">')
                         for day in sorted(self.arr[year][month]):
                                 for pub_id in sorted(self.arr[year][month][day]):
                                         # Retrieve the publication record
@@ -178,15 +179,15 @@ class SeriesGrid:
                                                 color = "verifiedprimary"
                                         elif verified == 2:
                                                 color = "verifiedsecondary"
-                                        print '<tr class="seriesgridinner">'
+                                        print('<tr class="seriesgridinner">')
                                         format = ''
                                         if pub[PUB_PTYPE] != self.default_format:
                                                 format = ' <small>[%s]</small>' % pub[PUB_PTYPE]
-                                        print '<td class="%s">%s%s</td>' % (color, ISFDBLink("pl.cgi", pub[PUB_PUBID], title), format)
-                                        print '</tr>'
+                                        print('<td class="%s">%s%s</td>' % (color, ISFDBLink("pl.cgi", pub[PUB_PUBID], title), format))
+                                        print('</tr>')
                         # Close the nested table
-                        print '</table></td>'
-                print '</tr>'
+                        print('</table></td>')
+                print('</tr>')
 
         def StripLeadingTrailing(self, title):
                 # Check every character in the string starting with 1

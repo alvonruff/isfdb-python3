@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -22,9 +23,9 @@ if __name__ == '__main__':
         PrintHeader('Award Type Edit History')
         PrintNavbar('awardtype_history', 0, 0, 'awardtype_history.cgi', awardtype_id)
 
-        print """<h3>The list below displays the following types of submissions: New Award Type,
+        print("""<h3>The list below displays the following types of submissions: New Award Type,
                 Edit Award Type, Delete Award Type. The submission which created this award type
-                is displayed if the award type was created after 2016-10-24.</h3>"""
+                is displayed if the award type was created after 2016-10-24.</h3>""")
 
         query = """select * from submissions
                 where affected_record_id = %d
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>No submission data on file for this award type.</h3>'
+                print('<h3>No submission data on file for this award type.</h3>')
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 

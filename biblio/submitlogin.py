@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley, Uzume and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -19,7 +20,7 @@ from common import *
 def doError(message):
         PrintHeader('Login Failed')
         PrintNavbar('login', 0, 0, 0, 0)
-        print '<h2>Login failed: %s</h2>' % (message)
+        print('<h2>Login failed: %s</h2>' % (message))
         PrintTrailer('login', 0, 0)
         sys.exit(0)
 
@@ -112,16 +113,16 @@ if __name__ == '__main__':
         # to (and optionally an argument), then use status 303 (introduced in HTTP/1.1)
         # to redirect to that module
         if uri:
-                print 'Status: 303 See Other'
-                print 'Location: %s' % (location)
+                print('Status: 303 See Other')
+                print('Location: %s' % (location))
         
         # Set cookies -- this has to be done AFTER the redirect
         setCookies(record[0][0], record[0][2], record[0][3])
 
         PrintHeader('Logged In')
         PrintNavbar('login', 0, 0, 0, 0)
-        print '<h2>Logged In</h2>'
+        print('<h2>Logged In</h2>')
         # Print a link to the post-login URI
         if uri:
-                print 'Continue to <a href="%s">%s</a>' % (location, uri)
+                print('Continue to <a href="%s">%s</a>' % (location, uri))
         PrintTrailer('login', 0, 0)

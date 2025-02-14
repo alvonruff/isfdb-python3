@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -48,7 +49,7 @@ if __name__ == '__main__':
         PrintHeader(header)
         PrintNavbar('top', 0, 0, 'most_popular.cgi', 0)
 
-        print '<h3>This report is generated once a day</h3>'
+        print('<h3>This report is generated once a day</h3>')
 
         query = """select title_id, score, year, title_type from award_titles_report where 1 """
         if span == 'year':
@@ -66,24 +67,24 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>No awards or nominations for the specified period</h3>'
+                print('<h3>No awards or nominations for the specified period</h3>')
                 PrintTrailer('top', 0, 0)
                 sys.exit(0)
 
-        print """<b>Note</b>: Some recent awards are yet to be integrated into the database.<br>
+        print("""<b>Note</b>: Some recent awards are yet to be integrated into the database.<br>
                 <b>Scoring</b>: Wins are worth 50 points, nominations and second places are worth
-                35 points. For polls, third and lower places are worth (33-poll position) points."""
+                35 points. For polls, third and lower places are worth (33-poll position) points.""")
         # Print the table headers        
-        print '<table class="seriesgrid">'
-        print '<tr>'
-        print '<th>Place</th>'
-        print '<th>Score</th>'
+        print('<table class="seriesgrid">')
+        print('<tr>')
+        print('<th>Place</th>')
+        print('<th>Score</th>')
         if span != 'year':
-                print '<th>Year</th>'
-        print '<th>Title</th>'
-        print '<th>Type</th>'
-        print '<th>Authors</th>'
-        print '</tr>'
+                print('<th>Year</th>')
+        print('<th>Title</th>')
+        print('<th>Type</th>')
+        print('<th>Authors</th>')
+        print('</tr>')
         record = result.fetch_row()
         bgcolor = 0
         place = 0
@@ -93,25 +94,25 @@ if __name__ == '__main__':
                 year = record[0][2]
                 title_type = record[0][3]
                 title_title = SQLgetTitle(title_id)
-                print '<tr align=left class="table%d">' % (bgcolor + 1)
-                print '<td>%d</td>' % (place + 1)
-                print '<td>%d</td>' % score
+                print('<tr align=left class="table%d">' % (bgcolor + 1))
+                print('<td>%d</td>' % (place + 1))
+                print('<td>%d</td>' % score)
                 # Display the year of the title unless we are displaying the data for just one year
                 if span != 'year':
                         display_year = unicode(year)
                         if display_year == '0':
                                 display_year = '0000'
-                        print '<td>%s</td>' % ISFDBconvertYear(display_year)
-                print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                print '<td>%s</td>' % title_type
-                print '<td>'
+                        print('<td>%s</td>' % ISFDBconvertYear(display_year))
+                print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                print('<td>%s</td>' % title_type)
+                print('<td>')
                 PrintAllAuthors(title_id)
-                print '</td>'
-                print '</tr>'
+                print('</td>')
+                print('</tr>')
                 record = result.fetch_row()
                 place += 1
                 bgcolor = bgcolor ^ 1
-        print '</table>'
+        print('</table>')
         
         PrintTrailer('top', 0, 0)
 

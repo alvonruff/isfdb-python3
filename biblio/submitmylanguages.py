@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,7 +22,7 @@ debug = 0
 def DoError(message):
         PrintHeader("My Translation Preferences Update")
         PrintNavbar("languages", 0, 0, 0, 0)
-        print '<h3>%s.</h3>' % message
+        print('<h3>%s.</h3>' % message)
         PrintTrailer('mylanguages', 0, 0)
         sys.exit(0)
 

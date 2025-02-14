@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -18,7 +19,7 @@ from common import *
 
 
 def DoError(message):
-        print '<h3>%s</h3>' % message
+        print('<h3>%s</h3>' % message)
         PrintTrailer('pubdiff', 0, 0)
         sys.exit(0)
         
@@ -71,101 +72,101 @@ if __name__ == '__main__':
                         page_number = pc[PUB_CONTENTS_PAGE]
                         pages[pub_id][title_id] = page_number
 
-        print '<table class="pub_comparison_table">'
+        print('<table class="pub_comparison_table">')
         # Publication title
-        print '<tr>'
-        print '<th>Pub. Title:</th>'
+        print('<tr>')
+        print('<th>Pub. Title:</th>')
         for pub in pubs:
                 pub_id = int(pub[PUB_PUBID])
                 pub_title = pub[PUB_TITLE]
                 pub_date = pub[PUB_YEAR]
-                print '<th>%s</th>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-        print '</tr>'
+                print('<th>%s</th>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+        print('</tr>')
 
         # Publication Date
-        print '<tr>'
-        print '<th>Pub. Date:</th>'
+        print('<tr>')
+        print('<th>Pub. Date:</th>')
         for pub in pubs:
                 pub_date = pub[PUB_YEAR]
-                print '<td>%s</td>' % pub_date
-        print '</tr>'
+                print('<td>%s</td>' % pub_date)
+        print('</tr>')
 
         # Publisher
-        print '<tr>'
-        print '<th>Publisher:</th>'
+        print('<tr>')
+        print('<th>Publisher:</th>')
         for pub in pubs:
-                print '<td>'
+                print('<td>')
                 publisher_id = pub[PUB_PUBLISHER]
                 if publisher_id:
                         publisher_data = SQLGetPublisher(publisher_id)
                         publisher_name = publisher_data[PUBLISHER_NAME]
-                        print ISFDBLink('publisher.cgi', publisher_id, publisher_name)
+                        print(ISFDBLink('publisher.cgi', publisher_id, publisher_name))
                 else:
-                        print '&nbsp;'
-                print '</td>'
-        print '</tr>'
+                        print('&nbsp;')
+                print('</td>')
+        print('</tr>')
 
         # Publication Note
-        print '<tr>'
-        print '<th>Pub. Note:</th>'
+        print('<tr>')
+        print('<th>Pub. Note:</th>')
         for pub in pubs:
                 note_id = pub[PUB_NOTE]
                 note_data = SQLgetNotes(note_id)
-                print '<td>'
-                print note_data
-                print '</td>'
-        print '</tr>'
+                print('<td>')
+                print(note_data)
+                print('</td>')
+        print('</tr>')
 
         # Cover images
-        print '<tr>'
-        print '<th>Pub. Cover:</th>'
+        print('<tr>')
+        print('<th>Pub. Cover:</th>')
         for pub in pubs:
                 pub_image = ISFDBHostCorrection(pub[PUB_IMAGE])
-                print '<td>'
+                print('<td>')
                 if not pub_image:
-                        print '&nbsp;'
+                        print('&nbsp;')
                 else:
-                        print '<img src="%s" height="250" alt="cover image"><br>' % (pub_image.split("|")[0])
-                print '</td>'
-        print '</tr>'
+                        print('<img src="%s" height="250" alt="cover image"><br>' % (pub_image.split("|")[0]))
+                print('</td>')
+        print('</tr>')
 
         # Contents titles
         for title_id in titles_dict:
                 title = title_bodies[title_id]
                 title_title = title[TITLE_TITLE]
                 title_type = title[TITLE_TTYPE]
-                print '<tr>'
-                print '<td>&nbsp;</td>'
+                print('<tr>')
+                print('<td>&nbsp;</td>')
                 for pub in pubs:
                         pub_id = int(pub[PUB_PUBID])
                         if pub_id not in titles_dict[title_id]:
-                                print '<td class="pub_comparison_title_not_found">-</td>'
+                                print('<td class="pub_comparison_title_not_found">-</td>')
                                 continue
-                        print '<td>'
+                        print('<td>')
                         if pages[pub_id][title_id]:
-                                print '<b>%s</b> ' % pages[pub_id][title_id]
-                        print '%s %s by ' % (ISFDBLink('title.cgi', title_id, title_title), title_type)
+                                print('<b>%s</b> ' % pages[pub_id][title_id])
+                        print('%s %s by ' % (ISFDBLink('title.cgi', title_id, title_title), title_type))
 
                         authors = SQLTitleBriefAuthorRecords(title_id)
                         counter = 0
                         for author in authors:
                                 if counter:
-                                        print " <b>and</b> "
+                                        print(" <b>and</b> ")
                                 displayAuthorById(author[0], author[1])
                                 counter += 1
-                        print '</td>'
-                print '</tr>'
+                        print('</td>')
+                print('</tr>')
 
-        print '<tr>'
-        print '<td>&nbsp;</td>'
+        print('<tr>')
+        print('<td>&nbsp;</td>')
         for pub in pubs:
                 pub_id = int(pub[PUB_PUBID])
                 pub_title = pub[PUB_TITLE]
-                print '<td>'
-                print ISFDBLink('edit/editpub.cgi', pub_id, 'Edit %s' % pub_title, True)
-                print '</td>'
-        print '</tr>'
-        print '</table>'
+                print('<td>')
+                print(ISFDBLink('edit/editpub.cgi', pub_id, 'Edit %s' % pub_title, True))
+                print('</td>')
+        print('</tr>')
+        print('</table>')
 
         PrintTrailer('login', 0, 0)
         sys.exit(0)

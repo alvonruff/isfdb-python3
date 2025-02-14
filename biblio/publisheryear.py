@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -35,25 +36,25 @@ if __name__ == '__main__':
         PrintNavbar('publisheryear', publisher_id, publisher_id, 'publisheryear.cgi', 0)
         pubs = SQLGetPubsByPublisherYear(publisher_id, year)
         if show_covers:
-                print ISFDBLinkNoName('publisheryear.cgi', '%d+%d' % (publisher_id, year), 'View publication list for this year')
-                print SESSION.ui.bullet
-                print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
-                print '<p>'
+                print(ISFDBLinkNoName('publisheryear.cgi', '%d+%d' % (publisher_id, year), 'View publication list for this year'))
+                print(SESSION.ui.bullet)
+                print(ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page'))
+                print('<p>')
                 count = 0
                 for pub in pubs:
                         if pub[PUB_IMAGE]:
-                                print ISFDBScan(pub[PUB_PUBID], pub[PUB_IMAGE])
+                                print(ISFDBScan(pub[PUB_PUBID], pub[PUB_IMAGE]))
                                 count += 1
                 if not count:
-                        print '<h3>No covers for %s</h3>' % year
+                        print('<h3>No covers for %s</h3>' % year)
                 PrintTrailer('publisheryear', publisher_id, publisher_id)
                 sys.exit(0)
         if len(pubs):
-                print '<p>'
-                print ISFDBLinkNoName('publisheryear.cgi', '%d+%d+1' % (publisher_id, year), 'View covers for this year')
-                print SESSION.ui.bullet
-                print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
-                print '<p>'
+                print('<p>')
+                print(ISFDBLinkNoName('publisheryear.cgi', '%d+%d+1' % (publisher_id, year), 'View covers for this year'))
+                print(SESSION.ui.bullet)
+                print(ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page'))
+                print('<p>')
                 PrintPubsTable(pubs, 'publisher')
 
         PrintTrailer('publisheryear', publisher_id, publisher_id)

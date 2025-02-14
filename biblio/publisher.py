@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -32,16 +33,16 @@ if __name__ == '__main__':
         PrintHeader(title)
         PrintNavbar('publisher', publisher_id, publisher_id, 'publisher.cgi', publisher_id)
 
-        print '<div class="ContentBox">'
+        print('<div class="ContentBox">')
         other_publishers = SQLGetDisambiguatedRecords(publisher_id, publisher[PUBLISHER_NAME], 'publishers', 'publisher_id', 'publisher_name')
         if other_publishers:
-                print '<h3>Note: There are other publishers with the same name:'
+                print('<h3>Note: There are other publishers with the same name:')
                 displayRecordList('publisher', other_publishers)
-                print '</h3>'
-        print '<ul>'
+                print('</h3>')
+        print('<ul>')
         # Transliterated name(s)
         trans_names = SQLloadTransPublisherNames(publisher_id)
-        print '<li><b>Publisher: </b>%s' % ISFDBMouseover(trans_names, publisher[PUBLISHER_NAME], '')
+        print('<li><b>Publisher: </b>%s' % ISFDBMouseover(trans_names, publisher[PUBLISHER_NAME], ''))
         printRecordID('Publisher', publisher_id, user.id)
 
         # Webpages
@@ -50,22 +51,22 @@ if __name__ == '__main__':
 
         # Local Wiki Link
         if SQLwikiLinkExists('Publisher', publisher[PUBLISHER_NAME]):
-                print "<li><b>Publisher Comments:</b>"
+                print("<li><b>Publisher Comments:</b>")
                 publisher_name = 'Publisher:%s' % publisher[PUBLISHER_NAME]
-                print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, publisher_name, publisher_name)
+                print('<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, publisher_name, publisher_name))
 
         # Publisher Note
         if publisher[PUBLISHER_NOTE]:
-                print '<li>'
+                print('<li>')
                 notes = SQLgetNotes(publisher[PUBLISHER_NOTE])
-                print FormatNote(notes, 'Note', 'short', publisher_id, 'Publisher')
+                print(FormatNote(notes, 'Note', 'short', publisher_id, 'Publisher'))
 
-        print '</ul>'
-        print '</div>'
+        print('</ul>')
+        print('</div>')
 
-        print '<div class="ContentBox">'
-        print '<h3 class="contentheader">Publication series data</h3>'
-        print '<ul class="unindent">'
+        print('<div class="ContentBox">')
+        print('<h3 class="contentheader">Publication series data</h3>')
+        print('<ul class="unindent">')
         # Retrieve the count of this publisher's publications not in a publication series
         pubs_not_in_series = SQLCountPubsNotInPubSeries(publisher_id)
         if pubs_not_in_series:
@@ -77,7 +78,7 @@ if __name__ == '__main__':
                         display += ' (too many to display on one page)'
                 else:
                         display = ISFDBLink('pubs_not_in_series.cgi', publisher_id, display)
-                print '<li><b>%s</b>' % display
+                print('<li><b>%s</b>' % display)
 
         # Retrieve all Publication Series IDs used by this publisher
         all_pub_series = SQLFindPubSeriesForPublisher(publisher_id)
@@ -89,15 +90,15 @@ if __name__ == '__main__':
                 list_of_series_as_string = ",".join(list_of_series)
                 all_pub_series = SQLLoadPubSeries(list_of_series_as_string)
                 for pub_series in all_pub_series:
-                        print '<li>%s</li>' % ISFDBLink('pubseries.cgi', pub_series[PUB_SERIES_ID], pub_series[PUB_SERIES_NAME])
-        print '</ul>'
-        print '</div>'
+                        print('<li>%s</li>' % ISFDBLink('pubseries.cgi', pub_series[PUB_SERIES_ID], pub_series[PUB_SERIES_NAME]))
+        print('</ul>')
+        print('</div>')
 
-        print '<div class="ContentBox">'
-        print '<h3 class="contentheader">Years When Books Were Published</h3>'
+        print('<div class="ContentBox">')
+        print('<h3 class="contentheader">Years When Books Were Published</h3>')
         years = SQLGetPublisherYears(publisher_id)
 
-        print '<table class="yearblock">'
+        print('<table class="yearblock">')
 
         low_decade = 10000
         hi_decade  = 0
@@ -113,9 +114,9 @@ if __name__ == '__main__':
                         exception = 'forthcoming'
 
                 if exception:
-                        print '<tr>'
-                        print '<td colspan="10">%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), exception)
-                        print '</tr>'
+                        print('<tr>')
+                        print('<td colspan="10">%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), exception))
+                        print('</tr>')
 
                 if (year != 0) and (year < 2100):
                         decade = 10*(int(year)/10)
@@ -127,24 +128,24 @@ if __name__ == '__main__':
         decade = low_decade
         while decade <= hi_decade:
                 year = decade
-                print '<tr>'
+                print('<tr>')
                 while year < decade+10:
                         if year in years:
-                                print '<td>%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), year)
+                                print('<td>%s</td>' % ISFDBLink("publisheryear.cgi", "%d+%s" % (publisher_id, year), year))
                         else:
-                                print "<td>------</td>"
+                                print("<td>------</td>")
                         year += 1
-                print "</tr>"
+                print("</tr>")
                 decade += 10
-        print '</table>'
-        print '</div>'
+        print('</table>')
+        print('</div>')
 
-        print '<div class="ContentBox">'
-        print '<b>Publication Breakdown by Author:</b>'
-        print '<ul>'
-        print '<li>%s' % ISFDBLink('publisher_authors.cgi', '%d+name' % publisher_id, 'Sort by Author Name')
-        print '<li>%s' % ISFDBLink('publisher_authors.cgi', '%d+count' % publisher_id, 'Sort by Publication Count')
-        print '</ul>'
-        print '</div>'
+        print('<div class="ContentBox">')
+        print('<b>Publication Breakdown by Author:</b>')
+        print('<ul>')
+        print('<li>%s' % ISFDBLink('publisher_authors.cgi', '%d+name' % publisher_id, 'Sort by Author Name'))
+        print('<li>%s' % ISFDBLink('publisher_authors.cgi', '%d+count' % publisher_id, 'Sort by Publication Count'))
+        print('</ul>')
+        print('</div>')
 
         PrintTrailer('publisher', publisher_id, publisher_id)

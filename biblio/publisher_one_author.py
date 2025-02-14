@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,14 +32,14 @@ if __name__ == '__main__':
         PrintHeader('Publications for Author %s Published by %s' % (author_name, publisher_name))
         PrintNavbar('publisher_one_author', publisher_id, publisher_id, 'publisher_one_author.cgi', 0)
 
-        print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
-        print ' %s ' % SESSION.ui.bullet
-        print ISFDBLink('publisher_authors.cgi', '%d+name' % publisher_id, 'Return to the Authors for Publisher %s page' % publisher_name)
-        print """<p>The statistics below count the number of publications for the
+        print(ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page'))
+        print(' %s ' % SESSION.ui.bullet)
+        print(ISFDBLink('publisher_authors.cgi', '%d+name' % publisher_id, 'Return to the Authors for Publisher %s page' % publisher_name))
+        print("""<p>The statistics below count the number of publications for the
                 specified author. They do not include individual titles (stories, poems, etc.)
                 contained in publications. Each edition of a book increments the count.
                 Only the currently selected form of the author's name is counted, e.g.
-                'Mary Shelley' does not include books published as by 'Mary W. Shelley'."""
+                'Mary Shelley' does not include books published as by 'Mary W. Shelley'.""")
 
         pubs = SQLGetPubsForAuthorPublisher(publisher_id, author_id)
         decades = {}
@@ -74,7 +75,7 @@ if __name__ == '__main__':
                                 row.append('-')
                 table.rows.append(row)
         table.PrintTable()
-        print '<p>'
+        print('<p>')
         PrintPubsTable(pubs, 'publisher')
 
         PrintTrailer('publisher_one_author', publisher_id, publisher_id)

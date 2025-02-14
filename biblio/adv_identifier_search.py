@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
 #       ALL RIGHTS RESERVED
@@ -26,38 +27,38 @@ class AdvancedIDSearch(AdvancedSearch):
                 self.user = User()
                 self.user.load()
                 if not self.user.id:
-                        print '<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>'
+                        print('<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>')
                 else:
                         self.print_full_header()
                         self.print_identifier_search()
                 PrintTrailer('adv_id_search', 0, 0)
 
         def print_identifier_search(self):
-                print '<h2>Publication Search by External Identifier</h2>'
-                print '<form METHOD="GET" action="%s:/%s/external_id_search_results.cgi">' % (PROTOCOL, HTFAKE)
-                print '<p>'
+                print('<h2>Publication Search by External Identifier</h2>')
+                print('<form METHOD="GET" action="%s:/%s/external_id_search_results.cgi">' % (PROTOCOL, HTFAKE))
+                print('<p>')
                 id_types = SQLLoadIdentifierTypes()
-                print '<select NAME="ID_TYPE">'
+                print('<select NAME="ID_TYPE">')
                 for type_number in sorted(id_types, key = id_types.get):
                         type_name = id_types[type_number][0]
-                        print '<option VALUE="%d">%s</option>' % (type_number, type_name)
-                print '</select>'
+                        print('<option VALUE="%d">%s</option>' % (type_number, type_name))
+                print('</select>')
 
-                print '<select NAME="OPERATOR">'
-                print '<option SELECTED VALUE="exact">is exactly'
-                print '<option VALUE="contains">contains'
-                print '<option VALUE="notcontains">does not contain'
-                print '<option VALUE="starts_with">starts with'
-                print '<option VALUE="not_starts_with">does not start with'
-                print '<option VALUE="ends_with">ends with'
-                print '<option VALUE="not_ends_with">does not end with'
-                print '</select>'
+                print('<select NAME="OPERATOR">')
+                print('<option SELECTED VALUE="exact">is exactly')
+                print('<option VALUE="contains">contains')
+                print('<option VALUE="notcontains">does not contain')
+                print('<option VALUE="starts_with">starts with')
+                print('<option VALUE="not_starts_with">does not start with')
+                print('<option VALUE="ends_with">ends with')
+                print('<option VALUE="not_ends_with">does not end with')
+                print('</select>')
 
-                print '<input NAME="ID_VALUE" SIZE="50">'
-                print '<p>'
+                print('<input NAME="ID_VALUE" SIZE="50">')
+                print('<p>')
 
-                print '<input TYPE="SUBMIT" VALUE="Submit Query">'
-                print '</form>'
+                print('<input TYPE="SUBMIT" VALUE="Submit Query">')
+                print('</form>')
 
         
 if __name__ == '__main__':

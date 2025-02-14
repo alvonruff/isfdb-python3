@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,7 +31,7 @@ if __name__ == '__main__':
         db.query(query)
         result0 = db.store_result()
         if result0.num_rows() == 0:
-                print '<h3>No removed secondary verifications present for the specified ID range</h3>'
+                print('<h3>No removed secondary verifications present for the specified ID range</h3>')
                 PrintTrailer('removed_secondary_verifications', 0, 0)
                 sys.exit(0)
         deleted = result0.fetch_row()
@@ -39,16 +40,16 @@ if __name__ == '__main__':
                 deleted_verifications.append(deleted[0])
                 deleted = result0.fetch_row()
 
-        print '<table cellpadding=3 class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>#</th>'
-        print '<th>Publication</th>'
-        print '<th>Reference</th>'
-        print '<th>Original Verifier</th>'
-        print '<th>Verification Time</th>'
-        print '<th>Deleting Moderator</th>'
-        print '<th>Deletion Time</th>'
-        print '</tr>'
+        print('<table cellpadding=3 class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>#</th>')
+        print('<th>Publication</th>')
+        print('<th>Reference</th>')
+        print('<th>Original Verifier</th>')
+        print('<th>Verification Time</th>')
+        print('<th>Deleting Moderator</th>')
+        print('<th>Deletion Time</th>')
+        print('</tr>')
 
         color = 0
         count = start
@@ -77,22 +78,22 @@ if __name__ == '__main__':
                         verifier_name = record[0][2]
                         deleter_name = record[0][3]
                         if color:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td>%s</td>' % reference_name
-                        print '<td>%s</td>' % WikiLink(verifier_name)
-                        print '<td>%s</td>' % verification_time
-                        print '<td>%s</td>' % WikiLink(deleter_name)
-                        print '<td>%s</td>' % deletion_time
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td>%s</td>' % reference_name)
+                        print('<td>%s</td>' % WikiLink(verifier_name))
+                        print('<td>%s</td>' % verification_time)
+                        print('<td>%s</td>' % WikiLink(deleter_name))
+                        print('<td>%s</td>' % deletion_time)
+                        print('</tr>')
                         record = result.fetch_row()
 
-        print '</table>'
+        print('</table>')
         if result0.num_rows() > (per_page - 1):
-                print '<p> [%s]' % ISFDBLink('removed_secondary_verifications.cgi', start + per_page, 'MORE')
+                print('<p> [%s]' % ISFDBLink('removed_secondary_verifications.cgi', start + per_page, 'MORE'))
 
         PrintTrailer('removed_secondary_verifications', 0, 0)
 

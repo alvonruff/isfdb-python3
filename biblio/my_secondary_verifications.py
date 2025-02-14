@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -26,7 +27,7 @@ if __name__ == '__main__':
         user = User()
         user.load()
         if not user.id:
-                print '<h3>You must be logged in to view your secondary verifications</h3>'
+                print('<h3>You must be logged in to view your secondary verifications</h3>')
                 PrintTrailer('my_secondary_verifications', 0, 0)
                 sys.exit(0)
 
@@ -42,7 +43,7 @@ if __name__ == '__main__':
         db.query(query)
         result0 = db.store_result()
         if result0.num_rows() == 0:
-                print '<h3>No verifications present</h3>'
+                print('<h3>No verifications present</h3>')
                 PrintTrailer('recentver', 0, 0)
                 sys.exit(0)
         ver = result0.fetch_row()
@@ -51,13 +52,13 @@ if __name__ == '__main__':
                 ver_set.append(ver[0])
                 ver = result0.fetch_row()
 
-        print '<table cellpadding=3 class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>#</th>'
-        print '<th>Publication Title</th>'
-        print '<th>Reference</th>'
-        print '<th>Time</th>'
-        print '</tr>'
+        print('<table cellpadding=3 class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>#</th>')
+        print('<th>Publication Title</th>')
+        print('<th>Reference</th>')
+        print('<th>Time</th>')
+        print('</tr>')
 
         color = 0
         count = start
@@ -79,19 +80,19 @@ if __name__ == '__main__':
                         reference_name = record[0][0]
                         pub_title = record[0][1]
                         if color:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td>%s</td>' % reference_name
-                        print '<td>%s</td>' % verification_time
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td>%s</td>' % reference_name)
+                        print('<td>%s</td>' % verification_time)
+                        print('</tr>')
                         record = result.fetch_row()
 
-        print '</table>'
+        print('</table>')
         if result0.num_rows() > (per_page - 1):
-                print '<p> [%s]' % ISFDBLink('my_secondary_verifications.cgi', start + per_page, 'MORE')
+                print('<p> [%s]' % ISFDBLink('my_secondary_verifications.cgi', start + per_page, 'MORE'))
 
         PrintTrailer('my_secondary_verifications', 0, 0)
 

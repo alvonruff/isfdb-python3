@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,26 +41,26 @@ if __name__ == '__main__':
         PrintHeader('Most-Reviewed Titles Details')
         PrintNavbar('top', 0, 0, 'most_reviewed.cgi', 0)
 
-        print '<h3>%s</h3>' % header
+        print('<h3>%s</h3>' % header)
 
-        print '<h3>This report is generated once a day</h3>'
+        print('<h3>This report is generated once a day</h3>')
 
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>This report is currently unavailable. It will be regenerated overnight.</h3>'
+                print('<h3>This report is currently unavailable. It will be regenerated overnight.</h3>')
         else:
                 # Print the table headers        
-                print '<table class="seriesgrid">'
-                print '<tr>'
-                print '<th>Count</th>'
-                print '<th>Reviews</th>'
+                print('<table class="seriesgrid">')
+                print('<tr>')
+                print('<th>Count</th>')
+                print('<th>Reviews</th>')
                 if report_type != 'year':
-                        print '<th>Year</th>'
-                print '<th>Title</th>'
-                print '<th>Type</th>'
-                print '<th>Authors</th>'
-                print '</tr>'
+                        print('<th>Year</th>')
+                print('<th>Title</th>')
+                print('<th>Type</th>')
+                print('<th>Authors</th>')
+                print('</tr>')
                 record = result.fetch_row()
                 bgcolor = 0
                 count = 1
@@ -67,27 +68,27 @@ if __name__ == '__main__':
                         title_id = record[0][0]
                         year = record[0][1]
                         reviews = record[0][2]
-                        print '<tr align=left class="table%d">' % (bgcolor+1)
-                        print '<td>%d</td>' % count
-                        print '<td>%d</td>' % reviews
+                        print('<tr align=left class="table%d">' % (bgcolor+1))
+                        print('<td>%d</td>' % count)
+                        print('<td>%d</td>' % reviews)
                         # Display the year of the title unless we are displaying the data for just one year
                         if report_type != 'year':
                                 display_year = unicode(year)
                                 if display_year == '0':
                                         display_year = '0000'
-                                print '<td>%s</td>' % ISFDBconvertYear(display_year)
+                                print('<td>%s</td>' % ISFDBconvertYear(display_year))
                         # Retrieve this record's title and type
                         title_data = SQLloadTitle(title_id)
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_data[TITLE_TITLE])
-                        print '<td>%s</td>' % title_data[TITLE_TTYPE]
-                        print '<td>'
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_data[TITLE_TITLE]))
+                        print('<td>%s</td>' % title_data[TITLE_TTYPE])
+                        print('<td>')
                         PrintAllAuthors(title_id)
-                        print '</td>'
-                        print '</tr>'
+                        print('</td>')
+                        print('</tr>')
                         record = result.fetch_row()
                         bgcolor = bgcolor ^ 1
                         count += 1
-                print '</table>'
+                print('</table>')
         
         PrintTrailer('top', 0, 0)
 

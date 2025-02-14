@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2022   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,7 +19,7 @@ from SQLparsing import SQLLoadFullLanguages
 PrintHeader('ISFDB-Supported Languages')
 PrintNavbar('languages', 0, 0, 'languages.cgi', 0)
 
-print '<h4>ISFDB supports the following subset of <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2-recognized</a> languages</h4>'
+print('<h4>ISFDB supports the following subset of <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2-recognized</a> languages</h4>')
 
 table = ISFDBTable()
 table.headers.extend(['Name', 'ISO 639-2 Code', 'Supports Latin-Derived Script'])

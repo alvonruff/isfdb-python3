@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2016-2025  Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -36,17 +37,17 @@ def PrintPubRecord(count, record, previous_last_viewed, bgcolor):
         submitter_name = record[6]
         transient = record[7]
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
+        print('<td>%d</td>' % count)
         new = 'New'
         if change_date and previous_last_viewed and change_date < previous_last_viewed:
                 new = '&nbsp;'
-        print '<td>%s</td>' % new
-        print '<td>%s</td>' % ISFDBLinkNoName('view_submission.cgi', sub_id, change_date)
-        print '<td>%s</td>' % WikiLink(submitter_name)
+        print('<td>%s</td>' % new)
+        print('<td>%s</td>' % ISFDBLinkNoName('view_submission.cgi', sub_id, change_date))
+        print('<td>%s</td>' % WikiLink(submitter_name))
         xml = SQLloadXML(sub_id)
         doc = minidom.parseString(XMLunescape2(xml))
         fields = ''
@@ -71,30 +72,30 @@ def PrintPubRecord(count, record, previous_last_viewed, bgcolor):
                                 fields += display_field
                 if not fields:
                         fields = '&nbsp;'
-        print '<td>%s</td>' % fields
-        print '<td>%s</td>' % ver_date
-        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-        print '<td>%s</td>' % PubAuthors(pub_id)
+        print('<td>%s</td>' % fields)
+        print('<td>%s</td>' % ver_date)
+        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+        print('<td>%s</td>' % PubAuthors(pub_id))
         if transient:
-                print '<td>Transient</td>'
+                print('<td>Transient</td>')
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
-        print '</tr>'
+        print('</tr>')
 
 def PrintTableColumns():
-        print '<table class="userverifications">'
-        print '<tr class="table2">'
-        print '<th>Count</th>'
-        print '<th>New?</th>'
-        print '<th>Submission Link</th>'
-        print '<th>Submitter</th>'
-        print '<th>Changed Fields</th>'
-        print '<th>Verification Date</th>'
-        print '<th>Publication</th>'
-        print '<th>Author/Editor</th>'
-        print '<th>Transient?</th>'
-        print '</tr>'
+        print('<table class="userverifications">')
+        print('<tr class="table2">')
+        print('<th>Count</th>')
+        print('<th>New?</th>')
+        print('<th>Submission Link</th>')
+        print('<th>Submitter</th>')
+        print('<th>Changed Fields</th>')
+        print('<th>Verification Date</th>')
+        print('<th>Publication</th>')
+        print('<th>Author/Editor</th>')
+        print('<th>Transient?</th>')
+        print('</tr>')
 
 if __name__ == '__main__':
 
@@ -130,7 +131,7 @@ if __name__ == '__main__':
                 last = num
                 if last > 200:
                         last = 200
-                print '<h3>Displaying changed primary verifications %d-%d:</h3>' % (start+1, start+last)
+                print('<h3>Displaying changed primary verifications %d-%d:</h3>' % (start+1, start+last))
                 record = result.fetch_row()
                 bgcolor = 1
                 PrintTableColumns()
@@ -140,11 +141,11 @@ if __name__ == '__main__':
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
                 if num > 199:
-                        print ISFDBLinkNoName('changed_verified_pubs.cgi', start+200, '%d-%d' % (start+201, start+400), True)
+                        print(ISFDBLinkNoName('changed_verified_pubs.cgi', start+200, '%d-%d' % (start+201, start+400), True))
         else:
-                print '<h2>No changed primary verifications found</h2>'
+                print('<h2>No changed primary verifications found</h2>')
 
         PrintTrailer('changed_verified_pubs', 0, 0)
 

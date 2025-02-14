@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2022-2025  Ahasuerus
+#     (C) COPYRIGHT 2022-2025  Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,8 +24,8 @@ if __name__ == '__main__':
         PrintHeader('My Primary Verifications with Unstable ISBN-based Amazon URLs')
         PrintNavbar('my_unstable_ISBN_verifications', 0, 0, 'my_unstable_ISBN_verifications.cgi', 0)
 
-        print """<h3>Amazon URLs which start with "/images/P/" are based on an ISBN
-                and may no longer reflect the actual cover of the publication</h3>"""
+        print("""<h3>Amazon URLs which start with "/images/P/" are based on an ISBN
+                and may no longer reflect the actual cover of the publication</h3>""")
 
         my_verifications = MyVerifications()
         my_verifications.display()

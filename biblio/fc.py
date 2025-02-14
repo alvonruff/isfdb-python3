@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -176,27 +177,27 @@ class PublicationMonth:
                         self.tags = SQLgetTagsByTitleForTitleList(title_ids, self.user.id)
 
         def PrintPage(self):
-                print '<hr>'
-                print '<h2 class="centered">Upcoming Months</h2>'
+                print('<hr>')
+                print('<h2 class="centered">Upcoming Months</h2>')
                 self.PrintMonthLine()
-                print '<hr>'
+                print('<hr>')
 
                 if not self.pubs:
-                        print '<h1 class="centered">No books available for %s %s</h1>' % (ISFDBmonthmap[self.target_month], self.target_year)
+                        print('<h1 class="centered">No books available for %s %s</h1>' % (ISFDBmonthmap[self.target_month], self.target_year))
                 else:
                         if self.sorting == 'date':
                                 self.SortByDateAndGenre()
                         else:
                                 self.SortByAuthor()
 
-                print '<hr>'
+                print('<hr>')
                 self.PrintMonthLine()
                 PrintTrailer('forthcoming', 0, 0)
 
         def PrintMonthLine(self):
                 count = 0
-                print '<table class="generic_centered_table">'
-                print '<tr class="generic_centered_header">'
+                print('<table class="generic_centered_table">')
+                print('<tr class="generic_centered_header">')
                 TmpMonth = self.current_month
                 TmpYear = int(self.current_year)
                 while count < 12:
@@ -204,17 +205,17 @@ class PublicationMonth:
                                 full = ' (Full)'
                         else:
                                 full = ''
-                        print '<td>%s</td>' % ISFDBLinkNoName('fc.cgi',
+                        print('<td>%s</td>' % ISFDBLinkNoName('fc.cgi',
                                                               'date+%s+%d' % (TmpMonth, TmpYear),
                                                               '%s %d%s' % (ISFDBmonthmap[TmpMonth], TmpYear, full),
-                                                              False, 'class = "bold"')
+                                                              False, 'class = "bold"'))
                         TmpMonth += 1
                         if TmpMonth > 12:
                                 TmpMonth = 1
                                 TmpYear += 1
                         count += 1
-                print '</tr>'
-                print '</table>'
+                print('</tr>')
+                print('</table>')
 
         def SortByAuthor(self):
                 self.sorting = 'author'
@@ -238,12 +239,12 @@ class PublicationMonth:
                                 pub_dict[last_name][canonical_name][pub_id] = author_id
 
                 if self.target_day == 0:
-                        print '<h1 class="centered"> All Books for %s %s by Author</h1>' % (ISFDBmonthmap[self.target_month], self.target_year)
-                        print ISFDBLinkNoName('fc.cgi', 'date+%d+%s' % (self.target_month, self.target_year), 'Sort by Genre and Date')
+                        print('<h1 class="centered"> All Books for %s %s by Author</h1>' % (ISFDBmonthmap[self.target_month], self.target_year))
+                        print(ISFDBLinkNoName('fc.cgi', 'date+%d+%s' % (self.target_month, self.target_year), 'Sort by Genre and Date'))
                 else:
-                        print '<h1 class="centered"> Future Books for %s %s by Author (Information based on pre-publication data and subject to change)</h1>' % (ISFDBmonthmap[self.target_month], self.target_year)
-                        print ISFDBLinkNoName('fc.cgi', 'date', 'Sort by Genre and Date')
-                print '<br>'
+                        print('<h1 class="centered"> Future Books for %s %s by Author (Information based on pre-publication data and subject to change)</h1>' % (ISFDBmonthmap[self.target_month], self.target_year))
+                        print(ISFDBLinkNoName('fc.cgi', 'date', 'Sort by Genre and Date'))
+                print('<br>')
                 self.PrintTableHeader()
 
                 # Now that the dictionary has been populated, traverse it alphabetically
@@ -253,7 +254,7 @@ class PublicationMonth:
                                         self.first_author_id = pub_dict[last_name][canonical_name][pub_id]
                                         self.pub_id = pub_id
                                         self.PrintOneRecord()
-                print '</table>'
+                print('</table>')
                 return
 
         def SortByDateAndGenre(self):
@@ -272,20 +273,20 @@ class PublicationMonth:
 
                 # Print out the target month
                 if self.target_day == 0:
-                        print '<h1 class="centered"> All Books for %s %s by Genre and Date</h1>' % (ISFDBmonthmap[self.target_month], self.target_year)
-                        print ISFDBLinkNoName('fc.cgi', 'author+%d+%s' % (self.target_month, self.target_year), 'Sort by Author')
+                        print('<h1 class="centered"> All Books for %s %s by Genre and Date</h1>' % (ISFDBmonthmap[self.target_month], self.target_year))
+                        print(ISFDBLinkNoName('fc.cgi', 'author+%d+%s' % (self.target_month, self.target_year), 'Sort by Author'))
                 else:
-                        print '<h1 class="centered"> Future Books for %s %s by Genre and Date (Information based on pre-publication data and subject to change)</h1>' % (ISFDBmonthmap[self.target_month], self.target_year)
-                        print ISFDBLinkNoName('fc.cgi', 'author', 'Sort by Author')
-                print '<br>Or jump to:'
-                print '<ul>'
+                        print('<h1 class="centered"> Future Books for %s %s by Genre and Date (Information based on pre-publication data and subject to change)</h1>' % (ISFDBmonthmap[self.target_month], self.target_year))
+                        print(ISFDBLinkNoName('fc.cgi', 'author', 'Sort by Author'))
+                print('<br>Or jump to:')
+                print('<ul>')
                 if self.adult:
-                        print '<li><a href="#adult">Adult</a>'
+                        print('<li><a href="#adult">Adult</a>')
                 if self.ya:
-                        print '<li><a href="#ya">Young Adult and Juvenile</a>'
+                        print('<li><a href="#ya">Young Adult and Juvenile</a>')
                 if self.romance:
-                        print '<li><a href="#romance">Romance</a>'
-                print '</ul>'
+                        print('<li><a href="#romance">Romance</a>')
+                print('</ul>')
 
                 if self.adult:
                         self.PrintGenre("adult", "Adult", self.adult)
@@ -295,33 +296,33 @@ class PublicationMonth:
                         self.PrintGenre("romance", "Romance", self.romance)
 
         def PrintGenre(self, html_id, displayed_genre, pub_ids):
-                print '<h2 id = "%s" class="centered">%s</h2>' % (html_id, displayed_genre)
+                print('<h2 id = "%s" class="centered">%s</h2>' % (html_id, displayed_genre))
                 self.PrintTableHeader()
                 
                 for pub_id in pub_ids:
                         self.pub_id = pub_id
                         self.PrintOneRecord()
-                print '</table>'
+                print('</table>')
 
         def PrintTableHeader(self):
-                print '<table class="generic_table">'
-                print '<tr class="generic_centered_header">'
+                print('<table class="generic_table">')
+                print('<tr class="generic_centered_header">')
                 if self.sorting == 'author':
-                        print "<td><b>Author(s)</b></td>"
-                        print "<td><b>Title %s Series</b></td>" % SESSION.ui.bullet
-                print "<td><b>Date</b></td>"
+                        print("<td><b>Author(s)</b></td>")
+                        print("<td><b>Title %s Series</b></td>" % SESSION.ui.bullet)
+                print("<td><b>Date</b></td>")
                 if self.sorting == 'date':
-                        print "<td><b>Author(s)</b></td>"
-                        print "<td><b>Title %s Series</b></td>" % SESSION.ui.bullet
-                print "<td><b>Reprint?</b></td>"
-                print "<td><b>Genre/Tags</b></td>"
-                print "<td><b>Type</b></td>"
-                print "<td><b>Publisher</b></td>"
-                print "<td><b>ISBN/Catalog ID</b></td>"
-                print "<td><b>Price</b></td>"
-                print "<td><b>Pages</b></td>"
-                print "<td><b>Format</b></td>"
-                print "</tr>"
+                        print("<td><b>Author(s)</b></td>")
+                        print("<td><b>Title %s Series</b></td>" % SESSION.ui.bullet)
+                print("<td><b>Reprint?</b></td>")
+                print("<td><b>Genre/Tags</b></td>")
+                print("<td><b>Type</b></td>")
+                print("<td><b>Publisher</b></td>")
+                print("<td><b>ISBN/Catalog ID</b></td>")
+                print("<td><b>Price</b></td>")
+                print("<td><b>Pages</b></td>")
+                print("<td><b>Format</b></td>")
+                print("</tr>")
 
         def PrintOneRecord(self):
                 from isbn import convertISBN
@@ -340,18 +341,18 @@ class PublicationMonth:
                 self.title_data = self.referral_titles.get(self.pub_id, None)
 
                 if self.bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
                 self.bgcolor ^= 1
 
                 # If sorting by author, print the authors and title first
                 if self.sorting == 'author':
                         self.PrintAuthorAndTitle()
 
-                print '<td>'
-                print pub[PUB_YEAR]
-                print '</td>'
+                print('<td>')
+                print(pub[PUB_YEAR])
+                print('</td>')
 
                 if self.sorting == 'date':
                         self.PrintAuthorAndTitle()
@@ -369,11 +370,11 @@ class PublicationMonth:
                                                 if int(title[TITLE_YEAR][5:7]) < int(pub[PUB_YEAR][5:7]):
                                                         reprint = 'REPRINT'
 
-                print '<td>'
-                print reprint
-                print '</td>'
+                print('<td>')
+                print(reprint)
+                print('</td>')
 
-                print '<td>'
+                print('<td>')
                 output = ''
                 if self.title_data:
                         self.title_id = self.title_data[TITLE_PUBID]
@@ -383,19 +384,19 @@ class PublicationMonth:
                                                 output += ', '
                                         output += ISFDBLink('tag.cgi', tag[TAG_ID], tag[TAG_NAME])
                 if output:
-                        print output
+                        print(output)
                 else:
-                        print "&nbsp;"
-                print '</td>'
+                        print("&nbsp;")
+                print('</td>')
 
-                print '<td>'
+                print('<td>')
                 if pub[PUB_CTYPE]:
-                        print pub[PUB_CTYPE].capitalize()
+                        print(pub[PUB_CTYPE].capitalize())
                 else:
-                        print "&nbsp;"
-                print '</td>'
+                        print("&nbsp;")
+                print('</td>')
                 
-                print '<td>'
+                print('<td>')
                 if publisher_id:
                         output = ISFDBLink('publisher.cgi', publisher_id, publisher_name, False, '', self.publisher_trans)
                         if pub_series_id:
@@ -403,34 +404,34 @@ class PublicationMonth:
                                 if pub_series_number:
                                         output += ' #%s' % pub_series_number
                                 output += ')'
-                        print output
+                        print(output)
                 else:
-                        print "&nbsp;"
-                print '</td>'
+                        print("&nbsp;")
+                print('</td>')
 
                 printISBNCatalog(pub)
 
-                print '<td>'
+                print('<td>')
                 if pub[PUB_PRICE]:
-                        print ISFDBPrice(pub[PUB_PRICE], 'left')
+                        print(ISFDBPrice(pub[PUB_PRICE], 'left'))
                 else:
-                        print "&nbsp;"
-                print '</td>'
+                        print("&nbsp;")
+                print('</td>')
 
-                print '<td>'
+                print('<td>')
                 if pub[PUB_PAGES]:
-                        print pub[PUB_PAGES]
+                        print(pub[PUB_PAGES])
                 else:
-                        print "&nbsp;"
-                print '</td>'
+                        print("&nbsp;")
+                print('</td>')
 
-                print '<td>'
+                print('<td>')
                 if pub[PUB_PTYPE]:
-                        print ISFDBPubFormat(pub[PUB_PTYPE], 'left')
+                        print(ISFDBPubFormat(pub[PUB_PTYPE], 'left'))
                 else:
-                        print "&nbsp;"
-                print '</td>'
-                print '</tr>'
+                        print("&nbsp;")
+                print('</td>')
+                print('</tr>')
                 return
 
         def PrintAuthorAndTitle(self):
@@ -447,13 +448,13 @@ class PublicationMonth:
                         authors = []
                         authors.append(first_author)
                         authors = authors + new_authors
-                print '<td>'
+                print('<td>')
                 displayAuthorList(authors)
-                print '</td>'
+                print('</td>')
 
                 # Print the title and series for the book
                 pub = self.pubs[self.pub_id]
-                print '<td>'
+                print('<td>')
                 output = ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, '', self.pub_trans)
                 title = self.title_data
                 if title:
@@ -470,8 +471,8 @@ class PublicationMonth:
                                                 output += '.%s' % (title[TITLE_SERIESNUM_2])
                                 elif title[TITLE_CONTENT]:
                                         output += ' /%s' % (title[TITLE_CONTENT])
-                print output
-                print '</td>'
+                print(output)
+                print('</td>')
 
         def GetTitleGenre(self):
                 self.title_genre = 'Adult'

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -39,30 +40,30 @@ if __name__ == '__main__':
         bgcolor = 1
         while record:
                 if first:
-                        print '<table class="generic_table">'
-                        print '<tr class="generic_table_header">'
-                        print '<th>Tag Name</th>'
-                        print '<th>Count</th>'
-                        print '<th>Private?</th>'
-                        print '</tr>'
+                        print('<table class="generic_table">')
+                        print('<tr class="generic_table_header">')
+                        print('<th>Tag Name</th>')
+                        print('<th>Count</th>')
+                        print('<th>Private?</th>')
+                        print('</tr>')
                         first = 0
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%s</td>' % ISFDBLink('tag.cgi', record[0][0], record[0][2])
-                print '<td>%s</td>' % ISFDBLink('usertitles.cgi', '%d+%d' % (user_id, record[0][0]), record[0][1])
-                print '<td>'
+                        print('<tr align=left class="table2">')
+                print('<td>%s</td>' % ISFDBLink('tag.cgi', record[0][0], record[0][2]))
+                print('<td>%s</td>' % ISFDBLink('usertitles.cgi', '%d+%d' % (user_id, record[0][0]), record[0][1]))
+                print('<td>')
                 if record[0][3]:
-                        print '<b>Private</b>'
+                        print('<b>Private</b>')
                 else:
-                        print '&nbsp;'
-                print '</td>'
-                print '</tr>'
+                        print('&nbsp;')
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
 
-        print '</table>'
-        print '<p><p>'
+        print('</table>')
+        print('<p><p>')
 
         PrintTrailer('usertag', user_id, user_id)

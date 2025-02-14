@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025         Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Ahasuerus, Bill Longley and Dirk Stoecker
 #                ALL RIGHTS RESERVED
@@ -43,25 +44,25 @@ def displayPersonLabel(person_type, persons, line_start = '<br>'):
                 many = 's'
         else:
                 many = ''
-        print "%s<b>%s%s:</b>" % (line_start, person_type, many)
+        print("%s<b>%s%s:</b>" % (line_start, person_type, many))
 
 def displayPersons(persons):
         counter = 0
         for person in persons:
                 if counter:
-                        print " <b>and</b> "
+                        print(" <b>and</b> ")
                 displayAuthorById(person[0], person[1])
                 counter += 1
 
 def PrintNewPubs(userid):
-        print '<div class="divider">'
-        print 'Add New Data:'
-        print '</div>'
-        print '<ul class="navbar">'
+        print('<div class="divider">')
+        print('Add New Data:')
+        print('</div>')
+        print('<ul class="navbar">')
         for pub_type in SESSION.db.pub_types:
-                print '<li>%s' % ISFDBLinkNoName('edit/newpub.cgi', pub_type.title(), 'Add New %s' % pub_type.title())
-        print '<li>%s' % ISFDBLinkNoName('edit/select_award_type.cgi', '0', 'Add Untitled Award')
-        print '</ul>'
+                print('<li>%s' % ISFDBLinkNoName('edit/newpub.cgi', pub_type.title(), 'Add New %s' % pub_type.title()))
+        print('<li>%s' % ISFDBLinkNoName('edit/select_award_type.cgi', '0', 'Add Untitled Award'))
+        print('</ul>')
         return
 
 def convertTitleYear(title):
@@ -140,7 +141,7 @@ def displayMainTitle(title, author_id, authors, series_type, original_language, 
         # If this is a graphic title, display the graphic designation
         if title[TITLE_GRAPHIC] == 'Yes':
                 output += ' <b>[graphic format]</b>'
-        print output
+        print(output)
 
         # Display review authors
         if title[TITLE_TTYPE] == 'REVIEW':
@@ -211,21 +212,21 @@ def displayVariants(title, parent_authors, variants, serials, variant_authors, a
         ######################################################
         if titleVariation:
                 if parentHasPubs:
-                        print " also appeared as:"
+                        print(" also appeared as:")
                 else:
-                        print " only appeared as:"
+                        print(" only appeared as:")
                 firstvariant = 1
                 for variant in variant_list:
                         if firstvariant:
                                 firstvariant = 0
-                                print "<ul>"
-                        print "<li>"
+                                print("<ul>")
+                        print("<li>")
                         displayVariantTitle(variant, title, 'variant',
                                             parent_authors, author_id,
                                             variant_authors, translit_titles,
                                             translit_authors)
                 if firstvariant == 0:
-                        print "</ul>"
+                        print("</ul>")
         ###############################################################
         # STEP 2b: If there is only 1 variant and its title, title type
         # and language are the same as the parent title's, then display
@@ -244,14 +245,14 @@ def displayVariants(title, parent_authors, variants, serials, variant_authors, a
         # STEP 3: Display serializations
         ######################################################
         if serial_list:
-                print '<ul>'
-                print '<li><b>Serializations:</b>'
+                print('<ul>')
+                print('<li><b>Serializations:</b>')
                 for serial in serial_list:
-                        print "<li>"
+                        print("<li>")
                         displayVariantTitle(serial, title, 'serial',
                                             parent_authors, author_id,
                                             variant_authors, translit_titles, translit_authors)
-                print '</ul>'
+                print('</ul>')
 
 def displayVariantTitle(title, origTitle, variant_type, parent_authors,
                         author_id, variant_authors, translit_titles, translit_authors):
@@ -301,7 +302,7 @@ def displayVariantTitle(title, origTitle, variant_type, parent_authors,
                         output += ' <b>[O/%s]</b> ' % title[TITLE_CONTENT]
                 else:
                         output += ' <b>[O]</b> '
-        print output
+        print(output)
 
         canonical_authors = parent_authors.get(origTitle[TITLE_PUBID], [])
         canonical_author_ids = []
@@ -327,23 +328,23 @@ def displayAuthors(authors, author_id, translit_authors):
         if not authors:
                 return
         if not author_id:
-                print " <b>by</b>"
+                print(" <b>by</b>")
         else:
-                print " <b>with</b> "
+                print(" <b>with</b> ")
         counter = 0
         for author in authors:
                 if counter:
-                        print " <b>and</b> "
+                        print(" <b>and</b> ")
                 displayAuthorById(author[0], author[1], translit_authors)
                 counter += 1
 
 def displayAuthorsforReview(reviewer_authors, title, author_id, translit_authors):
         reviewed_authors = SQLReviewedAuthors(title[TITLE_PUBID])
-        print " <b>by</b> "
+        print(" <b>by</b> ")
         counter = 0
         for author in reviewed_authors:
                 if counter:
-                        print " <b>and</b> "
+                        print(" <b>and</b> ")
                 displayAuthorById(author[0], author[1])
                 counter += 1
         
@@ -366,15 +367,15 @@ def displayAuthorsforReview(reviewer_authors, title, author_id, translit_authors
                 counter += 1
         if counter:
                 output += ")"
-        print output
+        print(output)
 
 def displayAuthorsforInterview(interviewer_authors, title, author_id, translit_authors):
         interviewee_authors = SQLIntervieweeAuthors(title[TITLE_PUBID])
-        print " <b>with</b> "
+        print(" <b>with</b> ")
         counter = 0
         for author in interviewee_authors:
                 if counter:
-                        print " <b>and</b> "
+                        print(" <b>and</b> ")
                 displayAuthorById(author[0], author[1])
                 counter += 1
 
@@ -400,7 +401,7 @@ def displayAuthorsforInterview(interviewer_authors, title, author_id, translit_a
                 counter += 1
         if counter:
                 output += ")"        
-        print output
+        print(output)
 
 def displayVariantAuthors(authors, qualifier, translit_authors):
         if len(authors) == 0:
@@ -417,7 +418,7 @@ def displayVariantAuthors(authors, qualifier, translit_authors):
                 output += ISFDBLink('ea.cgi', author[0], author[1], False, '', translit_authors)
                 counter += 1
         output += "]"
-        print output
+        print(output)
 
 def buildVariants(canonical_titles, variants, user):
         variant_dict = {}
@@ -522,31 +523,31 @@ def PrintUserInfo(executable, argument):
 def PrintHeader(title):
         PrintHTMLHeaders(title)
 
-        print '<script type="text/javascript" src="%s://%s/isfdb_main.js"></script>' % (PROTOCOL, HTMLLOC)
+        print('<script type="text/javascript" src="%s://%s/isfdb_main.js"></script>' % (PROTOCOL, HTMLLOC))
         # Advanced Search pages only:
         if title.startswith('Advanced'):
                 # Import functions to change drop-down values dynamically
-                print '<script type="text/javascript" src="%s://%s/adv_search.js"></script>' % (PROTOCOL, HTMLLOC)
+                print('<script type="text/javascript" src="%s://%s/adv_search.js"></script>' % (PROTOCOL, HTMLLOC))
 
         # GOOGLE Analytics - will need to be rewritten to work with CSP before it can be activated
         if DO_ANALYTICS:
-                print '<script src="https://www.google-analytics.com/urchin.js" type="text/javascript">'
-                print '</script>'
-                print '<script type="text/javascript">'
-                print '_uacct = "UA-253096-1";'
-                print 'urchinTracker();'
-                print '</script>'
+                print('<script src="https://www.google-analytics.com/urchin.js" type="text/javascript">')
+                print('</script>')
+                print('<script type="text/javascript">')
+                print('_uacct = "UA-253096-1";')
+                print('urchinTracker();')
+                print('</script>')
 
         (userid, username, usertoken) = GetUserData()
         if not userid:
-                print '<h3>You are not logged in. If you'
-                print ' <a href="%s://%s/index.php?title=Special:Userlogin&amp;type=signup">' % (PROTOCOL, WIKILOC)
-                print '<span class="newuser">create a free account</span></a>'
-                print ' and sign in, you will be able to customize what is displayed.</h3>'
+                print('<h3>You are not logged in. If you')
+                print(' <a href="%s://%s/index.php?title=Special:Userlogin&amp;type=signup">' % (PROTOCOL, WIKILOC))
+                print('<span class="newuser">create a free account</span></a>')
+                print(' and sign in, you will be able to customize what is displayed.</h3>')
         elif SQLhasNewTalk(userid):
-                print '<div class="newtalk"><h3>There are new messages on your Talk page. Please follow '
-                print '<a href="%s://%s/index.php/User_talk:%s">this link</a> and respond.</h3></div>' % (PROTOCOL, WIKILOC, username)
-        print '</div>'
+                print('<div class="newtalk"><h3>There are new messages on your Talk page. Please follow ')
+                print('<a href="%s://%s/index.php/User_talk:%s">this link</a> and respond.</h3></div>' % (PROTOCOL, WIKILOC, username))
+        print('</div>')
 
 ########################################################################
 #        "page_type" defines the type of page the Navbar will be displayed on
@@ -572,7 +573,7 @@ def PrintHeader(title):
 #        see /edit/isfdblib.py for Edit NavBar function
 ########################################################################
 def PrintNavbar(page_type, arg1, arg2, executable, argument, search_value = '', search_type = ''):
-        print '<div id="nav">'
+        print('<div id="nav">')
 
         # Display the search box
         PrintSearchBox(page_type, search_value, search_type)
@@ -597,64 +598,64 @@ def PrintNavbar(page_type, arg1, arg2, executable, argument, search_value = '', 
                 elif arg1[PUB_PUBLISHER]:
                         publisher = SQLGetPublisher(arg1[PUB_PUBLISHER])
                         if publisher[PUBLISHER_NAME] == 'Project Gutenberg' and arg1[PUB_CATALOG]:
-                                print '<div class="divider">'
-                                print 'Other Links:'
-                                print '</div>'
-                                print '<ul class="navbar">'
-                                print '<li><a href="https://www.gutenberg.org/ebooks/%s" target="_blank">Project Gutenberg</a>' % arg1[PUB_CATALOG]
-                                print '</ul>'
+                                print('<div class="divider">')
+                                print('Other Links:')
+                                print('</div>')
+                                print('<ul class="navbar">')
+                                print('<li><a href="https://www.gutenberg.org/ebooks/%s" target="_blank">Project Gutenberg</a>' % arg1[PUB_CATALOG])
+                                print('</ul>')
 
         PrintEditTools(page_type, userid, arg1, arg2)
 
         PrintNewPubs(userid)
 
         if page_type == 'frontpage':
-                print '<div class="divider">'
-                print 'Tools Used to Create This Site:'
-                print '</div>'
-                print '<ul class="navbar">'
-                print '<li><a href="https://www.fabforce.net/dbdesigner4/">DBDesigner 4</a>'
-                print '<li><a href="https://www.mysql.com">MySQL</a>'
-                print '<li><a href="https://www.python.org">Python</a>'
-                print '<li><a href="https://wiki.mozilla.org/Venkman">Venkman</a>'
-                print '<li><a href="https://www.vim.org">Vim</a>'
-                print '</ul>'
+                print('<div class="divider">')
+                print('Tools Used to Create This Site:')
+                print('</div>')
+                print('<ul class="navbar">')
+                print('<li><a href="https://www.fabforce.net/dbdesigner4/">DBDesigner 4</a>')
+                print('<li><a href="https://www.mysql.com">MySQL</a>')
+                print('<li><a href="https://www.python.org">Python</a>')
+                print('<li><a href="https://wiki.mozilla.org/Venkman">Venkman</a>')
+                print('<li><a href="https://www.vim.org">Vim</a>')
+                print('</ul>')
 
-        print '<div class="divider">'
-        print 'Policies:'
-        print '</div>'
-        print '<ul class="navbar">'
-        print '<li><a href="%s://%s/index.php/ISFDB:General_disclaimer">Disclaimer</a>' % (PROTOCOL, WIKILOC)
-        print '<li><a href="%s://%s/index.php/ISFDB:Privacy_policy">Privacy Policy</a>' % (PROTOCOL, WIKILOC)
-        print '<li><a href="%s://%s/index.php/Banner_Art_Credits">Banner Art Credits</a>' % (PROTOCOL, WIKILOC)
-        print '</ul>'
+        print('<div class="divider">')
+        print('Policies:')
+        print('</div>')
+        print('<ul class="navbar">')
+        print('<li><a href="%s://%s/index.php/ISFDB:General_disclaimer">Disclaimer</a>' % (PROTOCOL, WIKILOC))
+        print('<li><a href="%s://%s/index.php/ISFDB:Privacy_policy">Privacy Policy</a>' % (PROTOCOL, WIKILOC))
+        print('<li><a href="%s://%s/index.php/Banner_Art_Credits">Banner Art Credits</a>' % (PROTOCOL, WIKILOC))
+        print('</ul>')
 
-        print '<div class="divider">'
-        print 'License:'
-        print '</div>'
-        print '<div id="cclicense">'
-        print '<a rel="license" href="https://creativecommons.org/licenses/by/4.0/">'
-        print '<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a><br>'
-        print 'This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.'
-        print '</div>'
+        print('<div class="divider">')
+        print('License:')
+        print('</div>')
+        print('<div id="cclicense">')
+        print('<a rel="license" href="https://creativecommons.org/licenses/by/4.0/">')
+        print('<img alt="Creative Commons License" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a><br>')
+        print('This work is licensed under a <a rel="license" href="https://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.')
+        print('</div>')
 
         # nav div
-        print '</div>'
+        print('</div>')
         if page_type == 'login':
-                print '<div id="main2">'
+                print('<div id="main2">')
         elif page_type in ('author', 'publication', 'title', 'publisher', 'pub_series', 'series', 'seriestags', 'seriesgrid'):
-                print '<div id="content">'
+                print('<div id="content">')
         else:
-                print '<div id="main">'
+                print('<div id="main">')
         dbStatus = SQLgetDatabaseStatus()
         if dbStatus == 0:
-                print "<h3>The ISFDB database is currently offline. Please check back in a few minutes.</h3>"
+                print("<h3>The ISFDB database is currently offline. Please check back in a few minutes.</h3>")
                 PrintTrailer('frontpage', 0, 0)
                 sys.exit(0)
 
         onlineVersion = SQLgetSchemaVersion()
         if onlineVersion != SCHEMA_VER:
-                print "<h3>Warning: database schema mismatch (%s vs %s)</h3>" % (onlineVersion, SCHEMA_VER)
+                print("<h3>Warning: database schema mismatch (%s vs %s)</h3>" % (onlineVersion, SCHEMA_VER))
 
 def PrintThirdPartyLinks(websites, type_of_sites):
         displayed_sites = []
@@ -665,10 +666,10 @@ def PrintThirdPartyLinks(websites, type_of_sites):
                         displayed_sites.append(website)
         if not displayed_sites:
                 return
-        print '<div class="divider">'
-        print '%s Links <i class="downarrow"></i>' % type_of_sites
-        print '<div id="div%ssites" class="divothersites">' % type_of_sites
-        print '<ul class="listothersites">'
+        print('<div class="divider">')
+        print('%s Links <i class="downarrow"></i>' % type_of_sites)
+        print('<div id="div%ssites" class="divothersites">' % type_of_sites)
+        print('<ul class="listothersites">')
         for website in displayed_sites:
                 displayed_site_name = ISFDBText(website[0])
                 suffix=''
@@ -676,10 +677,10 @@ def PrintThirdPartyLinks(websites, type_of_sites):
                         displayed_site_name = displayed_site_name.replace('Amazon ','')
                         if displayed_site_name in ('US','UK'):
                                 suffix = ' (commissions earned)'
-                print '<li><a href="%s" target="_blank">%s</a>%s' % (website[1], displayed_site_name, suffix)
-        print '</ul>'
-        print '</div>'
-        print '</div>'
+                print('<li><a href="%s" target="_blank">%s</a>%s' % (website[1], displayed_site_name, suffix))
+        print('</ul>')
+        print('</div>')
+        print('</div>')
 
 def AuthorSearchLink(author_name):
         return AdvSearchLink((('TYPE', 'Title'),
@@ -751,27 +752,27 @@ def PrintEditTools(page_type, userid, arg1, arg2):
         elif page_type == 'pub_series':
                 output.append(ISFDBLink('edit/editpubseries.cgi', arg2, 'Edit This Publication Series'))
         if output:
-                print '<div class="divider">'
-                print 'Editing Tools:'
-                print '</div>'
-                print '<ul class="navbar">'
+                print('<div class="divider">')
+                print('Editing Tools:')
+                print('</div>')
+                print('<ul class="navbar">')
                 for line in output:
-                        print '<li>%s' % line
-                print '</ul>'
+                        print('<li>%s' % line)
+                print('</ul>')
 
 def PrintTrailer(page_type, arg1, arg2):
-        print '</div>'
-        print '<div id="bottom">'
-        print COPYRIGHT
-        print '<br>'
-        print ENGINE
+        print('</div>')
+        print('<div id="bottom">')
+        print(COPYRIGHT)
+        print('<br>')
+        print(ENGINE)
         if page_type == 'publication':
-                print '<br>'
-                print 'ISFDB is an Amazon Associate in order to have access to Amazon\'s product data. As an Amazon Associate ISFDB earns from qualifying purchases.'
-        print '</div>'
-        print '</div>'
-        print '</body>'
-        print '</html>'
+                print('<br>')
+                print('ISFDB is an Amazon Associate in order to have access to Amazon\'s product data. As an Amazon Associate ISFDB earns from qualifying purchases.')
+        print('</div>')
+        print('</div>')
+        print('</body>')
+        print('</html>')
 
 def escape_spaces(input):
         return string.replace(input, ' ', '%20')
@@ -792,16 +793,16 @@ def displayAuthorList(authors):
         displayRecordList('author', authors)
 
 def displayRecordList(record_type, records):
-        print LIBbuildRecordList(record_type, records)
+        print(LIBbuildRecordList(record_type, records))
 
 def displayAuthorById(id, name, trans_authors = None):
-        print buildAuthorById(id, name, trans_authors = None)
+        print(buildAuthorById(id, name, trans_authors = None))
 
 def buildAuthorById(id, name, trans_authors = None):
         return ISFDBLink('ea.cgi', id, name, False, '', trans_authors)
 
 def PrintAllAuthors(title_id, prefix = '', suffix = ''):
-        print ISFDBFormatAllAuthors(title_id, prefix, suffix)
+        print(ISFDBFormatAllAuthors(title_id, prefix, suffix))
 
 def PrintWebPages(webpages, format = '<li>'):
         if not webpages:
@@ -831,7 +832,7 @@ def PrintWebPages(webpages, format = '<li>'):
                                 qualifier = "-%d" % (count)
                         output += '<a href="%s" target="_blank">%s%s</a>' % (webpage, display, qualifier)
                         count += 1
-        print output
+        print(output)
 
 def BuildDisplayedURL(webpage):
         linked_page = ''
@@ -891,15 +892,15 @@ def BuildDisplayedURL(webpage):
         return (webpage, display, home_page, linked_page)
         
 def PrintAwardResults(results, limit):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
-        print '<th>Short Award Name</th>'
-        print '<th>Full Award Name</th>'
-        print '<th>Awarded For</th>'
-        print '<th>Awarded By</th>'
-        print '<th>Poll</th>'
-        print '<th>Non-Genre</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
+        print('<th>Short Award Name</th>')
+        print('<th>Full Award Name</th>')
+        print('<th>Awarded For</th>')
+        print('<th>Awarded By</th>')
+        print('<th>Poll</th>')
+        print('<th>Non-Genre</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -909,35 +910,35 @@ def PrintAwardResults(results, limit):
                 counter += 1
                 if counter > limit:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintAwardRecord(award, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award[AWARD_TYPE_ID], award[AWARD_TYPE_SHORT_NAME])
-        print '<td>%s</td>' % award[AWARD_TYPE_NAME]
+        print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award[AWARD_TYPE_ID], award[AWARD_TYPE_SHORT_NAME]))
+        print('<td>%s</td>' % award[AWARD_TYPE_NAME])
         award_for = award[AWARD_TYPE_FOR]
         if award_for is None:
                 award_for = '-'
-        print '<td>%s</td>' % award_for
+        print('<td>%s</td>' % award_for)
         award_by = award[AWARD_TYPE_BY]
         if award_by is None:
                 award_by = '-'
-        print '<td>%s</td>' % award_by
-        print '<td>%s</td>' % award[AWARD_TYPE_POLL]
-        print '<td>%s</td>' % award[AWARD_TYPE_NONGENRE]
-        print '</tr>'
+        print('<td>%s</td>' % award_by)
+        print('<td>%s</td>' % award[AWARD_TYPE_POLL])
+        print('<td>%s</td>' % award[AWARD_TYPE_NONGENRE])
+        print('</tr>')
 
 def PrintAwardCatResults(results, limit):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
-        print '<th>Award Category Name</th>'
-        print '<th>Parent Award Type</th>'
-        print '<th>Award Category Order</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
+        print('<th>Award Category Name</th>')
+        print('<th>Parent Award Type</th>')
+        print('<th>Award Category Order</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -947,23 +948,23 @@ def PrintAwardCatResults(results, limit):
                 counter += 1
                 if counter > limit:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintAwardCatRecord(award_cat, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat[AWARD_CAT_ID], award_cat[AWARD_CAT_NAME])
+        print('<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat[AWARD_CAT_ID], award_cat[AWARD_CAT_NAME]))
         award_type_id = award_cat[AWARD_CAT_TYPE_ID]
         award_type = SQLGetAwardTypeById(award_type_id)
-        print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type[AWARD_TYPE_ID], award_type[AWARD_TYPE_SHORT_NAME])
+        print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type[AWARD_TYPE_ID], award_type[AWARD_TYPE_SHORT_NAME]))
         if award_cat[AWARD_CAT_ORDER]:
-                print '<td>%s</td>' % award_cat[AWARD_CAT_ORDER]
+                print('<td>%s</td>' % award_cat[AWARD_CAT_ORDER])
         else:
-                print '<td>&nbsp;</td>'
-        print '</tr>'
+                print('<td>&nbsp;</td>')
+        print('</tr>')
 
 def CoverInfo(link, preview=False, direct=False):
         (finallink, credit, home_page, linked_page) = BuildDisplayedURL(link)
@@ -990,40 +991,40 @@ def PrintPubsTable(pubs, display_type, user = None, limit = 100000):
         if not user:
                 user = User()
                 user.load()
-        print '<table class="publications">'
-        print '<tr class="table2">'
+        print('<table class="publications">')
+        print('<tr class="table2">')
 
         if display_type == 'diffselect':
-                print '<th class="publication_checkbox">&nbsp;</th>'
-                print '<th class="publication_title_short">Title</th>'
+                print('<th class="publication_checkbox">&nbsp;</th>')
+                print('<th class="publication_title_short">Title</th>')
         elif display_type == 'pubseries':
-                print '<th class="publication_date">Date</th>'
-                print '<th class="publication_series_number">Pub. Series #</th>'
-                print '<th class="publication_title">Title</th>'
+                print('<th class="publication_date">Date</th>')
+                print('<th class="publication_series_number">Pub. Series #</th>')
+                print('<th class="publication_title">Title</th>')
         else:
-                print '<th class="publication_title">Title</th>'
+                print('<th class="publication_title">Title</th>')
 
         if display_type != 'pubseries':
-                print '<th class="publication_date">Date</th>'
-        print '<th class="publication_author_editor">Author/Editor</th>'
+                print('<th class="publication_date">Date</th>')
+        print('<th class="publication_author_editor">Author/Editor</th>')
 
         if display_type == 'publisher':
-                print '<th class="publication_publisher">Publication series</th>'
+                print('<th class="publication_publisher">Publication series</th>')
         elif display_type == 'pubseries':
-                print '<th class="publication_publisher">Publisher</th>'
+                print('<th class="publication_publisher">Publisher</th>')
         else:
-                print '<th class="publication_publisher">Publisher/Pub. Series</th>'
+                print('<th class="publication_publisher">Publisher/Pub. Series</th>')
 
-        print '<th class="publication_isbn_catalog">ISBN/Catalog ID</th>'
-        print '<th class="publication_price">Price</th>'
-        print '<th class="publication_pages">Pages</th>'
-        print '<th class="publication_format">Format</th>'
-        print '<th class="publication_type">Type</th>'
-        print '<th class="publication_cover_artist">Cover Artist</th>'
-        print '<th class="publication_verif">Verif</th>'
+        print('<th class="publication_isbn_catalog">ISBN/Catalog ID</th>')
+        print('<th class="publication_price">Price</th>')
+        print('<th class="publication_pages">Pages</th>')
+        print('<th class="publication_format">Format</th>')
+        print('<th class="publication_type">Type</th>')
+        print('<th class="publication_cover_artist">Cover Artist</th>')
+        print('<th class="publication_verif">Verif</th>')
         if user.cover_links_display:
-                print '<th class="publication_cover">Cover</th>'
-        print '</tr>'
+                print('<th class="publication_cover">Cover</th>')
+        print('</tr>')
 
         # Build lists of pub IDs, publisher IDs and pub series IDs to be used in SQL statements
         pub_list = []
@@ -1049,42 +1050,42 @@ def PrintPubsTable(pubs, display_type, user = None, limit = 100000):
                 index += 1
                 if index > limit:
                         break
-        print '</table>'
+        print('</table>')
         return
 
 def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgcolor, display_type, user, index):
         from isbn import convertISBN
-        print '<tr class="table%d">' % bgcolor
+        print('<tr class="table%d">' % bgcolor)
 
         # Display the checkbox column for "Diff Select" only
         if display_type == 'diffselect':
-                print '<td><input type="checkbox" value="%d" name="pub%d"></td>' % (pub[PUB_PUBID], index)
+                print('<td><input type="checkbox" value="%d" name="pub%d"></td>' % (pub[PUB_PUBID], index))
 
         # For publication series, display the Date and Pub. Series Number columns first
         elif display_type == 'pubseries':
-                print '<td>%s</td>' % ISFDBconvertDate(pub[PUB_YEAR], 1)
+                print('<td>%s</td>' % ISFDBconvertDate(pub[PUB_YEAR], 1))
                 pub_series_number = '&nbsp;'
                 if pub[PUB_SERIES_NUM]:
                         pub_series_number = ISFDBText(pub[PUB_SERIES_NUM])
-                print '<td dir="ltr">%s</td>' % pub_series_number
+                print('<td dir="ltr">%s</td>' % pub_series_number)
 
         # Publication title
-        print '<td dir="ltr">%s</td>' % ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE])
+        print('<td dir="ltr">%s</td>' % ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE]))
 
         # Publication date unless this is a Publication Series, in which case we have already displayed the date
         if display_type != 'pubseries':
-                print '<td>%s</td>' % ISFDBconvertDate(pub[PUB_YEAR], 1)
+                print('<td>%s</td>' % ISFDBconvertDate(pub[PUB_YEAR], 1))
 
         # Author(s)/editor(s)
-        print '<td>'
+        print('<td>')
         if pub[PUB_CTYPE] in ('ANTHOLOGY', 'MAGAZINE', 'FANZINE'):
-                print 'ed. '
+                print('ed. ')
         author_list = ''
         for author in pub_authors[pub[PUB_PUBID]]:
                 if author_list:
                         author_list += ", "
                 author_list += ISFDBLink('ea.cgi', author[0], author[1])
-        print '%s</td>' % author_list
+        print('%s</td>' % author_list)
 
         # Publisher and publication series
         displayed_publisher = FormatPublisher(pub, pub_publishers)
@@ -1104,23 +1105,23 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
                         output = ''
 
         if output:
-                print '<td dir="ltr">%s</td>' % output
+                print('<td dir="ltr">%s</td>' % output)
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         # ISBN/Catalog ID
         printISBNCatalog(pub)
 
         # Price
         if pub[PUB_PRICE]:
-                print '<td dir="ltr">%s</td>' % ISFDBPrice(pub[PUB_PRICE])
+                print('<td dir="ltr">%s</td>' % ISFDBPrice(pub[PUB_PRICE]))
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         # Pages
         if pub[PUB_PAGES]:
                 page_list = string.split(pub[PUB_PAGES],'+')
-                print '<td>'
+                print('<td>')
                 first = 1
                 output = ''
                 for page_number in page_list:
@@ -1129,15 +1130,15 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
                         else:
                                 first = 0
                         output += ISFDBText(page_number)
-                print output
-                print '</td>' 
+                print(output)
+                print('</td>') 
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         if pub[PUB_PTYPE]:
-                print '<td>%s</td>' % ISFDBPubFormat(pub[PUB_PTYPE])
+                print('<td>%s</td>' % ISFDBPubFormat(pub[PUB_PTYPE]))
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         # Type
         if pub[PUB_CTYPE]:
@@ -1150,39 +1151,39 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
                               'FANZINE': 'fanzine',
                               'NONFICTION': 'non-fic'}
                 if pub[PUB_CTYPE] in short_names:
-                        print '<td>%s</td>' % short_names[pub[PUB_CTYPE]]
+                        print('<td>%s</td>' % short_names[pub[PUB_CTYPE]])
                 else:
-                        print '<td>%s</td>' % pub[PUB_CTYPE]
+                        print('<td>%s</td>' % pub[PUB_CTYPE])
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         # Cover artists
-        print '<td>'
+        print('<td>')
         if pub[PUB_PUBID] in cover_artists:
                 artist_count = 0
                 for cover_artist in cover_artists[pub[PUB_PUBID]]:
                         artist_id = cover_artist[0]
                         artist_name = cover_artist[1]
                         if artist_count:
-                                print ', '
+                                print(', ')
                         displayAuthorById(artist_id, artist_name)
                         artist_count += 1
         else:
                 '&nbsp;'
-        print '</td>'
+        print('</td>')
 
         # Verification status
         if SQLPrimaryVerifiers(pub[PUB_PUBID]):
-                print '<td class="checkmark"><img src="%s://%s/checkmark.png" alt="Checkmark" height="15" width="15"></td>' % (PROTOCOL, HTMLLOC)
+                print('<td class="checkmark"><img src="%s://%s/checkmark.png" alt="Checkmark" height="15" width="15"></td>' % (PROTOCOL, HTMLLOC))
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
 
         if user.cover_links_display:
                 if pub[PUB_IMAGE]:
-                        print '<td>%s</td>' % CoverInfo(pub[PUB_IMAGE], False, True)
+                        print('<td>%s</td>' % CoverInfo(pub[PUB_IMAGE], False, True))
                 else:
-                        print '<td>&nbsp;</td>'
-        print '</tr>'
+                        print('<td>&nbsp;</td>')
+        print('</tr>')
 
 def printISBNCatalog(pub):
         from isbn import convertISBN
@@ -1196,7 +1197,7 @@ def printISBNCatalog(pub):
                         value += ISFDBText(pub[PUB_CATALOG])
         else:
                 value = '&nbsp;'
-        print '<td dir="ltr">%s</td>' % value
+        print('<td dir="ltr">%s</td>' % value)
 
 def FormatPubSeries(pub, pub_series):
         displayed_pub_series = ''
@@ -1216,19 +1217,19 @@ def FormatPublisher(pub, pub_publishers):
         return displayed_publisher
 
 def PrintTitleTable(titles, merge, limit = 100, user = None):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
         if merge:
-                print "<th>Merge</th>"
-        print "<th>Date</th>"
-        print "<th>Type</th>"
-        print "<th>Language</th>"
-        print "<th>Title</th>"
-        print "<th>Authors</th>"
-        print "<th>Parent Title</th>"
-        print "<th>Parent Authors</th>"
-        print "<th>Tags</th>"
-        print "</tr>"
+                print("<th>Merge</th>")
+        print("<th>Date</th>")
+        print("<th>Type</th>")
+        print("<th>Language</th>")
+        print("<th>Title</th>")
+        print("<th>Authors</th>")
+        print("<th>Parent Title</th>")
+        print("<th>Parent Authors</th>")
+        print("<th>Tags</th>")
+        print("</tr>")
         counter = 1
         bgcolor = 1
         for title in titles:
@@ -1237,46 +1238,46 @@ def PrintTitleTable(titles, merge, limit = 100, user = None):
                 counter += 1
                 if counter > limit:
                         break
-        print "</table>"
+        print("</table>")
 
 def PrintTitleRecord(title, merge, limit, bgcolor, user):
         title_id = title[TITLE_PUBID]
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         if merge:
-                print '<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%s"></td>' % title_id
-        print "<td>%s</td>" % ISFDBconvertDate(title[TITLE_YEAR], 1)
-        print "<td>%s</td>" % title[TITLE_TTYPE]
+                print('<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%s"></td>' % title_id)
+        print("<td>%s</td>" % ISFDBconvertDate(title[TITLE_YEAR], 1))
+        print("<td>%s</td>" % title[TITLE_TTYPE])
         if title[TITLE_LANGUAGE]:
-                print "<td>%s</td>" % (LANGUAGES[int(title[TITLE_LANGUAGE])])
+                print("<td>%s</td>" % (LANGUAGES[int(title[TITLE_LANGUAGE])]))
         else:
-                print "<td>&nbsp;</td>"
+                print("<td>&nbsp;</td>")
 
         displayed_title = ISFDBLink('title.cgi', title_id, title[TITLE_TITLE])
-        print '<td dir="ltr">%s</td>' % displayed_title
+        print('<td dir="ltr">%s</td>' % displayed_title)
 
         authors = SQLTitleBriefAuthorRecords(title_id)
-        print "<td>%s</td>" % FormatAuthors(authors)
+        print("<td>%s</td>" % FormatAuthors(authors))
         
         if title[TITLE_PARENT]:
-                print '<td>'
+                print('<td>')
                 parent_data = SQLloadTitle(title[TITLE_PARENT])
-                print ISFDBLink('title.cgi', parent_data[TITLE_PUBID], parent_data[TITLE_TITLE])
-                print '</td>'
-                print '<td>'
+                print(ISFDBLink('title.cgi', parent_data[TITLE_PUBID], parent_data[TITLE_TITLE]))
+                print('</td>')
+                print('<td>')
                 parent_authors = SQLTitleBriefAuthorRecords(parent_data[TITLE_PUBID])
                 # Only display the parent author(s) if they are not the same as the variant's author(s)
                 if set(authors) != set(parent_authors):
-                        print FormatAuthors(parent_authors)
-                print '</td>'
+                        print(FormatAuthors(parent_authors))
+                print('</td>')
         else:
-                print '<td>&nbsp;</td>'
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
+                print('<td>&nbsp;</td>')
 
-        print '<td>'
+        print('<td>')
         tags = SQLgetAllTitleTags(title_id, title[TITLE_PARENT], int(user.id))
         if tags:
                 first_tag = 1
@@ -1287,20 +1288,20 @@ def PrintTitleRecord(title, merge, limit, bgcolor, user):
                                 first_tag = 0
                         else:
                                 output += ', %s (%d)' % (ISFDBLink('tag.cgi', tag[0], tag[1]), tag[2])
-                print output
+                print(output)
         else:
-                print '&nbsp;'
-        print '</td>'
+                print('&nbsp;')
+        print('</td>')
 
-        print '</tr>'
+        print('</tr>')
 
 def PrintPublisherTable(publishers, merge, limit = 100, user = None):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
         if merge and user.moderator:
-                print '<th>Merge</th>'
-        print '<th>Publisher</th>'
-        print '</tr>'
+                print('<th>Merge</th>')
+        print('<th>Publisher</th>')
+        print('</tr>')
         counter = 1
         bgcolor = 1
         for publisher in publishers:
@@ -1309,24 +1310,24 @@ def PrintPublisherTable(publishers, merge, limit = 100, user = None):
                 counter += 1
                 if counter > limit:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintPublisherRecord(record, bgcolor, user, merge):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         if merge and user.moderator:
-                print '<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%s"></td>' % record[PUBLISHER_ID]
-        print '<td>%s</td>' % ISFDBLink('publisher.cgi', record[PUBLISHER_ID], record[PUBLISHER_NAME])
-        print '</tr>'
+                print('<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%s"></td>' % record[PUBLISHER_ID])
+        print('<td>%s</td>' % ISFDBLink('publisher.cgi', record[PUBLISHER_ID], record[PUBLISHER_NAME]))
+        print('</tr>')
 
 def PrintPubSeriesTable(pub_series, limit = 100):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
-        print '<th>Publication Series</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
+        print('<th>Publication Series</th>')
+        print('</tr>')
         counter = 1
         bgcolor = 1
         for one_pub_series in pub_series:
@@ -1335,23 +1336,23 @@ def PrintPubSeriesTable(pub_series, limit = 100):
                 counter += 1
                 if counter > limit:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintPubSeriesRecord(record, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
-        print '<td>%s</td>' % ISFDBLink('pubseries.cgi', record[PUB_SERIES_ID], record[PUB_SERIES_NAME])
-        print '</tr>'
+                print('<tr align=left class="table2">')
+        print('<td>%s</td>' % ISFDBLink('pubseries.cgi', record[PUB_SERIES_ID], record[PUB_SERIES_NAME]))
+        print('</tr>')
 
 def PrintSeriesTable(series_list, limit = 100):
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
-        print '<th>Series</th>'
-        print '<th>Parent Series</th>'
-        print '<th>Position Within Parent Series</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
+        print('<th>Series</th>')
+        print('<th>Parent Series</th>')
+        print('<th>Position Within Parent Series</th>')
+        print('</tr>')
         counter = 1
         bgcolor = 1
         for series in series_list:
@@ -1360,25 +1361,25 @@ def PrintSeriesTable(series_list, limit = 100):
                 counter += 1
                 if counter > limit:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintSeriesRecord(record, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
-        print '<td>%s</td>' % ISFDBLink('pe.cgi', record[SERIES_PUBID], record[SERIES_NAME])
+                print('<tr align=left class="table2">')
+        print('<td>%s</td>' % ISFDBLink('pe.cgi', record[SERIES_PUBID], record[SERIES_NAME]))
         parent_id = record[SERIES_PARENT]
         if parent_id:
                 parent_name = SQLgetSeriesName(parent_id)
-                print '<td>%s</td>' % ISFDBLink('pe.cgi', parent_id, parent_name)
+                print('<td>%s</td>' % ISFDBLink('pe.cgi', parent_id, parent_name))
         else:
-                print '<td>&nbsp;</td>'
+                print('<td>&nbsp;</td>')
         if record[SERIES_PARENT_POSITION]:
-                print '<td>%s</td>' % record[SERIES_PARENT_POSITION]
+                print('<td>%s</td>' % record[SERIES_PARENT_POSITION])
         else:
-                print '<td>&nbsp;</td>'
-        print '</tr>'
+                print('<td>&nbsp;</td>')
+        print('</tr>')
 
 def PrintAuthorTable(authors, merge, limit = 100, user = None):
         author_ids = []
@@ -1387,19 +1388,19 @@ def PrintAuthorTable(authors, merge, limit = 100, user = None):
         trans_names = SQLLoadTransAuthorNamesList(author_ids)
         trans_legal_names = SQLtransLegalNames(author_ids)
 
-        print '<table class="generic_table">'
-        print '<tr align="left" class="generic_table_header">'
+        print('<table class="generic_table">')
+        print('<tr align="left" class="generic_table_header">')
         if merge and user.moderator:
-                print "<th>Merge</th>"
-        print "<th>Author</th>"
-        print "<th>Alternate Name?</th>"
-        print "<th>Working Language</th>"
-        print "<th>Directory Entry</th>"
-        print "<th>Legal Name</th>"
-        print "<th>Birth Place</th>"
-        print "<th>Birth Date</th>"
-        print "<th>Death Date</th>"
-        print "</tr>"
+                print("<th>Merge</th>")
+        print("<th>Author</th>")
+        print("<th>Alternate Name?</th>")
+        print("<th>Working Language</th>")
+        print("<th>Directory Entry</th>")
+        print("<th>Legal Name</th>")
+        print("<th>Birth Place</th>")
+        print("<th>Birth Date</th>")
+        print("<th>Death Date</th>")
+        print("</tr>")
         counter = 1
         bgcolor = 1
         for author in authors:
@@ -1409,17 +1410,17 @@ def PrintAuthorTable(authors, merge, limit = 100, user = None):
                 counter += 1
                 if counter > limit:
                         break
-        print "</table>"
+        print("</table>")
 
 def PrintAuthorRecord(record, pseudonym, bgcolor, user, trans_names, trans_legal_names, merge):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         if merge and user.moderator:
-                print '<td><INPUT TYPE="checkbox" NAME="merge" VALUE="' +str(record[AUTHOR_ID])+ '"></td>'
-        print "<td>%s</td>" % ISFDBLink('ea.cgi', record[AUTHOR_ID], record[AUTHOR_CANONICAL], False, '', trans_names)
+                print('<td><INPUT TYPE="checkbox" NAME="merge" VALUE="' +str(record[AUTHOR_ID])+ '"></td>')
+        print("<td>%s</td>" % ISFDBLink('ea.cgi', record[AUTHOR_ID], record[AUTHOR_CANONICAL], False, '', trans_names))
         if pseudonym == 1:
                 query = "select 1 from dual where exists (select * from canonical_author a, titles t"
                 query += " WHERE a.author_id ='%d'" % (record[AUTHOR_ID])
@@ -1428,42 +1429,42 @@ def PrintAuthorRecord(record, pseudonym, bgcolor, user, trans_names, trans_legal
                 result = db.store_result()
                 count = result.fetch_row()
                 if count:
-                        print "<td>Has pseud. titles"
+                        print("<td>Has pseud. titles")
                 else:
-                        print "<td>Alternate Name"
-                print "</td>"
+                        print("<td>Alternate Name")
+                print("</td>")
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_LANGUAGE]:
-                print "<td>%s</td>" % LANGUAGES[record[AUTHOR_LANGUAGE]]
+                print("<td>%s</td>" % LANGUAGES[record[AUTHOR_LANGUAGE]])
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_LASTNAME]:
-                print "<td>" +record[AUTHOR_LASTNAME]+ "</td>"
+                print("<td>" +record[AUTHOR_LASTNAME]+ "</td>")
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_LEGALNAME]:
                 author_id = record[AUTHOR_ID]
                 if author_id in trans_legal_names:
                         display_value = ISFDBMouseover(trans_legal_names[author_id], record[AUTHOR_LEGALNAME], 'td')
-                        print display_value
+                        print(display_value)
                 else:
-                        print "<td>%s</td>" % record[AUTHOR_LEGALNAME]
+                        print("<td>%s</td>" % record[AUTHOR_LEGALNAME])
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_BIRTHPLACE]:
-                print "<td>" +record[AUTHOR_BIRTHPLACE]+ "</td>"
+                print("<td>" +record[AUTHOR_BIRTHPLACE]+ "</td>")
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_BIRTHDATE]:
-                print "<td>" +record[AUTHOR_BIRTHDATE]+ "</td>"
+                print("<td>" +record[AUTHOR_BIRTHDATE]+ "</td>")
         else:
-                print "<td>-</td>"
+                print("<td>-</td>")
         if record[AUTHOR_DEATHDATE]:
-                print "<td>" +record[AUTHOR_DEATHDATE]+ "</td>"
+                print("<td>" +record[AUTHOR_DEATHDATE]+ "</td>")
         else:
-                print "<td>-</td>"
-        print "</tr>"
+                print("<td>-</td>")
+        print("</tr>")
 
 def PrintAnnualGrid(starting_decade, link, year_parameter, display_decade, decade_parameter):
         # Get the current year based on system time
@@ -1473,15 +1474,15 @@ def PrintAnnualGrid(starting_decade, link, year_parameter, display_decade, decad
         bgcolor = 0
         # Display all decades since the starting decade in reverse chronological order
         for decade in range(current_decade, starting_decade-10, -10):
-                print '<tr class="table%d">' % (bgcolor+1)
+                print('<tr class="table%d">' % (bgcolor+1))
                 if display_decade:
-                        print '<td>%s</td>' % ISFDBLinkNoName('%s.cgi' % link, '%s%d' % (decade_parameter, decade), '%ds' % decade)
+                        print('<td>%s</td>' % ISFDBLinkNoName('%s.cgi' % link, '%s%d' % (decade_parameter, decade), '%ds' % decade))
                 for year in range(decade, decade+10):
                         # Skip future years
                         if year > current_year:
-                                print '<td>&nbsp;</td>'
+                                print('<td>&nbsp;</td>')
                                 continue
-                        print '<td>%s</td>' % ISFDBLinkNoName('%s.cgi' % link, '%s%d' % (year_parameter, year), '%d' % year)
-                print '</tr>'
+                        print('<td>%s</td>' % ISFDBLinkNoName('%s.cgi' % link, '%s%d' % (year_parameter, year), '%d' % year))
+                print('</tr>')
                 bgcolor ^= 1
-        print '</table>'
+        print('</table>')

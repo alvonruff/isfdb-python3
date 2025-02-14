@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
@@ -35,7 +36,7 @@ if __name__ == '__main__':
         (myID, username, usertoken) = GetUserData()
         myID = int(myID)
         if not myID:
-                print '<h3>You have to be logged in to view your votes</h3>'
+                print('<h3>You have to be logged in to view your votes</h3>')
                 PrintTrailer('votes', 0, 0)
                 sys.exit(0)
 
@@ -59,19 +60,19 @@ if __name__ == '__main__':
         result = db.store_result()
         result_count = result.num_rows()
         if not result_count:
-                print '<h3>No votes present for the specified title range</h3>'
+                print('<h3>No votes present for the specified title range</h3>')
                 PrintTrailer('votes', 0, 0)
                 sys.exit(0)
 
-        print '<h3>Sorted by %s. You can also sort by %s.</h3>' % (current_sort_order, ' or '.join(alternative_sort_orders))
-        print '<table class="vote_table">'
-        print '<tr class="table1">'
-        print '<th>Vote</th>'
-        print '<th>Title</th>'
-        print '<th>Type</th>'
-        print '<th>Year</th>'
-        print '<th>Author</th>'
-        print '</tr>'
+        print('<h3>Sorted by %s. You can also sort by %s.</h3>' % (current_sort_order, ' or '.join(alternative_sort_orders)))
+        print('<table class="vote_table">')
+        print('<tr class="table1">')
+        print('<th>Vote</th>')
+        print('<th>Title</th>')
+        print('<th>Type</th>')
+        print('<th>Year</th>')
+        print('<th>Author</th>')
+        print('</tr>')
 
         record = result.fetch_row()
         color = 0
@@ -81,24 +82,24 @@ if __name__ == '__main__':
                 title = SQLloadTitle(title_id)
                 authors = SQLTitleBriefAuthorRecords(title_id)
                 if color:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % vote
-                print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title[TITLE_TITLE])
-                print '<td>%s</td>' % title[TITLE_TTYPE]
-                print '<td>%s</td>' % title[TITLE_YEAR]
-                print '<td>%s</td>' % FormatAuthors(authors)
-                print '</tr>'
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % vote)
+                print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title[TITLE_TITLE]))
+                print('<td>%s</td>' % title[TITLE_TTYPE])
+                print('<td>%s</td>' % title[TITLE_YEAR])
+                print('<td>%s</td>' % FormatAuthors(authors))
+                print('</tr>')
                 color = color ^ 1
                 record = result.fetch_row()
 
-        print '</table>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
         if result_count == titles_per_page:
-                print ISFDBLinkNoName('myvotes.cgi', '%d+%s' % (start + titles_per_page, current_sort_order),
+                print(ISFDBLinkNoName('myvotes.cgi', '%d+%s' % (start + titles_per_page, current_sort_order),
                                       '%d-%d' % (start + titles_per_page, start + (titles_per_page * 2) +1),
-                                      True)
+                                      True))
 
         PrintTrailer('myvotes', 0, 0)
 

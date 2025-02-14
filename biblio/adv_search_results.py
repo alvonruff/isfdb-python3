@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
@@ -19,6 +20,7 @@ from SQLparsing import *
 from library import *
 from isbn import *
 from advSearchClass import AdvancedSearch
+from awardClass import awards
 
 class AdvancedSearchResults(AdvancedSearch):
         def __init__(self):
@@ -52,7 +54,7 @@ class AdvancedSearchResults(AdvancedSearch):
                 PrintHeader("Advanced %s Search" % ISFDBText(self.search_type))
                 PrintNavbar('adv_search_results', 0, 0, 0, 0)
                 if not self.user.id:
-                        print '<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>'
+                        print('<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>')
                 else:
                         self.set_search_type()
                         self.process_terms()
@@ -74,7 +76,7 @@ class AdvancedSearchResults(AdvancedSearch):
                 self.display_message('Error: %s' % message)
 
         def display_message(self, message):
-                print '<h2>%s</h2>' % ISFDBText(message)
+                print('<h2>%s</h2>' % ISFDBText(message))
                 PrintTrailer('adv_search_results', 0, 0)
                 sys.exit(0)
 
@@ -353,19 +355,19 @@ class AdvancedSearchResults(AdvancedSearch):
                         self.display_message('Count of matching records: %d' % self.records[0])
 
         def print_selection_criteria(self):
-                print '<b>Selection Criteria (joined using %s):</b>' % ISFDBText(self.conjunction)
+                print('<b>Selection Criteria (joined using %s):</b>' % ISFDBText(self.conjunction))
                 for selection in sorted(self.selection_criteria):
-                        print '<br>'
+                        print('<br>')
                         for term_tuple in self.selection[self.search_type]:
                                 if term_tuple[0] == selection[0]:
-                                        print ISFDBText(term_tuple[1])
+                                        print(ISFDBText(term_tuple[1]))
                                         break
                         for operator_tuple in self.operators:
                                 if operator_tuple[0] == selection[1]:
-                                        print ISFDBText(operator_tuple[1])
+                                        print(ISFDBText(operator_tuple[1]))
                                         break
-                        print ISFDBText(selection[2])
-                print '<br>Sort by %s' % ISFDBText(self.sort_name)
+                        print(ISFDBText(selection[2]))
+                print('<br>Sort by %s' % ISFDBText(self.sort_name))
 
         def print_pub_results(self):
                 PrintPubsTable(self.records, 'adv_search', self.user, 100)
@@ -388,7 +390,6 @@ class AdvancedSearchResults(AdvancedSearch):
                 PrintAwardCatResults(self.records, 100)
 
         def print_award_results(self):
-                from awardClass import awards
                 award = awards(db)
                 award.PrintAwardTable(self.records, 1, 1, 100)
 
@@ -442,47 +443,47 @@ class AdvancedSearchResults(AdvancedSearch):
                         self.print_help_merge('titles', 'tv_merge')
 
         def print_help_merge(self, record_type, script):
-                print '<div id="HelpBox">'
-                print '<b>Help:How to merge %s: </b>' % record_type
-                print '<a href="%s://%s/index.php/Help:How_to_merge_%s">Help:How to merge %s</a><p>' % (PROTOCOL, WIKILOC, record_type, record_type)
-                print '</div>'
-                print '<form METHOD="POST" ACTION="/cgi-bin/edit/%s.cgi">' % script
+                print('<div id="HelpBox">')
+                print('<b>Help:How to merge %s: </b>' % record_type)
+                print('<a href="%s://%s/index.php/Help:How_to_merge_%s">Help:How to merge %s</a><p>' % (PROTOCOL, WIKILOC, record_type, record_type))
+                print('</div>')
+                print('<form METHOD="POST" ACTION="/cgi-bin/edit/%s.cgi">' % script)
 
         def print_page_buttons(self):
-                print '<div class="button-container">'
+                print('<div class="button-container">')
                 if self.start > 99:
                         self.print_page_button('Previous')
                 if self.num > 100:
                         self.print_page_button('Next')
-                print '</div>'
+                print('</div>')
 
         def print_page_button(self, direction):
-                print '<form METHOD="GET" action="%s:/%s/adv_search_results.cgi">' % (PROTOCOL, HTFAKE)
-                print '<div>'
+                print('<form METHOD="GET" action="%s:/%s/adv_search_results.cgi">' % (PROTOCOL, HTFAKE))
+                print('<div>')
                 if direction == 'Previous':
                         new_start = self.start - 100
                 else:
                         new_start = self.start + 100
-                print '<input NAME="START" value="%s" type="HIDDEN">' % new_start
+                print('<input NAME="START" value="%s" type="HIDDEN">' % new_start)
                 for key in self.form.keys():
                         if key != 'START':
                                 key_value = ISFDBText(self.form[key], True)
-                                print '<input NAME="%s" value="%s" type="HIDDEN">' % (key, key_value)
+                                print('<input NAME="%s" value="%s" type="HIDDEN">' % (key, key_value))
                 if direction == 'Previous':
                         start = self.start-99
                         end = self.start
                 else:
                         start = self.start+101
                         end = self.start+200
-                print '<input TYPE="SUBMIT" VALUE="%s page (%d - %d)">' % (direction, start, end)
-                print '</div>'
-                print '</form>'
+                print('<input TYPE="SUBMIT" VALUE="%s page (%d - %d)">' % (direction, start, end))
+                print('</div>')
+                print('</form>')
 
         def print_merge_button(self):
-                print '<p>'
-                print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-                print '</form>'
-                print '<hr>'
+                print('<p>')
+                print('<input TYPE="SUBMIT" VALUE="Merge Selected Records">')
+                print('</form>')
+                print('<hr>')
 
         def make_titles_SQL_term(self, field, value, sql_value):
                 # Set up default values

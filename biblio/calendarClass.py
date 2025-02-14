@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2022   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -27,59 +28,59 @@ class CalendarMenu:
         def display(self):
                 PrintHeader('SF Calendar')
                 PrintNavbar('calendar_menu', 0, 0, 'calendar_menu.cgi', 0)
-                print '<table class="calendar_table">'
+                print('<table class="calendar_table">')
                 for month_row in (1,2,3,4):
-                        print '<tr>'
+                        print('<tr>')
                         for month_column in (1,2,3):
                                 self.month += 1
                                 self.num_days = calendar.monthrange(2000, self.month)[1]
-                                print '<td>'
+                                print('<td>')
                                 self.print_month()
-                                print '</td>'
-                        print '</tr>'
-                print '</table>'
+                                print('</td>')
+                        print('</tr>')
+                print('</table>')
                 PrintTrailer('calendar_menu', 0, 0)
         
         def print_month(self):
-                print '<table class="calendar_row">'
+                print('<table class="calendar_row">')
                 self.print_month_header()
                 self.print_decades()
-                print '</table>'
+                print('</table>')
 
         def print_decades(self):
                 day = 0
                 for decade_row in (1,2,3):
-                        print '<tr>'
+                        print('<tr>')
                         for day_cell in range(1,11):
                                 day += 1
-                                print '<td>'
+                                print('<td>')
                                 if decade_row == 3 and day == 30 and self.num_days < 30:
-                                        print '&nbsp;'
+                                        print('&nbsp;')
                                 else:
                                         self.print_day(day)
-                                print '</td>'
+                                print('</td>')
 
-                        print '<td>'
+                        print('<td>')
                         if day == 30 and self.num_days == 31:
                                 self.print_day(31)
                         else:
-                                print '&nbsp;'
-                        print '</td>'
-                        print '</tr>'
+                                print('&nbsp;')
+                        print('</td>')
+                        print('</tr>')
 
         def print_day(self, day):
                 inverted = ''
                 # Highlight the current day
                 if self.month == self.current_month and self.current_day == day:
                         inverted = 'class="inverted"'
-                print ISFDBLink('calendar_day.cgi', '%s+%s' % (self.month, day), day, argument = inverted)
+                print(ISFDBLink('calendar_day.cgi', '%s+%s' % (self.month, day), day, argument = inverted))
 
         def print_month_header(self):
-                print '<tr>'
-                print '<th colspan="10" class="calendar">'
-                print calendar.month_name[self.month]
-                print '</th>'
-                print '</tr>'
+                print('<tr>')
+                print('<th colspan="10" class="calendar">')
+                print(calendar.month_name[self.month])
+                print('</th>')
+                print('</tr>')
 
 class CalendarDay:
         def __init__(self):
@@ -101,29 +102,29 @@ class CalendarDay:
                         SESSION.DisplayError('Invalid day for this month')
 
         def print_authors_section(self):
-                print '<table class="mainauthors">'
-                print '<tr>'
-                print '<th class="dividerrow">Authors Born On This Day:</th>'
-                print '<th class="dividerrow">Authors Who Died On This Day:</th>'
-                print '</tr>'
+                print('<table class="mainauthors">')
+                print('<tr>')
+                print('<th class="dividerrow">Authors Born On This Day:</th>')
+                print('<th class="dividerrow">Authors Who Died On This Day:</th>')
+                print('</tr>')
                 # Authors born on this day
-                print '<tr>'
+                print('<tr>')
                 self.authors = SQLAuthorsBorn(self.padded_day)
                 self.printAuthorList()
                 # Authors who died on this day
                 self.authors = SQLAuthorsDied(self.padded_day)
                 self.printAuthorList()
-                print '</tr>'
-                print '</table>'
+                print('</tr>')
+                print('</table>')
 
         def printAuthorList(self):
-                print '<td>'
+                print('<td>')
                 if self.authors:
-                        print '<ul>'
+                        print('<ul>')
                         for self.author in self.authors:
-                                print '<li>%s %s' % (ISFDBLink('ea.cgi', self.author[AUTHOR_ID], self.author[AUTHOR_CANONICAL]), self.lifeSpan())
-                        print '</ul>'
-                print '</td>'
+                                print('<li>%s %s' % (ISFDBLink('ea.cgi', self.author[AUTHOR_ID], self.author[AUTHOR_CANONICAL]), self.lifeSpan()))
+                        print('</ul>')
+                print('</td>')
 
         def lifeSpan(self):
                 birthyear = self.author[AUTHOR_BIRTHDATE]

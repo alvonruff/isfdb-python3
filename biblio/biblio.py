@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -199,7 +200,7 @@ class Bibliography:
                 self.printHeaders()
                 self.printAuthorData()
                 self.loadAllAuthorTitles()
-                print '<div class="ContentBox">'
+                print('<div class="ContentBox">')
                 if self.canonical_titles or self.interviews:
                         self.loadParentAuthors()
                         # Load author variants for all but Alphabetical bibliographies
@@ -232,7 +233,7 @@ class Bibliography:
                 if self.page_type == 'Award':
                         self.loadAuthorAwards()
                         self.printAwards()
-                print '</div>'
+                print('</div>')
 
                 PrintTrailer('author', self.author_name, self.au_id)
 
@@ -244,7 +245,7 @@ class Bibliography:
                 if HTMLHOST == '127.0.0.1':
                         start = self.last_checkpoint
                         self.last_checkpoint = time()
-                        print '%s %f<br>' % (message, self.last_checkpoint - start)
+                        print('%s %f<br>' % (message, self.last_checkpoint - start))
 
         ####################################################
         #         LOAD METHODS
@@ -422,8 +423,8 @@ class Bibliography:
                 # works that still need to be displayed
                 for title in self.canonical_titles:
                         if title[TITLE_NON_GENRE] == 'Yes':
-                                print '<hr>'
-                                print '<div class="nongenre"><b>Non-Genre Titles</b></div><br>'
+                                print('<hr>')
+                                print('<div class="nongenre"><b>Non-Genre Titles</b></div><br>')
                                 return 1
                 return 0
 
@@ -450,15 +451,15 @@ class Bibliography:
                 sorted_series_list = sorted(series_type_list, key=lambda x: x[SERIES_NAME])
 
                 # Print series type
-                print '<b>%s Series</b>' % self.type_reverse[series_type]
-                print '<ul>'
+                print('<b>%s Series</b>' % self.type_reverse[series_type])
+                print('<ul>')
                 # For all but the last series, display the series and a blank line at the end
                 for series_data in sorted_series_list[:-1]:
                         self.printSeries(series_data, series_type)
-                        print '<br>'
+                        print('<br>')
                 # For the last series, display the series, but no blank line
                 self.printSeries(sorted_series_list[-1], series_type)
-                print '</ul>'
+                print('</ul>')
                 return
 
         def printSeries(self, series_data, series_type):
@@ -467,8 +468,8 @@ class Bibliography:
                         position = ''
                 else:
                         position = int(series_data[SERIES_PARENT_POSITION])
-                print '<li> %s %s' % (position, ISFDBLink('pe.cgi', series_id, series_data[SERIES_NAME]))
-                print '<ul>'
+                print('<li> %s %s' % (position, ISFDBLink('pe.cgi', series_id, series_data[SERIES_NAME])))
+                print('<ul>')
                 counter = 0
                 delete_list = []
                 for title in self.canonical_titles:
@@ -478,7 +479,7 @@ class Bibliography:
                                         output += ' %d' % title[TITLE_SERIESNUM]
                                 if title[TITLE_SERIESNUM_2] is not None:
                                         output += '.%s' % title[TITLE_SERIESNUM_2]
-                                print output
+                                print(output)
                                 displayTitle(title, self.au_id, self.parent_authors, series_type,
                                              self.variant_titles, self.variant_serials,
                                              self.parent_titles_with_pubs, self.variant_authors,
@@ -504,58 +505,58 @@ class Bibliography:
                                                       key=lambda x: (int(x[SERIES_PARENT_POSITION] or 999999), x[SERIES_NAME]),
                                                       reverse=False):
                                 self.printSeries(sub_series_data, series_type)
-                print '</ul>'
+                print('</ul>')
 
         def printIsPseudo(self):
                 authors = SQLgetBriefActualFromPseudo(self.au_id)
-                print '<li><b>Used As Alternate Name By:</b>'
+                print('<li><b>Used As Alternate Name By:</b>')
                 displayAuthorList(authors)
 
         def printHasPseudo(self):
                 authors = SQLgetBriefPseudoFromActual(self.au_id)
-                print '<li><b>Used These Alternate Names:</b>'
+                print('<li><b>Used These Alternate Names:</b>')
                 displayAuthorList(authors)
 
         def printAuthorData(self):
-                print '<div class="ContentBox">'
+                print('<div class="ContentBox">')
                 other_authors = SQLGetDisambiguatedRecords(self.au_id, self.au_data[AUTHOR_CANONICAL], 'authors', 'author_id', 'author_canonical')
                 if other_authors:
-                        print '<h3>Note: There are other authors with the same name:'
+                        print('<h3>Note: There are other authors with the same name:')
                         displayAuthorList(other_authors)
-                        print '</h3>'
+                        print('</h3>')
 
                 if self.au_data[AUTHOR_IMAGE]:
-                        print '<table>'
-                        print '<tr align="left">'
-                        print '<td>'
-                        print '<img src="%s" width="150" alt="Author Picture">' % ISFDBHostCorrection(self.au_data[AUTHOR_IMAGE].split('|')[0])
-                        print '</td>'
-                        print '<td class="authorimage">'
+                        print('<table>')
+                        print('<tr align="left">')
+                        print('<td>')
+                        print('<img src="%s" width="150" alt="Author Picture">' % ISFDBHostCorrection(self.au_data[AUTHOR_IMAGE].split('|')[0]))
+                        print('</td>')
+                        print('<td class="authorimage">')
 
-                print '<ul>'
-                print '<li><b>Author:</b> %s' % ISFDBMouseover(self.au_trans_names, self.au_data[AUTHOR_CANONICAL], '')
+                print('<ul>')
+                print('<li><b>Author:</b> %s' % ISFDBMouseover(self.au_trans_names, self.au_data[AUTHOR_CANONICAL], ''))
                 printRecordID('Author', self.au_id, self.user.id)
 
                 if self.au_data[AUTHOR_LEGALNAME]:
-                        print '<li><b>Legal Name:</b> %s' % ISFDBMouseover(self.au_trans_legal_names, self.au_data[AUTHOR_LEGALNAME], '')
+                        print('<li><b>Legal Name:</b> %s' % ISFDBMouseover(self.au_trans_legal_names, self.au_data[AUTHOR_LEGALNAME], ''))
 
                 if self.au_data[AUTHOR_BIRTHPLACE]:
-                        print '<li><b>Birthplace:</b>',  ISFDBText(self.au_data[AUTHOR_BIRTHPLACE])
+                        print('<li><b>Birthplace:</b>',  ISFDBText(self.au_data[AUTHOR_BIRTHPLACE]))
 
                 if self.au_data[AUTHOR_BIRTHDATE]:
-                        print '<li><b>Birthdate:</b>', self.ConvertDate(self.au_data[AUTHOR_BIRTHDATE])
+                        print('<li><b>Birthdate:</b>', self.ConvertDate(self.au_data[AUTHOR_BIRTHDATE]))
 
                 if self.au_data[AUTHOR_DEATHDATE]:
-                        print '<li><b>Deathdate:</b>', self.ConvertDate(self.au_data[AUTHOR_DEATHDATE])
+                        print('<li><b>Deathdate:</b>', self.ConvertDate(self.au_data[AUTHOR_DEATHDATE]))
 
                 if self.au_data[AUTHOR_LANGUAGE]:
                         displayed_language = LANGUAGES[int(self.au_data[AUTHOR_LANGUAGE])]
-                        print '<li><b>Language:</b>', displayed_language
+                        print('<li><b>Language:</b>', displayed_language)
 
                 if self.au_emails:
                         for email in self.au_emails:
-                                print "<li><b>Email:</b>"
-                                print '<a href="mailto:' +email+ '">' +email+ '</a>'
+                                print("<li><b>Email:</b>")
+                                print('<a href="mailto:' +email+ '">' +email+ '</a>')
 
                 PrintWebPages(self.au_webpages)
 
@@ -566,22 +567,22 @@ class Bibliography:
                         self.printHasPseudo()
 
                 if self.au_data[AUTHOR_NOTE]:
-                        print "<li>",FormatNote(self.au_data[AUTHOR_NOTE], 'Note', 'short', self.au_id, 'Author')
+                        print("<li>",FormatNote(self.au_data[AUTHOR_NOTE], 'Note', 'short', self.au_id, 'Author'))
 
                 has_bio = SQLwikiLinkExists('Bio', self.au_data[AUTHOR_CANONICAL])
                 if has_bio:
-                        print "<li><b>Additional Biographical Data:</b>"
+                        print("<li><b>Additional Biographical Data:</b>")
                         bio_title = 'Bio:%s' % self.au_data[AUTHOR_CANONICAL]
-                        print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, bio_title, bio_title)
+                        print('<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, bio_title, bio_title))
 
                 has_biblio = SQLwikiLinkExists('Author', self.au_data[AUTHOR_CANONICAL])
                 if has_biblio:
-                        print "<li><b>Additional Bibliographic Comments:</b>"
+                        print("<li><b>Additional Bibliographic Comments:</b>")
                         biblio_title = 'Author:%s' % self.au_data[AUTHOR_CANONICAL]
-                        print '<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, biblio_title, biblio_title)
+                        print('<a href="%s://%s/index.php/%s">%s</a>' % (PROTOCOL, WIKILOC, biblio_title, biblio_title))
 
                 if self.au_tags:
-                        print "<li><b>Author Tags:</b>"
+                        print("<li><b>Author Tags:</b>")
                         print_string = ''
                         count = 0
                         total_tags = len(self.au_tags)
@@ -599,47 +600,47 @@ class Bibliography:
                                                                         False,
                                                                         'class="bold inverted"')
                                         break
-                        print print_string
+                        print(print_string)
                 
-                print '</ul>'
+                print('</ul>')
 
                 if self.au_data[AUTHOR_IMAGE]:
-                        print '</td>'
-                        print '</table>'
+                        print('</td>')
+                        print('</table>')
                         (webpage, credit, home_page, linked_page) = BuildDisplayedURL(self.au_data[AUTHOR_IMAGE])
-                        print 'Image supplied by <a href="%s" target="_blank">%s</a>' % (home_page, credit)
+                        print('Image supplied by <a href="%s" target="_blank">%s</a>' % (home_page, credit))
                         if linked_page:
-                                print ' on <a href="%s" target="_blank">this Web page</a>' % linked_page
+                                print(' on <a href="%s" target="_blank">this Web page</a>' % linked_page)
 
-                print '</div>'
+                print('</div>')
 
         def printAuthorPseudo(self):
                 authors = SQLgetBriefActualFromPseudo(self.au_id)
                 if len(authors) > 0:
-                        print '<b>Alternate Name. See: '
+                        print('<b>Alternate Name. See: ')
                         displayAuthorList(authors)
-                        print AuthorSearchLink(self.author_name)
-                        print '(or view all titles published using this alternate name)</a></b>'
+                        print(AuthorSearchLink(self.author_name))
+                        print('(or view all titles published using this alternate name)</a></b>')
 
         def printInterviews(self):
                 if not self.interviews:
                         return
-                print '<b>Interviews with This Author</b>'
-                print '<ul>'
+                print('<b>Interviews with This Author</b>')
+                print('<ul>')
                 for interview in self.interviews:
-                        print '<li> %s ' % buildCoreTitleLine(interview, self.au_data[AUTHOR_LANGUAGE], self.translit_titles)
+                        print('<li> %s ' % buildCoreTitleLine(interview, self.au_data[AUTHOR_LANGUAGE], self.translit_titles))
                         self.displayAuthorsforInterview(interview)
-                print '</ul>'
+                print('</ul>')
 
         def displayAuthorsforInterview(self, title):
                 interviewed_collaborators = SQLIntervieweeAuthors(title[TITLE_PUBID], self.au_id)
                 interviewer_collaborators = SQLTitleBriefAuthorRecords(title[TITLE_PUBID])
-                print " <b>by</b> "
+                print(" <b>by</b> ")
                
                 counter = 0
                 for author in interviewer_collaborators:
                         if counter:
-                                print " <b>and</b> "
+                                print(" <b>and</b> ")
                         displayAuthorById(author[0], author[1])
                         counter += 1
 
@@ -654,7 +655,7 @@ class Bibliography:
                         counter += 1
                 if counter:
                         output +=  ")"
-                print output
+                print(output)
 
         def displayWorks(self, title_type):
                 self.first = 1
@@ -671,10 +672,10 @@ class Bibliography:
                                 if self.page_type == 'Summary' and title[TITLE_SERIES] and (title[TITLE_TTYPE] in self.type_order):
                                         continue
                                 if self.first:
-                                        print '<b>%s</b>' % self.title_types.get(title_type)
-                                        print "<ul>"
+                                        print('<b>%s</b>' % self.title_types.get(title_type))
+                                        print("<ul>")
                                         self.first = 0
-                                print "<li>"
+                                print("<li>")
                                 displayTitle(title, self.au_id, self.parent_authors, SERIES_TYPE_OTHER,
                                              self.variant_titles, self.variant_serials,
                                              self.parent_titles_with_pubs, self.variant_authors,
@@ -682,23 +683,23 @@ class Bibliography:
                                              self.au_data[AUTHOR_LANGUAGE], self.nongenre)
                 
                 if not self.first:
-                        print "</ul>"
+                        print("</ul>")
 
         def printStrayPubs(self):
                 pubs = SQLGetPubsByAuthor(self.au_id)
                 if len(pubs):
-                        print '<b>Stray Publications:</b>'
-                        print '<ul>'
+                        print('<b>Stray Publications:</b>')
+                        print('<ul>')
                         for pub in pubs:
-                                print '<li>'
-                                print ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class = "italic"')
-                        print '</ul>'
+                                print('<li>')
+                                print(ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class = "italic"'))
+                        print('</ul>')
 
         def displayBiblioLinks(self):
-                print self.user.translation_message(self.page_type, self)
-                print '<table class=bibliolinks>'
-                print '<tr>'
-                print '<td><b>Other views:</b></td>'
+                print(self.user.translation_message(self.page_type, self))
+                print('<table class=bibliolinks>')
+                print('<tr>')
+                print('<td><b>Other views:</b></td>')
                 print_string = '<td class="authorbiblios"><b>'
                 if self.page_type != 'Summary':
                         print_string += ' %s' % ISFDBLinkNoName('ea.cgi', self.au_id, 'Summary')
@@ -708,10 +709,10 @@ class Bibliography:
                         print_string += ' %s' % ISFDBLinkNoName('ae.cgi', self.au_id, 'Alphabetical')
                 if self.page_type != 'Chronological':
                         print_string += ' %s' % ISFDBLinkNoName('ch.cgi', self.au_id, 'Chronological')
-                print '%s</b></td>' % print_string
-                print '</tr>'
-                print '</table>'
-                print '<br>'
+                print('%s</b></td>' % print_string)
+                print('</tr>')
+                print('</table>')
+                print('<br>')
                 return
 
         def printHeaders(self):
@@ -739,7 +740,7 @@ class Bibliography:
 
                 if self.author_name == 'uncredited' and self.page_type != 'Award':
                         PrintNavbar('author', author, 0, self.cgi_script, author)
-                        print '<h2>%s</h2>' % 'Only %s is available for "uncredited"' % ISFDBLink('eaw.cgi', 'uncredited', 'Award Bibliography')
+                        print('<h2>%s</h2>' % 'Only %s is available for "uncredited"' % ISFDBLink('eaw.cgi', 'uncredited', 'Award Bibliography'))
                         PrintTrailer('author', author, 0)
                         sys.exit(0)
 
@@ -748,9 +749,9 @@ class Bibliography:
                 PrintNavbar('author', self.author_name, self.au_id, self.cgi_script, self.au_id)
 
         def printAwards(self):
-                print '<p>'
+                print('<p>')
                 if not self.au_awards:
-                        print '<h2>No awards found for %s</h2>' % self.author_name
+                        print('<h2>No awards found for %s</h2>' % self.author_name)
                         PrintTrailer('author', self.author_name, 0)
                         sys.exit(0)
                 award = awards(db)

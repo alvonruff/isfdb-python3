@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -32,6 +33,6 @@ if __name__ == '__main__':
 
         award.PrintAwardSummary()
 
-        print '<p>'
+        print('<p>')
 
         PrintTrailer('award', award_id, award_id)

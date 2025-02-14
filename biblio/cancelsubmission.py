@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2009-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -34,20 +35,20 @@ if __name__ == '__main__':
         PrintHeader('Submission Cancellation')
         PrintNavbar('cancelsubmission', 0, 0, 'cancelsubmission.cgi', 0)
 
-        print '<ul>'
+        print('<ul>')
 
         reason = 'Cancelled by the submitter'
         update = """update submissions
                 set sub_state='R', sub_reason='%s', sub_reviewer=%d, sub_reviewed=NOW(), sub_holdid=0
                 where sub_id=%d""" % (db.escape_string(reason), int(myID), submission_id)
-        print '<li> ', update
+        print('<li> ', update)
         db.query(update)
 
-        print '</ul><p><hr>'
+        print('</ul><p><hr>')
 
-        print 'Record %d has been moved to the Rejected state.<br>' % submission_id
-        print '<b>Reason:</b> ', reason
+        print('Record %d has been moved to the Rejected state.<br>' % submission_id)
+        print('<b>Reason:</b> ', reason)
 
-        print '<p><hr>'
+        print('<p><hr>')
 
         PrintTrailer('cancelsubmission', 0, 0)

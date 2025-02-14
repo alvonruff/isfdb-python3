@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -31,10 +32,10 @@ if __name__ == '__main__':
         PrintHeader(title)
         PrintNavbar('award_type', award_type.award_type_id, 0, 'awardtype.cgi', award_type.award_type_id)
 
-        print '<ul>'
+        print('<ul>')
 
         if award_type.award_type_short_name:
-                print '<li><b>Short Name:</b>', ISFDBText(award_type.award_type_short_name)
+                print('<li><b>Short Name:</b>', ISFDBText(award_type.award_type_short_name))
 
         #Retrieve this user's data
         user = User()
@@ -42,19 +43,19 @@ if __name__ == '__main__':
         printRecordID('Award Type', award_type.award_type_id, user.id, user)
 
         if award_type.award_type_name:
-                print '<li><b>Full Name:</b>', ISFDBText(award_type.award_type_name)
+                print('<li><b>Full Name:</b>', ISFDBText(award_type.award_type_name))
 
         if award_type.award_type_for:
-                print '<li><b>Awarded For:</b>', ISFDBText(award_type.award_type_for)
+                print('<li><b>Awarded For:</b>', ISFDBText(award_type.award_type_for))
 
         if award_type.award_type_by:
-                print '<li><b>Awarded By:</b>', ISFDBText(award_type.award_type_by)
+                print('<li><b>Awarded By:</b>', ISFDBText(award_type.award_type_by))
 
         if award_type.award_type_poll:
-                print '<li><b>Poll:</b>', ISFDBText(award_type.award_type_poll)
+                print('<li><b>Poll:</b>', ISFDBText(award_type.award_type_poll))
 
         if award_type.award_type_non_genre:
-                print '<li><b>Covers more than just SF:</b>', ISFDBText(award_type.award_type_non_genre)
+                print('<li><b>Covers more than just SF:</b>', ISFDBText(award_type.award_type_non_genre))
 
         # Webpages
         webpages = SQLloadAwardTypeWebpages(award_type.award_type_id)
@@ -62,12 +63,12 @@ if __name__ == '__main__':
 
         # Note
         if award_type.award_type_note:
-                print '<li>'
-                print FormatNote(award_type.award_type_note, 'Note', 'short', award_type.award_type_id, 'AwardType')
+                print('<li>')
+                print(FormatNote(award_type.award_type_note, 'Note', 'short', award_type.award_type_id, 'AwardType'))
 
-        print '</ul>'
+        print('</ul>')
 
-        print '<p>'
+        print('<p>')
                 
         # Display a grid of all years when the award was given
         award_type.display_table_grid()

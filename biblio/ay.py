@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -47,6 +48,6 @@ if __name__ == '__main__':
         PrintHeader(title)
         PrintNavbar('award', 0, award_Type.award_type_id, 'ay.cgi', 0)
         award_Type.display_awards_for_year(year)
-        print '<p>'
+        print('<p>')
         PrintTrailer('award', 0, 0)
 

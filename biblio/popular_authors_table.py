@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -35,16 +36,16 @@ if __name__ == '__main__':
         PrintHeader('%s Ranked by Awards and Nominations' % author_type)
         PrintNavbar('top', 0, 0, 'popular_authors_table.cgi', 0)
 
-        print '<h3>%s</h3>' % ISFDBLinkNoName('popular_authors.cgi', '%d+all' % report_type, 'Highest Ranked %s of All Time' % author_type)
-        print '<h3>%s</h3>' % ISFDBLinkNoName('popular_authors.cgi', '%d+pre1950' % report_type, 'Highest Ranked %s Prior to 1950' % author_type)
+        print('<h3>%s</h3>' % ISFDBLinkNoName('popular_authors.cgi', '%d+all' % report_type, 'Highest Ranked %s of All Time' % author_type))
+        print('<h3>%s</h3>' % ISFDBLinkNoName('popular_authors.cgi', '%d+pre1950' % report_type, 'Highest Ranked %s Prior to 1950' % author_type))
 
-        print '<h3>Highest Ranked %s Since 1950 by Decade:</h3>' % author_type
+        print('<h3>Highest Ranked %s Since 1950 by Decade:</h3>' % author_type)
         # Set the end decade to the decade of the current year
         endyear = localtime()[0]
         enddecade = endyear/10
-        print '<ul>'
+        print('<ul>')
         for decade in range(195, enddecade+1):
-                print '<li>%s' % ISFDBLinkNoName('popular_authors.cgi', '%d+decade+%d0' % (report_type, decade), '%d0s' % decade)
-        print '</ul>'
+                print('<li>%s' % ISFDBLinkNoName('popular_authors.cgi', '%d+decade+%d0' % (report_type, decade), '%d0s' % decade))
+        print('</ul>')
         
         PrintTrailer('top', 0, 0)

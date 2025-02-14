@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,14 +22,14 @@ def printTableBody(author_dict):
         count = 0
         for author_id in sorted(author_dict, key=author_dict.get, reverse=True):
                 score = author_dict[author_id]
-                print '<tr align=left class="table%d">' % (bgcolor+1)
-                print '<td>%d</td>' % (count+1)
-                print '<td>%d</td>' % score
-                print '<td>'
+                print('<tr align=left class="table%d">' % (bgcolor+1))
+                print('<td>%d</td>' % (count+1))
+                print('<td>%d</td>' % score)
+                print('<td>')
                 author_data = SQLloadAuthorData(author_id)
-                print ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author_data[AUTHOR_CANONICAL])
-                print '</td>'
-                print '</tr>'
+                print(ISFDBLink('ea.cgi', author_data[AUTHOR_ID], author_data[AUTHOR_CANONICAL]))
+                print('</td>')
+                print('</tr>')
                 bgcolor = bgcolor ^ 1
                 count += 1
                 if count > 499:
@@ -76,7 +77,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>No %s with awards or nominations for the specified period</h3>' % displayed_type
+                print('<h3>No %s with awards or nominations for the specified period</h3>' % displayed_type)
                 PrintTrailer('top', 0, 0)
                 sys.exit(0)
 
@@ -101,21 +102,21 @@ if __name__ == '__main__':
                 author_dict[author_id] = author_dict.get(author_id, 0) + score
                 record = result.fetch_row()
 
-        print '<h3>This report is generated once a day</h3>'
-        print '<b>Note</b>: Some recent awards are yet to be integrated into the database. Only title-based awards are used for ranking purposes.<br>'
-        print '<b>Scoring</b>: Wins are worth 50 points, nominations and second places are worth 35 points. For polls, third and lower places are worth (33-poll position) points.'
+        print('<h3>This report is generated once a day</h3>')
+        print('<b>Note</b>: Some recent awards are yet to be integrated into the database. Only title-based awards are used for ranking purposes.<br>')
+        print('<b>Scoring</b>: Wins are worth 50 points, nominations and second places are worth 35 points. For polls, third and lower places are worth (33-poll position) points.')
         # Print the table headers        
-        print '<table class="seriesgrid">'
-        print '<tr>'
-        print '<th>Place</th>'
-        print '<th>Score</th>'
+        print('<table class="seriesgrid">')
+        print('<tr>')
+        print('<th>Place</th>')
+        print('<th>Score</th>')
         if type != 4:
-                print '<th>Author</th>'
+                print('<th>Author</th>')
         else:
-                print '<th>Editor</th>'
-        print '</tr>'
+                print('<th>Editor</th>')
+        print('</tr>')
         printTableBody(author_dict)
-        print '</table>'
+        print('</table>')
         
         PrintTrailer('top', 0, 0)
 

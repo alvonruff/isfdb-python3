@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -56,10 +57,10 @@ if __name__ == '__main__':
         PrintNavbar('recent', 0, 0, 'view_submission.cgi', 0)
         
         if sub_state == 'R':
-                print '<b>Cancellation/Rejection Reason</b>: %s<p>' % sub_reason
+                print('<b>Cancellation/Rejection Reason</b>: %s<p>' % sub_reason)
 
-        print '<b>Note</b>: For "Edit" submissions, the "Current" column shows the data as it currently exists in the database,'
-        print 'not as it existed when the submission was created.<p>'
+        print('<b>Note</b>: For "Edit" submissions, the "Current" column shows the data as it currently exists in the database,')
+        print('not as it existed when the submission was created.<p>')
 
         function_name = SUBMAP[sub_type][5]
         if SUBMAP[sub_type][0] == 0:
@@ -72,16 +73,16 @@ if __name__ == '__main__':
         if sub_state == 'I':
                 (subjectLink, new_record) = getSubjectLink(submission, doc2, sub_type)
                 if new_record:
-                        print '<p><b>New record:</b> %s' % subjectLink
+                        print('<p><b>New record:</b> %s' % subjectLink)
 
-        print '<p>%s' % ISFDBLink('dumpxml.cgi', submission_id, 'View the submission as raw XML')
+        print('<p>%s' % ISFDBLink('dumpxml.cgi', submission_id, 'View the submission as raw XML'))
         
-        print '<p><b>Submitted by</b> %s on %s' % (WikiLink(submitter), sub_time)
+        print('<p><b>Submitted by</b> %s on %s' % (WikiLink(submitter), sub_time))
 
         (userID, username, usertoken) = GetUserData()
         # If the viewing user is the submitter and the submission is "N"ew, allow the user to cancel
         if int(userID) == int(sub_user) and sub_state == 'N':
-                print ' %s' % ISFDBLink('cancelsubmission.cgi', submission_id, 'Cancel submission', True)
+                print(' %s' % ISFDBLink('cancelsubmission.cgi', submission_id, 'Cancel submission', True))
         # If the submission has been reviewed, display the reviewer's name
         elif sub_reviewer:
                 moderator_name = SQLgetUserName(sub_reviewer)
@@ -89,15 +90,15 @@ if __name__ == '__main__':
                         status = 'Rejected'
                 else:
                         status = 'Approved'
-                print '<p><b>%s by</b> %s on %s' % (status, WikiLink(moderator_name), sub_reviewed)
+                print('<p><b>%s by</b> %s on %s' % (status, WikiLink(moderator_name), sub_reviewed))
 
         if SQLisUserModerator(userID):
                 if sub_state == 'R':
-                        print '<p>%s' % ISFDBLink('mod/unreject.cgi', submission_id, 'Unreject Submission')
+                        print('<p>%s' % ISFDBLink('mod/unreject.cgi', submission_id, 'Unreject Submission'))
                 elif sub_state == 'N':
-                        print '<p>%s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Moderator View')
+                        print('<p>%s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Moderator View'))
         elif SQLisUserSelfApprover(userID) and sub_state == 'N':
-                print '<p>%s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Self-Approver View')
+                print('<p>%s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Self-Approver View'))
 
         PrintTrailer('recent', 0, 0)
 

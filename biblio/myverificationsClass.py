@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -65,7 +66,7 @@ class MyVerifications:
                                 limit %d,%d""" % (int(self.user.id), start, self.per_page + 1)
                         none_found = 'No primary verifications with unstable "/G/" Amazon URLs'
                 else:
-                        print '<h2>A software error has occurred. Please post this URL on the ISFDB Community Portal.</h2>'
+                        print('<h2>A software error has occurred. Please post this URL on the ISFDB Community Portal.</h2>')
                         return
                 db.query(query)
                 result = db.store_result()
@@ -75,7 +76,7 @@ class MyVerifications:
                         last_displayed = self.retrieved_count
                         if self.retrieved_count > self.per_page:
                                 last_displayed = self.per_page
-                        print '<h3>Displaying primary verifications %d - %d:</h3>' % (start + 1, start + last_displayed)
+                        print('<h3>Displaying primary verifications %d - %d:</h3>' % (start + 1, start + last_displayed))
                         self.record = result.fetch_row()
                         self.printTableColumns()
                         while self.record:
@@ -84,66 +85,66 @@ class MyVerifications:
                                         break
                                 self.printPubRecord()
                                 self.record = result.fetch_row()
-                        print '</table>'
+                        print('</table>')
                         if self.retrieved_count > self.per_page:
-                                print ISFDBLink('%s.cgi' % script, start + self.per_page,
+                                print(ISFDBLink('%s.cgi' % script, start + self.per_page,
                                                 '%d - %d' % (start + self.per_page + 1, start + (2 * self.per_page)),
-                                                True)
+                                                True))
                 else:
-                        print '<h2>%s found</h2>' % none_found
+                        print('<h2>%s found</h2>' % none_found)
 
         def printTableColumns(self):
-                print '<table class="userverifications">'
-                print '<tr class="table2">'
-                print '<th>#</th>'
-                print '<th>Type</th>'
-                print '<th>Ver. Date</th>'
-                print '<th>Publication</th>'
-                print '<th>Author(s) or Editor(s)</th>'
-                print '<th>Transient?</th>'
-                print '<th>Artist(s)</th>'
-                print '<th>Cover</th>'
-                print '</tr>'
+                print('<table class="userverifications">')
+                print('<tr class="table2">')
+                print('<th>#</th>')
+                print('<th>Type</th>')
+                print('<th>Ver. Date</th>')
+                print('<th>Publication</th>')
+                print('<th>Author(s) or Editor(s)</th>')
+                print('<th>Transient?</th>')
+                print('<th>Artist(s)</th>')
+                print('<th>Cover</th>')
+                print('</tr>')
 
         def printPubRecord(self):
                 self.displayed_index += 1
                 data = self.record[0]
                 self.pub_id = data[0]
                 if self.bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
                 self.bgcolor ^= 1
 
-                print '<td>%d</td>' % self.displayed_index
-                print '<td>%s</td>' % data[2]
-                print '<td>%s</td>' % data[3]
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', self.pub_id, data[1])
+                print('<td>%d</td>' % self.displayed_index)
+                print('<td>%s</td>' % data[2])
+                print('<td>%s</td>' % data[3])
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', self.pub_id, data[1]))
                 output = '' 
                 if data[2] in ('MAGAZINE', 'ANTHOLOGY', 'FANZINE', 'NONFICTION'):
                         output = "Ed. "
                 output += self.pubAuthors()
-                print '<td>%s</td>' % output
+                print('<td>%s</td>' % output)
 
                 if data[4]:
-                        print '<td>Transient</td>'
+                        print('<td>Transient</td>')
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
 
                 cover_artists = self.pubArtists()
-                print '<td>'
+                print('<td>')
                 if self.pub_id in cover_artists:
                         displayAuthorList(cover_artists[self.pub_id])
                 else:
-                        print '&nbsp;'
-                print '</td>'
+                        print('&nbsp;')
+                print('</td>')
 
                 if data[5]:
-                        print '<td>%s</td>' % CoverInfo(data[5])
+                        print('<td>%s</td>' % CoverInfo(data[5]))
                 else:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
 
-                print '</tr>'
+                print('</tr>')
 
         def pubAuthors(self):
                 retval = ''

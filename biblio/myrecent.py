@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
@@ -36,13 +37,13 @@ if __name__ == '__main__':
         PrintNavbar('recent', 0, 0, 'recent.cgi', 0)
 
         if start:
-                print '<p> %s<p>' % ISFDBLinkNoName('myrecent.cgi', '%d+%s' % (start-results_per_page, sub_type), 'NEWER', True)
+                print('<p> %s<p>' % ISFDBLinkNoName('myrecent.cgi', '%d+%s' % (start-results_per_page, sub_type), 'NEWER', True))
 
         (myID, username, usertoken) = GetUserData()
 
         if sub_type == 'N':
                 queuesize = SQLQueueSize()
-                print "The current number of pending edits by all editors (not held by a moderator) is %d." % queuesize
+                print("The current number of pending edits by all editors (not held by a moderator) is %d." % queuesize)
 
         if sub_type == 'I':
                 query = """select * from submissions
@@ -61,25 +62,25 @@ if __name__ == '__main__':
         result = db.store_result()
         numRows = result.num_rows()
         if numRows == 0:
-                print '<h3>No matching submissions present</h3>'
+                print('<h3>No matching submissions present</h3>')
                 PrintTrailer('recent', 0, 0)
                 sys.exit(0)
         elif sub_type == 'N':
                 wikipointer = """<br>If your edits seem to be taking a long time to be approved,
                 please check your <a href="%s://%s/index.php/User_talk:%s">Talk page</a>
                 for comments or questions.""" % (PROTOCOL, WIKILOC, username)
-                print wikipointer
+                print(wikipointer)
         elif sub_type == 'R':
                 wikipointer = """The moderator may have left additional comments on your 
                 <a href="%s://%s/index.php/User_talk:%s">Talk page</a>.<br>
                 Please check your wiki Talk page frequently for comments or questions.""" % (PROTOCOL, WIKILOC, username)
-                print wikipointer
+                print(wikipointer)
 
         ISFDBprintSubmissionTable(result, sub_type)
         
         # Check if there is more since "results_per_page+1" was requested from the database
         if numRows > results_per_page:
-                print '<p>'
-                print ISFDBLinkNoName('myrecent.cgi', '%d+%s' % (start+results_per_page, sub_type), 'OLDER', True)
+                print('<p>')
+                print(ISFDBLinkNoName('myrecent.cgi', '%d+%s' % (start+results_per_page, sub_type), 'OLDER', True))
         PrintTrailer('recent', 0, 0)
 

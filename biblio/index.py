@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Uzume and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -19,10 +20,10 @@ from isbn import convertISBN
 
 
 def displayLinks():
-        print '<p class="bottomlinks">\n%s\n%s Note: Information based on pre-publication data and subject to change' % (
+        print('<p class="bottomlinks">\n%s\n%s Note: Information based on pre-publication data and subject to change' % (
                 ISFDBLink("fc.cgi", "", "View All Forthcoming Books", argument='class="inverted"'),
                 ISFDBLink("stats.cgi?24", "", "View Top Forthcoming", argument='class="inverted"')
-                )
+                ))
         return
 
 if __name__ == '__main__':
@@ -30,11 +31,11 @@ if __name__ == '__main__':
         PrintHeader('The Internet Speculative Fiction Database')
         PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
 
-        print 'The <i><b>ISFDB</b></i> is a community effort to catalog works of science '
-        print 'fiction, fantasy, and horror. '
-        print 'It links together various types of bibliographic data: author bibliographies, '
-        print 'publication bibliographies, award listings, magazine content listings, anthology '
-        print 'and collection content listings, and forthcoming books.'
+        print('The <i><b>ISFDB</b></i> is a community effort to catalog works of science ')
+        print('fiction, fantasy, and horror. ')
+        print('It links together various types of bibliographic data: author bibliographies, ')
+        print('publication bibliographies, award listings, magazine content listings, anthology ')
+        print('and collection content listings, and forthcoming books.')
 
         # Authors who were born and died on this day
         calendar_day = CalendarDay()
@@ -42,12 +43,12 @@ if __name__ == '__main__':
         calendar_day.print_authors_section()
         # Forthcoming Books
         displayLinks()
-        print '<div class="divider">'
-        print '<b>Selected Forthcoming Books:</b>'
-        print '</div>'
+        print('<div class="divider">')
+        print('<b>Selected Forthcoming Books:</b>')
+        print('</div>')
 
-        print '<div id="Intro">'
-        print '<table>'
+        print('<div id="Intro">')
+        print('<table>')
 
         leftcolumn = 1
         # Retrieve publication list from front_page_pubs which is built by the nightly job
@@ -57,12 +58,12 @@ if __name__ == '__main__':
                 pubs = SQLGetNextMonthPubs()
         for pub in pubs:
                 if leftcolumn:
-                        print '<tr>'
+                        print('<tr>')
 
                 image_source = ISFDBHostCorrection(pub[PUB_IMAGE])
                 image_source = image_source.split("|")[0]
                 alt_name = 'Book Image'
-                print '<td><img src="%s" class="covermainpage" alt="%s"></td>' % (image_source, alt_name)
+                print('<td><img src="%s" class="covermainpage" alt="%s"></td>' % (image_source, alt_name))
                 outstr = pub[PUB_YEAR][5:7] +'/'+ pub[PUB_YEAR][8:10] + ' - '
                 outstr += ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class="forthcoming"') + " ("
                 if pub[PUB_PUBLISHER]:
@@ -85,24 +86,24 @@ if __name__ == '__main__':
                                 outstr += ', %s' % pub[PUB_CTYPE].lower()
                 outstr += ') by '
 
-                print '<td>%s' % outstr
+                print('<td>%s' % outstr)
                 authors = SQLPubBriefAuthorRecords(pub[PUB_PUBID])
                 displayAuthorList(authors)
-                print '</td>'
+                print('</td>')
                 if leftcolumn:
                         leftcolumn = 0
                 else:
-                        print '</tr>'
+                        print('</tr>')
                         leftcolumn = 1
 
         if leftcolumn == 0:
-                print '</tr>'
-                print '<tr>'
-                print '<td></td>'
-                print '<td></td>'
-                print '</tr>'
-        print '</table>'
-        print '</div>'
+                print('</tr>')
+                print('<tr>')
+                print('<td></td>')
+                print('<td></td>')
+                print('</tr>')
+        print('</table>')
+        print('</div>')
         displayLinks()
 
         PrintTrailer('frontpage', 0, 0)

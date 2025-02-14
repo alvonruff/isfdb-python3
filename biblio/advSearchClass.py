@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
@@ -225,7 +226,7 @@ class AdvancedSearch:
                 PrintHeader('Advanced %s Search' % self.search_type)
                 PrintNavbar('adv_search_selection', 0, 0, 0, 0)
                 if not self.user.id:
-                        print '<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>'
+                        print('<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>')
                 else:
                         self.print_invisible_drop_down_values()
                         self.print_full_header()
@@ -239,7 +240,7 @@ class AdvancedSearch:
                 if self.search_type in self.messages:
                         print('<ul>')
                         for message in self.messages[self.search_type]:
-                                print('<li> %s' % message)
+                                print(('<li> %s' % message))
                         print('</ul>')
                 for self.number in range(1, self.max_term + 1):
                         self.print_selectors()
@@ -259,12 +260,12 @@ class AdvancedSearch:
                 self.print_invisible_award_levels()
 
         def print_one_invisible_drop_down(self, name, values):
-                print '<select NAME="%s" id="%s" class="nodisplay">' % (name, name)
+                print('<select NAME="%s" id="%s" class="nodisplay">' % (name, name))
                 for value in values:
                         # Skip empty values, e.g. in SESSION.db.storylen_codes
                         if value:
-                                print '<option VALUE="%s">%s' % (value, value)
-                print '</select>'
+                                print('<option VALUE="%s">%s' % (value, value))
+                print('</select>')
 
         def print_invisible_secondary_verifications(self):
                 sources = SQLGetRefDetails()
@@ -275,7 +276,7 @@ class AdvancedSearch:
 
         def print_invisible_award_levels(self):
                 from awardClass import awardShared
-                print '<select NAME="AwardLevels" id="AwardLevels" class="nodisplay">'
+                print('<select NAME="AwardLevels" id="AwardLevels" class="nodisplay">')
                 # First display regular award levels in the 1-70 range
                 for award_level in range(1,71):
                         if award_level == 1:
@@ -284,58 +285,58 @@ class AdvancedSearch:
                                 displayed_value = '9 (Nomination)'
                         else:
                                 displayed_value = '%d' % award_level
-                        print '<option VALUE="%s">%s</option>' % (displayed_value, displayed_value)
+                        print('<option VALUE="%s">%s</option>' % (displayed_value, displayed_value))
                 # Next display special award levels in the 71-99 range
                 special_levels = awardShared.SpecialAwards()
                 for special_level in sorted(special_levels):
-                        print '<option VALUE="%s (%s)">%s (%s)</option>' % (special_level, special_levels[special_level], special_level, special_levels[special_level])
-                print '</select>'
+                        print('<option VALUE="%s (%s)">%s (%s)</option>' % (special_level, special_levels[special_level], special_level, special_levels[special_level]))
+                print('</select>')
 
         def print_full_header(self):
-                print '<ul>'
-                print '<li>A downloadable version of the ISFDB database is available <a href="%s://%s/index.php/ISFDB_Downloads">here</a>' % (PROTOCOL, WIKILOC)
-                print '<li>Supported wildcards: * and % match any number of characters, _ matches one character'
-                print '</ul>'
-                print '<hr>'
+                print('<ul>')
+                print('<li>A downloadable version of the ISFDB database is available <a href="%s://%s/index.php/ISFDB_Downloads">here</a>' % (PROTOCOL, WIKILOC))
+                print('<li>Supported wildcards: * and % match any number of characters, _ matches one character')
+                print('</ul>')
+                print('<hr>')
 
         def print_submit_button(self):
-                print '<button TYPE="SUBMIT" NAME="ACTION" VALUE="query">Get Results</button>'
-                print '<button TYPE="SUBMIT" NAME="ACTION" VALUE="count">Get Count</button>'
-                print '<input NAME="START" VALUE="0" TYPE="HIDDEN">'
-                print '<input NAME="TYPE" VALUE="%s" TYPE="HIDDEN">' % self.search_type
-                print '</form>'
+                print('<button TYPE="SUBMIT" NAME="ACTION" VALUE="query">Get Results</button>')
+                print('<button TYPE="SUBMIT" NAME="ACTION" VALUE="count">Get Count</button>')
+                print('<input NAME="START" VALUE="0" TYPE="HIDDEN">')
+                print('<input NAME="TYPE" VALUE="%s" TYPE="HIDDEN">' % self.search_type)
+                print('</form>')
 
         def print_radio_selectors(self):
-                print '<input TYPE="RADIO" NAME="C" VALUE="AND" CHECKED>AND'
-                print '<input TYPE="RADIO" NAME="C" VALUE="OR">OR'
+                print('<input TYPE="RADIO" NAME="C" VALUE="AND" CHECKED>AND')
+                print('<input TYPE="RADIO" NAME="C" VALUE="OR">OR')
 
         def print_selectors(self):
-                print '<p id="%s_selectors_%d">' % (self.selector_id, self.number)
-                print '<select NAME="USE_%d" id="%s_%d">' % (self.number, self.selector_id, self.number)
+                print('<p id="%s_selectors_%d">' % (self.selector_id, self.number))
+                print('<select NAME="USE_%d" id="%s_%d">' % (self.number, self.selector_id, self.number))
                 for value_display_pair in self.selection[self.search_type]:
-                        print '<option VALUE="%s">%s' % (value_display_pair[0], value_display_pair[1])
-                print '</select>'
+                        print('<option VALUE="%s">%s' % (value_display_pair[0], value_display_pair[1]))
+                print('</select>')
 
-                print '<select NAME="O_%d" id="%s_operator_%d">' % (self.number, self.selector_id, self.number)
+                print('<select NAME="O_%d" id="%s_operator_%d">' % (self.number, self.selector_id, self.number))
                 for operator_tuple in self.operators:
-                        print '<option VALUE="%s">%s' % (operator_tuple[0], operator_tuple[1])
-                print '</select>'
+                        print('<option VALUE="%s">%s' % (operator_tuple[0], operator_tuple[1]))
+                print('</select>')
 
-                print '<input id="%sterm_%d" NAME="TERM_%d" TYPE="text" SIZE="50">' % (self.selector_id, self.number, self.number)
+                print('<input id="%sterm_%d" NAME="TERM_%d" TYPE="text" SIZE="50">' % (self.selector_id, self.number, self.number))
                 if self.number == 1:
                         self.print_radio_selectors()
-                print '<p>'
+                print('<p>')
 
         def print_sort_by(self):
                 if self.search_type not in self.sort_values:
                         return
                 # If there is only one way to sort the search results, hide the sort value
                 if len(self.sort_values[self.search_type]) == 1:
-                        print '<input NAME="ORDERBY" VALUE="%s" TYPE="HIDDEN">' % self.sort_values[self.search_type][0][0]
+                        print('<input NAME="ORDERBY" VALUE="%s" TYPE="HIDDEN">' % self.sort_values[self.search_type][0][0])
                         return
 
-                print '<b>Sort Results By:</b>'
-                print '<select NAME="ORDERBY">'
+                print('<b>Sort Results By:</b>')
+                print('<select NAME="ORDERBY">')
                 for value_display_pair in self.sort_values[self.search_type]:
-                        print '<option VALUE="%s">%s' % (value_display_pair[0], value_display_pair[1])
-                print '</select>'
+                        print('<option VALUE="%s">%s' % (value_display_pair[0], value_display_pair[1]))
+                print('</select>')

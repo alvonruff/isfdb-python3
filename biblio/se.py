@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
@@ -41,32 +42,32 @@ def validateYear(string):
                 return (0, error)
 
 def PrintSummary(arg, count, limit, search_type, search_abbreviation):
-        print "<p><b>A search for '%s' found %d matches. " % (ISFDBText(arg), count)
+        print("<p><b>A search for '%s' found %d matches. " % (ISFDBText(arg), count))
         if count >= limit:
-                print "<br>The first %d matches are displayed below. Use " % (limit)
-                print ISFDBLink('adv_search_selection.cgi', search_abbreviation, 'Advanced %s Search' % search_type, False, 'class="inverted"')
-                print " to see more matches."
-        print '</b>'
-        print '<p>'
+                print("<br>The first %d matches are displayed below. Use " % (limit))
+                print(ISFDBLink('adv_search_selection.cgi', search_abbreviation, 'Advanced %s Search' % search_type, False, 'class="inverted"'))
+                print(" to see more matches.")
+        print('</b>')
+        print('<p>')
 
 def PrintWholeWordNote():
-        print """Note that All Titles and Fiction Titles searches are now limited to
+        print("""Note that All Titles and Fiction Titles searches are now limited to
                 complete words for performance reasons. If you want to search for a
                 substring, e.g. 'kenstein' in 'Frankenstein', you will need to use
-                %s.""" % ISFDBLink('adv_search_selection.cgi', 'title', 'Advanced Title Search', False, 'class="inverted"')
+                %s.""" % ISFDBLink('adv_search_selection.cgi', 'title', 'Advanced Title Search', False, 'class="inverted"'))
 
 def PrintGoogleSearch(arg, search_type):
-        print 'You can also try:'
-        print '<form METHOD="GET" action="%s:/%s/google_search_redirect.cgi" accept-charset="utf-8">' % (PROTOCOL, HTFAKE)
-        print '<p>'
-        print '<select NAME="OPERATOR">'
-        print '<option VALUE="exact">exact %s search' % search_type
-        print '<option SELECTED VALUE="approximate">approximate %s search' % search_type
-        print '</select>'
-        print ' on <input NAME="SEARCH_VALUE" SIZE="50" VALUE="%s">' % ISFDBText(arg)
-        print '<input NAME="PAGE_TYPE" VALUE="%s" TYPE="HIDDEN">' % search_type
-        print '<input TYPE="SUBMIT" VALUE="using Google">'
-        print '</form>'
+        print('You can also try:')
+        print('<form METHOD="GET" action="%s:/%s/google_search_redirect.cgi" accept-charset="utf-8">' % (PROTOCOL, HTFAKE))
+        print('<p>')
+        print('<select NAME="OPERATOR">')
+        print('<option VALUE="exact">exact %s search' % search_type)
+        print('<option SELECTED VALUE="approximate">approximate %s search' % search_type)
+        print('</select>')
+        print(' on <input NAME="SEARCH_VALUE" SIZE="50" VALUE="%s">' % ISFDBText(arg))
+        print('<input NAME="PAGE_TYPE" VALUE="%s" TYPE="HIDDEN">' % search_type)
+        print('<input TYPE="SUBMIT" VALUE="using Google">')
+        print('</form>')
 
 def PrintReplaceScript(script, value):
         ISFDBLocalRedirect('%s.cgi?%s' % (script, value))
@@ -74,7 +75,7 @@ def PrintReplaceScript(script, value):
 def DoError(error, search_value, search_type):
         PrintHeader('ISFDB Search Error')
         PrintNavbar('search', '', 0, 'se.cgi', '', search_value, search_type)
-        print '<h2>%s</h2>' % ISFDBText(error)
+        print('<h2>%s</h2>' % ISFDBText(error))
         PrintTrailer('search', '', 0)
         sys.exit(0)
 
@@ -84,15 +85,15 @@ def DoError(error, search_value, search_type):
 ##########################################################################################
 
 def PrintMagazineResults(results, arg):
-        print """<h3>Note: The search results displayed below include all series
+        print("""<h3>Note: The search results displayed below include all series
                  AND magazine title records that match the entered value.
                  Matching magazines whose series titles do not match the
-                 entered value have asterisks next to their titles.</h3>"""
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>Magazine Series</th>'
-        print '<th>Parent Series</th>'
-        print '</tr>'
+                 entered value have asterisks next to their titles.</h3>""")
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>Magazine Series</th>')
+        print('<th>Parent Series</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -107,41 +108,41 @@ def PrintMagazineResults(results, arg):
                                 break
                 if counter > 299:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintMagazineRecord(title, series_id, parent_id, series_title, bgcolor, arg):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>'
-        print ISFDBLink('pe.cgi', series_id, title)
+        print('<td>')
+        print(ISFDBLink('pe.cgi', series_id, title))
         if title != series_title:
-                print '*'
-        print ISFDBLink('seriesgrid.cgi', series_id, ' (issue grid)')
-        print '</td>'
+                print('*')
+        print(ISFDBLink('seriesgrid.cgi', series_id, ' (issue grid)'))
+        print('</td>')
         if parent_id:
                 parent_title = SQLgetSeriesName(int(parent_id))
-                print '<td>'
-                print ISFDBLink('pe.cgi', parent_id, parent_title)
-                print ISFDBLink('seriesgrid.cgi', parent_id, ' (issue grid)')
-                print '</td>'
+                print('<td>')
+                print(ISFDBLink('pe.cgi', parent_id, parent_title))
+                print(ISFDBLink('seriesgrid.cgi', parent_id, ' (issue grid)'))
+                print('</td>')
         else:
-                print '<td>-</td>'
-        print '</tr>'
+                print('<td>-</td>')
+        print('</tr>')
 
 ##########################################################################################
 # PUBLISHER SECTION
 ##########################################################################################
 
 def PrintPublisherResults(results,moderator):
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
         if moderator:
-                print '<th>Merge</th>'
-        print '<th>Publisher</th>'
-        print '</tr>'
+                print('<th>Merge</th>')
+        print('<th>Publisher</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -151,19 +152,19 @@ def PrintPublisherResults(results,moderator):
                 counter += 1
                 if counter > 299:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintPublisherRecord(record, bgcolor, moderator):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         if moderator:
-                print '<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%d"></td>' % (record[PUBLISHER_ID])
+                print('<td><INPUT TYPE="checkbox" NAME="merge" VALUE="%d"></td>' % (record[PUBLISHER_ID]))
 
-        print '<td>%s</td>' % ISFDBLink('publisher.cgi', record[PUBLISHER_ID], record[PUBLISHER_NAME])
-        print '</tr>'
+        print('<td>%s</td>' % ISFDBLink('publisher.cgi', record[PUBLISHER_ID], record[PUBLISHER_NAME]))
+        print('</tr>')
 
 
 ##########################################################################################
@@ -171,10 +172,10 @@ def PrintPublisherRecord(record, bgcolor, moderator):
 ##########################################################################################
 
 def PrintPubSeriesResults(results):
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>Publication Series</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>Publication Series</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -184,16 +185,16 @@ def PrintPubSeriesResults(results):
                 counter += 1
                 if counter > 299:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintPubSeriesRecord(record, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%s</td>' % ISFDBLink('pubseries.cgi', record[PUB_SERIES_ID], record[PUB_SERIES_NAME])
-        print '</tr>'
+        print('<td>%s</td>' % ISFDBLink('pubseries.cgi', record[PUB_SERIES_ID], record[PUB_SERIES_NAME]))
+        print('</tr>')
 
 
 ##########################################################################################
@@ -201,11 +202,11 @@ def PrintPubSeriesRecord(record, bgcolor):
 ##########################################################################################
 
 def PrintTagResults(results):
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>Tag Name</th>'
-        print '<th>Private?</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>Tag Name</th>')
+        print('<th>Private?</th>')
+        print('</tr>')
 
         bgcolor = 1
         counter = 0
@@ -215,21 +216,21 @@ def PrintTagResults(results):
                 counter += 1
                 if counter > 299:
                         break
-        print '</table>'
+        print('</table>')
 
 def PrintTagRecord(tag, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
         if tag[TAG_STATUS]:
                 status = '<b>Private</b>'
         else:
                 status = ''
-        print '<td>%s</td>' % ISFDBLink('tag.cgi', tag[TAG_ID], tag[TAG_NAME])
-        print '<td>%s</td>' % (status)
-        print '</tr>'
+        print('<td>%s</td>' % ISFDBLink('tag.cgi', tag[TAG_ID], tag[TAG_NAME]))
+        print('<td>%s</td>' % (status))
+        print('</tr>')
 
 def LengthCheck(arg, record_name, search_type):
         # Check that the search string contains at least 2 non-wildcard characters
@@ -268,7 +269,7 @@ if __name__ == '__main__':
         except:
                 PrintHeader("ISFDB Search Error")
                 PrintNavbar('search', '', 0, 'se.cgi', '')
-                print "<h2>No search value specified</h2>"
+                print("<h2>No search value specified</h2>")
                 PrintTrailer('search', '', 0)
                 sys.exit(0)
 
@@ -397,18 +398,18 @@ if __name__ == '__main__':
                         PrintNavbar('search', 0, 0, 0, 0, search_value, type)
                         if SQLisUserModerator(userid):
                                 moderator = 1
-                                print '<form METHOD="POST" ACTION="/cgi-bin/edit/pv_merge.cgi">'
+                                print('<form METHOD="POST" ACTION="/cgi-bin/edit/pv_merge.cgi">')
                         PrintSummary(arg, len(results), 300, 'Publisher', 'publisher')
                         if results:
                                 PrintPublisherResults(results, moderator)
                         else:
-                                print '</form>'
+                                print('</form>')
                                 PrintGoogleSearch(arg, 'publisher')
 
                 if moderator and (len(results) > 1):
-                        print '<p>'
-                        print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-                        print '</form>'
+                        print('<p>')
+                        print('<input TYPE="SUBMIT" VALUE="Merge Selected Records">')
+                        print('</form>')
 
         elif type[:18] == 'Publication Series':
                 results = SQLFindPubSeries(arg, mode)

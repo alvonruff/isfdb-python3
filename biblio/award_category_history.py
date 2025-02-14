@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2020-2025   Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -22,9 +23,9 @@ if __name__ == '__main__':
         PrintHeader('Award Category Edit History')
         PrintNavbar('award_category_history', 0, 0, 'award_category_history.cgi', award_category_id)
 
-        print """<h3>The list below displays the following types of submissions: New Award Category,
+        print("""<h3>The list below displays the following types of submissions: New Award Category,
                 Edit Award Category, Delete Award Category. The submission which created this award category is displayed
-                if the award category was created after 2016-10-24.</h3>"""
+                if the award category was created after 2016-10-24.</h3>""")
 
         query = """select * from submissions
                 where affected_record_id = %d
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>No submission data on file for this award category.</h3>'
+                print('<h3>No submission data on file for this award category.</h3>')
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 

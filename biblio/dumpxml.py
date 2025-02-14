@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -31,13 +32,13 @@ if __name__ == '__main__':
         outstr = string.replace(outstr, '>', '&gt;')
         outstr = string.replace(outstr, '\n', '<br>')
 
-        print outstr
+        print(outstr)
 
-        print '<p>'
-        print ISFDBLinkNoName('view_submission.cgi', submission_id, 'Public View', False, 'class="approval"')
+        print('<p>')
+        print(ISFDBLinkNoName('view_submission.cgi', submission_id, 'Public View', False, 'class="approval"'))
         (userid, username, usertoken) = GetUserData()
         # If the user is a moderator
         if SQLisUserModerator(userid):
-                print ' %s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Moderator View', False, 'class="approval"')
+                print(' %s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'Moderator View', False, 'class="approval"'))
 
         PrintTrailer('dumpxml', 0, 0)

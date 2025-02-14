@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2011-2025   Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -25,13 +26,13 @@ if __name__ == '__main__':
         PrintHeader(header)
         PrintNavbar('authors_by_debut_year', 0, 0, 'authors_by_debut_year.cgi', 0)
 
-        print '<h3>Includes authors with at least 6 novels, short fiction, poems or collections:</h3>'
-        print '<table class="generic_table">'
-        print '<tr align=left class="table1">'
-        print '<th>Debut Year</th>'
-        print '<th>Author</th>'
-        print '<th>Number of Titles</th>'
-        print '</tr>'
+        print('<h3>Includes authors with at least 6 novels, short fiction, poems or collections:</h3>')
+        print('<table class="generic_table">')
+        print('<tr align=left class="table1">')
+        print('<th>Debut Year</th>')
+        print('<th>Author</th>')
+        print('<th>Number of Titles</th>')
+        print('</tr>')
 
         if year:
                 year_selector = '= %d' % year
@@ -52,15 +53,15 @@ if __name__ == '__main__':
                 author_name = record[0][2]
                 title_count = record[0][3]
                 if color:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%s</td>' % debut_year
-                print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
-                print '<td>%d</td>' % title_count
-                print '</tr>'
+                        print('<tr align=left class="table2">')
+                print('<td>%s</td>' % debut_year)
+                print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
+                print('<td>%d</td>' % title_count)
+                print('</tr>')
                 color = color ^ 1
                 record = result.fetch_row()
-        print '</table><p>'
+        print('</table><p>')
 
         PrintTrailer('frontpage', 0, 0)

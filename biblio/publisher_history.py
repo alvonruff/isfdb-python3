@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,10 +24,10 @@ if __name__ == '__main__':
         PrintHeader('Publisher Edit History')
         PrintNavbar('publisher_history', 0, 0, 'publisher_history.cgi', publisher_id)
 
-        print """<h3>The list below displays Edit Publisher and Publisher Merge submissions for this publisher.
+        print("""<h3>The list below displays Edit Publisher and Publisher Merge submissions for this publisher.
                 Note that publisher records are created and deleted automatically when
                 publications are created/edited/deleted; related
-                submissions are not displayed on this page.</h3>"""
+                submissions are not displayed on this page.</h3>""")
 
         query = """select * from submissions
                 where affected_record_id = %d
@@ -36,7 +37,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h3>No submission data on file for this publisher.</h3>'
+                print('<h3>No submission data on file for this publisher.</h3>')
         else:
                 ISFDBprintSubmissionTable(result, 'I')
 

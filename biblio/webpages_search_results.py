@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2018-2020   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -65,7 +66,7 @@ class WebPagesSearch:
                         self.clause = "like '%%%s'" % escaped_value
                 
         def display_error(self, message):
-                print '<h2>%s</h2>' % message
+                print('<h2>%s</h2>' % message)
                 PrintTrailer('search', '', 0)
                 sys.exit(0)
 
@@ -131,11 +132,11 @@ class WebPagesSearch:
 
         def print_results(self):
                 if not self.records:
-                        print '<b>No matching records found.</b>'
+                        print('<b>No matching records found.</b>')
                         return
-                print '<b>Web Page Search is currently limited to the first 1000 matches across all record types.</b>'
-                print '<p><b>Jump to record type:</b>'
-                print '<ul>'
+                print('<b>Web Page Search is currently limited to the first 1000 matches across all record types.</b>')
+                print('<p><b>Jump to record type:</b>')
+                print('<ul>')
                 for record_type in sorted(self.record_types):
                         if record_type not in self.records:
                                 continue
@@ -143,33 +144,33 @@ class WebPagesSearch:
                         for ordering_field in self.records[record_type]:
                                 for record_name in self.records[record_type][ordering_field]:
                                         count += len(self.records[record_type][ordering_field][record_name])
-                        print '<li><a href="#%s">%s</a> (%d)' % (record_type.replace(' ',''), record_type, count)
-                print '</ul>'
+                        print('<li><a href="#%s">%s</a> (%d)' % (record_type.replace(' ',''), record_type, count))
+                print('</ul>')
                 for record_type in sorted(self.record_types):
                         if record_type not in self.records:
                                 continue
-                        print '<h3 id="%s" class="centered">%s</h3>' % (record_type.replace(' ',''), record_type)
-                        print '<table>'
-                        print '<tr class="table1">'
-                        print '<th>#</th>'
-                        print '<th>Record Name</th>'
-                        print '<th>Web Page URL</th>'
-                        print '</tr>'
+                        print('<h3 id="%s" class="centered">%s</h3>' % (record_type.replace(' ',''), record_type))
+                        print('<table>')
+                        print('<tr class="table1">')
+                        print('<th>#</th>')
+                        print('<th>Record Name</th>')
+                        print('<th>Web Page URL</th>')
+                        print('</tr>')
                         cgi_script = self.record_types[record_type][2]
                         bgcolor = 1
                         count = 1
                         for ordering_field in sorted(self.records[record_type]):
                                 for record_name in sorted(self.records[record_type][ordering_field]):
                                         for record_id in self.records[record_type][ordering_field][record_name]:
-                                                print '<tr class="table%d">' % (bgcolor+1)
-                                                print '<td>%d</td>' % count
-                                                print '<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record_id, record_name)
+                                                print('<tr class="table%d">' % (bgcolor+1))
+                                                print('<td>%d</td>' % count)
+                                                print('<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record_id, record_name))
                                                 url = self.records[record_type][ordering_field][record_name][record_id]
-                                                print '<td><a href="%s" target="_blank">%s</a></td>' % (url, url)
-                                                print '</tr>'
+                                                print('<td><a href="%s" target="_blank">%s</a></td>' % (url, url))
+                                                print('</tr>')
                                                 bgcolor ^= 1
                                                 count += 1
-                        print '</table>'
+                        print('</table>')
 
 if __name__ == '__main__':
 

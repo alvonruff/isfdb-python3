@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -28,17 +29,17 @@ if __name__ == '__main__':
         PrintNavbar('publisher_authors', publisher_id, publisher_id, 'publisher_authors.cgi', 0)
 
         if sort_by == 'name':
-                print ISFDBLink('publisher_authors.cgi', '%s+count' % publisher_id, 'Sort by Publication Count')
+                print(ISFDBLink('publisher_authors.cgi', '%s+count' % publisher_id, 'Sort by Publication Count'))
         else:
-                print ISFDBLink('publisher_authors.cgi', '%s+name' % publisher_id, 'Sort by Author Name')
+                print(ISFDBLink('publisher_authors.cgi', '%s+name' % publisher_id, 'Sort by Author Name'))
 
-        print ' %s ' % SESSION.ui.bullet
-        print ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page')
-        print """<p>Note that the statistics below count the number of publications associated
+        print(' %s ' % SESSION.ui.bullet)
+        print(ISFDBLinkNoName('publisher.cgi', publisher_id, 'Return to the publisher page'))
+        print("""<p>Note that the statistics below count the number of publications associated
                 with publication-level authors and editors. They do not count the authors of
                 individual titles (stories, poems, etc.) contained in publications. Each edition
                 of a book increments its author's count. Different forms of an author's name, e.g.
-                'Mary Shelley' vs. 'Mary W. Shelley', are counted separately."""
+                'Mary Shelley' vs. 'Mary W. Shelley', are counted separately.""")
 
         authors = SQLGetAllAuthorsForPublisher(publisher_id, sort_by)
         table = ISFDBTable()

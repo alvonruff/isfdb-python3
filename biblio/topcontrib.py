@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -21,9 +22,9 @@ def output_data(sub_type):
         result = db.store_result()
         if result.num_rows():
                 record = result.fetch_row()
-                print record[0][0]
+                print(record[0][0])
         else:
-                print '<h3>This report is currently unavailable. It is regenerated once a week.</h3>'
+                print('<h3>This report is currently unavailable. It is regenerated once a week.</h3>')
 
 if __name__ == '__main__':
 
@@ -33,15 +34,15 @@ if __name__ == '__main__':
         PrintNavbar('top', 0, 0, 'topcontrib.cgi', 0)
 
         if sub_type == 0:
-                print '<h2>Top ISFDB contributors (All Submission Types)</h2>'
-                print '<h3>This report is generated once a week</h3>'
+                print('<h2>Top ISFDB contributors (All Submission Types)</h2>')
+                print('<h3>This report is generated once a week</h3>')
                 output_data(0)
         elif sub_type in SUBMAP and SUBMAP[sub_type][3]:
-                print '<h2>Top ISFDB contributors (%s)</h2>' % (SUBMAP[sub_type][3])
-                print '<h3>This report is generated once a week</h3>'
+                print('<h2>Top ISFDB contributors (%s)</h2>' % (SUBMAP[sub_type][3]))
+                print('<h3>This report is generated once a week</h3>')
                 output_data(sub_type)
         else:
-                print '<h3>Specified submission type is currently inactive</h3>'
+                print('<h3>Specified submission type is currently inactive</h3>')
                 PrintTrailer('top', 0, 0)
                 sys.exit(0)
 

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2021   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,20 +26,20 @@ PrintHeader('My Translation Preferences')
 PrintNavbar('mylanguages', 0, 0, 'mylanguages.cgi', 0)
 
 langs = SQLLoadFullLanguages()
-print '<p>'
-print '<form id="data" METHOD="POST" ACTION="/cgi-bin/submitmylanguages.cgi">'
-print '<ul>'
+print('<p>')
+print('<form id="data" METHOD="POST" ACTION="/cgi-bin/submitmylanguages.cgi">')
+print('<ul>')
 for lang in langs:
         if lang[0] in user.languages:
                 checked = 'checked'
         else:
                 checked = ''
-        print '<li><input type="checkbox" name="lang_choice.%s" value="on" %s>%s' % (lang[0], checked, lang[1])
-        print '<input name="lang_id.%d" value="%s" type="HIDDEN"></li>' % (lang[0], lang[1])
+        print('<li><input type="checkbox" name="lang_choice.%s" value="on" %s>%s' % (lang[0], checked, lang[1]))
+        print('<input name="lang_id.%d" value="%s" type="HIDDEN"></li>' % (lang[0], lang[1]))
 
-print '</ul>'
-print '<p>'
-print '<input type="SUBMIT" value="Update Translation Preferences">'
-print '</form>'
+print('</ul>')
+print('<p>')
+print('<input type="SUBMIT" value="Update Translation Preferences">')
+print('</form>')
 
 PrintTrailer('mylanguages', 0, 0)

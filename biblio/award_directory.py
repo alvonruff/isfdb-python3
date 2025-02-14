@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -22,11 +23,11 @@ if __name__ == '__main__':
         PrintHeader('Award Directory')
         PrintNavbar('directory', 0, 0, 'award_directory.cgi', 0)
 
-        print 'For the current status of the award data entry project see the <a href="%s://%s/index.php/Awards">Wiki Awards page</a>' % (PROTOCOL, WIKILOC)
-        print '<p>'
+        print('For the current status of the award data entry project see the <a href="%s://%s/index.php/Awards">Wiki Awards page</a>' % (PROTOCOL, WIKILOC))
+        print('<p>')
         results = SQLSearchAwards('')
         PrintAwardResults(results, 10000)
 
-        print '<p>'
+        print('<p>')
 
         PrintTrailer('directory', 0, 0)

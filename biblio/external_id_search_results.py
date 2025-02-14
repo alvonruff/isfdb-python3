@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2017-2025   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -61,7 +62,7 @@ class ExtIDSearch:
 
         def display_error(self, message):
                 self.print_headers()
-                print '<h2>%s</h2>' % message
+                print('<h2>%s</h2>' % message)
                 PrintTrailer('search', '', 0)
                 sys.exit(0)
 
@@ -111,10 +112,10 @@ class ExtIDSearch:
                         ISFDBLocalRedirect('pl.cgi?%d' % self.pubs[0][PUB_PUBID])
                 self.print_headers()
                 if not matches:
-                        print '<h2>No matching records found.</h2>'
+                        print('<h2>No matching records found.</h2>')
                         return
-                print '<p><h3>%d matches found.' % matches
-                print 'Publication Search by External ID is currently limited to the first 300 publication matches.</h3>'
+                print('<p><h3>%d matches found.' % matches)
+                print('Publication Search by External ID is currently limited to the first 300 publication matches.</h3>')
                 PrintPubsTable(self.pubs, 'adv_search')
 
 if __name__ == '__main__':
@@ -123,6 +124,6 @@ if __name__ == '__main__':
         search.build_query_clause()
         search.get_pubs()
         search.print_pubs()
-        print '<p>'
+        print('<p>')
         PrintTrailer('search', 0, 0)
 

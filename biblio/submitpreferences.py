@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Bill Longley, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -19,7 +20,7 @@ from common import *
 def DoError(message):
         PrintHeader("Preferences Update")
         PrintNavbar("preferences", 0, 0, 0, 0)
-        print '<h2>%s</h2>' % message
+        print('<h2>%s</h2>' % message)
         sys.exit(0)
         
 if __name__ == '__main__':
