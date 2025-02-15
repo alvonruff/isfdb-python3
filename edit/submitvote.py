@@ -23,7 +23,7 @@ from library import ISFDBLocalRedirect
 def DoError(message):
         PrintPreSearch("Vote Submission")
         PrintNavBar(0, 0)
-        print "<h3>ERROR: %s</h3>" % message
+        print("<h3>ERROR: %s</h3>" % message)
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
         

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,9 +30,9 @@ if __name__ == '__main__':
 
         help = HelpVerificationSource()
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_verification_source.cgi">'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_verification_source.cgi">')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         printfield('Source Label', 'source_label', help)
 
@@ -40,11 +40,11 @@ if __name__ == '__main__':
 
         printfield('Source URL', 'source_url', help)
 
-        print '</table>'
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)
 

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,27 +31,27 @@ if __name__ == '__main__':
         seriesname = SQLgetSeriesName(series_id)
 
         if subseries:
-                print '<h2>Error: Series with sub-series cannot be deleted until all sub-series have been removed.</h2>'
-                print '<h2>This series still has %d sub-series.</h2>' % len(subseries)
+                print('<h2>Error: Series with sub-series cannot be deleted until all sub-series have been removed.</h2>')
+                print('<h2>This series still has %d sub-series.</h2>' % len(subseries))
 
         elif titles:
-                print '<h2>Error: Non-empty series can\'t be deleted.</h2>'
-                print '<h2>This series still has %d titles:</h2>' % len(titles)
-                print '<ul>'
+                print('<h2>Error: Non-empty series can\'t be deleted.</h2>')
+                print('<h2>This series still has %d titles:</h2>' % len(titles))
+                print('<ul>')
                 for title in titles:
-                        print '<li>'
-                        print '%s (%s)' % (ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]), title[TITLE_YEAR])
-                print '</ul>'
+                        print('<li>')
+                        print('%s (%s)' % (ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]), title[TITLE_YEAR]))
+                print('</ul>')
         else:
-                print '<b>Request to Delete:</b> <i>%s</i>' % seriesname
-                print '<form METHOD="POST" ACTION="/cgi-bin/edit/submitdelseries.cgi">'
-                print '<p>'
-                print '<b>Deletion Reason</b><br>'
-                print '<textarea name="reason" rows="4" cols="45"></textarea>'
-                print '<p>'
-                print '<input name="series_id" value="%d" type="HIDDEN">' % series_id
-                print '<input name="series_name" value="%s" type="HIDDEN">' % seriesname
-                print '<input type="SUBMIT" value="Delete">'
-                print '</form>'
+                print('<b>Request to Delete:</b> <i>%s</i>' % seriesname)
+                print('<form METHOD="POST" ACTION="/cgi-bin/edit/submitdelseries.cgi">')
+                print('<p>')
+                print('<b>Deletion Reason</b><br>')
+                print('<textarea name="reason" rows="4" cols="45"></textarea>')
+                print('<p>')
+                print('<input name="series_id" value="%d" type="HIDDEN">' % series_id)
+                print('<input name="series_name" value="%s" type="HIDDEN">' % seriesname)
+                print('<input type="SUBMIT" value="Delete">')
+                print('</form>')
         
         PrintPostSearch(0, 0, 0, 0, 0, 0)

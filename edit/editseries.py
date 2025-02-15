@@ -33,19 +33,19 @@ if __name__ == '__main__':
 
         printHelpBox('series', 'SeriesData')
 
-        print "Note:"
-        print "<ul>"
-        print "<li>Changing the Name field changes the name of the series for all books currently in this series."
-        print "<li>Changing the Parent field does NOT change the name of the parent series."
-        print "<li>If the Parent exists, changing the Parent field relinks the Named series to that parent."
-        print "<li>If the Parent does not exist, a new Parent series will be created and the Named series will be linked to that parent."
-        print "</ul>"
-        print "<hr>"
-        print "<p>"
+        print("Note:")
+        print("<ul>")
+        print("<li>Changing the Name field changes the name of the series for all books currently in this series.")
+        print("<li>Changing the Parent field does NOT change the name of the parent series.")
+        print("<li>If the Parent exists, changing the Parent field relinks the Named series to that parent.")
+        print("<li>If the Parent does not exist, a new Parent series will be created and the Named series will be linked to that parent.")
+        print("</ul>")
+        print("<hr>")
+        print("<p>")
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitseries.cgi">'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitseries.cgi">')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         # Display the series name
         printfield("Name", "series_name", help, series[SERIES_NAME])
@@ -70,16 +70,16 @@ if __name__ == '__main__':
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
-        print '<input NAME="series_id" VALUE="%d" TYPE="HIDDEN">' % series_number
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
-        print '<hr>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
+        print('<input NAME="series_id" VALUE="%d" TYPE="HIDDEN">' % series_number)
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
+        print('<hr>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

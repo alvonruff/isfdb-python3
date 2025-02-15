@@ -27,9 +27,9 @@ def displayError(message, title = '', cgi_script = '', record_id = 0):
                         PrintNavBar(0, 0)
                 else:
                         PrintNavBar("edit/%s.cgi" % cgi_script, record_id)
-        print '<div id="WarningBox">'
-        print "<h3>Error: %s.</h3>" % message
-        print '</div>'
+        print('<div id="WarningBox">')
+        print("<h3>Error: %s.</h3>" % message)
+        print('</div>')
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
 
@@ -84,7 +84,7 @@ def makequery(entry, use):
         elif use in Query_RL_List:
                 return use+" like '%"+entry+"%'"
         else:
-                print "BAD QUERY USE:", use
+                print("BAD QUERY USE:", use)
                 return ''
 
 
@@ -94,9 +94,9 @@ def makequery(entry, use):
 def PrintPreSearch(title):
         PrintHTMLHeaders(title)
 
-        print '<script type="text/javascript" src="%s://%s/isfdb_main.js"></script>' % (PROTOCOL, HTMLLOC)
+        print('<script type="text/javascript" src="%s://%s/isfdb_main.js"></script>' % (PROTOCOL, HTMLLOC))
         # Include the JavaScript file with the general purpose JS functions that support editing
-        print '<script type="text/javascript" src="%s://%s/edit_js.js"></script>' % (PROTOCOL, HTMLLOC)
+        print('<script type="text/javascript" src="%s://%s/edit_js.js"></script>' % (PROTOCOL, HTMLLOC))
 
         if title in ('Publication Editor', 'Add Publication', 'New Novel', 'New Magazine',
                      'New Anthology', 'New Collection', 'New Omnibus', 'New Nonfiction',
@@ -120,13 +120,13 @@ def PrintPreSearch(title):
         elif title in ('Publisher Editor', 'Publication Series Editor', 'Series Editor'):
                 JSscript('edit_other')
 
-        print '</div>'
+        print('</div>')
         # The "<noscript>" part will only be executed if Javascript is not enabled on the browser side
-        print '<noscript><h1>Your browser does not support JavaScript. Javascript is required to edit ISFDB.'
-        print '%s to return to browsing ISFDB.</h1></noscript>' % ISFDBLink('index.cgi', '', 'Click here')
+        print('<noscript><h1>Your browser does not support JavaScript. Javascript is required to edit ISFDB.')
+        print('%s to return to browsing ISFDB.</h1></noscript>' % ISFDBLink('index.cgi', '', 'Click here'))
 
 def JSscript(script_name):
-        print '<script type="text/javascript" src="%s://%s/%s.js"></script>' % (PROTOCOL, HTMLLOC, script_name)
+        print('<script type="text/javascript" src="%s://%s/%s.js"></script>' % (PROTOCOL, HTMLLOC, script_name))
 
 def getSubmitter():
         (userid, username, usertoken) = GetUserData()
@@ -157,40 +157,40 @@ def PrintUserInfo(userid, username):
 def PrintNavBar(executable, arg):
         (userid, username, usertoken) = GetUserData()
 
-        print '<div id="nav">'
+        print('<div id="nav">')
         #Print the search box from module navbar
         PrintSearchBox('')
         PrintUserInfo(userid, username)
         PrintOtherPages('Moderator')
-        print '</div>'
+        print('</div>')
         
-        print '<div id="main2">'
+        print('<div id="main2">')
         dbStatus = SQLgetDatabaseStatus()
         if dbStatus == 0:
-                print "<h3>The ISFDB database is currently offline. Please check back in a few minutes.</h3>"
+                print("<h3>The ISFDB database is currently offline. Please check back in a few minutes.</h3>")
                 PrintPostSearch(0, 0, 0, 0, 0)
                 sys.exit(0)
         
         onlineVersion = SQLgetSchemaVersion()
         if onlineVersion != SCHEMA_VER:
-                print "<h3>Warning: database schema mismatch (%s vs %s)</h3>" % (onlineVersion, SCHEMA_VER)
+                print("<h3>Warning: database schema mismatch (%s vs %s)</h3>" % (onlineVersion, SCHEMA_VER))
         if username == 0:
-                print '<h2>Login required to edit</h2>'
-                print """Note that you have to %s and the ISFDB wiki separately.
+                print('<h2>Login required to edit</h2>')
+                print("""Note that you have to %s and the ISFDB wiki separately.
                         Your database user name is the same as your Wiki user name.
                         Your database password is the same as your Wiki
-                        password.""" % ISFDBLink('dologin.cgi', '%s+%s' % (executable, arg), 'login to the ISFDB database')
+                        password.""" % ISFDBLink('dologin.cgi', '%s+%s' % (executable, arg), 'login to the ISFDB database'))
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
                 sys.exit(0)
         moderator_flag = SQLisUserModerator(userid)
         editStatus = SQLgetEditingStatus()
         if editStatus == 0:
-                print '<h2>Editing facilities are currently offline</h2>'
+                print('<h2>Editing facilities are currently offline</h2>')
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
                 sys.exit(0)
         elif editStatus == 2:
                 if moderator_flag == 0:
-                        print '<h2>Editing facilities have been temporarily restricted to moderators only.</h2>'
+                        print('<h2>Editing facilities have been temporarily restricted to moderators only.</h2>')
                         PrintPostSearch(0, 0, 0, 0, 0, 0)
                         sys.exit(0)
         if SQLisUserBlocked(userid):
@@ -203,107 +203,107 @@ def PrintNavBar(executable, arg):
                                         'find_dups', 'find_pub_dups', 'keygen'))
             and (SQLWikiEditCount(username) < SESSION.new_editor_threshold)
             and (SQLCountPendingSubsForUser(userid) > SESSION.max_new_editor_submissions)):
-                print """<h2>You currently have %d pending submissions, more than the limit for new editors.
+                print("""<h2>You currently have %d pending submissions, more than the limit for new editors.
                              You will need to wait for the moderators to process your submissions
                              before you can create new ones. Posting Wiki responses to moderator questions
                              will eventually remove the "new editor" flag from your account, at which
                              point you will be able to have more pending submissions at the same time.
                              If you believe that this message is in error, please post on the
-                             Community Portal.</h2>""" % SQLCountPendingSubsForUser(userid)
+                             Community Portal.</h2>""" % SQLCountPendingSubsForUser(userid))
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
                 sys.exit(0)
 
 def PrintPostSearch(executable=0, records=0, subsequent=0, printed=0, mergeform=0, tableclose=True):
         if tableclose:
-                print '</table>'
+                print('</table>')
         if mergeform:
-                print '<hr>'
-                print '<p>'
-                print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-                print '</form>'
+                print('<hr>')
+                print('<p>')
+                print('<input TYPE="SUBMIT" VALUE="Merge Selected Records">')
+                print('</form>')
         if printed == 100:
-                print '<hr>'
-                print ISFDBLink('edit/%s.cgi' % executable, subsequent, '[Records: %s]' % records)
+                print('<hr>')
+                print(ISFDBLink('edit/%s.cgi' % executable, subsequent, '[Records: %s]' % records))
 
-        print '</div>'
-        print '<div id="bottom">'
-        print COPYRIGHT
-        print '<br>'
-        print ENGINE
-        print '</div>'
-        print '</div>'
-        print '</body>'
-        print '</html>'
+        print('</div>')
+        print('<div id="bottom">')
+        print(COPYRIGHT)
+        print('<br>')
+        print(ENGINE)
+        print('</div>')
+        print('</div>')
+        print('</body>')
+        print('</html>')
 
 def PrintTitle(title):
-        print "Content-type: text/html; charset=%s\n" % (UNICODE)
-        print "<html>\n"
-        print "<head><title>%s</title></head>\n" % (title)
-        print "<body>\n"
+        print("Content-type: text/html; charset=%s\n" % (UNICODE))
+        print("<html>\n")
+        print("<head><title>%s</title></head>\n" % (title))
+        print("<body>\n")
 
 def PrintDuplicateTitleRecord(record, bgcolor, authors):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td><INPUT TYPE="checkbox" NAME="merge" VALUE="' +str(record[TITLE_PUBID])+ '"></td>'
-        print "<td>" +record[TITLE_YEAR][:4]+ "</td>"
-        print "<td>" +record[TITLE_TTYPE]+ "</td>"
+        print('<td><INPUT TYPE="checkbox" NAME="merge" VALUE="' +str(record[TITLE_PUBID])+ '"></td>')
+        print("<td>" +record[TITLE_YEAR][:4]+ "</td>")
+        print("<td>" +record[TITLE_TTYPE]+ "</td>")
         if record[TITLE_STORYLEN]:
-                print "<td>" +record[TITLE_STORYLEN]+ "</td>"
+                print("<td>" +record[TITLE_STORYLEN]+ "</td>")
         else:
-                print "<td> </td>"
+                print("<td> </td>")
 
         # Print variant information
         if record[TITLE_PARENT]:
-                print "<td>Variant</td>"
+                print("<td>Variant</td>")
         else:
-                print "<td> </td>"
+                print("<td> </td>")
 
         # Print this title's language
         if record[TITLE_LANGUAGE]:
-                print "<td>%s</td>" % (LANGUAGES[int(record[TITLE_LANGUAGE])])
+                print("<td>%s</td>" % (LANGUAGES[int(record[TITLE_LANGUAGE])]))
         else:
-                print "<td> </td>"
+                print("<td> </td>")
 
-        print "<td>%s</td>" % ISFDBLink('title.cgi', record[TITLE_PUBID], record[TITLE_TITLE])
+        print("<td>%s</td>" % ISFDBLink('title.cgi', record[TITLE_PUBID], record[TITLE_TITLE]))
 
-        print "<td>"
+        print("<td>")
         for author in authors:
-                print ISFDBLink('ea.cgi', author[0], author[1])
-        print "</td>"
+                print(ISFDBLink('ea.cgi', author[0], author[1]))
+        print("</td>")
 
-        print "<td>"
+        print("<td>")
         if record[TITLE_NOTE]:
                 note = SQLgetNotes(record[TITLE_NOTE])
-                print FormatNote(note, '', 'edit')
+                print(FormatNote(note, '', 'edit'))
         else:
-                print "&nbsp;"
-        print "</td>"
+                print("&nbsp;")
+        print("</td>")
 
-        print "</tr>"
+        print("</tr>")
 
 def PrintDuplicateTableColumns():
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
-        print '<th>Merge</th>'
-        print '<th>Year</th>'
-        print '<th>Type</th>'
-        print '<th>Length</th>'
-        print '<th>Variant</th>'
-        print '<th>Language</th>'
-        print '<th>Title</th>'
-        print '<th>Authors</th>'
-        print '<th>Note</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
+        print('<th>Merge</th>')
+        print('<th>Year</th>')
+        print('<th>Type</th>')
+        print('<th>Length</th>')
+        print('<th>Variant</th>')
+        print('<th>Language</th>')
+        print('<th>Title</th>')
+        print('<th>Authors</th>')
+        print('<th>Note</th>')
+        print('</tr>')
 
 def CheckOneTitleForDuplicates(title):
         possible_duplicates = ISFDBPossibleDuplicates(title)
         if not possible_duplicates:
                 return 0
 
-        print '<form METHOD="POST" ACTION="/cgi-bin/edit/tv_merge.cgi">'
+        print('<form METHOD="POST" ACTION="/cgi-bin/edit/tv_merge.cgi">')
         PrintDuplicateTableColumns()
         title_authors = SQLTitleBriefAuthorRecords(title[TITLE_PUBID])
         PrintDuplicateTitleRecord(title, 0, title_authors)
@@ -313,11 +313,11 @@ def CheckOneTitleForDuplicates(title):
                 target_authors = target[1]
                 PrintDuplicateTitleRecord(target_title, 0, target_authors)
 
-        print '</table>'
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-        print '</form>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Merge Selected Records">')
+        print('</form>')
+        print('<p>')
         return 1
 
 class Submission:
@@ -346,7 +346,7 @@ class Submission:
                 PrintNavBar(self.cgi_script, 0)
 
                 PrintWikiPointer(self.user.name)
-                print '<h1>Submitting the following changes:</h1>'
+                print('<h1>Submitting the following changes:</h1>')
                 function_name = SUBMAP[self.type][5]
                 if SUBMAP[self.type][0] == 0:
                         getattr(viewers, function_name)(submission_id)
@@ -355,7 +355,7 @@ class Submission:
                 
                 # If the user is a moderator or a self-approver, allow going to the approval page
                 if SQLisUserModerator(self.user.id) or SQLisUserSelfApprover(self.user.id):
-                        print '<br>Moderate %s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'submission')
+                        print('<br>Moderate %s' % ISFDBLink('mod/submission_review.cgi', submission_id, 'submission'))
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
         
         def error(self, error = '', record_id = 0):

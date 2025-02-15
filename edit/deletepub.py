@@ -26,16 +26,16 @@ if __name__ == '__main__':
         PrintPreSearch('Delete Publication')
         PrintNavBar('edit/deletepub.cgi', pub.pub_id)
         
-        print '<b>Publication to Delete:</b> <i>%s</i>' % pub.pub_title
-        print '<p>'
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitdelpub.cgi">'
-        print '<p>'
-        print '<b>Note to Moderator:</b><br>'
-        print '<textarea tabindex="1" name="mod_note" rows="4" cols="60"></textarea>'
-        print '<p>'
-        print '<input name="pub_id" value="%d" type="HIDDEN">' % pub.pub_id
-        print '<input type="SUBMIT" value="Delete">'
+        print('<b>Publication to Delete:</b> <i>%s</i>' % pub.pub_title)
+        print('<p>')
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitdelpub.cgi">')
+        print('<p>')
+        print('<b>Note to Moderator:</b><br>')
+        print('<textarea tabindex="1" name="mod_note" rows="4" cols="60"></textarea>')
+        print('<p>')
+        print('<input name="pub_id" value="%d" type="HIDDEN">' % pub.pub_id)
+        print('<input type="SUBMIT" value="Delete">')
         pub.printModNoteRequired()
-        print '</form>'
+        print('</form>')
 
         PrintPostSearch(tableclose=False)

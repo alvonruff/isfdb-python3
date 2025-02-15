@@ -40,10 +40,10 @@ if __name__ == '__main__':
 
         printHelpBox('Award Type', 'AwardType')
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewawardtype.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewawardtype.cgi">')
 
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         printfield('Short Name',      'award_type_short_name', help)
 
@@ -67,12 +67,12 @@ if __name__ == '__main__':
 
         printtextarea('Note', 'award_type_note', help)
 
-        print '</table>'
+        print('</table>')
 
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0)
 

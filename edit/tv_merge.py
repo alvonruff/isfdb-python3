@@ -55,50 +55,50 @@ def Compare2(fieldname, values):
         recno = 1
         while recno < MaxRecords:
                 if values[0] != values[recno]:
-                        print '<tr align="left">'
-                        print '<td class="drop"><b>%s</b></td>' % fieldname
-                        print '<td class="drop"><b>Conflict</b></td>'
-                        print '<td class="drop">'
+                        print('<tr align="left">')
+                        print('<td class="drop"><b>%s</b></td>' % fieldname)
+                        print('<td class="drop"><b>Conflict</b></td>')
+                        print('<td class="drop">')
                         index = 1
                         for value in values:
                                 if index == checked_entry:
-                                        print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s" checked="checked">' % (index)
+                                        print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s" checked="checked">' % (index))
                                 else:
-                                        print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s">' % (index)
+                                        print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s">' % (index))
                                 index += 1
                                 if fieldname in ('title_synop', 'title_note', 'title_author'):
-                                        print value
+                                        print(value)
                                 else:
-                                        print ISFDBText(value)
-                                print '<br>'
-                        print '</td>'
-                        print '</tr>'
+                                        print(ISFDBText(value))
+                                print('<br>')
+                        print('</td>')
+                        print('</tr>')
                         return
                 recno += 1
-        print '<tr align="left">'
-        print '<td class="keep"><b>%s</b></td>' % fieldname
-        print '<td class="keep">Merged</td>'
-        print '<td class="keep">%s</td>' % values[0]
-        print '</tr>'
+        print('<tr align="left">')
+        print('<td class="keep"><b>%s</b></td>' % fieldname)
+        print('<td class="keep">Merged</td>')
+        print('<td class="keep">%s</td>' % values[0])
+        print('</tr>')
 
 def Merge2(fieldname, values):
 
-        print '<tr align="left">'
-        print '<td class="keep"><b>%s</b></td>' % fieldname
-        print '<td class="keep">Merged</td>'
-        print '<td class="keep">'
+        print('<tr align="left">')
+        print('<td class="keep"><b>%s</b></td>' % fieldname)
+        print('<td class="keep">Merged</td>')
+        print('<td class="keep">')
         for value in values:
                 if value:
-                        print ISFDBText(value)
-                        print '<br>'
-        print '</td>'
-        print '</tr>'
+                        print(ISFDBText(value))
+                        print('<br>')
+        print('</td>')
+        print('</tr>')
 
 def SelectionError():
         DisplayError('You need to select at least two records to merge')
 
 def DisplayError(message):
-        print '<h2>Error: %s.</h2>' % (message)
+        print('<h2>Error: %s.</h2>' % (message))
         PrintPostSearch(0, 0, 0, 0, 0, 0)
         sys.exit(1)
 
@@ -153,12 +153,12 @@ if __name__ == '__main__':
                 RecordNumber = form.getlist('merge')
                 MaxRecords = len(RecordNumber)
                 rec = 0
-                print "<h2>Merging Records: "
+                print("<h2>Merging Records: ")
                 while rec < MaxRecords:
-                        print RecordNumber[rec]
+                        print(RecordNumber[rec])
                         rec += 1
-                print "</h2>"
-                print "<hr>"
+                print("</h2>")
+                print("<hr>")
         else:
                 SelectionError()
 
@@ -199,8 +199,8 @@ if __name__ == '__main__':
                         check += 1
                 target += 1
 
-        print '<form METHOD="POST" ACTION="/cgi-bin/edit/ts_merge.cgi">'
-        print '<table class="generic_table">'
+        print('<form METHOD="POST" ACTION="/cgi-bin/edit/ts_merge.cgi">')
+        print('<table class="generic_table">')
 
         ##################################################
         # title_title
@@ -396,8 +396,8 @@ if __name__ == '__main__':
                 recno += 1
         Compare2("title_note", list)
 
-        print '</table>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
 
         # Display cover images for COVERART records
         recno = 0
@@ -405,38 +405,38 @@ if __name__ == '__main__':
         while recno < MaxRecords:
                 if Records[recno].title_ttype == 'COVERART':
                         if not images_found:
-                                print '<table border="1">'
+                                print('<table border="1">')
                                 images_found = 1
-                        print '<tr>'
-                        print '<td>Images for record %s:</td>' % ISFDBLinkNoName('title.cgi', Records[recno].title_id, Records[recno].title_id)
+                        print('<tr>')
+                        print('<td>Images for record %s:</td>' % ISFDBLinkNoName('title.cgi', Records[recno].title_id, Records[recno].title_id))
                         cover_pubs = SQLGetCoverPubsByTitle(int(Records[recno].title_id))
-                        print '<td>'
+                        print('<td>')
                         for cover_pub in cover_pubs:
                                 if cover_pub[PUB_IMAGE]:
-                                        print '<br>'
-                                        print '<br>%s<br>' % ISFDBFormatImage(cover_pub[PUB_IMAGE], cover_pub[PUB_PUBID])
-                                        print '<br>'
-                        print '</td>'
-                        print '</tr>'
+                                        print('<br>')
+                                        print('<br>%s<br>' % ISFDBFormatImage(cover_pub[PUB_IMAGE], cover_pub[PUB_PUBID]))
+                                        print('<br>')
+                        print('</td>')
+                        print('</tr>')
                 recno += 1
 
         if images_found:
-                print '</table>'
+                print('</table>')
         
-        print '<hr>'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<hr>')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
         printtextarea('Note to Moderator', 'mod_note', help, '')
-        print '</tbody>'
-        print '</table>'
-        print '<p>'
+        print('</tbody>')
+        print('</table>')
+        print('<p>')
 
         recno = 0
         while recno < MaxRecords:
-                print '<input NAME="record%s" VALUE="%s" TYPE="HIDDEN">' % ((recno+1), RecordNumber[recno])
+                print('<input NAME="record%s" VALUE="%s" TYPE="HIDDEN">' % ((recno+1), RecordNumber[recno]))
                 recno += 1
 
-        print '<input TYPE="SUBMIT" VALUE="Complete Merge">'
-        print '</form>'
+        print('<input TYPE="SUBMIT" VALUE="Complete Merge">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

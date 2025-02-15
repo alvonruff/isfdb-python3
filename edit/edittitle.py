@@ -19,10 +19,10 @@ from isfdblib_print import *
 
 
 def printReadOnlyTitleType(title_type):
-        print '<tr>'
-        print '<td><b>Title Type</b></td>'
-        print '<td><input name="title_ttype" value="%s" READONLY class="titletype displayonly"></td>' % title_type
-        print '</tr>'
+        print('<tr>')
+        print('<td><b>Title Type</b></td>')
+        print('<td><input name="title_ttype" value="%s" READONLY class="titletype displayonly"></td>' % title_type)
+        print('</tr>')
 
 
 def printCommonSection(record, help):
@@ -117,7 +117,7 @@ if __name__ == '__main__':
         printHelpBox('title', 'EditTitle')
 
         # Pass the title type to the form validation function so that it would know which fields exist in the form
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submittitle.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submittitle.cgi">')
 
         # Combine the two series number fields into one for display purposes
         series_number = title_data[TITLE_SERIESNUM]
@@ -133,8 +133,8 @@ if __name__ == '__main__':
         else:
                 interview = 0
 
-        print '<table border="0">'
-        print '<tbody>'
+        print('<table border="0">')
+        print('<tbody>')
         
         if review:
                 title_field = 'Review of'
@@ -158,17 +158,17 @@ if __name__ == '__main__':
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
-        print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % (title_id)
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
-        print '<hr>'
-        print ISFDBLink("edit/deletetitle.cgi", title_id, "Delete record")
+        print('<p>')
+        print('<hr>')
+        print('<p>')
+        print('<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % (title_id))
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
+        print('<hr>')
+        print(ISFDBLink("edit/deletetitle.cgi", title_id, "Delete record"))
 
         PrintPostSearch(tableclose=False)

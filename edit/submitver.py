@@ -23,7 +23,7 @@ from pubClass import pubs
 def insert_verif_record(pub_id, refID, status, userid):
         insert = """insert into verification(pub_id, reference_id, user_id, ver_time, ver_status)
                     values(%d, %d, %d, NOW(), %d)""" % (pub_id, refID, int(userid), int(status))
-        print "<li> %s" % insert
+        print("<li> %s" % insert)
         db.query(insert)
 
 def update_verif_record(verification_id, ver_status, userid):
@@ -32,7 +32,7 @@ def update_verif_record(verification_id, ver_status, userid):
                     user_id=%d,
                     ver_time=NOW()
                     where verification_id=%d""" % (ver_status, int(userid), verification_id)
-        print "<li> "+update
+        print("<li> "+update)
         db.query(update)
 
 if __name__ == '__main__':
@@ -53,8 +53,8 @@ if __name__ == '__main__':
 
         pub = pubs(db)
         pub.load(pub_id)
-        print '<h2>Secondary verification of %s</h2>' % ISFDBLink('pl.cgi', pub_id, pub.pub_title)
-        print '<ul>'
+        print('<h2>Secondary verification of %s</h2>' % ISFDBLink('pl.cgi', pub_id, pub.pub_title))
+        print('<ul>')
         (userid, username, usertoken) = GetUserData()
         secondary_verifications = SQLSecondaryVerifications(pub_id)
         for name in form:
@@ -73,10 +73,10 @@ if __name__ == '__main__':
                         if not found and ver_status > 0:
                                 insert_verif_record(pub_id, reference_id, ver_status, userid)
 
-        print '</ul>'
+        print('</ul>')
 
-        print ISFDBLinkNoName('pl.cgi', pub_id, 'View This Pub', True)
-        print ISFDBLinkNoName('edit/editpub.cgi', pub_id, 'Edit This Pub', True)
-        print ISFDBLinkNoName('edit/verify.cgi', pub_id, 'View/Add Verifications', True)
+        print(ISFDBLinkNoName('pl.cgi', pub_id, 'View This Pub', True))
+        print(ISFDBLinkNoName('edit/editpub.cgi', pub_id, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('edit/verify.cgi', pub_id, 'View/Add Verifications', True))
 
         PrintPostSearch(0, 0, 0, 0, 0)

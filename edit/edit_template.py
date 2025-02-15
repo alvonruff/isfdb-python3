@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022-2025   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -34,13 +34,13 @@ if __name__ == '__main__':
         PrintPreSearch('Edit ISFDB Template')
         PrintNavBar('edit/edit_template.cgi', 0)
 
-        print """Note that HTML entity references like "&amp;amp;" are curently automatically
-                converted to their ASCII equivalents. See SVN Bug 514 for details."""
+        print("""Note that HTML entity references like "&amp;amp;" are curently automatically
+                converted to their ASCII equivalents. See SVN Bug 514 for details.""")
         help = HelpTemplate()
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_template.cgi">'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_edit_template.cgi">')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         printfield('Name', 'template_name', help, template[TEMPLATE_NAME])
 
@@ -58,12 +58,12 @@ if __name__ == '__main__':
 
         printfield('Mouseover Help', 'template_mouseover', help, template[TEMPLATE_MOUSEOVER])
 
-        print '</table>'
-        print '<p>'
-        print '<input NAME="template_id" VALUE="%d" TYPE="HIDDEN">' % template_id
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
+        print('<input NAME="template_id" VALUE="%d" TYPE="HIDDEN">' % template_id)
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)
 

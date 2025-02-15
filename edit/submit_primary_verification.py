@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2017-2025   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,7 +31,7 @@ class verifications:
         
         def insert_ver(self):
                 insert = SQLInsertPrimaryVerification(self.pub_id, self.transient, self.user_id)
-                print "<li> %s" % insert
+                print("<li> %s" % insert)
 
         def update_ver(self):
                 if self.transient:
@@ -44,13 +44,13 @@ class verifications:
                                     set ver_transient = NULL,
                                     ver_time=NOW()
                                     where pub_id=%d and user_id = %d""" % (self.pub_id, self.user_id)
-                print "<li> %s" % update
+                print("<li> %s" % update)
                 db.query(update)
 
         def delete_ver(self):
                 delete = """delete from primary_verifications
                             where user_id = %d and pub_id = %d""" % (self.user_id, self.pub_id)
-                print "<li> %s" % delete
+                print("<li> %s" % delete)
                 db.query(delete)
 
 if __name__ == '__main__':
@@ -70,14 +70,14 @@ if __name__ == '__main__':
                 if ver.new_status == 'Transient':
                         ver.transient = 1
         except:
-                print 'An error has occurred'
+                print('An error has occurred')
                 PrintPostSearch(0, 0, 0, 0, 0)
                 sys.exit(0)
 
         pub = pubs(db)
         pub.load(ver.pub_id)
-        print '<h2>Primary verification of %s</h2>' % ISFDBLink('pl.cgi', pub.pub_id, pub.pub_title)
-        print '<ul>'
+        print('<h2>Primary verification of %s</h2>' % ISFDBLink('pl.cgi', pub.pub_id, pub.pub_title))
+        print('<ul>')
         (user_id, username, usertoken) = GetUserData()
         ver.user_id = int(user_id)
         ver.current_status = SQLPrimaryVerStatus(ver.pub_id, ver.user_id)
@@ -91,12 +91,12 @@ if __name__ == '__main__':
         elif ver.new_status == 'No':
                 ver.delete_ver()
         else:
-                print 'An error has occurred'
+                print('An error has occurred')
                 sys.exit(0)
-        print '</ul>'
+        print('</ul>')
 
-        print ISFDBLinkNoName('pl.cgi', ver.pub_id, 'View This Pub', True)
-        print ISFDBLinkNoName('edit/editpub.cgi', ver.pub_id, 'Edit This Pub', True)
-        print ISFDBLinkNoName('edit/verify.cgi', ver.pub_id, 'View/Add Verifications', True)
+        print(ISFDBLinkNoName('pl.cgi', ver.pub_id, 'View This Pub', True))
+        print(ISFDBLinkNoName('edit/editpub.cgi', ver.pub_id, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('edit/verify.cgi', ver.pub_id, 'View/Add Verifications', True))
 
         PrintPostSearch(0, 0, 0, 0, 0)

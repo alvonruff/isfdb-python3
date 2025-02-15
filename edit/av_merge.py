@@ -16,41 +16,41 @@ from SQLparsing import *
 from authorClass import authors
 
 def Compare(field1, field2, fieldname):
-        print '<tr class="generic_table_header">'
+        print('<tr class="generic_table_header">')
         if field1 != field2:
-                print '<td class="drop">'
-                print "<b>" +fieldname+ " Conflict:</b><br>"
-                print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="1" CHECKED>'
+                print('<td class="drop">')
+                print("<b>" +fieldname+ " Conflict:</b><br>")
+                print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="1" CHECKED>')
                 if fieldname == 'author_note':
-                        print field1
+                        print(field1)
                 else:
-                        print ISFDBText(field1)
-                print '<br>'
-                print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="2">'
+                        print(ISFDBText(field1))
+                print('<br>')
+                print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="2">')
                 if fieldname == 'author_note':
-                        print field2
+                        print(field2)
                 else:
-                        print ISFDBText(field2)
+                        print(ISFDBText(field2))
         else:
-                print '<td class="keep">'
-                print "<b>Merged " +fieldname+ ": </b>", ISFDBText(field1)
-        print '</td>'
-        print '</tr>'
+                print('<td class="keep">')
+                print("<b>Merged " +fieldname+ ": </b>", ISFDBText(field1))
+        print('</td>')
+        print('</tr>')
 
 def Merge2(field1, field2, fieldname):
-        print '<tr class="generic_table_header">'
-        print '<td class="keep">'
-        print '<b>Merged %s </b><br>' % fieldname
+        print('<tr class="generic_table_header">')
+        print('<td class="keep">')
+        print('<b>Merged %s </b><br>' % fieldname)
         # Combine the two lists in a set, which removes duplicates, then print all values
         for value in set(field1 + field2):
                 if value:
-                        print ISFDBText(value)
-                        print '<br>'
-        print '</td>'
-        print '</tr>'
+                        print(ISFDBText(value))
+                        print('<br>')
+        print('</td>')
+        print('</tr>')
 
 def SelectionError():
-        print "<h2>Error: You need to select exactly two records to merge.</h2>"
+        print("<h2>Error: You need to select exactly two records to merge.</h2>")
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
 
@@ -84,8 +84,8 @@ if __name__ == '__main__':
                         pass
                 if too_many_args:
                         SelectionError()
-                print "<h2>Merging Records %d and %d</h2>" % (recno1, recno2)
-                print "<hr>"
+                print("<h2>Merging Records %d and %d</h2>" % (recno1, recno2))
+                print("<hr>")
         else:
                 SelectionError()
 
@@ -99,8 +99,8 @@ if __name__ == '__main__':
         if not record2.author_id:
                 SelectionError("Record %d no longer exists.</b>" % recno2)
 
-        print '<form METHOD="POST" ACTION="/cgi-bin/edit/as_merge.cgi">'
-        print '<table class="generic_table">'
+        print('<form METHOD="POST" ACTION="/cgi-bin/edit/as_merge.cgi">')
+        print('<table class="generic_table">')
 
         Compare(record1.author_canonical,   record2.author_canonical, "author_canonical")
         Merge2(record1.author_trans_names, record2.author_trans_names, "trans_names")
@@ -115,12 +115,12 @@ if __name__ == '__main__':
         Merge2(record1.author_emails,       record2.author_emails,    "author_emails")
         Merge2(record1.author_webpages,     record2.author_webpages,  "author_webpages")
         Compare(record1.author_note,        record2.author_note,      "author_note")
-        print '</table>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
 
-        print '<input NAME="record1" VALUE="%d" TYPE="HIDDEN">' % (recno1)
-        print '<input NAME="record2" VALUE="%d" TYPE="HIDDEN">' % (recno2)
-        print '<input TYPE="SUBMIT" VALUE="Complete Merge">'
-        print '</form>'
+        print('<input NAME="record1" VALUE="%d" TYPE="HIDDEN">' % (recno1))
+        print('<input NAME="record2" VALUE="%d" TYPE="HIDDEN">' % (recno2))
+        print('<input TYPE="SUBMIT" VALUE="Complete Merge">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

@@ -21,8 +21,8 @@ from isfdblib_print import *
 def printtitlerecord(record):
         help = HelpTitle()
         
-        print '<table border="0">'
-        print '<tbody id="titleBody">'
+        print('<table border="0">')
+        print('<tbody id="titleBody">')
 
         printfield("Title", "title_title", help, record[TITLE_TITLE])
 
@@ -43,8 +43,8 @@ def printtitlerecord(record):
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
 if __name__ == '__main__':
 
@@ -58,20 +58,20 @@ if __name__ == '__main__':
         PrintPreSearch('Add Variant Title')
         PrintNavBar('edit/addvariant.cgi', title_id)
         
-        print '<div id="HelpBox">'
-        print '<b>Help on adding variant titles: </b>'
-        print '<a href="%s://%s/index.php/Help:Screen:AddVariant">Help:Screen:AddVariant</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<b>Help on adding variant titles: </b>')
+        print('<a href="%s://%s/index.php/Help:Screen:AddVariant">Help:Screen:AddVariant</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitvariant.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitvariant.cgi">')
         printtitlerecord(title_data)
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
-        print '<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % title_id
-        print '<input TYPE="SUBMIT" VALUE="Submit Data">'
-        print '</form>'
-        print '<p>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
+        print('<input NAME="title_id" VALUE="%d" TYPE="HIDDEN">' % title_id)
+        print('<input TYPE="SUBMIT" VALUE="Submit Data">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

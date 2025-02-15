@@ -26,47 +26,47 @@ def Compare2(fieldname, values, note = 0):
         recno = 1
         while recno < MaxRecords:
                 if values[0] != values[recno]:
-                        print '<tr align="left">'
-                        print '<td class="drop">'
-                        print "<b>" +fieldname+ " Conflict:</b><br>"
+                        print('<tr align="left">')
+                        print('<td class="drop">')
+                        print("<b>" +fieldname+ " Conflict:</b><br>")
                         index = 1
                         for value in values:
                                 if index == checked_entry:
-                                        print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s" checked="checked">' % (index)
+                                        print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s" checked="checked">' % (index))
                                 else:
-                                        print '<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s">' % (index)
+                                        print('<INPUT TYPE="radio" NAME="' +fieldname+ '" VALUE="%s">' % (index))
                                 index += 1
                                 if note:
-                                        print value
+                                        print(value)
                                 else:
-                                        print ISFDBText(value)
-                                print '<br>'
-                        print '</td>'
-                        print '</tr>'
+                                        print(ISFDBText(value))
+                                print('<br>')
+                        print('</td>')
+                        print('</tr>')
                         return
                 recno += 1
-        print '<tr align="left">'
-        print '<td class="keep">'
-        print "<b>Merged " +fieldname+ ": </b>", values[0]
-        print '</td>'
-        print '</tr>'
+        print('<tr align="left">')
+        print('<td class="keep">')
+        print("<b>Merged " +fieldname+ ": </b>", values[0])
+        print('</td>')
+        print('</tr>')
 
 def Merge2(fieldname, values):
 
-        print '<tr align=left>'
-        print '<td class="keep">'
-        print "<b>Merged " +fieldname+ " </b><br>"
+        print('<tr align=left>')
+        print('<td class="keep">')
+        print("<b>Merged " +fieldname+ " </b><br>")
         for value in values:
                 if value:
-                        print ISFDBText(value)
-                        print "<br>"
-        print '</td>'
-        print '</tr>'
+                        print(ISFDBText(value))
+                        print("<br>")
+        print('</td>')
+        print('</tr>')
 
 def SelectionError():
-        print "<h1>Error: You need to select at least two records to merge.</h1>"
-        print "</body>\n"
-        print "</html>\n"
+        print("<h1>Error: You need to select at least two records to merge.</h1>")
+        print("</body>\n")
+        print("</html>\n")
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(1)
 
@@ -88,12 +88,12 @@ if __name__ == '__main__':
                                 break
                         MaxRecords += 1
                 rec = 0
-                print '<h2>Merging Records: '
+                print('<h2>Merging Records: ')
                 while rec < MaxRecords:
-                        print RecordNumber[rec]
+                        print(RecordNumber[rec])
                         rec += 1
-                print '</h2>'
-                print '<hr>'
+                print('</h2>')
+                print('<hr>')
         else:
                 SelectionError()
 
@@ -109,8 +109,8 @@ if __name__ == '__main__':
                 Records[recno].load(int(RecordNumber[recno]))
                 recno += 1
 
-        print '<form METHOD="POST" ACTION="/cgi-bin/edit/ps_merge.cgi">'
-        print '<table class="generic_table">'
+        print('<form METHOD="POST" ACTION="/cgi-bin/edit/ps_merge.cgi">')
+        print('<table class="generic_table">')
 
         ##################################################
         # publisher_name
@@ -156,15 +156,15 @@ if __name__ == '__main__':
                 recno += 1
         Compare2("publisher_note", record_list, 1)
 
-        print '</table>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
 
         recno = 0
         while recno < MaxRecords:
-                print '<input NAME="record%s" VALUE="%s" TYPE="HIDDEN">' % ((recno+1), RecordNumber[recno])
+                print('<input NAME="record%s" VALUE="%s" TYPE="HIDDEN">' % ((recno+1), RecordNumber[recno]))
                 recno += 1
 
-        print '<input TYPE="SUBMIT" VALUE="Complete Merge">'
-        print '</form>'
+        print('<input TYPE="SUBMIT" VALUE="Complete Merge">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

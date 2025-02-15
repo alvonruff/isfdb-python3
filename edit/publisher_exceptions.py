@@ -59,31 +59,31 @@ if __name__ == '__main__':
                 record = result.fetch_row()
 
         if not titles:
-                print '<h2>No exceptions found</h2>'
+                print('<h2>No exceptions found</h2>')
         else:
-                print '<table class="generic_table">'
-                print '<tr class="generic_table_header">'
-                print '<th>Title</th>'
-                print '<th>Title Type</th>'
-                print '<th>Title Language</th>'
-                print '<th>Publication(s)</th>'
+                print('<table class="generic_table">')
+                print('<tr class="generic_table_header">')
+                print('<th>Title</th>')
+                print('<th>Title Type</th>')
+                print('<th>Title Language</th>')
+                print('<th>Publication(s)</th>')
                 for title_id in titles:
                         title = SQLloadTitle(title_id)
-                        print '<tr>'
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title[TITLE_TITLE])
-                        print '<td>%s</td>' % title[TITLE_TTYPE]
+                        print('<tr>')
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title[TITLE_TITLE]))
+                        print('<td>%s</td>' % title[TITLE_TTYPE])
                         if title[TITLE_LANGUAGE]:
-                                print '<td>%s</td>' % LANGUAGES[int(title[TITLE_LANGUAGE])]
+                                print('<td>%s</td>' % LANGUAGES[int(title[TITLE_LANGUAGE])])
                         else:
-                                print '<td>&nbsp;</td>'
-                        print '<td>'
+                                print('<td>&nbsp;</td>')
+                        print('<td>')
                         pubs = titles[title_id]
                         for pub_id in pubs:
                                 pub = SQLGetPubById(pub_id)
-                                print ISFDBLink('pl.cgi', pub_id, pub[PUB_TITLE])
-                                print '<br>'
-                        print '</td>'
-                        print '</tr>'
-                print '</table>'
+                                print(ISFDBLink('pl.cgi', pub_id, pub[PUB_TITLE]))
+                                print('<br>')
+                        print('</td>')
+                        print('</tr>')
+                print('</table>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

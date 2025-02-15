@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -71,11 +71,11 @@ if __name__ == '__main__':
 
         print('</table>')
         print('<p>')
-        print('<input NAME="domain_id" VALUE="%d" TYPE="HIDDEN">' % domain_id)
+        print(('<input NAME="domain_id" VALUE="%d" TYPE="HIDDEN">' % domain_id))
         print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
         print('</form>')
         print('<p>')
-        print(ISFDBLink('edit/submit_delete_recognized_domain.cgi', domain_id, 'Delete This Recognized Domain'))
+        print((ISFDBLink('edit/submit_delete_recognized_domain.cgi', domain_id, 'Delete This Recognized Domain')))
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)
 

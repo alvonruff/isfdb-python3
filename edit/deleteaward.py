@@ -26,14 +26,14 @@ if __name__ == '__main__':
         PrintPreSearch('Delete Award Submission')
         PrintNavBar('edit/deleteaward.cgi', award_id)
 
-        print '<b>Request to Delete:</b> <i>%s</i>' % award[0][AWARD_TITLE]
-        print '<form METHOD="POST" ACTION="/cgi-bin/edit/submitdelaward.cgi">'
-        print '<p>'
-        print '<b>Deletion Reason</b><br>'
-        print '<textarea name="reason" rows="4" cols="45"></textarea>'
-        print '<p>'
-        print '<input name="award_id" value="%d" type="HIDDEN">' % award_id
-        print '<input type="SUBMIT" value="Delete">'
-        print '</form>'
+        print('<b>Request to Delete:</b> <i>%s</i>' % award[0][AWARD_TITLE])
+        print('<form METHOD="POST" ACTION="/cgi-bin/edit/submitdelaward.cgi">')
+        print('<p>')
+        print('<b>Deletion Reason</b><br>')
+        print('<textarea name="reason" rows="4" cols="45"></textarea>')
+        print('<p>')
+        print('<input name="award_id" value="%d" type="HIDDEN">' % award_id)
+        print('<input type="SUBMIT" value="Delete">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2015-2025   Ahasuerus
+#     (C) COPYRIGHT 2015-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,15 +29,15 @@ if __name__ == '__main__':
         PrintPreSearch('Duplicate Finder for one or more Titles')
         PrintNavBar('edit/find_title_dups.cgi', 0)
 
-        print '<div id="HelpBox">'
-        print '<b>Help on merging titles: </b>'
-        print '<a href="%s://%s/index.php/Help:How to merge titles">Help:How to merge titles</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<b>Help on merging titles: </b>')
+        print('<a href="%s://%s/index.php/Help:How to merge titles">Help:How to merge titles</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
-        print """<h3>Note: Unlike the Duplicate Finder for author records, the Duplicate Finder for
+        print("""<h3>Note: Unlike the Duplicate Finder for author records, the Duplicate Finder for
                 title records does not identify potential duplicates with different capitalization. 
-                Also, be sure to check the title types and languages carefully before merging.</h3>"""
-        print '<p><hr>'
+                Also, be sure to check the title types and languages carefully before merging.</h3>""")
+        print('<p><hr>')
 
         found = 0
         for title_id in titles:
@@ -46,6 +46,6 @@ if __name__ == '__main__':
                         found += CheckOneTitleForDuplicates(title)
 
         if not found:
-                print '<h2>No duplicate candidates found.</h2>'
+                print('<h2>No duplicate candidates found.</h2>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

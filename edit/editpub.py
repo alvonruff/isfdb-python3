@@ -21,9 +21,9 @@ from isfdblib_print import *
 
 def printpubrecord(pub):
         help = HelpPub()
-        print '<h2>Publication Metadata</h2>'
-        print '<table id="metadata">'
-        print '<tbody id="pubBody">'
+        print('<h2>Publication Metadata</h2>')
+        print('<table id="metadata">')
+        print('<tbody id="pubBody">')
         printfield("Title", "pub_title", help, pub.pub_title)
         trans_titles = SQLloadTransPubTitles(pub.pub_id)
         printmultiple(trans_titles, "Transliterated Title", "trans_titles", help)
@@ -36,15 +36,15 @@ def printpubrecord(pub):
         printfield("Pages", "pub_pages", help, pub.pub_pages)
         printformat("pub_ptype", "Format", help, pub.pub_ptype)
 
-        print '<tr>'
+        print('<tr>')
         printContentHeader('Pub Type:', help)
-        print '<td><select tabindex="1" name="pub_ctype" class="metainputselect">'
-        print '<option value="%s" selected="selected">%s</option>' % (pub.pub_ctype, pub.pub_ctype)
+        print('<td><select tabindex="1" name="pub_ctype" class="metainputselect">')
+        print('<option value="%s" selected="selected">%s</option>' % (pub.pub_ctype, pub.pub_ctype))
         for ctype in SESSION.db.pub_types:
                 if ctype != pub.pub_ctype:
-                        print '<option value="%s">%s</option>' % (ctype, ctype)
-        print '</select>'
-        print '</tr>'
+                        print('<option value="%s">%s</option>' % (ctype, ctype))
+        print('</select>')
+        print('</tr>')
 
         printISBN(help, pub.pub_isbn)
         printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
@@ -57,8 +57,8 @@ def printpubrecord(pub):
         printExternalIDs(pub.identifiers, "External ID", "external_id", help)
         printtextarea('Note to Moderator', 'mod_note', help)
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
 if __name__ == '__main__':
 
@@ -76,12 +76,12 @@ if __name__ == '__main__':
 
         printHelpBox('publication', 'EditPub')
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpub.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpub.cgi">')
         printpubrecord(pub)
 
-        print '<hr class="topspace">'
-        print '<h2 class="editheadline">Content</h2>'
-        print """<ul>
+        print('<hr class="topspace">')
+        print('<h2 class="editheadline">Content</h2>')
+        print("""<ul>
                 <li>To change the order of records in the Content section, use "pipe" characters in the "Page" field --
                 see the "Sorting" paragraph in <a href="%s://%s/index.php/Template:PubContentFields:Page">Template:PubContentFields:Page</a> for details.
                 <li>White: non-container titles appearing only in this publication; can be edited
@@ -89,15 +89,15 @@ if __name__ == '__main__':
                 <li>Gray: titles appearing in multiple publications; cannot be edited here
                 <li>See <a href="%s://%s/index.php/Help:How to change a story in a collection">Help:How
                 to change a story in a collection</a> for details.
-                </ul>"""  % (PROTOCOL, WIKILOC, PROTOCOL, WIKILOC)
-        print '<p>'
+                </ul>"""  % (PROTOCOL, WIKILOC, PROTOCOL, WIKILOC))
+        print('<p>')
 
-        print '<hr class="topspace">'
+        print('<hr class="topspace">')
         # Retrieve the Help text for covers
         help = HelpCoverArt()
-        print '<h2>Cover Art</h2>'
-        print '<table class="coveredit">'
-        print '<tbody id="coverBody">'
+        print('<h2>Cover Art</h2>')
+        print('<table class="coveredit">')
+        print('<tbody id="coverBody">')
 
         if not covers:
                 index = 1
@@ -105,11 +105,11 @@ if __name__ == '__main__':
                 index += 1
                 printNewBriefCoverButton()
         else:
-                print '<tr>'
-                print '<td>&nbsp;</td>'
+                print('<tr>')
+                print('<td>&nbsp;</td>')
                 printContentHeader('Title', help)
                 printContentHeader('Date', help)
-                print '</tr>'
+                print('</tr>')
                 index = 1
                 for cover in covers:
                         # Find out if this cover is in more than 1 publication
@@ -120,23 +120,23 @@ if __name__ == '__main__':
                                 printfullcoverart(cover, index, help, 0)
                         index += 1
                 printNewFullCoverButton()
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
         # Retrieve the Help text for publication content
         help = HelpTitleContent()
-        print '<hr class="topspace">'
-        print '<h2 class="editheadline">Regular Titles</h2>'
-        print '<table class="titleedit">'
-        print '<tbody id="titleBody">'
+        print('<hr class="topspace">')
+        print('<h2 class="editheadline">Regular Titles</h2>')
+        print('<table class="titleedit">')
+        print('<tbody id="titleBody">')
 
-        print '<tr>'
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
         printContentHeader('Title Type', help)
         printContentHeader('Length', help)
-        print '</tr>'
+        print('</tr>')
 
         normal_titles = []
         container_titles = []
@@ -178,20 +178,20 @@ if __name__ == '__main__':
                 printblanktitlerecord(index, help, pub.pub_ctype)
                 index += 1
         printNewTitleButton()
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<hr class="topspace">'
+        print('<hr class="topspace">')
         # Retrieve the Help text for reviews
         help = HelpReviewContent()
-        print '<h2 class="editheadline">Reviews</h2>'
-        print '<table class="reviewedit">'
-        print '<tbody id="reviewBody">'
-        print '<tr>'
+        print('<h2 class="editheadline">Reviews</h2>')
+        print('<table class="reviewedit">')
+        print('<tbody id="reviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         if review_titles:
                 for title in review_titles:
@@ -201,20 +201,20 @@ if __name__ == '__main__':
                 printblankreviewrecord(index, help)
                 index += 1
         printNewReviewButton()
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<hr class="topspace">'
+        print('<hr class="topspace">')
         # Retrieve the Help text for interviews
         help = HelpInterviewContent()
-        print '<h2 class="editheadline">Interviews</h2>'
-        print '<table class="interviewedit">'
-        print '<tbody id="interviewBody">'
-        print '<tr>'
+        print('<h2 class="editheadline">Interviews</h2>')
+        print('<table class="interviewedit">')
+        print('<tbody id="interviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Interview Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         if interview_titles:
                 for title in interview_titles:
@@ -224,17 +224,17 @@ if __name__ == '__main__':
                 printblankinterviewrecord(index, help)
                 index += 1
         printNewInterviewButton()
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<hr class="topspace">'
-        print '<p>'
-        print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
-        print '<input name="editor" value="editpub" type="HIDDEN">'
-        print '<input type="SUBMIT" value="Submit Changed Data" tabindex="1">'
+        print('<hr class="topspace">')
+        print('<p>')
+        print('<input name="pub_id" value="%d" type="HIDDEN">' % pub_id)
+        print('<input name="editor" value="editpub" type="HIDDEN">')
+        print('<input type="SUBMIT" value="Submit Changed Data" tabindex="1">')
         pub.printModNoteRequired()
-        print '</form>'
-        print '<hr class="topspace">'
-        print ISFDBLink("edit/deletepub.cgi", pub_id, "Delete record")
+        print('</form>')
+        print('<hr class="topspace">')
+        print(ISFDBLink("edit/deletepub.cgi", pub_id, "Delete record"))
 
         PrintPostSearch(tableclose=False)

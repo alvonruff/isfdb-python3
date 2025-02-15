@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -17,15 +17,15 @@ from SQLparsing import *
 
 
 def PrintTableColumns(columns, user):
-        print '<table class="generic_table">'
-        print '<tr class="table2">'
+        print('<table class="generic_table">')
+        print('<tr class="table2">')
         for column in columns:
                 if not column:
                         data = '&nbsp;'
                 else:
                         data = column
-                print '<td><b>%s</b></td>' % data
-        print '</tr>'
+                print('<td><b>%s</b></td>' % data)
+        print('</tr>')
 
 if __name__ == '__main__':
 
@@ -50,7 +50,7 @@ if __name__ == '__main__':
         PrintPreSearch('Publications with Incomplete Contents')
         PrintNavBar('edit/incomplete_contents.cgi', 0)
 
-        print '<h3>Date range: %s</h3>' % display_range
+        print('<h3>Date range: %s</h3>' % display_range)
         query = """select c.cleanup_id, p.*
                 from pubs p, notes n, cleanup c
                 where p.note_id = n.note_id
@@ -62,7 +62,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print 'No eligible publications for the specified date range'
+                print('No eligible publications for the specified date range')
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
                 sys.exit(0)
 
@@ -88,30 +88,30 @@ if __name__ == '__main__':
                 publisher = SQLGetPublisher(publisher_id)
                 referral_id = SQLgetTitleReferral(pub_id, pub_data[PUB_CTYPE])
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink("pl.cgi", pub_id, pub_title)
-                print '<td>%s</td>' % LIBbuildRecordList('author', authors)
-                print '<td>%s</td>' % pub_date
-                print '<td>%s</td>' % pub_type[:4]
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink("pl.cgi", pub_id, pub_title))
+                print('<td>%s</td>' % LIBbuildRecordList('author', authors))
+                print('<td>%s</td>' % pub_date)
+                print('<td>%s</td>' % pub_type[:4])
 
                 referral_column = 0
                 if referral_id:
                         referral_title = SQLloadTitle(referral_id)
                         if referral_title[TITLE_YEAR] != pub_date:
-                                print '<td>%s</td>' % referral_title[TITLE_YEAR]
+                                print('<td>%s</td>' % referral_title[TITLE_YEAR])
                                 referral_column = 1
                 if not referral_column:
-                        print '<td>&nbsp;</td>'
+                        print('<td>&nbsp;</td>')
 
                 if publisher:
-                        print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher[PUBLISHER_NAME])
+                        print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher[PUBLISHER_NAME]))
                 else:
-                        print '<td>&nbsp;</td>'
-                print '<td>%s</td>' % FormatNote(note_note)
-                print '</tr>'
+                        print('<td>&nbsp;</td>')
+                print('<td>%s</td>' % FormatNote(note_note))
+                print('</tr>')
                 count += 1
                 bgcolor ^= 1
                 record = result.fetch_row()

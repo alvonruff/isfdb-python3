@@ -43,15 +43,15 @@ if __name__ == '__main__':
 
         # Print appropriate message depending on whether this is a title-based award
         if award.title_id:
-                print '<h3>You are editing an award for Title record %s</h3>' % ISFDBLinkNoName('title.cgi', award.title_id, award.title_id)
+                print('<h3>You are editing an award for Title record %s</h3>' % ISFDBLinkNoName('title.cgi', award.title_id, award.title_id))
         else:
-                print '<h3>You are editing an award not associated with an ISFDB title</h3>'
-        print '<p>'
+                print('<h3>You are editing an award not associated with an ISFDB title</h3>')
+        print('<p>')
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitaward.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitaward.cgi">')
 
-        print '<table border="0">'
-        print '<tbody id="titleBody">'
+        print('<table border="0">')
+        print('<tbody id="titleBody">')
 
         printfield("Title", "award_title", help, award.award_title, award.title_id)
 
@@ -79,18 +79,18 @@ if __name__ == '__main__':
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
-        print '<input NAME="award_id" VALUE="%d" TYPE="HIDDEN">' % (award_id)
-        print '<input name="award_type_id" value="%d" type="HIDDEN">' % (awardType.award_type_id)
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
-        print '<hr>'
-        print '<a href="/cgi-bin/edit/deleteaward.cgi?%d">Delete this award</a>' % (award_id)
+        print('<p>')
+        print('<hr>')
+        print('<p>')
+        print('<input NAME="award_id" VALUE="%d" TYPE="HIDDEN">' % (award_id))
+        print('<input name="award_type_id" value="%d" type="HIDDEN">' % (awardType.award_type_id))
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
+        print('<hr>')
+        print('<a href="/cgi-bin/edit/deleteaward.cgi?%d">Delete this award</a>' % (award_id))
 
         PrintPostSearch(tableclose=False)

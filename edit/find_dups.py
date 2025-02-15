@@ -32,7 +32,7 @@ def CheckOneList(titles, mode):
                                 if set(title_authors) == set(target_authors):
                                         found = 1
                                         if first:
-                                                print '<form METHOD="POST" ACTION="/cgi-bin/edit/tv_merge.cgi">'
+                                                print('<form METHOD="POST" ACTION="/cgi-bin/edit/tv_merge.cgi">')
                                                 PrintDuplicateTableColumns()
                                                 PrintDuplicateTitleRecord(title, 0, title_authors)
                                                 first = 0
@@ -47,11 +47,11 @@ def CheckOneList(titles, mode):
                 counter += 1
 
                 if first == 0:
-                        print '</table>'
-                        print '<p>'
-                        print '<input TYPE="SUBMIT" VALUE="Merge Selected Records">'
-                        print '</form>'
-                        print '<p>'
+                        print('</table>')
+                        print('<p>')
+                        print('<input TYPE="SUBMIT" VALUE="Merge Selected Records">')
+                        print('</form>')
+                        print('<p>')
         return found
 
         
@@ -71,39 +71,39 @@ if __name__ == '__main__':
         PrintPreSearch('Duplicate Finder for %s' % author_data[AUTHOR_CANONICAL])
         PrintNavBar('edit/find_dups.cgi', author_id)
 
-        print '<div id="HelpBox">'
-        print '<b>Help on merging titles: </b>'
-        print '<a href="%s://%s/index.php/Editing:Merging_Titles">Editing:Merging_Titles</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<b>Help on merging titles: </b>')
+        print('<a href="%s://%s/index.php/Editing:Merging_Titles">Editing:Merging_Titles</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
         if mode == 2:
-                print '<h2>Mode: Aggressive Title Match</h2>'
-                print 'Note that this mode will generate the most false positives.'
-                print """You can also try stricter %s or even stricter
+                print('<h2>Mode: Aggressive Title Match</h2>')
+                print('Note that this mode will generate the most false positives.')
+                print("""You can also try stricter %s or even stricter
                         %s.""" % (ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode'),
-                                  ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode'))
+                                  ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode')))
         elif mode == 1:
-                print '<h2>Mode: Similar Title Match</h2>'
+                print('<h2>Mode: Similar Title Match</h2>')
                 if len(titles) <= 1000:
-                        print """You can also try %s or the most comprehensive
+                        print("""You can also try %s or the most comprehensive
                                 %s""" % (ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode'),
-                                         ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode'))
+                                         ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode')))
                 else:
-                        print """You can also try %s. Aggressive mode is disabled for authors
+                        print("""You can also try %s. Aggressive mode is disabled for authors
                                 with more than 1,000 titles for performance
-                                reasons.""" % ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode')
+                                reasons.""" % ISFDBLink('edit/find_dups.cgi', author_id, 'Exact Title Mode'))
         else:
-                print '<h2>Mode: Exact Title Match</h2>'
+                print('<h2>Mode: Exact Title Match</h2>')
                 if len(titles) <= 1000:
-                        print """You can also try the more comprehensive %s or the most comprehensive 
+                        print("""You can also try the more comprehensive %s or the most comprehensive 
                                  %s""" % (ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode'),
-                                          ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode'))
+                                          ISFDBLink('edit/find_dups.cgi', '%d+2' % author_id, 'Aggressive Title Mode')))
                 else:
-                        print """You can also try the more comprehensive %s. Aggressive mode is disabled for
+                        print("""You can also try the more comprehensive %s. Aggressive mode is disabled for
                                  authors with more than 1,000 titles for performance
-                                 reasons.""" % ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode')
-        print '<p>Be sure to check the title types and languages carefully before merging.'
-        print '<p><hr>'
+                                 reasons.""" % ISFDBLink('edit/find_dups.cgi', '%d+1' % author_id, 'Similar Title Mode'))
+        print('<p>Be sure to check the title types and languages carefully before merging.')
+        print('<p><hr>')
 
         found = 0
         if mode != 2:
@@ -182,7 +182,7 @@ if __name__ == '__main__':
                 found = CheckOneList(titles, mode)
 
         if not found:
-                print '<h2>No duplicate candidates found.</h2>'
+                print('<h2>No duplicate candidates found.</h2>')
 
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

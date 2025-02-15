@@ -28,15 +28,15 @@ if __name__ == '__main__':
 
         printHelpBox('publication', 'NewPub', 1)
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewpub.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitnewpub.cgi">')
 
         # Retrieve the Help text for publication metadata
         help = HelpPub()
 
         # Title level data
-        print '<h2>Title Data</h2>'
-        print '<table border="0" id="referenceTitle">'
-        print '<tbody id="referenceBody">'
+        print('<h2>Title Data</h2>')
+        print('<table border="0" id="referenceTitle">')
+        print('<tbody id="referenceBody">')
 
         printfield("Title", "pub_title", help)
 
@@ -65,13 +65,13 @@ if __name__ == '__main__':
         printtextarea('Title Note', 'title_note', help, '', 2)
         printWebPages([], 'shared_title', help, 'Title')
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
         # At this point we are done with title-specific data. The next section is publication-specific data.
-        print '<h2>Publication Data</h2>'
-        print '<table border="0" id="metadata">'
-        print '<tbody id="pubBody">'
+        print('<h2>Publication Data</h2>')
+        print('<table border="0" id="metadata">')
+        print('<tbody id="pubBody">')
 
         printfield("Publication Type", "pub_ctype", help, pub_ctype, 1)
         printfield("Date", "pub_year", help)
@@ -90,49 +90,49 @@ if __name__ == '__main__':
         printExternalIDs(None, "External ID", "external_id", help)
         printtextarea('Note to Moderator', 'mod_note', help)
 
-        print '</tbody>'
-        print '</table>'
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print('</tbody>')
+        print('</table>')
+        print('<p>')
+        print('<hr>')
+        print('<p>')
 
         ###################
         # Cover Art section
         ###################
         help = HelpCoverArt()
-        print '<h2 class="editheadline">Cover Art</h2>'
-        print '<p>'
-        print '<table class="coveredit">'
-        print '<tbody id="coverBody">'
+        print('<h2 class="editheadline">Cover Art</h2>')
+        print('<p>')
+        print('<table class="coveredit">')
+        print('<tbody id="coverBody">')
 
         printbriefblankcoverart(1, help)
         printNewBriefCoverButton()
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
         #################################
         # Content section: regular Titles
         #################################
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
         help = HelpTitleContent()
         if pub_type == 'Novel':
-                print '<h2>Additional Regular Titles</h2>'
+                print('<h2>Additional Regular Titles</h2>')
         else:
-                print '<h2>Regular Titles</h2>'
-        print '<p>'
+                print('<h2>Regular Titles</h2>')
+        print('<p>')
 
-        print '<table class="titleedit">'
-        print '<tbody id="titleBody">'
-        print '<tr>'
+        print('<table class="titleedit">')
+        print('<tbody id="titleBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
         printContentHeader('Title Type', help)
         printContentHeader('Length', help)
-        print '</tr>'
+        print('</tr>')
 
         counter = 1
         max = 10
@@ -143,26 +143,26 @@ if __name__ == '__main__':
                 printblanktitlerecord(counter, help, pub_ctype)
                 counter += 1
         printNewTitleButton()
-        print "</tbody>"
-        print "</table>"
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print("</tbody>")
+        print("</table>")
+        print('<p>')
+        print('<hr>')
+        print('<p>')
 
         ################################
         # Content section: Review Titles
         ################################
         help = HelpReviewContent()
-        print '<h2>Reviews</h2>'
-        print '<p>'
+        print('<h2>Reviews</h2>')
+        print('<p>')
 
-        print '<table class="reviewedit">'
-        print '<tbody id="reviewBody">'
-        print '<tr>'
+        print('<table class="reviewedit">')
+        print('<tbody id="reviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
 
         counter = 1
         max = 4
@@ -174,27 +174,27 @@ if __name__ == '__main__':
                 counter += 1
 
         printNewReviewButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
 
         ###################################
         # Content section: Interview Titles
         ###################################
         help = HelpInterviewContent()
-        print '<h2>Interviews</h2>'
-        print '<p>'
+        print('<h2>Interviews</h2>')
+        print('<p>')
 
-        print '<table class="interviewedit">'
-        print '<tbody id="interviewBody">'
-        print '<tr>'
+        print('<table class="interviewedit">')
+        print('<tbody id="interviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Interview Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
 
         counter = 1
         max = 3
@@ -207,15 +207,15 @@ if __name__ == '__main__':
 
         printNewInterviewButton()
 
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<p>"
-        print "<hr>"
-        print "<p>"
-        print '<input name="pub_id" VALUE="0" type="HIDDEN">'
-        print '<input tabindex="1" type="SUBMIT" VALUE="Submit Data">'
-        print "</form>"
-        print "<p>"
+        print("<p>")
+        print("<hr>")
+        print("<p>")
+        print('<input name="pub_id" VALUE="0" type="HIDDEN">')
+        print('<input tabindex="1" type="SUBMIT" VALUE="Submit Data">')
+        print("</form>")
+        print("<p>")
 
         PrintPostSearch(tableclose=False)

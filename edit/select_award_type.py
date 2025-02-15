@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,23 +31,23 @@ if __name__ == '__main__':
 
         help = HelpAward(0)
 
-        print '<div id="HelpBox">'
-        print '<b>Help on adding an award: </b>'
-        print '<a href="%s://%s/index.php/Help:Screen:AddAward">Help:Screen:AddAward</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<b>Help on adding an award: </b>')
+        print('<a href="%s://%s/index.php/Help:Screen:AddAward">Help:Screen:AddAward</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
-        print '<form method="POST" action="/cgi-bin/edit/submit_select_award_type.cgi">'
-        print '<table border="0">'
-        print '<tbody id="titleBody">'
+        print('<form method="POST" action="/cgi-bin/edit/submit_select_award_type.cgi">')
+        print('<table border="0">')
+        print('<tbody id="titleBody">')
 
         printAwardName('award_type_id', 'Award Name', help)
 
-        print '</tbody>'
-        print '</table>'
-        print '<p>'
+        print('</tbody>')
+        print('</table>')
+        print('<p>')
 
-        print '<input name="title_id" value="%d" type="HIDDEN">' % title_id
-        print '<input type="SUBMIT" value="Proceed to the Next Page" tabindex="1">'
-        print '</form>'
+        print('<input name="title_id" value="%d" type="HIDDEN">' % title_id)
+        print('<input type="SUBMIT" value="Proceed to the Next Page" tabindex="1">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

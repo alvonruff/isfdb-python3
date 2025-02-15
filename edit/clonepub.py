@@ -27,9 +27,9 @@ from pubClass import pubs
 ###################################################################
 def printpubrecord(pub, image_url, reuse_external_ids):
         help = HelpPub()
-        print '<h2>Publication Metadata</h2>'
-        print '<table border="0" id="metadata">'
-        print '<tbody id="pubBody">'
+        print('<h2>Publication Metadata</h2>')
+        print('<table border="0" id="metadata">')
+        print('<tbody id="pubBody">')
         printfield("Title", "pub_title", help, pub.pub_title, 1)
 
         trans_titles = SQLloadTransPubTitles(pub.pub_id)
@@ -46,16 +46,16 @@ def printpubrecord(pub, image_url, reuse_external_ids):
         
         printformat("pub_ptype", "Format", help, pub.pub_ptype)
 
-        print '<tr>'
+        print('<tr>')
         printContentHeader('Pub Type:', help)
 
-        print '<td><select tabindex="1" name="pub_ctype">'
-        print '<option selected="selected">%s</option>' % pub.pub_ctype
+        print('<td><select tabindex="1" name="pub_ctype">')
+        print('<option selected="selected">%s</option>' % pub.pub_ctype)
         for ctype in ['ANTHOLOGY','CHAPBOOK','COLLECTION','FANZINE','MAGAZINE','NONFICTION','NOVEL','OMNIBUS']:
                 if ctype != pub.pub_ctype:
-                        print '<option>%s</option>' % (ctype)
-        print '</select>'
-        print '</tr>'
+                        print('<option>%s</option>' % (ctype))
+        print('</select>')
+        print('</tr>')
         
         printISBN(help, pub.pub_isbn)
         printfield("Catalog ID", "pub_catalog", help, pub.pub_catalog)
@@ -80,8 +80,8 @@ def printpubrecord(pub, image_url, reuse_external_ids):
 
         printtextarea('Note to Moderator', 'mod_note', help)
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
 if __name__ == '__main__':
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         except:
                 PrintPreSearch("Clone Publication")
                 PrintNavBar('edit/clonepub.cgi', 0)
-                print "<h3>Error: Publication to clone is not specified.</h3>"
+                print("<h3>Error: Publication to clone is not specified.</h3>")
                 PrintPostSearch(0, 0, 0, 0, 0)
                 sys.exit(0)
 
@@ -133,44 +133,44 @@ if __name__ == '__main__':
         PrintPreSearch("Clone Publication")
         PrintNavBar('edit/clonepub.cgi', pub_id)
 
-        print '<div id="HelpBox">'
-        print '<b>Help on cloning publications: </b>'
-        print '<a href="%s://%s/index.php/Help:Screen:ClonePub">Help:Screen:ClonePub</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<b>Help on cloning publications: </b>')
+        print('<a href="%s://%s/index.php/Help:Screen:ClonePub">Help:Screen:ClonePub</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
         title_id = SQLgetTitleReferral(pub_id, pub.pub_ctype, 1)
         if title_id == 0:
-                print "<h3>Error: This publication is not in a cloneable state.</h3>"
-                print "<p>Unable to determine the parent title of this publication."
-                print "The most likely cause is that the parent title is missing or "
-                print "the publication type is wrong. For instance, if this publication "
-                print "is a COLLECTION, look to see that its type is set to COLLECTION "
-                print "and that the parent title is set to COLLECTION as well. If the type "
-                print "is wrong, edit the publication and change the type. "
-                print "Then the record will be cloneable."
+                print("<h3>Error: This publication is not in a cloneable state.</h3>")
+                print("<p>Unable to determine the parent title of this publication.")
+                print("The most likely cause is that the parent title is missing or ")
+                print("the publication type is wrong. For instance, if this publication ")
+                print("is a COLLECTION, look to see that its type is set to COLLECTION ")
+                print("and that the parent title is set to COLLECTION as well. If the type ")
+                print("is wrong, edit the publication and change the type. ")
+                print("Then the record will be cloneable.")
                 PrintPostSearch(0, 0, 0, 0, 0)
                 sys.exit(0)
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">')
 
         printpubrecord(pub, image_url, reuse_external_ids)
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
         # Retrieve the Help text for publication content
         help = HelpTitleContent()
-        print '<h2>Content Section</h2>'
-        print """<p>This tool performs a clone operation on a publication. You may add titles, but you
+        print('<h2>Content Section</h2>')
+        print("""<p>This tool performs a clone operation on a publication. You may add titles, but you
                  cannot delete or modify titles. The existing titles listed here will be automatically
-                 merged. Any titles that you add may need to be manually merged after submission approval.</p>"""
-        print '<p>'
+                 merged. Any titles that you add may need to be manually merged after submission approval.</p>""")
+        print('<p>')
 
         # Retrieve the Help text for covers
         help = HelpCoverArt()
-        print "<h2>Cover Art</h2>"
-        print '<table class="coveredit">'
-        print '<tbody id="coverBody">'
+        print("<h2>Cover Art</h2>")
+        print('<table class="coveredit">')
+        print('<tbody id="coverBody">')
 
         if not cover_art:
                 index = 1
@@ -178,37 +178,37 @@ if __name__ == '__main__':
                 index += 1
                 printNewBriefCoverButton()
         else:
-                print '<tr>'
-                print '<td>&nbsp;</td>'
+                print('<tr>')
+                print('<td>&nbsp;</td>')
                 printContentHeader('Title', help)
                 printContentHeader('Date', help)
-                print '</tr>'
+                print('</tr>')
                 index = 1
                 for cover in covers:
                         printfullcoverart(cover, index, help, 1)
                         index += 1
                 printNewFullCoverButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<p>"
-        print "<hr>"
-        print "<p>"
+        print("<p>")
+        print("<hr>")
+        print("<p>")
 
         # Retrieve the Help text for publication content
         help = HelpTitleContent()
-        print "<h2>Regular Titles</h2>"
+        print("<h2>Regular Titles</h2>")
 
-        print '<table border="0">'
-        print '<tbody id="titleBody">'
+        print('<table border="0">')
+        print('<tbody id="titleBody">')
 
-        print '<tr>'
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
         printContentHeader('Title Type', help)
         printContentHeader('Length', help)
-        print '</tr>'
+        print('</tr>')
 
         index = 1
         for title in titles:
@@ -234,22 +234,22 @@ if __name__ == '__main__':
         printblanktitlerecord(index, help, pub.pub_ctype)
         index += 1
         printNewTitleButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<p>"
-        print "<hr>"
-        print "<p>"
+        print("<p>")
+        print("<hr>")
+        print("<p>")
         # Retrieve the Help text for reviews
         help = HelpReviewContent()
-        print "<h2>Reviews</h2>"
-        print '<table border="0">'
-        print '<tbody id="reviewBody">'
-        print '<tr>'
+        print("<h2>Reviews</h2>")
+        print('<table border="0">')
+        print('<tbody id="reviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         for title in titles:
                 if (title[TITLE_TTYPE] == 'REVIEW'):
@@ -258,22 +258,22 @@ if __name__ == '__main__':
         printblankreviewrecord(index, help)
         index += 1
         printNewReviewButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<p>"
-        print "<hr>"
-        print "<p>"
+        print("<p>")
+        print("<hr>")
+        print("<p>")
         # Retrieve the Help text for interviews
         help = HelpInterviewContent()
-        print "<h2>Interviews</h2>"
-        print '<table border="0">'
-        print '<tbody id="interviewBody">'
-        print '<tr>'
+        print("<h2>Interviews</h2>")
+        print('<table border="0">')
+        print('<tbody id="interviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Interview Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         for title in titles:
                 if (title[TITLE_TTYPE] == 'INTERVIEW'):
@@ -282,16 +282,16 @@ if __name__ == '__main__':
         printblankinterviewrecord(index, help)
         index += 1
         printNewInterviewButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<p>"
-        print "<hr>"
-        print "<p>"
-        print '<input name="pub_id" value="%d" type="HIDDEN">' % pub_id
-        print "<input NAME=\"title_id\" VALUE=\"%d\" TYPE=\"HIDDEN\">" % title_id
-        print '<input type="SUBMIT" tabindex="1" value="Clone Pub">'
-        print "</form>"
-        print "<p>"
+        print("<p>")
+        print("<hr>")
+        print("<p>")
+        print('<input name="pub_id" value="%d" type="HIDDEN">' % pub_id)
+        print("<input NAME=\"title_id\" VALUE=\"%d\" TYPE=\"HIDDEN\">" % title_id)
+        print('<input type="SUBMIT" tabindex="1" value="Clone Pub">')
+        print("</form>")
+        print("<p>")
 
         PrintPostSearch(tableclose=False)

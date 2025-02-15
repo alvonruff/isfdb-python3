@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -22,9 +22,9 @@ from library import ISFDBLinkNoName, ISFDBLocalRedirect
 def DoError(error, title_id):
         PrintPreSearch('Add Quick Tag')
         PrintNavBar('edit/addquicktag.cgi', 0)
-        print '<h2>ERROR: %s</h2>' % error
+        print('<h2>ERROR: %s</h2>' % error)
         if title_id:
-                print '<br>%s' % ISFDBLinkNoName('title.cgi', title_id, 'View This Title', True)
+                print('<br>%s' % ISFDBLinkNoName('title.cgi', title_id, 'View This Title', True))
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
 

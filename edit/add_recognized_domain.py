@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,9 +30,9 @@ if __name__ == '__main__':
 
         help = HelpRecognizedDomain()
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_recognized_domain.cgi">'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_add_recognized_domain.cgi">')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         printfield('Domain Name', 'domain_name', help)
 
@@ -52,11 +52,11 @@ if __name__ == '__main__':
         values['No'] = 1
         printdropdown('Explicit Credit Page Link Required', 'explicit_link_required', values, help)
 
-        print '</table>'
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)
 

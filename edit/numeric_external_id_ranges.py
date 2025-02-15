@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2019-2025   Ahasuerus
+#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -75,29 +75,29 @@ class ExternalIdRanges:
         def display_ranges(self):
                 for type_name in sorted(self.ranges):
                         bgcolor = 0
-                        print '<h3>%s</h3>' % type_name
-                        print '<table class="externalidranges">'
+                        print('<h3>%s</h3>' % type_name)
+                        print('<table class="externalidranges">')
                         count = 0
                         for range_span in self.ranges[type_name]:
                                 count += 1
                                 if (count % 10) == 1:
-                                        print '<tr class="table%d">' % (bgcolor + 1)
+                                        print('<tr class="table%d">' % (bgcolor + 1))
                                         bgcolor ^= 1
                                 range_start = range_span[0]
                                 range_end = range_span[1]
-                                print '<td>'
-                                print range_start
+                                print('<td>')
+                                print(range_start)
                                 if range_end != range_start:
-                                        print ' - ', range_end
-                                print '</td>'
+                                        print(' - ', range_end)
+                                print('</td>')
                                 if (count % 10) == 0:
-                                        print '</tr>'
+                                        print('</tr>')
                         if count % 10:
                                 for i in range(count % 10, 10):
-                                        print '<td>'
-                                        print '&nbsp;'
-                                        print '</td>'
-                        print '</table>'
+                                        print('<td>')
+                                        print('&nbsp;')
+                                        print('</td>')
+                        print('</table>')
 
 if __name__ == '__main__':
 

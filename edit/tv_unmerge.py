@@ -26,19 +26,19 @@ if __name__ == '__main__':
         PrintPreSearch('Title Unmerge Request')
         PrintNavBar('edit/tv_unmerge.cgi', title_id)
 
-        print '<div id="HelpBox">'
-        print '<b>Help on unmerging titles: </b>'
-        print '<a href="%s://%s/index.php/Help:Screen:UnmergeTitles">Help:Screen:UnmergeTitles</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
-        print '<b>Select titles to unmerge:</b>'
-        print '<p>'
-        print '<hr>'
+        print('<div id="HelpBox">')
+        print('<b>Help on unmerging titles: </b>')
+        print('<a href="%s://%s/index.php/Help:Screen:UnmergeTitles">Help:Screen:UnmergeTitles</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
+        print('<b>Select titles to unmerge:</b>')
+        print('<p>')
+        print('<hr>')
 
         help = HelpGeneral()
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/ts_unmerge.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/ts_unmerge.cgi">')
         index = 1
-        print '<ul>'
+        print('<ul>')
         for pub in pubs:
                 output = pub[PUB_TITLE]
                 output += ' (%s' % ISFDBconvertDate(pub[PUB_YEAR], 1)
@@ -81,19 +81,19 @@ if __name__ == '__main__':
                                 output += ", fanzine"
                 output = '<li><input type="checkbox" value="%d" name="pub%d"> %s)' % (pub[PUB_PUBID], index, ISFDBText(output))
 
-                print output
+                print(output)
                 index += 1
-        print '</ul>'
-        print '<hr>'
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('</ul>')
+        print('<hr>')
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
         printtextarea('Note to Moderator', 'mod_note', help, '')
-        print '</tbody>'
-        print '</table>'
-        print '<p>'
+        print('</tbody>')
+        print('</table>')
+        print('<p>')
 
-        print '<input NAME="record" VALUE="%d" TYPE="HIDDEN">' % (title_id)
-        print '<input TYPE="SUBMIT" VALUE="Submit Unmerge" tabindex="1">'
-        print '</form>'
+        print('<input NAME="record" VALUE="%d" TYPE="HIDDEN">' % (title_id))
+        print('<input TYPE="SUBMIT" VALUE="Submit Unmerge" tabindex="1">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, False)

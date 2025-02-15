@@ -29,9 +29,9 @@ def printpubrecord(record):
         help = HelpGeneral()
         pub = pubs(db)
         pub.load(record[PUB_PUBID])
-        print '<h2 class="editheadline">Publication Metadata</h2>'
-        print '<table id="metadata">'
-        print '<tbody id="pubBody">'
+        print('<h2 class="editheadline">Publication Metadata</h2>')
+        print('<table id="metadata">')
+        print('<tbody id="pubBody">')
         printfield("Title", "pub_title", help, pub.pub_title, 1)
 
         authors = SQLPubAuthors(pub.pub_id)
@@ -57,11 +57,11 @@ def printpubrecord(record):
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-        print '</tbody>'
-        print '</table>'
+        print('</tbody>')
+        print('</table>')
 
 def errorPage(text):
-        print "<h3>Error: %s</h3>" % (text)
+        print("<h3>Error: %s</h3>" % (text))
         PrintPostSearch(0, 0, 0, 0, 0)
         sys.exit(0)
 
@@ -75,9 +75,9 @@ if __name__ == '__main__':
         PrintPreSearch("Import/Export Contents")
         PrintNavBar('edit/editpub.cgi', 0)
 
-        print '<div id="HelpBox">'
-        print '<a href="%s://%s/index.php/Help:Screen:EditPub">Help on entering additional contents</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<a href="%s://%s/index.php/Help:Screen:EditPub">Help on entering additional contents</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
         form = cgi.FieldStorage()
         if form.has_key('ExportTo'):
@@ -164,7 +164,7 @@ if __name__ == '__main__':
         else:
                 errorPage("Publication or title to import content from is not specified")
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitclone.cgi">')
         printpubrecord(publication_to)
 
         # Retrieve the titles that are currently in publication_to and remove them from the
@@ -174,15 +174,15 @@ if __name__ == '__main__':
                 if current_title in titles:
                         titles.remove(current_title)
 
-        print '<hr class="topspace">'
-        print '<h2 class="editheadline">Content</h2>'
-        print '<p>'
-        print 'This tool imports or exports titles to a publication. You may add titles, but you'
-        print 'cannot delete or modify grayed out titles. '
-        print 'The existing titles listed here will be automatically merged. New titles may need to'
-        print 'be manually merged with pre-existing titles after this submission has been approved.'
-        print '<p>'
-        print '<p>'
+        print('<hr class="topspace">')
+        print('<h2 class="editheadline">Content</h2>')
+        print('<p>')
+        print('This tool imports or exports titles to a publication. You may add titles, but you')
+        print('cannot delete or modify grayed out titles. ')
+        print('The existing titles listed here will be automatically merged. New titles may need to')
+        print('be manually merged with pre-existing titles after this submission has been approved.')
+        print('<p>')
+        print('<p>')
 
         covers = []
         for title in titles:
@@ -191,29 +191,29 @@ if __name__ == '__main__':
         if covers:
                 # Retrieve the Help text for covers
                 help = HelpCoverArt()
-                print '<hr class="topspace">'
-                print "<h2>Cover Art</h2>"
-                print '<table class="coveredit">'
-                print '<tbody id="coverBody">'
+                print('<hr class="topspace">')
+                print("<h2>Cover Art</h2>")
+                print('<table class="coveredit">')
+                print('<tbody id="coverBody">')
 
-                print '<tr>'
-                print '<td>&nbsp;</td>'
+                print('<tr>')
+                print('<td>&nbsp;</td>')
                 printContentHeader('Title', help)
                 printContentHeader('Date', help)
-                print '</tr>'
+                print('</tr>')
                 index = 1
                 for cover in covers:
                         printfullcoverart(cover, index, help, 1)
                         index += 1
                 printNewFullCoverButton()
-                print '</tbody>'
-                print '</table>'
+                print('</tbody>')
+                print('</table>')
 
-        print '<hr class="topspace">'
-        print '<h2>Regular Titles</h2>'
-        print '<table class="titleedit">'
-        print '<tbody id="titleBody">'
-        print '<tr>'
+        print('<hr class="topspace">')
+        print('<h2>Regular Titles</h2>')
+        print('<table class="titleedit">')
+        print('<tbody id="titleBody">')
+        print('<tr>')
         # Retrieve the Help text for publication content
         help = HelpTitleContent()
         printContentHeader('Page', help)
@@ -221,7 +221,7 @@ if __name__ == '__main__':
         printContentHeader('Date', help)
         printContentHeader('Title Type', help)
         printContentHeader('Length', help)
-        print '</tr>'
+        print('</tr>')
 
         NeedReviewSection = 0
         NeedInterviewSection = 0
@@ -246,20 +246,20 @@ if __name__ == '__main__':
                 index += 1
 
         printNewTitleButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<hr class=\"topspace\">"
+        print("<hr class=\"topspace\">")
         # Retrieve the Help text for reviews
         help = HelpReviewContent()
-        print '<h2 class="editheadline">Reviews</h2>'
-        print '<table class="reviewedit">'
-        print '<tbody id="reviewBody">'
-        print '<tr>'
+        print('<h2 class="editheadline">Reviews</h2>')
+        print('<table class="reviewedit">')
+        print('<tbody id="reviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         if NeedReviewSection:
                 for title in titles:
@@ -270,20 +270,20 @@ if __name__ == '__main__':
                 printblankreviewrecord(index, help)
                 index += 1
         printNewReviewButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<hr class=\"topspace\">"
+        print("<hr class=\"topspace\">")
         # Retrieve the Help text for interviews
         help = HelpInterviewContent()
-        print '<h2 class="editheadline">Interviews</h2>'
-        print '<table class="interviewedit">'
-        print '<tbody id="interviewBody">'
-        print '<tr>'
+        print('<h2 class="editheadline">Interviews</h2>')
+        print('<table class="interviewedit">')
+        print('<tbody id="interviewBody">')
+        print('<tr>')
         printContentHeader('Page', help)
         printContentHeader('Interview Title', help)
         printContentHeader('Date', help)
-        print '</tr>'
+        print('</tr>')
         index = 1
         if NeedInterviewSection:
                 for title in titles:
@@ -294,14 +294,14 @@ if __name__ == '__main__':
                 printblankinterviewrecord(index, help)
                 index += 1
         printNewInterviewButton()
-        print "</tbody>"
-        print "</table>"
+        print("</tbody>")
+        print("</table>")
 
-        print "<hr class=\"topspace\">"
-        print "<p>"
-        print '<input name="pub_id" value="0" type="HIDDEN">'
-        print '<input name="child_id" value="%d" type="HIDDEN">' % int(clone_to)
-        print '<input type="SUBMIT" value="Submit Data" tabindex="1">'
-        print "</form>"
+        print("<hr class=\"topspace\">")
+        print("<p>")
+        print('<input name="pub_id" value="0" type="HIDDEN">')
+        print('<input name="child_id" value="%d" type="HIDDEN">' % int(clone_to))
+        print('<input type="SUBMIT" value="Submit Data" tabindex="1">')
+        print("</form>")
 
         PrintPostSearch(tableclose=False)

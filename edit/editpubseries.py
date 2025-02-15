@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus
+#     (C) COPYRIGHT 2010-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -24,36 +24,36 @@ if __name__ == '__main__':
         if not record:
                 SESSION.DisplayError('Record Does Not Exist')
 
-	PrintPreSearch('Publication Series Editor')
-	PrintNavBar('edit/editpubseries.cgi', pub_series_id)
+        PrintPreSearch('Publication Series Editor')
+        PrintNavBar('edit/editpubseries.cgi', pub_series_id)
 
         help = HelpPubSeries()
 
         printHelpBox('publication series', 'PublicationSeries')
 
-	print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpubseries.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitpubseries.cgi">')
 
-	print '<table border="0">'
-	print '<tbody id="tagBody">'
-	printfield("Pub. Series Name",  "pub_series_name",       help, record[PUB_SERIES_NAME])
-	
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
+        printfield("Pub. Series Name",  "pub_series_name",       help, record[PUB_SERIES_NAME])
+        
         trans_pub_series_names = SQLloadTransPubSeriesNames(record[PUB_SERIES_ID])
         printmultiple(trans_pub_series_names, "Transliterated Name", "trans_pub_series_names", help)
 
-	webpages = SQLloadPubSeriesWebpages(pub_series_id)
+        webpages = SQLloadPubSeriesWebpages(pub_series_id)
         printWebPages(webpages, 'pub_series', help)
-	
+        
         printtextarea('Note', 'pub_series_note', help, SQLgetNotes(record[PUB_SERIES_NOTE]))
 
         printtextarea('Note to Moderator', 'mod_note', help, '')
 
-	print '</table>'
+        print('</table>')
 
-	print '<p>'
-	print '<input NAME="pub_series_id" VALUE="%d" TYPE="HIDDEN">' % pub_series_id
-	print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-	print '</form>'
-	print '<p>'
+        print('<p>')
+        print('<input NAME="pub_series_id" VALUE="%d" TYPE="HIDDEN">' % pub_series_id)
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
-	PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)
 

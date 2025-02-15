@@ -17,9 +17,9 @@ from SQLparsing import *
 
 
 def PrintTableColumns(columns, user):
-	print '<table class="generic_table">'
-	print '<tr class="table2">'
-	for column in columns:
+        print('<table class="generic_table">')
+        print('<tr class="table2">')
+        for column in columns:
                 if not column:
                         data = '&nbsp;'
                 else:
@@ -27,8 +27,8 @@ def PrintTableColumns(columns, user):
                 # Skip 'Ignore' and 'Resolve' columns if the user is not a moderator
                 if ('Ignore' in column or 'Resolve' in column) and not user.moderator:
                         continue
-                print "<td><b>%s</b></td>" % data
- 	print '</tr>'
+                print("<td><b>%s</b></td>" % data)
+        print('</tr>')
 
 if __name__ == '__main__':
 
@@ -54,10 +54,10 @@ if __name__ == '__main__':
                 container_names = 'Anthologies and Collections'
         else:
                 container_names = 'Magazines'
-	PrintPreSearch("%s with no Fiction Titles" % container_names)
-	PrintNavBar('edit/empty_container_table.cgi', 0)
+        PrintPreSearch("%s with no Fiction Titles" % container_names)
+        PrintNavBar('edit/empty_container_table.cgi', 0)
 
-        print '<h3>Date range: %s</h3>' % display_range
+        print('<h3>Date range: %s</h3>' % display_range)
         query = """select c.cleanup_id, p.*
                 from pubs p, cleanup c
                 where c.resolved IS NULL
@@ -75,8 +75,8 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print 'No eligible publications for the specified date range.'
-                print ISFDBLink('edit/cleanup_report.cgi', report_id, 'Return to the main report')
+                print('No eligible publications for the specified date range.')
+                print(ISFDBLink('edit/cleanup_report.cgi', report_id, 'Return to the main report'))
                 sys.exit(0)
 
         user = User()
@@ -104,35 +104,35 @@ if __name__ == '__main__':
                 publisher = SQLGetPublisher(publisher_id)
                 referral_id = SQLgetTitleReferral(pub_id, pub_data[PUB_CTYPE])
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink("pl.cgi", pub_id, pub_title)
-                print '<td>%s</td>' % LIBbuildRecordList('author', authors)
-                print '<td>%s</td>' % pub_date
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink("pl.cgi", pub_id, pub_title))
+                print('<td>%s</td>' % LIBbuildRecordList('author', authors))
+                print('<td>%s</td>' % pub_date)
                 if report_id == 240:
-                        print '<td>%s</td>' % pub_type[:4]
+                        print('<td>%s</td>' % pub_type[:4])
 
                         referral_column = 0
                         if referral_id:
                                 referral_title = SQLloadTitle(referral_id)
                                 if referral_title[TITLE_YEAR] != pub_date:
-                                        print '<td>%s</td>' % referral_title[TITLE_YEAR]
+                                        print('<td>%s</td>' % referral_title[TITLE_YEAR])
                                         referral_column = 1
                         if not referral_column:
-                                print '<td>&nbsp;</td>'
+                                print('<td>&nbsp;</td>')
 
                 if publisher:
-                        print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher[PUBLISHER_NAME])
+                        print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher[PUBLISHER_NAME]))
                 else:
-                        print '<td>&nbsp;</td>'
-                print '<td>%s</td>' % FormatNote(note_note)
+                        print('<td>&nbsp;</td>')
+                print('<td>%s</td>' % FormatNote(note_note))
                 if user.moderator:
-                        print '<td>%s</td>' % ISFDBLink('mod/resolve_empty_containers.cgi', '%d+%s+%d+%d' % (cleanup_id, report_type, date_range, report_id), 'Ignore')
-                print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('mod/resolve_empty_containers.cgi', '%d+%s+%d+%d' % (cleanup_id, report_type, date_range, report_id), 'Ignore'))
+                print('</tr>')
                 count += 1
                 bgcolor ^= 1
                 record = result.fetch_row()
-	
+        
         PrintPostSearch(0, 0, 0, 0, 0)

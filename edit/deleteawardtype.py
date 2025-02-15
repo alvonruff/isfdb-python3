@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -35,20 +35,20 @@ if __name__ == '__main__':
         award_cats = SQLGetAwardCategories(awardType.award_type_id)
         if awards or award_cats:
                 if awards:
-                        print '<h2>Error: Award records for %d years still on file for this award type</h2>' % (len(awards))
+                        print('<h2>Error: Award records for %d years still on file for this award type</h2>' % (len(awards)))
                 if award_cats:
-                        print '<h2>Error: %d award categories still on file for this award type</h2>' % (len(award_cats))
-                print '<h2>*** Cannot delete this award type</h2>'
+                        print('<h2>Error: %d award categories still on file for this award type</h2>' % (len(award_cats)))
+                print('<h2>*** Cannot delete this award type</h2>')
         else:
-                print '<b>Request to Delete:</b> <i>%s</i>' % awardType.award_type_name
+                print('<b>Request to Delete:</b> <i>%s</i>' % awardType.award_type_name)
 
-                print '<form METHOD="POST" ACTION="/cgi-bin/edit/submitdeleteawardtype.cgi">'
-                print '<p>'
-                print '<b>Deletion Reason</b><br>'
-                print '<textarea name="reason" rows="4" cols="45"></textarea>'
-                print '<p>'
-                print '<input name="award_type_id" value="%d" type="HIDDEN">' % awardType.award_type_id
-                print '<input type="SUBMIT" value="Delete">'
-                print '</form>'
+                print('<form METHOD="POST" ACTION="/cgi-bin/edit/submitdeleteawardtype.cgi">')
+                print('<p>')
+                print('<b>Deletion Reason</b><br>')
+                print('<textarea name="reason" rows="4" cols="45"></textarea>')
+                print('<p>')
+                print('<input name="award_type_id" value="%d" type="HIDDEN">' % awardType.award_type_id)
+                print('<input type="SUBMIT" value="Delete">')
+                print('</form>')
         
         PrintPostSearch(0, 0, 0, 0, 0, 0)

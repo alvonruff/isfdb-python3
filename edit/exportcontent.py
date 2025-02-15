@@ -26,35 +26,35 @@ if __name__ == '__main__':
         PrintPreSearch('Export Content - %s' % pub_data[PUB_TITLE])
         PrintNavBar('edit/exportcontent.cgi', pub_id)
 
-        print '<div id="HelpBox">'
-        print '<a href="%s://%s/index.php/Help:Screen:ExportContent">Help on exporting content</a><p>' % (PROTOCOL, WIKILOC)
-        print '</div>'
+        print('<div id="HelpBox">')
+        print('<a href="%s://%s/index.php/Help:Screen:ExportContent">Help on exporting content</a><p>' % (PROTOCOL, WIKILOC))
+        print('</div>')
 
-        print 'Enter the publication ID/record number you would like to export into:'
-        print '<p>'
+        print('Enter the publication ID/record number you would like to export into:')
+        print('<p>')
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">'
-        print '<table>'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/clonecontent.cgi">')
+        print('<table>')
         printfield('Export Into', 'ExportTo')
 
-        print '<tr>'
-        print '<td><b>Include COVERART title(s)?</b></td>'
-        print '<td><input type="checkbox" NAME="IncludeCoverArt" value="on" checked></td>'
-        print '</tr>'
+        print('<tr>')
+        print('<td><b>Include COVERART title(s)?</b></td>')
+        print('<td><input type="checkbox" NAME="IncludeCoverArt" value="on" checked></td>')
+        print('</tr>')
         
-        print '<tr>'
-        print '<td><b>Include INTERIORART titles?</b></td>'
-        print '<td><input type="checkbox" NAME="IncludeInteriorArt" value="on" checked></td>'
-        print '</tr>'
+        print('<tr>')
+        print('<td><b>Include INTERIORART titles?</b></td>')
+        print('<td><input type="checkbox" NAME="IncludeInteriorArt" value="on" checked></td>')
+        print('</tr>')
 
-        print '<tr>'
-        print '<td><b>Include page numbers?</b></td>'
-        print '<td><input type="checkbox" NAME="IncludePages" value="on" checked></td>'
-        print '</tr>'
-        print '</table>'
-        print '<p>'
-        print '<input NAME="ExportFrom" VALUE="%d" TYPE="HIDDEN">' % pub_id
-        print '<input TYPE="SUBMIT" VALUE="Export Content">'
-        print '</form>'
+        print('<tr>')
+        print('<td><b>Include page numbers?</b></td>')
+        print('<td><input type="checkbox" NAME="IncludePages" value="on" checked></td>')
+        print('</tr>')
+        print('</table>')
+        print('<p>')
+        print('<input NAME="ExportFrom" VALUE="%d" TYPE="HIDDEN">' % pub_id)
+        print('<input TYPE="SUBMIT" VALUE="Export Content">')
+        print('</form>')
 
         PrintPostSearch(tableclose=False)

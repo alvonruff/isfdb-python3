@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2011-2025   Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2011-2025   Ahasuerus, Bill Longley, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -37,7 +37,7 @@ class Cleanup():
 
                 if num > 0:
                         if self.note:
-                                print '<div class="bold">%s</div>' % self.note
+                                print('<div class="bold">%s</div>' % self.note)
                         record = result.fetch_row()
                         bgcolor = 1
                         if self.ignore:
@@ -56,9 +56,9 @@ class Cleanup():
                                 bgcolor ^= 1
                                 count += 1
                                 record = result.fetch_row()
-                        print '</table>'
+                        print('</table>')
                 else:
-                        print '<h2>%s.</h2>' % self.none
+                        print('<h2>%s.</h2>' % self.none)
 
         def print_pub_table(self):
                 self.print_record_function = PrintPublicationRecord
@@ -109,7 +109,7 @@ class Cleanup():
                 num = result.num_rows()
                 if num > 0:
                         if self.note:
-                                print '<h3>%s</h3>' % self.note
+                                print('<h3>%s</h3>' % self.note)
                         record = result.fetch_row()
                         bgcolor = 1
                         count = 1
@@ -119,35 +119,35 @@ class Cleanup():
                                 pub_title = record[0][1]
                                 pub_date = record[0][2]
                                 if bgcolor:
-                                        print '<tr align=left class="table1">'
+                                        print('<tr align=left class="table1">')
                                 else:
-                                        print '<tr align=left class="table2">'
+                                        print('<tr align=left class="table2">')
 
-                                print '<td>%d</td>' % int(count)
-                                print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                                print '<td>%s</td>' % pub_date
-                                print '</tr>'
+                                print('<td>%d</td>' % int(count))
+                                print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                                print('<td>%s</td>' % pub_date)
+                                print('</tr>')
                                 bgcolor ^= 1
                                 count += 1
                                 record = result.fetch_row()
-                        print '</table>'
+                        print('</table>')
                 else:
-                        print '<h2>%s</h2>' % self.none
+                        print('<h2>%s</h2>' % self.none)
 
         def PrintAuthorRecord(self, author_id, author_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % int(count)
-                print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
+                print('<td>%d</td>' % int(count))
+                print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
                 if cleanup_id and user.moderator:
                         message = {0: 'Resolve', 1: 'Ignore'}
-                        print '<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi',
+                        print('<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi',
                                                               '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                              '%s this author' % message[mode])
-                print '</tr>'
+                                                              '%s this author' % message[mode]))
+                print('</tr>')
 
         def books_with_trans_and_no_pubs(self, lang_name, length = 'long'):
                 if length == 'short':
@@ -218,7 +218,7 @@ class Cleanup():
 
                 if num > 0:
                         if self.note:
-                                print '<div class="bold">%s</div>' % self.note
+                                print('<div class="bold">%s</div>' % self.note)
                         record = result.fetch_row()
                         bgcolor = 1
                         PrintTableColumns(('#', 'Language', 'Title', 'Type'))
@@ -229,21 +229,21 @@ class Cleanup():
                                 record_language = record[0][2]
                                 record_type = record[0][3]
                                 if bgcolor:
-                                        print '<tr align=left class="table1">'
+                                        print('<tr align=left class="table1">')
                                 else:
-                                        print '<tr align=left class="table2">'
+                                        print('<tr align=left class="table2">')
 
-                                print '<td>%d</td>' % count
-                                print '<td>%s</td>' % record_language
-                                print '<td>%s</td>' % ISFDBLink('title.cgi', record_id, record_title)
-                                print '<td>%s</td>' % record_type
-                                print '</tr>'
+                                print('<td>%d</td>' % count)
+                                print('<td>%s</td>' % record_language)
+                                print('<td>%s</td>' % ISFDBLink('title.cgi', record_id, record_title))
+                                print('<td>%s</td>' % record_type)
+                                print('</tr>')
                                 bgcolor ^= 1
                                 count += 1
                                 record = result.fetch_row()
-                        print '</table>'
+                        print('</table>')
                 else:
-                        print '<h2>%s.</h2>' % self.none
+                        print('<h2>%s.</h2>' % self.none)
 
 class ExcludedTitleTypes():
         def __init__(self):
@@ -279,7 +279,7 @@ class ExcludedTitleTypes():
         def print_data(self):
                 if self.num > 0:
                         if self.note:
-                                print '<h3>%s</h3>' % self.note
+                                print('<h3>%s</h3>' % self.note)
                         record = self.result.fetch_row()
                         if self.ignore:
                                 PrintTableColumns(('#', 'Publication', 'Invalid Titles', 'Ignore'))
@@ -295,39 +295,39 @@ class ExcludedTitleTypes():
                                 self.bgcolor ^= 1
                                 self.count += 1
                                 record = self.result.fetch_row()
-                        print '</table>'
+                        print('</table>')
                 else:
-                        print '<h2>%s.</h2>' % self.none
+                        print('<h2>%s.</h2>' % self.none)
 
         def print_row(self):
                 if self.bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % self.count
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', self.pub_id, self.pub_title)
+                print('<td>%d</td>' % self.count)
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', self.pub_id, self.pub_title))
                 invalid_titles = SQLloadTitlesXBT(self.pub_id)
-                print '<td>'
+                print('<td>')
                 first_title = True
                 for title in invalid_titles:
                         if title[TITLE_TTYPE] in self.excluded_title_types:
                                 if not first_title:
-                                        print '<br>'
-                                print '%s - ' % title[TITLE_TTYPE]
-                                print ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE])
+                                        print('<br>')
+                                print('%s - ' % title[TITLE_TTYPE])
+                                print(ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]))
                                 first_title = False
-                print '</td>'
+                print('</td>')
                 if self.ignore and user.moderator:
                         message = {0: 'Resolve', 1: 'Ignore'}
-                        print '<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi',
+                        print('<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi',
                                                               '%d+%d+%d' % (int(self.cleanup_id), self.mode, self.report_id),
-                                                              '%s this publication' % message[self.mode])
-                print '</tr>'
+                                                              '%s this publication' % message[self.mode]))
+                print('</tr>')
 
 def PrintTableColumns(columns):
-        print '<table class="generic_table">'
-        print '<tr class="table2">'
+        print('<table class="generic_table">')
+        print('<tr class="table2">')
         for column in columns:
                 if not column:
                         data = '&nbsp;'
@@ -336,14 +336,14 @@ def PrintTableColumns(columns):
                 # Skip 'Ignore' and 'Resolve' columns if the user is not a moderator
                 if ('Ignore' in column or 'Resolve' in column) and not user.moderator:
                         continue
-                print '<td><b>%s</b></td>' % data
-        print '</tr>'
+                print('<td><b>%s</b></td>' % data)
+        print('</tr>')
 
 def nonModeratorMessage():
         if not user.moderator:
-                print """<h2>If you find a record that is listed erroneously,
+                print("""<h2>If you find a record that is listed erroneously,
                 please post on the Moderator Noticeboard and a moderator will
-                remove it from this report.</h2>"""
+                remove it from this report.</h2>""")
 
 def function1():
         query = """select c.cleanup_id, c.record_id, t.title_title  
@@ -369,9 +369,9 @@ def function1():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No titles without authors found</h2>"
+                print("<h2>No titles without authors found</h2>")
 
 def function2():
         nonModeratorMessage()
@@ -416,9 +416,9 @@ def function2():
                         bgcolor = bgcolor ^ 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No VT-alternate name mismatches found</h2>"
+                print("<h2>No VT-alternate name mismatches found</h2>")
 
 def function3():
         nonModeratorMessage()
@@ -436,7 +436,7 @@ def function3():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No eligible titles without publications.</h2>"
+                print("<h2>No eligible titles without publications.</h2>")
                 return
 
         record = result.fetch_row()
@@ -453,7 +453,7 @@ def function3():
 
         for title_type in titles.keys():
                 if not titles[title_type]:
-                        print "<h3>No %s titles without publications.</h3>" % title_type
+                        print("<h3>No %s titles without publications.</h3>" % title_type)
                         continue
                 PrintTableColumns(('', '%s titles' % title_type, 'Ignore'))
                 bgcolor = 1
@@ -465,7 +465,7 @@ def function3():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 3)
                         bgcolor ^= 1
                         count += 1
-                print '</table><p>'
+                print('</table><p>')
 
 def function5():
         query = """select cleanup.record_id, notes.note_id,
@@ -480,7 +480,7 @@ def MismatchesInNotes(query, header):
         result = db.store_result()
         num = result.num_rows()
         if not num:
-                print '<h2>No %s in Notes/Synopses</h2>' % header
+                print('<h2>No %s in Notes/Synopses</h2>' % header)
                 return
 
         record = result.fetch_row()
@@ -516,20 +516,20 @@ def OneType(record_id, record_title, table, record_name, cgi_script, note_id, te
                 count = 1
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record[0][0], record[0][1])
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record[0][0], record[0][1]))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No %s with %s in %s</h3>' % (record_name, header, term)
-        print '<p>'
+                print('<h3>No %s with %s in %s</h3>' % (record_name, header, term))
+        print('<p>')
 
 def function6():
         query = """select a.author_id, a.author_canonical, a.author_lastname, a.author_language
@@ -551,26 +551,26 @@ def function6():
                 PrintTableColumns(('', 'Directory Entry', 'Author', 'Working Language'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         author_id = record[0][0]
                         author_canonical = record[0][1]
                         author_lastname = record[0][2]
                         author_language = record[0][3]
                         if not author_language:
                                 author_language = 0
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % author_lastname
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_canonical)
-                        print '<td>%s</td>' % LANGUAGES[author_language]
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % author_lastname)
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_canonical))
+                        print('<td>%s</td>' % LANGUAGES[author_language])
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No invalid directory names found</h2>'
+                print('<h2>No invalid directory names found</h2>')
 
 def function7():
         suffixes = []
@@ -642,34 +642,34 @@ def function8():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
         record = result.fetch_row()
         bgcolor = 1
         PrintTableColumns(('Title', 'Author(s)', 'Reviewer(s)'))
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % ISFDBLink('title.cgi', record[0][0], record[0][1])
+                print('<td>%s</td>' % ISFDBLink('title.cgi', record[0][0], record[0][1]))
                 
                 reviewees = SQLReviewBriefAuthorRecords(record[0][0])
-                print '<td>'
+                print('<td>')
                 for reviewee in reviewees:
-                        print ISFDBLink('ea.cgi', reviewee[0], reviewee[1])
-                print '</td>'
+                        print(ISFDBLink('ea.cgi', reviewee[0], reviewee[1]))
+                print('</td>')
                 
                 authors = SQLTitleBriefAuthorRecords(record[0][0])
-                print '<td>'
+                print('<td>')
                 for author in authors:
-                        print ISFDBLink('ea.cgi', author[0], author[1])
-                print '</td>'
-                print '</tr>'
+                        print(ISFDBLink('ea.cgi', author[0], author[1]))
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function9():
         query = """select titles.title_id, titles.title_title
@@ -695,9 +695,9 @@ def function9():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function10():
         query = """select a.author_id, a.author_canonical 
@@ -708,7 +708,7 @@ def function10():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No alternate names with canonical titles found</h2>'
+                print('<h2>No alternate names with canonical titles found</h2>')
                 return
 
         # Print table headers
@@ -717,11 +717,11 @@ def function10():
         bgcolor = 1
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print "<td>%s</td>" % ISFDBLink("ea.cgi", record[0][0], record[0][1])
+                print("<td>%s</td>" % ISFDBLink("ea.cgi", record[0][0], record[0][1]))
                 # Retrieve the number of canonical titles for this alternate name
                 query2 = """select count(t.title_id) from canonical_author c, titles t
                         where c.author_id=%d and c.ca_status=1 and c.title_id=t.title_id
@@ -729,11 +729,11 @@ def function10():
                 db.query(query2)
                 result2 = db.store_result()
                 record2 = result2.fetch_row()
-                print "<td>%s</td>" % record2[0][0]
-                print "</tr>"
+                print("<td>%s</td>" % record2[0][0])
+                print("</tr>")
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function11():
         # Ignore the following authors: unknown, Anonymous, various, uncredited, The Readers, The Editors
@@ -757,20 +757,20 @@ def function11():
                 count = 1
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', record[0][0], record[0][1])
-                        print '<td>%s</td>' % record[0][2]
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', record[0][0], record[0][1]))
+                        print('<td>%s</td>' % record[0][2])
+                        print('</tr>')
                         record = result.fetch_row()
                         bgcolor ^= 1
                         count += 1
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No authors without a defined language found</h2>'
+                print('<h2>No authors without a defined language found</h2>')
 
 def function12():
         query = """select titles.* from titles, cleanup
@@ -790,23 +790,23 @@ def function12():
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%s</td>' % record[0][TITLE_YEAR][:4]
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE])
+                        print('<td>%s</td>' % record[0][TITLE_YEAR][:4])
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE]))
                         authors = SQLTitleBriefAuthorRecords(record[0][TITLE_PUBID])
-                        print '<td>'
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
-                        print '</tr>'
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
+                        print('</tr>')
                         bgcolor ^= 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function13():
         query = """select t.* from titles as t, cleanup where t.title_ttype = 'EDITOR' 
@@ -823,25 +823,25 @@ def function13():
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print "<td>%s</td>" % record[0][TITLE_YEAR][:4]
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE])
+                        print("<td>%s</td>" % record[0][TITLE_YEAR][:4])
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE]))
 
                         authors = SQLTitleBriefAuthorRecords(record[0][TITLE_PUBID])
-                        print "<td>"
+                        print("<td>")
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print "</td>"
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print("</td>")
 
-                        print "</tr>"
+                        print("</tr>")
                         bgcolor ^= 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function14():
         query = """select pubs.pub_id, pubs.pub_title
@@ -865,9 +865,9 @@ def function14():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function15():
         query =  """select p.pub_id, p.pub_title
@@ -897,9 +897,9 @@ def function15():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publications with Extra EDITOR Records found</h2>"
+                print("<h2>No Publications with Extra EDITOR Records found</h2>")
 
 def function16():
         query = """select s1.series_id, s1.series_title from series s1, cleanup 
@@ -922,9 +922,9 @@ def function16():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function17():
         query = """select titles.series_id, titles.title_seriesnum, titles.title_seriesnum_2, count(*) cnt 
@@ -948,22 +948,22 @@ def function17():
                         series_data = SQLget1Series(series_id)
                         series_name = series_data[SERIES_NAME]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('pe.cgi', series_id, series_name)
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('pe.cgi', series_id, series_name))
                         display_series_num = str(series_number)
                         if series_number_2 is not None:
                                 display_series_num += '.%s' % series_number_2
-                        print '<td>%s</td>' % (display_series_num)
-                        print '</tr>'
+                        print('<td>%s</td>' % (display_series_num))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No series with duplicate series numbers found</h2>"
+                print("<h2>No series with duplicate series numbers found</h2>")
 
 def function18():
         query = """select t.title_id, t.title_title from titles t, cleanup c 
@@ -974,7 +974,7 @@ def function18():
         result = db.store_result()
         num = result.num_rows()
         if not num:
-                print "<h2>No titles with bad ellipses found.</h2>"
+                print("<h2>No titles with bad ellipses found.</h2>")
                 return
         PrintTableColumns(('', 'Title'))
         bgcolor = 1
@@ -987,7 +987,7 @@ def function18():
                 record = result.fetch_row()
                 bgcolor ^= 1
                 count += 1
-        print "</table>"
+        print("</table>")
 
 def function19():
         query = """select ca.title_id, t.title_title from 
@@ -1014,9 +1014,9 @@ def function19():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function20():
         query = """select t.title_id, t.title_title from titles t, titles tp, cleanup 
@@ -1039,9 +1039,9 @@ def function20():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function21():
         query = """select t.title_id, t.title_title from titles t, cleanup where t.title_parent<>0 
@@ -1064,9 +1064,9 @@ def function21():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function22():
         query = """select t.title_id,t.title_title from titles t, cleanup where 
@@ -1090,9 +1090,9 @@ def function22():
                         record = result.fetch_row()
                         bgcolor ^= 1
                         count += 1
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No SERIALs without a Parent Title found</h2>"
+                print("<h2>No SERIALs without a Parent Title found</h2>")
 
 def function23():
         from awardClass import awards
@@ -1111,7 +1111,7 @@ def function23():
         result = db.store_result()
         num = result.num_rows()
         if not num:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         PrintTableColumns(('Award Title', 'Award Name', 'Award Year', 'Award Category', 'Award Level'))
@@ -1119,22 +1119,22 @@ def function23():
         bgcolor = 1
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
                 award = awards(db)
                 award.load(record[0][AWARD_ID])
 
-                print '<td>%s</td>' % ISFDBLink('award_details.cgi', award.award_id, award.award_title)
-                print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award.award_type_id, award.award_type_name)
-                print '<td>%s</td>' % ISFDBLink('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), award.award_year[:4])
-                print '<td>%s</td>' % award.award_cat_name
-                print '<td>%s</td>' % award.award_displayed_level
-                print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('award_details.cgi', award.award_id, award.award_title))
+                print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award.award_type_id, award.award_type_name))
+                print('<td>%s</td>' % ISFDBLink('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), award.award_year[:4]))
+                print('<td>%s</td>' % award.award_cat_name)
+                print('<td>%s</td>' % award.award_displayed_level)
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function24():
         from awardClass import awards
@@ -1150,7 +1150,7 @@ def function24():
         result = db.store_result()
         num = result.num_rows()
         if not result.num_rows():
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         PrintTableColumns(('Award Title', 'Award Name', 'Award Year', 'Award Category', 'Award Level', ''))
@@ -1158,23 +1158,23 @@ def function24():
         bgcolor = 1
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
                 award = awards(db)
                 award.load(record[0][1])
 
-                print '<td>%s</td>' % ISFDBLink('award_details.cgi', award.award_id, award.award_title)
-                print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award.award_type_id, award.award_type_short_name)
-                print '<td>%s</td>' % ISFDBLink('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), award.award_year[:4])
-                print '<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % award.award_cat_id, award.award_cat_name)
-                print '<td>%s</td>' % award.award_displayed_level
-                print '<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi', '%s+1+24' % record[0][0], 'Ignore this award')
-                print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('award_details.cgi', award.award_id, award.award_title))
+                print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award.award_type_id, award.award_type_short_name))
+                print('<td>%s</td>' % ISFDBLink('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), award.award_year[:4]))
+                print('<td>%s</td>' % ISFDBLink('award_category.cgi', '%s+0' % award.award_cat_id, award.award_cat_name))
+                print('<td>%s</td>' % award.award_displayed_level)
+                print('<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi', '%s+1+24' % record[0][0], 'Ignore this award'))
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function25():
         query = """select * from award_types, cleanup
@@ -1194,19 +1194,19 @@ def function25():
                 bgcolor = 1
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         award_type_id = record[0][AWARD_TYPE_ID]
                         award_type_name = record[0][AWARD_TYPE_NAME]
-                        print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type_id, award_type_name)
-                        print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type_id, award_type_name))
+                        print('</tr>')
                         record = result.fetch_row()
                         bgcolor ^= 1
 
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No empty Award Types found</h3>'
+                print('<h3>No empty Award Types found</h3>')
 
 def function26():
         query = """select award_cats.*
@@ -1227,18 +1227,18 @@ def function26():
                 bgcolor = 1
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         award_cat_id = record[0][AWARD_CAT_ID]
                         award_cat_name = record[0][AWARD_CAT_NAME]
-                        print '<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat_id, award_cat_name)
-                        print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat_id, award_cat_name))
+                        print('</tr>')
                         record = result.fetch_row()
                         bgcolor ^= 1
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No empty Award Categories found</h3>'
+                print('<h3>No empty Award Categories found</h3>')
 
 def function27():
         query = """select s.series_id, s.series_title from series s, cleanup c where 
@@ -1249,7 +1249,7 @@ def function27():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         record = result.fetch_row()
@@ -1263,7 +1263,7 @@ def function27():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function28():
         query = """select t.title_id, t.title_title from titles t, cleanup c 
@@ -1286,9 +1286,9 @@ def function28():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function29():
         query = """select pub_id, pub_title from pubs, cleanup 
@@ -1315,9 +1315,9 @@ def function29():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function30():
         query = """select t1.title_id, t1.title_title from titles t1, titles t2, cleanup c where 
@@ -1329,7 +1329,7 @@ def function30():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         record = result.fetch_row()
@@ -1343,7 +1343,7 @@ def function30():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function31():
         query = """select c.cleanup_id, p.pub_id, p.pub_isbn, p.pub_year from pubs p, cleanup c 
@@ -1365,23 +1365,23 @@ def function31():
                 PrintTableColumns(('Count', 'Date', 'ISBN', ''))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % record[0][3]
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', record[0][1], record[0][2])
-                        print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % record[0][3])
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', record[0][1], record[0][2]))
+                        print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                         '%s+1+31' % record[0][0],
-                                                        'Ignore this ISBN')
-                        print '</tr>'
+                                                        'Ignore this ISBN'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function32():
         query = """select p1.pub_id, p1.pub_tag, p1.pub_title from pubs p1, 
@@ -1399,18 +1399,18 @@ def function32():
                 PrintTableColumns(('Publication Title', 'Publication Tag'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][2])
-                        print '<td>%s</td>' % record[0][1]
-                        print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][2]))
+                        print('<td>%s</td>' % record[0][1])
+                        print('</tr>')
                         bgcolor ^= 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function33():
         query = """select p.pub_id, p.pub_title as order_title, pa.author_id, a.author_canonical
@@ -1453,19 +1453,19 @@ def function33():
                 PrintTableColumns(('', 'Title', 'Author'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][1])
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', record[0][2], record[0][3])
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][1]))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', record[0][2], record[0][3]))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function34():
         query =  """select pub_id, pub_title from pubs, cleanup
@@ -1494,9 +1494,9 @@ def function34():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function35():
         formats = "'" + "','".join(SESSION.db.formats) + "'"
@@ -1508,7 +1508,7 @@ def function35():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No matching records</h2>'
+                print('<h2>No matching records</h2>')
                 return
         
         PrintTableColumns(('Format', 'Publication'))
@@ -1519,18 +1519,18 @@ def function35():
                 pub_id = record[0][1]
                 pub_title = record[0][2]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % format
-                print '<td>'
-                print ISFDBLink('pl.cgi', pub_id, pub_title)
-                print '</td>'
-                print '</tr>'
+                print('<td>%s</td>' % format)
+                print('<td>')
+                print(ISFDBLink('pl.cgi', pub_id, pub_title))
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function36():
         query = """select pub_id, pub_title, pub_frontimage
@@ -1568,23 +1568,23 @@ def function36():
         result = db.store_result()
         record = result.fetch_row()
         if not record:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
                 return
 
         bgcolor = 1
         PrintTableColumns(('Publication', 'URL'))
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][1])
-                print '<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2]))
-                print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', record[0][0], record[0][1]))
+                print('<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2])))
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function37():
         nonModeratorMessage()
@@ -1619,9 +1619,9 @@ def function37():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function38():
         query = 'select pc.pub_id, pc.title_id, count(*) as cnt \
@@ -1655,7 +1655,7 @@ def function38():
                 record = result.fetch_row()
 
         if not pubs:
-                print "<h2>No publications with duplicate titles found</h2>"
+                print("<h2>No publications with duplicate titles found</h2>")
                 return
         bgcolor = 1
         PrintTableColumns(('Publication', 'Duplicate Titles (count)'))
@@ -1663,12 +1663,12 @@ def function38():
                 titles = pubs[pub_id]
                 pub_title = pub_data[pub_id][PUB_TITLE]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                print '<td>'
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                print('<td>')
                 first = 1
                 for title in titles:
                         title_id = title[0]
@@ -1677,12 +1677,12 @@ def function38():
                         if first:
                                 first = 0
                         else:
-                                print '<br>'
-                        print '%s (%s)' % (ISFDBLink('title.cgi', title_id, title_title), count)
-                print '</td>'
-                print '</tr>'
+                                print('<br>')
+                        print('%s (%s)' % (ISFDBLink('title.cgi', title_id, title_title), count))
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
-        print '</table>'
+        print('</table>')
 
 def function39():
         query = """select p.pub_id, p.pub_title from pubs p, cleanup c 
@@ -1693,7 +1693,7 @@ def function39():
         result = db.store_result()
         num = result.num_rows()
         if not num:
-                print "<h2>No publications with bad ellipses found.</h2>"
+                print("<h2>No publications with bad ellipses found.</h2>")
                 return
         PrintTableColumns(('', 'Publication'))
         bgcolor = 1
@@ -1706,7 +1706,7 @@ def function39():
                 record = result.fetch_row()
                 bgcolor ^= 1
                 count += 1
-        print "</table>"
+        print("</table>")
 
 def function40():
         query = """select t.* from titles t, cleanup c where title_ttype='REVIEW' and not exists 
@@ -1716,7 +1716,7 @@ def function40():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Reviews without Reviewed Authors</h2>'
+                print('<h2>No Reviews without Reviewed Authors</h2>')
                 return
 
         # Print table headers
@@ -1731,7 +1731,7 @@ def function40():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function41():
         query = """select t1.title_id, t1.title_title, c.cleanup_id from titles t1, cleanup c
@@ -1744,7 +1744,7 @@ def function41():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Reviews not Linked to Titles</h2>'
+                print('<h2>No Reviews not Linked to Titles</h2>')
                 return
 
         # Print table headers
@@ -1759,10 +1759,10 @@ def function41():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function42():
-        print '<h3>This report finds reviews of CHAPBOOK, COVERART, INTERIORART, INTERVIEW and REVIEW records.</h3>'
+        print('<h3>This report finds reviews of CHAPBOOK, COVERART, INTERIORART, INTERVIEW and REVIEW records.</h3>')
 
         query = """select c.cleanup_id, t1.title_id, t1.title_title, t2.title_ttype 
                 from titles t1, titles t2, cleanup c, title_relationships tr 
@@ -1779,7 +1779,7 @@ def function42():
         num = result.num_rows()
 
         if not num:
-                print '<h2>No Reviews of Uncommon Title Types.</h2>'
+                print('<h2>No Reviews of Uncommon Title Types.</h2>')
                 return
 
         record = result.fetch_row()
@@ -1796,26 +1796,26 @@ def function42():
 
         for title_type in titles.keys():
                 if not titles[title_type]:
-                        print '<h3>No reviews of %ss.</h3>' % title_type
+                        print('<h3>No reviews of %ss.</h3>' % title_type)
                         continue
                 PrintTableColumns(('', 'Reviews of %s records' % title_type, ''))
                 color = 0
                 count = 1
                 for title in titles[title_type]:
                         if color:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         cleanup_id = title[0]
                         title_id = title[1]
                         title_title = title[2]
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                        print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+42' % cleanup_id, 'Ignore this title')
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                        print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+42' % cleanup_id, 'Ignore this title'))
+                        print('</tr>')
                         color = color ^ 1
                         count += 1
-                print '</table><p>'
+                print('</table><p>')
 
 def function43():
         query = """select p1.publisher_name from publishers p1, publishers p2, cleanup c where 
@@ -1843,9 +1843,9 @@ def function43():
                                 count += 1
                                 record2 = result2.fetch_row()
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function44():
         query = """select c.record_id, p1.publisher_name,
@@ -1859,7 +1859,7 @@ def function44():
         result = db.store_result()
 
         if not result.num_rows():
-                print '<h2>No similar publisher records found</h2>'
+                print('<h2>No similar publisher records found</h2>')
                 return
 
         PrintTableColumns(('', 'Publisher 1', 'Publisher 2', 'Ignore'))
@@ -1873,18 +1873,18 @@ def function44():
                 publisher_name_2 = record[0][3]
                 cleanup_id = record[0][4]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id_1, publisher_name_1)
-                print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id_2, publisher_name_2)
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+44' % int(cleanup_id), 'Ignore')
-                print '</tr>'
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id_1, publisher_name_1))
+                print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id_2, publisher_name_2))
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+44' % int(cleanup_id), 'Ignore'))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function45():
         query = """select v.title_id, v.title_title, v.title_ttype, p.title_ttype
@@ -1903,7 +1903,7 @@ def function45():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No variant title type mismatches</h2>"
+                print("<h2>No variant title type mismatches</h2>")
                 return
 
         record = result.fetch_row()
@@ -1917,26 +1917,26 @@ def function45():
 
         for variant_type in titles.keys():
                 if not titles[variant_type]:
-                        print "<h3>No %s title type mismatches</h3>" % variant_type
+                        print("<h3>No %s title type mismatches</h3>" % variant_type)
                         continue
                 PrintTableColumns(('', '%s titles' % variant_type, 'Parent type'))
                 color = 0
                 count = 1
                 for title in titles[variant_type]:
                         if color:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         variant_id = title[0]
                         variant_title = title[1]
                         parent_type = title[3]
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title)
-                        print '<td>%s</td>' % parent_type
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title))
+                        print('<td>%s</td>' % parent_type)
+                        print('</tr>')
                         color = color ^ 1
                         count += 1
-                print '</table><p>'
+                print('</table><p>')
 
 def function46():
         query = """select DISTINCT t.*
@@ -1958,24 +1958,24 @@ def function46():
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%s</td>' % record[0][TITLE_YEAR][:4]
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE])
+                        print('<td>%s</td>' % record[0][TITLE_YEAR][:4])
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', record[0][TITLE_PUBID], record[0][TITLE_TITLE]))
 
                         authors = SQLTitleBriefAuthorRecords(record[0][TITLE_PUBID])
-                        print '<td>'
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
-                        print '</tr>'
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
+                        print('</tr>')
                         bgcolor ^= 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function47():
         query = """select distinct t.title_id, t.title_title, t.title_ttype 
@@ -2011,7 +2011,7 @@ def function47():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No Title Dates after Publication Dates.</h2>"
+                print("<h2>No Title Dates after Publication Dates.</h2>")
                 return
 
         record = result.fetch_row()
@@ -2027,7 +2027,7 @@ def function47():
 
         for title_type in sorted(titles.keys()):
                 if not titles[title_type]:
-                        print "<h3>No %s with Title Dates after Publication Dates.</h3>" % title_type
+                        print("<h3>No %s with Title Dates after Publication Dates.</h3>" % title_type)
                         continue
                 PrintTableColumns(('', '%s titles' % title_type))
                 bgcolor = 1
@@ -2038,12 +2038,12 @@ def function47():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor = bgcolor ^ 1
                         count += 1
-                print '</table><p>'
+                print('</table><p>')
 
 def function48():
         if user.moderator:
-                print """<h3>If a series can't be fixed, please document the details
-                        in the series' Note field before marking it "Ignored".</h3>"""
+                print("""<h3>If a series can't be fixed, please document the details
+                        in the series' Note field before marking it "Ignored".</h3>""")
 
         nonModeratorMessage()
         
@@ -2052,7 +2052,7 @@ def function48():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Series with Numbering Gaps</h2>'
+                print('<h2>No Series with Numbering Gaps</h2>')
                 return
 
         series_ids = []
@@ -2086,7 +2086,7 @@ def function48():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Series with Numbering Gaps</h2>'
+                print('<h2>No Series with Numbering Gaps</h2>')
                 return
 
         # Print table headers
@@ -2102,7 +2102,7 @@ def function48():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 
 def function49():
@@ -2131,7 +2131,7 @@ def function49():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Publications with Invalid ISBN Formats</h2>'
+                print('<h2>No Publications with Invalid ISBN Formats</h2>')
                 return
         PrintTableColumns(('', 'ISBN', 'Publication'))
         bgcolor = 1
@@ -2142,20 +2142,20 @@ def function49():
                 pub_id = record[0][1]
                 pub_title = record[0][2]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % pub_isbn
-                print '<td>'
-                print ISFDBLink('pl.cgi', pub_id, pub_title)
-                print '</td>'
-                print '</tr>'
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % pub_isbn)
+                print('<td>')
+                print(ISFDBLink('pl.cgi', pub_id, pub_title))
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function50():
         query = """(select tmp.pub_id, tmp.isbn, tmp.pub_title as pub_title, tmp.cleanup_id from
@@ -2201,7 +2201,7 @@ def function50():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Publications with Invalid ISBN Checksums</h2>'
+                print('<h2>No Publications with Invalid ISBN Checksums</h2>')
                 return
 
         PrintTableColumns(('', 'ISBN', 'Publication', ''))
@@ -2214,21 +2214,21 @@ def function50():
                 pub_title = record[0][2]
                 cleanup_id = record[0][3]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % pub_isbn
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % pub_isbn)
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%s+1+50' % cleanup_id,
-                                                'Ignore this pub')
-                print '</tr>'
+                                                'Ignore this pub'))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function51():
         query = """select p.pub_id, p.pub_title, p.pub_isbn, p.pub_year, c.cleanup_id 
@@ -2237,7 +2237,7 @@ def function51():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Publications with Identical ISBNs and Different Titles</h2>'
+                print('<h2>No Publications with Identical ISBNs and Different Titles</h2>')
                 return
 
         isbns = {}
@@ -2265,33 +2265,33 @@ def function51():
                 if not isbns[isbn]:
                         continue
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % isbn
-                print '<td>'
-                print '<table class="review">'
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % isbn)
+                print('<td>')
+                print('<table class="review">')
                 for pub in isbns[isbn]:
-                        print '<tr>'
-                        print '<td>'
-                        print ISFDBLink('pl.cgi', pub[0], pub[1])
-                        print '</td>'
-                        print '<td>%s</td>' % pub[3]
-                        print '<td>'
-                        print ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+51' % pub[4], 'Ignore this pub')
-                        print '</td>'
-                        print '</tr>'
-                print '</table>'
-                print '</td>'
-                print '</tr>'
+                        print('<tr>')
+                        print('<td>')
+                        print(ISFDBLink('pl.cgi', pub[0], pub[1]))
+                        print('</td>')
+                        print('<td>%s</td>' % pub[3])
+                        print('<td>')
+                        print(ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+51' % pub[4], 'Ignore this pub'))
+                        print('</td>')
+                        print('</tr>')
+                print('</table>')
+                print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
-        print '</table>'
+        print('</table>')
 
 def function52():
-        print """<h3>This report finds publication with 0 or 2+ reference titles.</h3>"""
+        print("""<h3>This report finds publication with 0 or 2+ reference titles.</h3>""")
 
         only_one = {'ANTHOLOGY': ['ANTHOLOGY'],
                     'COLLECTION': ['COLLECTION'],
@@ -2325,7 +2325,7 @@ def function52():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No Publications with 0 or 2+ Reference Titles.</h2>"
+                print("<h2>No Publications with 0 or 2+ Reference Titles.</h2>")
                 return
 
         record = result.fetch_row()
@@ -2341,7 +2341,7 @@ def function52():
 
         for pub_type in sorted(pubs.keys()):
                 if not pubs[pub_type]:
-                        print "<h3>No %s Publications with 0 or 2+ Reference Titles.</h3>" % pub_type
+                        print("<h3>No %s Publications with 0 or 2+ Reference Titles.</h3>" % pub_type)
                         continue
                 PrintTableColumns(('', '%s publications' % pub_type, ''))
                 bgcolor = 1
@@ -2353,7 +2353,7 @@ def function52():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id, 52)
                         bgcolor ^= bgcolor
                         count += 1
-                print '</table><p>'
+                print('</table><p>')
 
 def function53():
         query = "select a1.author_id, a1.author_canonical, a2.author_id, a2.author_canonical, count(*) \
@@ -2366,7 +2366,7 @@ def function53():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Authors with Duplicate Alternate Names Found</h2>'
+                print('<h2>No Authors with Duplicate Alternate Names Found</h2>')
                 return
 
         # Print table headers
@@ -2376,25 +2376,25 @@ def function53():
         count = 1
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink("ea.cgi", record[0][0], record[0][1])
-                print '<td>%s</td>' % ISFDBLink("ea.cgi", record[0][2], record[0][3])
-                print '<td>%s</td>' % record[0][4]
-                print '</tr>'
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink("ea.cgi", record[0][0], record[0][1]))
+                print('<td>%s</td>' % ISFDBLink("ea.cgi", record[0][2], record[0][3]))
+                print('<td>%s</td>' % record[0][4])
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function54():
-        print """<h3>This report is currently limited to COLLECTION and ANTHOLOGY
+        print("""<h3>This report is currently limited to COLLECTION and ANTHOLOGY
                 titles which have at least one publication with fiction contents
                 and one publication without fiction contents. The displayed list
-                is limited to 1000 publications for performance reasons.</h3>"""
+                is limited to 1000 publications for performance reasons.</h3>""")
 
         query ="""select t.title_id, t.title_title, p.pub_id, p.pub_title, p.pub_year
                 from titles t, pubs p, pub_content pc, cleanup c where
@@ -2405,7 +2405,7 @@ def function54():
         record = result.fetch_row()
         num = result.num_rows()
         if not num:
-                print "<h2>No Collections/Anthologies without Contents Whose Other Editions Have Contents</h2>"
+                print("<h2>No Collections/Anthologies without Contents Whose Other Editions Have Contents</h2>")
                 return
         titles = {}
         pubs_set = set()
@@ -2455,23 +2455,23 @@ def function54():
                                 break
                         count += 1
                         if color:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                        print '<td>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                        print('<td>')
                         for pub in titles[title_title][title_id]:
                                 if pub[0] in empty_pubs:
                                         suffix = ' [EMPTY]'
                                 else:
                                         suffix = ''
-                                print '%s (%s)%s<br>' % (ISFDBLink('pl.cgi', pub[0], pub[1]), pub[2], suffix)
-                        print '</td>'
-                        print '</tr>'
+                                print('%s (%s)%s<br>' % (ISFDBLink('pl.cgi', pub[0], pub[1]), pub[2], suffix))
+                        print('</td>')
+                        print('</tr>')
                         color = color ^ 1
                         record = result.fetch_row()
-        print '</table><p>'
+        print('</table><p>')
 
 def function55():
         ui = isfdbUI()
@@ -2496,9 +2496,9 @@ def function55():
                         bgcolor ^= 1
                         count += 1
 
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Title records with HTML in Titles.</h2>"
+                print("<h2>No Title records with HTML in Titles.</h2>")
 
 def function56():
         ui = isfdbUI()
@@ -2523,12 +2523,12 @@ def function56():
                         bgcolor ^= 1
                         count += 1
 
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publications with HTML in Titles.</h2>"
+                print("<h2>No Publications with HTML in Titles.</h2>")
 
 def function57():
-        print '<h3>For SFE-hosted images, only links to /clute/, /clute_uk/, /langford/ and /robinson/ sub-directories are allowed.</h3>'
+        print('<h3>For SFE-hosted images, only links to /clute/, /clute_uk/, /langford/ and /robinson/ sub-directories are allowed.</h3>')
         
         query = """select pub_id, pub_title from pubs, cleanup c
                    where c.report_type = 57
@@ -2556,9 +2556,9 @@ def function57():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No invalid SFE image links found</h2>'
+                print('<h2>No invalid SFE image links found</h2>')
 
 def function58():
         cleanup.query = """select a.author_id, a.author_canonical
@@ -2659,9 +2659,9 @@ def function62():
                         bgcolor = bgcolor ^ 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No Titles with Invalid Length Values found</h2>"
+                print("<h2>No Titles with Invalid Length Values found</h2>")
 
 def function63():
         query = """select distinct t1.title_id, t1.title_title
@@ -2677,7 +2677,7 @@ def function63():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No Genre/Non-Genre Mismatches.</h2>"
+                print("<h2>No Genre/Non-Genre Mismatches.</h2>")
                 return
 
         PrintTableColumns(('', 'Title'))
@@ -2691,11 +2691,11 @@ def function63():
                 bgcolor = bgcolor ^ 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function64():
-        print """<h3>If a series legitimately contains EDITOR and non-EDITOR titles,
-                please mention this fact in the series' Note field before marking it "Ignored".</h3>"""
+        print("""<h3>If a series legitimately contains EDITOR and non-EDITOR titles,
+                please mention this fact in the series' Note field before marking it "Ignored".</h3>""")
 
         query = """select s.series_id, s.series_title, c.cleanup_id from series s, cleanup c
                  where s.series_id = c.record_id and c.report_type = 64 and c.resolved IS NULL
@@ -2705,7 +2705,7 @@ def function64():
         db.query(query)
         result = db.store_result()
         if not result.num_rows():
-                print '<h2>No Series with EDITOR and non-EDITOR Titles</h2>'
+                print('<h2>No Series with EDITOR and non-EDITOR Titles</h2>')
                 return
 
         # Print table headers
@@ -2721,7 +2721,7 @@ def function64():
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print "</table>"
+        print("</table>")
 
 def function65():
         pattern_match = ISFDBBadUnicodePatternMatch('publisher_name')
@@ -2785,8 +2785,8 @@ def function70():
         cleanup.print_pub_table()
 
 def function71():
-        print """<h3>This report lists all 9999-00-00 titles and titles expected
-                     to be published more than 3 months in the future.</h3>"""
+        print("""<h3>This report lists all 9999-00-00 titles and titles expected
+                     to be published more than 3 months in the future.</h3>""")
         query = """select t.title_id, t.title_title, t.title_copyright
                 from titles t, cleanup c
                 where t.title_copyright > DATE_ADD(NOW(), INTERVAL 3 MONTH)
@@ -2806,20 +2806,20 @@ def function71():
                         title_title = record[0][1]
                         title_date = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                        print '<td>%s</td>' % title_date
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                        print('<td>%s</td>' % title_date)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Forthcoming Titles Found</h2>'
+                print('<h2>No Forthcoming Titles Found</h2>')
         return
 
 def function72():
@@ -2857,9 +2857,9 @@ def function73():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publishers with Suspect Unicode Characters Found</h2>"
+                print("<h2>No Publishers with Suspect Unicode Characters Found</h2>")
         return
 
 def function74():
@@ -2885,9 +2885,9 @@ def function74():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Titles with Suspect Unicode Characters Found</h2>"
+                print("<h2>No Titles with Suspect Unicode Characters Found</h2>")
         return
 
 def function75():
@@ -2913,9 +2913,9 @@ def function75():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publications with Suspect Unicode Characters Found</h2>"
+                print("<h2>No Publications with Suspect Unicode Characters Found</h2>")
         return
 
 def function76():
@@ -2941,9 +2941,9 @@ def function76():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Series with Suspect Unicode Characters Found</h2>"
+                print("<h2>No Series with Suspect Unicode Characters Found</h2>")
         return
 
 def function77():
@@ -2969,9 +2969,9 @@ def function77():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publication Series with Suspect Unicode Characters Found</h2>"
+                print("<h2>No Publication Series with Suspect Unicode Characters Found</h2>")
         return
 
 def function78():
@@ -3016,9 +3016,9 @@ def function79():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No NOVEL publications with fewer than 80 pages</h2>"
+                print("<h2>No NOVEL publications with fewer than 80 pages</h2>")
         return
 
 def function80():
@@ -3038,7 +3038,7 @@ def function80():
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No Duplicate SHORTFICTION in Magazines/Fanzines</h2>"
+                print("<h2>No Duplicate SHORTFICTION in Magazines/Fanzines</h2>")
                 return
 
         record = result.fetch_row()
@@ -3055,24 +3055,24 @@ def function80():
         count = 1
         for pub_id in data:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
                 pub_title = data[pub_id][0][1]
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                print '<td>'
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                print('<td>')
                 for pub_data in data[pub_id]:
                         title_id = pub_data[2]
                         title_title = pub_data[3]
-                        print ISFDBLink('title.cgi', title_id, title_title)
-                        print '<br>'
-                print '</td>'
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+80' % int(data[pub_id][0][4]), 'Ignore')
-                print '</tr>'
+                        print(ISFDBLink('title.cgi', title_id, title_title))
+                        print('<br>')
+                print('</td>')
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+80' % int(data[pub_id][0][4]), 'Ignore'))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
-        print '</table>'
+        print('</table>')
 
 def function81():
         query = """select s.series_id, s.series_title, c.cleanup_id
@@ -3098,9 +3098,9 @@ def function81():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Series with Slashes and No Spaces</h2>"
+                print("<h2>No Series with Slashes and No Spaces</h2>")
         return
 
 def function82():
@@ -3112,7 +3112,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Award Types</h2>'
+                print('<h2>Award Types</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3125,9 +3125,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Award Type Notes</h2>"
+                print("<h2>No Invalid Record URLs in Award Type Notes</h2>")
 
         query = """select a.award_cat_id, a.award_cat_name, c.cleanup_id
                 from award_cats a, cleanup c
@@ -3137,7 +3137,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Award Categories</h2>'
+                print('<h2>Award Categories</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3150,9 +3150,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Award Category Notes</h2>"
+                print("<h2>No Invalid Record URLs in Award Category Notes</h2>")
 
         query = """select a.award_id, a.award_title, c.cleanup_id
                 from awards a, cleanup c
@@ -3162,7 +3162,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Awards</h2>'
+                print('<h2>Awards</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3175,9 +3175,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Award Notes</h2>"
+                print("<h2>No Invalid Record URLs in Award Notes</h2>")
 
         query = """select s.series_id, s.series_title, c.cleanup_id
                 from series s, cleanup c
@@ -3187,7 +3187,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Series</h2>'
+                print('<h2>Series</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3200,9 +3200,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Series Notes</h2>"
+                print("<h2>No Invalid Record URLs in Series Notes</h2>")
 
         query = """select p.publisher_id, p.publisher_name, c.cleanup_id
                 from publishers p, cleanup c
@@ -3212,7 +3212,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Publishers</h2>'
+                print('<h2>Publishers</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3225,9 +3225,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Publisher Notes</h2>"
+                print("<h2>No Invalid Record URLs in Publisher Notes</h2>")
 
         query = """select p.pub_series_id, p.pub_series_name, c.cleanup_id
                 from pub_series p, cleanup c
@@ -3237,7 +3237,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Publication Series</h2>'
+                print('<h2>Publication Series</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3250,9 +3250,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Publication Series Notes</h2>"
+                print("<h2>No Invalid Record URLs in Publication Series Notes</h2>")
 
         query = """select t.title_id, t.title_title, c.cleanup_id
                 from titles t, cleanup c
@@ -3262,7 +3262,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Title Notes</h2>'
+                print('<h2>Title Notes</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3275,9 +3275,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Title Notes</h2>"
+                print("<h2>No Invalid Record URLs in Title Notes</h2>")
 
         query = """select t.title_id, t.title_title, c.cleanup_id
                 from titles t, cleanup c
@@ -3287,7 +3287,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Synopses</h2>'
+                print('<h2>Synopses</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3300,9 +3300,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Synopses</h2>"
+                print("<h2>No Invalid Record URLs in Synopses</h2>")
 
         query = """select p.pub_id, p.pub_title, c.cleanup_id
                 from pubs p, cleanup c
@@ -3312,7 +3312,7 @@ def function82():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print '<h2>Publications</h2>'
+                print('<h2>Publications</h2>')
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3325,9 +3325,9 @@ def function82():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Invalid Record URLs in Publication Notes</h2>"
+                print("<h2>No Invalid Record URLs in Publication Notes</h2>")
 
 def function83():
         nonModeratorMessage()
@@ -3357,9 +3357,9 @@ def function83():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Serials without Standard Parenthetical Disambiguators Found</h2>"
+                print("<h2>No Serials without Standard Parenthetical Disambiguators Found</h2>")
 
 def function84():
         nonModeratorMessage()
@@ -3396,9 +3396,9 @@ def function84():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Serials with Potentially Unnecessary Disambiguation Found</h2>"
+                print("<h2>No Serials with Potentially Unnecessary Disambiguation Found</h2>")
 
 def function85():
         query = """select a.author_id, a.author_canonical, a.author_legalname, l.lang_name
@@ -3427,21 +3427,21 @@ def function85():
                                 author_legalname = '-'
                         lang_name = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
-                        print '<td>%s</td>' % author_legalname
-                        print '<td>%s</td>' % lang_name
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
+                        print('<td>%s</td>' % author_legalname)
+                        print('<td>%s</td>' % lang_name)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function86():
         query = """select distinct p.pub_id, p.pub_title
@@ -3463,38 +3463,38 @@ def function86():
                         pub_id = record[0][0]
                         pub_title = record[0][1]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
                         verifiers = SQLPrimaryVerifiers(pub_id)
-                        print '<td>'
+                        print('<td>')
                         verifier_count = 0
                         for verifier in verifiers:
                                 user_name = verifier[1]
                                 if verifier_count > 0:
-                                        print ', '
-                                print WikiLink(user_name)
+                                        print(', ')
+                                print(WikiLink(user_name))
                                 verifier_count += 1
                         if not verifier_count:
-                                print '&nbsp;'
-                        print '</td>'
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '</tr>'
+                                print('&nbsp;')
+                        print('</td>')
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Primary-Verified Publications with Unknown Format</h2>'
+                print('<h2>No Primary-Verified Publications with Unknown Format</h2>')
         return
 
 def function87():
         # Author/title language mismatches
         nonModeratorMessage()
 
-        print """<h3>Note: This report is currently limited to EDITOR, NOVEL, NONFICTION
-                and SHORTFICTION titles.</h3>"""
+        print("""<h3>Note: This report is currently limited to EDITOR, NOVEL, NONFICTION
+                and SHORTFICTION titles.</h3>""")
         query = """select distinct t.title_id, t.title_title, t.title_ttype, c.cleanup_id
                 from titles t, canonical_author ca, authors a, cleanup c
                 where t.title_id=ca.title_id
@@ -3523,30 +3523,30 @@ def function87():
                         title_ttype = record[0][2]
                         cleanup_id = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % title_ttype
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % title_ttype)
                         authors = SQLTitleBriefAuthorRecords(title_id)
-                        print '<td>'
+                        print('<td>')
                         author_counter = 0
                         for author in authors:
                                 if author_counter:
-                                        print ' <b>and</b> '
-                                print ISFDBLink('ea.cgi', author[0], author[1])
+                                        print(' <b>and</b> ')
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
                                 author_counter += 1
-                        print '</td>'
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
+                        print('</td>')
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+87' % int(cleanup_id), 'Ignore this title')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+87' % int(cleanup_id), 'Ignore this title'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Author/Title Language Mismatches Found.</h2>'
+                print('<h2>No Author/Title Language Mismatches Found.</h2>')
 
 def function88():
         # Pubs with multiple COVERART titles
@@ -3568,7 +3568,7 @@ def function88():
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No publications with multiple COVERART titles</h2>"
+                print("<h2>No publications with multiple COVERART titles</h2>")
 
         record = result.fetch_row()
         bgcolor = 1
@@ -3579,42 +3579,42 @@ def function88():
                 pub_title = record[0][1]
                 cleanup_id = record[0][2]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % count
+                print('<td>%s</td>' % count)
 
-                print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
+                print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
                 
                 authors = SQLPubBriefAuthorRecords(pub_id)
-                print '<td>'
+                print('<td>')
                 for author in authors:
-                        print ISFDBLink('ea.cgi', author[0], author[1])
-                print '</td>'
+                        print(ISFDBLink('ea.cgi', author[0], author[1]))
+                print('</td>')
                 
                 verifiers = SQLPrimaryVerifiers(pub_id)
                 ver_count = 0
-                print '<td>'
+                print('<td>')
                 for verifier in verifiers:
                         user_id = verifier[0]
                         user_name = verifier[1]
                         if ver_count > 0:
-                                print '<br>'
-                        print WikiLink(user_name)
+                                print('<br>')
+                        print(WikiLink(user_name))
                         ver_count += 1
                 if not verifiers:
-                        print '&nbsp;'
-                print '</td>'
+                        print('&nbsp;')
+                print('</td>')
                                 
                 if user.moderator:
-                        print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+88"' % cleanup_id, 'Ignore this pub')
-                print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+88"' % cleanup_id, 'Ignore this pub'))
+                print('</tr>')
 
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
         return
 
 def function89():
@@ -3757,8 +3757,8 @@ def function89():
         db.query(query)
         result = db.store_result()
 
-        print """<h3>See <a href="%s://%s/index.php?title=Template:AuthorFields:BirthPlace">
-                        this template</a> for formatting information.</h3>""" % (PROTOCOL, WIKILOC)
+        print("""<h3>See <a href="%s://%s/index.php?title=Template:AuthorFields:BirthPlace">
+                        this template</a> for formatting information.</h3>""" % (PROTOCOL, WIKILOC))
         if result.num_rows() > 0:
                 record = result.fetch_row()
                 bgcolor = 1
@@ -3770,19 +3770,19 @@ def function89():
                         birthplace = record[0][2]
                         birthdate = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, name)
-                        print '<td>%s</td>' % birthplace
-                        print '<td>%s</td>' % birthdate
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, name))
+                        print('<td>%s</td>' % birthplace)
+                        print('<td>%s</td>' % birthdate)
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No authors with invalid birthplaces</h2>'
+                print('<h2>No authors with invalid birthplaces</h2>')
         return
 
 def function90():
@@ -3802,11 +3802,11 @@ def function90():
                 PrintTableColumns(('', 'Parent Series', 'Position', 'Sub-series'))
                 while record:
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
                         series_id = record[0][0]
-                        print '<td>%d</td>' % count
+                        print('<td>%d</td>' % count)
                         
                         # Retrieve the parent series information
                         query1 = """select s2.series_id, s2.series_title
@@ -3818,7 +3818,7 @@ def function90():
                         record1 = result1.fetch_row()
                         parent_series_id = record1[0][0]
                         parent_series_name = record1[0][1]
-                        print '<td>%s</td>' % ISFDBLink('pe.cgi', parent_series_id, parent_series_name)
+                        print('<td>%s</td>' % ISFDBLink('pe.cgi', parent_series_id, parent_series_name))
                         
                         # Retrieve the sub-series position
                         query2 = """select series_parent_position from series where
@@ -3827,7 +3827,7 @@ def function90():
                         result2 = db.store_result()
                         record2 = result2.fetch_row()
                         parent_position = record2[0][0]
-                        print '<td>%d</td>' % parent_position
+                        print('<td>%d</td>' % parent_position)
                         
                         # Retrieve duplicate sub_series for this parent position
                         query3 = """select series_id, series_title from series where
@@ -3836,20 +3836,20 @@ def function90():
                         db.query(query3)
                         result3 = db.store_result()
                         record3 = result3.fetch_row()
-                        print '<td>'
+                        print('<td>')
                         while record3:
                                 subseries_id = record3[0][0]
                                 subseries_name = record3[0][1]
-                                print '%s<br>' % ISFDBLink('pe.cgi', subseries_id, subseries_name)
+                                print('%s<br>' % ISFDBLink('pe.cgi', subseries_id, subseries_name))
                                 record3 = result3.fetch_row()
-                        print '</td>'
-                        print '</tr>'
+                        print('</td>')
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No duplicate sub-series numbers within a series found</h2>"
+                print("<h2>No duplicate sub-series numbers within a series found</h2>")
 
 def function91():
         # Non-Art Titles by Non-English Authors without a Language
@@ -3872,7 +3872,7 @@ def function91():
         if num:
                 PrintTitlesWithoutLanguage(result)
         else:
-                print "<h2>No non-art titles by non-English authors without a language found</h2>"
+                print("<h2>No non-art titles by non-English authors without a language found</h2>")
 
 def function92():
         # Primary-Verified Anthologies/Collections without Contents Titles
@@ -3898,9 +3898,9 @@ def function92():
 
         if result.num_rows() > 0:
                 if not user.moderator:
-                        print """<h2>If you find a legitimate Contents-less publication,
+                        print("""<h2>If you find a legitimate Contents-less publication,
                         please post on the Moderator Noticeboard and a moderator will
-                        remove it from this report.</h2>"""
+                        remove it from this report.</h2>""")
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -3910,38 +3910,38 @@ def function92():
                         pub_title = record[0][1]
                         cleanup_id = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%s</td>' % count
+                        print('<td>%s</td>' % count)
                         verifiers = SQLPrimaryVerifiers(pub_id)
-                        print '<td>'
+                        print('<td>')
                         verifier_count = 0
                         for verifier in verifiers:
                                 if verifier_count > 0:
-                                        print ', '
+                                        print(', ')
                                 user_name = verifier[1]
-                                print WikiLink(user_name)
+                                print(WikiLink(user_name))
                                 verifier_count += 1
                         if not verifier_count:
-                                print '&nbsp;'
-                        print '</td>'
+                                print('&nbsp;')
+                        print('</td>')
                         authors = SQLPubBriefAuthorRecords(pub_id)
-                        print '<td>'
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+92' % cleanup_id, 'Ignore this pub')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%s+1+92' % cleanup_id, 'Ignore this pub'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Primary-Verified Anthologies/Collections without Contents Titles found</h2>'
+                print('<h2>No Primary-Verified Anthologies/Collections without Contents Titles found</h2>')
         return
 
 def function93():
@@ -4015,9 +4015,9 @@ def function96():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No COVERART Titles with a 'Cover: ' Prefix</h2>"
+                print("<h2>No COVERART Titles with a 'Cover: ' Prefix</h2>")
         return
 
 def function97():
@@ -4046,9 +4046,9 @@ def function97():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publication Series with Latin Characters in the Pub. Series Name and non-Latin Title Records Found</h2>"
+                print("<h2>No Publication Series with Latin Characters in the Pub. Series Name and non-Latin Title Records Found</h2>")
         return
 
 def function98():
@@ -4080,9 +4080,9 @@ def function98():
                                 count += 1
                                 record2 = result2.fetch_row()
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function99():
         nonModeratorMessage()
@@ -4108,22 +4108,22 @@ def function99():
                         publisher_name = record[0][1]
                         cleanup_id = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher_name)
-                        print '<td>%s</td>' % ISFDBLink('edit/publisher_exceptions.cgi', publisher_id, 'Link')
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('publisher.cgi', publisher_id, publisher_name))
+                        print('<td>%s</td>' % ISFDBLink('edit/publisher_exceptions.cgi', publisher_id, 'Link'))
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+99' % int(cleanup_id), 'Ignore this publisher')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+99' % int(cleanup_id), 'Ignore this publisher'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publishers with Latin Characters and non-Latin Title Records Found</h2>'
+                print('<h2>No Publishers with Latin Characters and non-Latin Title Records Found</h2>')
         return
 
 def function100():
@@ -4168,10 +4168,10 @@ def function100():
         result = db.store_result()
 
         if result.num_rows() > 0:
-                print """<h2>See <a href="%s">this Help template</a> and
+                print("""<h2>See <a href="%s">this Help template</a> and
                          <a href="%s">this Help page</a> for valid price
                          formats</h2>""" % (ISFDBWikiTemplate('PublicationFields:Price'),
-                                            ISFDBWikiPage('Help:List of currency symbols'))
+                                            ISFDBWikiPage('Help:List of currency symbols')))
                 record = result.fetch_row()
                 bgcolor = 1
                 count = 1
@@ -4181,20 +4181,20 @@ def function100():
                         pub_title = record[0][1]
                         pub_price = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td>%s</td>' % pub_price
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td>%s</td>' % pub_price)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publication Records with Invalid Prices Found</h2>'
+                print('<h2>No Publication Records with Invalid Prices Found</h2>')
         return
 
 def function101():
@@ -4265,7 +4265,7 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
                 sort_name = record_title_field
         # First check that Wiki tables exist in this instance of ISFDB
         if not WikiExists():
-                print '<h2>Wiki data does not exist in this instance of ISFDB, so this report is not available.</h2>'
+                print('<h2>Wiki data does not exist in this instance of ISFDB, so this report is not available.</h2>')
                 return
 
         # Step 1: Find all record IDs with a matching Wiki page
@@ -4280,7 +4280,7 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         record = result.fetch_row()
@@ -4308,7 +4308,7 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
                 record = result.fetch_row()
 
         if not records:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         # Step 4:
@@ -4325,7 +4325,7 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
                 return
 
         record = result.fetch_row()
@@ -4337,24 +4337,24 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
                 record_title = record[0][1]
                 wiki_title = records[record_id]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%d</td>' % int(count)
-                print '<td>%s</td>' % ISFDBLink('%s.cgi' % script, record_id, record_title)
-                print '<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(wiki_title), wiki_title)
-                print '</tr>'
+                print('<td>%d</td>' % int(count))
+                print('<td>%s</td>' % ISFDBLink('%s.cgi' % script, record_id, record_title))
+                print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(wiki_title), wiki_title))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def StrandedWikiPages(report_number, namespace_number, namespace_name):
         import urllib
         # First check that Wiki tables exist in this instance of ISFDB
         if not WikiExists():
-                print '<h2>Wiki data does not exist in this instance of ISFDB, so this report is not available.</h2>'
+                print('<h2>Wiki data does not exist in this instance of ISFDB, so this report is not available.</h2>')
                 return
 
         query = """select mw.page_title from mw_page mw, cleanup c
@@ -4375,19 +4375,19 @@ def StrandedWikiPages(report_number, namespace_number, namespace_name):
                 while record:
                         page_title = record[0][0]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(page_title), page_title)
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(page_title), page_title))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function121():
         query = """select distinct ps.pub_series_id, ps.pub_series_name, c.cleanup_id
@@ -4412,9 +4412,9 @@ def function121():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Publication Series with Latin Characters in the Pub. Series Name and no Transliterated Names.</h2>"
+                print("<h2>No Publication Series with Latin Characters in the Pub. Series Name and no Transliterated Names.</h2>")
         return
 
 def function122():
@@ -4441,9 +4441,9 @@ def function122():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publishers with Latin Characters and no Transliterated Names.</h2>'
+                print('<h2>No Publishers with Latin Characters and no Transliterated Names.</h2>')
         return
 
 def function123():
@@ -4475,21 +4475,21 @@ def function123():
                                 author_legalname = '-'
                         lang_name = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
-                        print '<td>%s</td>' % author_legalname
-                        print '<td>%s</td>' % lang_name
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
+                        print('<td>%s</td>' % author_legalname)
+                        print('<td>%s</td>' % lang_name)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
 
 def function124():
         transliteratedTitles(124)
@@ -4582,23 +4582,23 @@ def transliteratedTitlesDisplay(query, language):
                         title_title = record[0][1]
                         authors = SQLTitleBriefAuthorRecords(title_id)
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                        print '<td>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
-                        print '</tr>'
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No %s Titles with no Transliterated Names.</h2>' % language
+                print('<h2>No %s Titles with no Transliterated Names.</h2>' % language)
         return
 
 def function138():
@@ -4671,9 +4671,9 @@ def nonLatinTitlesDisplay(report_id, query, language):
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No %s Titles with Latin characters.</h2>" % language
+                print("<h2>No %s Titles with Latin characters.</h2>" % language)
         return
 
 def function144():
@@ -4709,14 +4709,14 @@ def function144():
                         series_title = record[0][1]
                         cleanup_id = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('pe.cgi', series_id, series_title)
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('pe.cgi', series_id, series_title))
 
-                        print '<td>'
+                        print('<td>')
                         query2 = """select series_id, series_title
                                     from series
                                     where series_title like '%s (%%'""" % db.escape_string(series_title)
@@ -4728,22 +4728,22 @@ def function144():
                                 parenthetical_id = record2[0][0]
                                 parenthetical_title = record2[0][1]
                                 if count2 > 1:
-                                        print '<br>'
-                                print ISFDBLink('pe.cgi', parenthetical_id, parenthetical_title)
+                                        print('<br>')
+                                print(ISFDBLink('pe.cgi', parenthetical_id, parenthetical_title))
                                 count2 += 1
                                 record2 = result2.fetch_row()
                         
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                                 '%d+%d+%d' % (int(cleanup_id), 1, 144),
-                                                                'Ignore this series')
-                        print '</tr>'
+                                                                'Ignore this series'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Series Names That May Need Disambiguation Found</h2>'
+                print('<h2>No Series Names That May Need Disambiguation Found</h2>')
         return
 
 def function145():
@@ -4773,9 +4773,9 @@ def function145():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No Romanian titles with s-cedilla or t-cedilla in the title.</h2>"
+                print("<h2>No Romanian titles with s-cedilla or t-cedilla in the title.</h2>")
         return
 
 def function146():
@@ -4808,9 +4808,9 @@ def function146():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No pubs with Romanian titles with s-cedilla or t-cedilla.</h2>"
+                print("<h2>No pubs with Romanian titles with s-cedilla or t-cedilla.</h2>")
         return
 
 def function147():
@@ -4835,9 +4835,9 @@ def function147():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No pubs with fullwidth yen signs.</h2>"
+                print("<h2>No pubs with fullwidth yen signs.</h2>")
         return
 
 def function148():
@@ -4937,9 +4937,9 @@ def transliteratedPubsDisplay(query, language):
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No %s Publications without Transliterated Titles.</h2>" % language
+                print("<h2>No %s Publications without Transliterated Titles.</h2>" % language)
         return
 
 def function162():
@@ -5016,9 +5016,9 @@ def nonLatinPubsDisplay(report_id, query, language):
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No %s Publications with Latin characters.</h2>" % language
+                print("<h2>No %s Publications with Latin characters.</h2>" % language)
         return
 
 def function168():
@@ -5051,19 +5051,19 @@ def function168():
                         if not author_language:
                                 author_language = 0
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
-                        print '<td>%s</td>' % LANGUAGES[author_language]
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
+                        print('<td>%s</td>' % LANGUAGES[author_language])
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No records found</h2>"
+                print("<h2>No records found</h2>")
 
 def function169():
         transliteratedAuthors(169)
@@ -5204,25 +5204,25 @@ def nonLatinAuthorsDisplay(report_id, query, language):
                         cleanup_id = record[0][3]
                         authors = SQLTitleBriefAuthorRecords(title_id)
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
-                        print '<td>%s</td>' % title_ttype
-                        print '<td>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
+                        print('<td>%s</td>' % title_ttype)
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
                         if cleanup_id and user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+%d' % (int(cleanup_id), int(report_id)), 'Ignore this title')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+%d' % (int(cleanup_id), int(report_id)), 'Ignore this title'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No %s Titles with a Latin author name.</h2>' % language
+                print('<h2>No %s Titles with a Latin author name.</h2>' % language)
         return
                   
 def nonLatinAuthors(report_id):
@@ -5275,14 +5275,14 @@ def function189():
                         pub_series_title = record[0][1]
                         cleanup_id = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink("pubseries.cgi", pub_series_id, pub_series_title)
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink("pubseries.cgi", pub_series_id, pub_series_title))
 
-                        print '<td>'
+                        print('<td>')
                         query2 = """select pub_series_id, pub_series_name from pub_series
                                 where pub_series_name like '%s (%%'""" % db.escape_string(pub_series_title)
                         db.query(query2)
@@ -5293,20 +5293,20 @@ def function189():
                                 parenthetical_id = record2[0][0]
                                 parenthetical_title = record2[0][1]
                                 if count2 > 1:
-                                        print '<br>'
-                                print ISFDBLink("pubseries.cgi", parenthetical_id, parenthetical_title)
+                                        print('<br>')
+                                print(ISFDBLink("pubseries.cgi", parenthetical_id, parenthetical_title))
                                 count2 += 1
                                 record2 = result2.fetch_row()
                         
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+189' % int(cleanup_id), 'Ignore this series')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+189' % int(cleanup_id), 'Ignore this series'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publication Series Names That May Need Disambiguation Found</h2>'
+                print('<h2>No Publication Series Names That May Need Disambiguation Found</h2>')
         return
 
 def function190():
@@ -5331,18 +5331,18 @@ def function190():
                         award_id = record[0][0]
                         award_movie = record[0][1]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('award_details.cgi', award_id, award_movie)
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('award_details.cgi', award_id, award_movie))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No invalid award records found</h2>"
+                print("<h2>No invalid award records found</h2>")
 
 def function191():
         query = """select c.record_id, n.note_id
@@ -5400,24 +5400,24 @@ def function193():
                         pub_ctype = record[0][2]
                         cleanup_id = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % pub_ctype
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % pub_ctype)
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
                         if cleanup_id and user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                                 '%d+1+193' % int(cleanup_id),
-                                                                'Ignore this publication')
-                        print '</tr>'
+                                                                'Ignore this publication'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No outstanding multilingual publications found</h2>'
+                print('<h2>No outstanding multilingual publications found</h2>')
 
 def function194():
         query = """select title_id, t.title_title, t.title_ttype
@@ -5440,31 +5440,31 @@ def function194():
                         title_title = record[0][1]
                         title_type = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%s</td>' % count
-                        print '<td>%s</td>' % title_type
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
+                        print('<td>%s</td>' % count)
+                        print('<td>%s</td>' % title_type)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
                         authors = SQLTitleBriefAuthorRecords(title_id)
-                        print '<td>'
+                        print('<td>')
                         for author in authors:
-                                print ISFDBLink('ea.cgi', author[0], author[1])
-                        print '</td>'
-                        print '</tr>'
+                                print(ISFDBLink('ea.cgi', author[0], author[1]))
+                        print('</td>')
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No titles without a language found.</h2>'
+                print('<h2>No titles without a language found.</h2>')
         return
 
 def function195():
-        print """<h2>This report identifies non-Omnibus titles with content values.
+        print("""<h2>This report identifies non-Omnibus titles with content values.
                    It also identifies Content values starting with a slash, which
-                   is no longer necessary.</h2>"""
+                   is no longer necessary.</h2>""")
         query = """select t.title_id, t.title_title
                    from titles t, cleanup c
                    where (
@@ -5489,9 +5489,9 @@ def function195():
                         bgcolor = bgcolor ^ 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No Titles with invalid content values found</h2>"
+                print("<h2>No Titles with invalid content values found</h2>")
 
 def function196():
         query = """select distinct t1.title_id, t1.title_title
@@ -5507,7 +5507,7 @@ def function196():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No Juvenile/Non-Juvenile Mismatches.</h2>"
+                print("<h2>No Juvenile/Non-Juvenile Mismatches.</h2>")
                 return
 
         PrintTableColumns(('', 'Title'))
@@ -5521,7 +5521,7 @@ def function196():
                 bgcolor = bgcolor ^ 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function197():
         query = """select distinct t1.title_id, t1.title_title
@@ -5537,7 +5537,7 @@ def function197():
         num = result.num_rows()
 
         if not num:
-                print "<h2>No Novelization/Non-Novelization Mismatches.</h2>"
+                print("<h2>No Novelization/Non-Novelization Mismatches.</h2>")
                 return
 
         PrintTableColumns(('', 'Title'))
@@ -5551,7 +5551,7 @@ def function197():
                 bgcolor = bgcolor ^ 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function198():
         # Author/alternate name language mismatches
@@ -5595,21 +5595,21 @@ def function199():
                                 new_note = '&nbsp;'
                         old_note = record[0][3]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name)
-                        print '<td>%s</td>' % old_note
-                        print '<td>%s</td>' % new_note
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id, author_name))
+                        print('<td>%s</td>' % old_note)
+                        print('<td>%s</td>' % new_note)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No author/alternate name language mismatches found.</h2>'
+                print('<h2>No author/alternate name language mismatches found.</h2>')
         return
 
 def function200():
@@ -5727,9 +5727,9 @@ def ids_in_notes(report_number, pattern_match, display_name, allow_ignore = 0, l
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print "</table>"
+                print("</table>")
         else:
-                print "<h2>No publications with %s in Notes.</h2>" % display_name
+                print("<h2>No publications with %s in Notes.</h2>" % display_name)
 
 def function227():
         nonModeratorMessage()
@@ -5758,9 +5758,9 @@ def function227():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No titles with mismatched parentheses found</h2>"
+                print("<h2>No titles with mismatched parentheses found</h2>")
 
 def function228():
         nonModeratorMessage()
@@ -5795,9 +5795,9 @@ def function228():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No ISBN-less e-publications without an ASIN found</h2>"
+                print("<h2>No ISBN-less e-publications without an ASIN found</h2>")
 
 def function229():
         ui = isfdbUI()
@@ -5830,9 +5830,9 @@ def function229():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table><p>'
+                print('</table><p>')
         else:
-                print "<h2>No publications with mismatches HTML tags found.</h2>"
+                print("<h2>No publications with mismatches HTML tags found.</h2>")
 
 def function230():
         query = """select p.pub_id, n.note_note
@@ -5873,9 +5873,9 @@ def function230():
                                 bgcolor ^= 1
                                 count += 1
                                 record = result.fetch_row()
-                        print '</table><p>'
+                        print('</table><p>')
         else:
-                print "<h2>No publications with mismatched OCLC URLs in Notes.</h2>"
+                print("<h2>No publications with mismatched OCLC URLs in Notes.</h2>")
 
 def function231():
         domains = SQLLoadRecognizedDomains()
@@ -5948,22 +5948,22 @@ def function233():
                         pub_title2 = record[0][3]
                         cleanup_id = record[0][4]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id1, pub_title1)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id2, pub_title2)
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id1, pub_title1))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id2, pub_title2))
                         if user.moderator:
-                                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+233' % int(cleanup_id), 'Ignore')
-                        print '</tr>'
+                                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+233' % int(cleanup_id), 'Ignore'))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No potential duplicate e-book publications found.</h2>'
+                print('<h2>No potential duplicate e-book publications found.</h2>')
 
 def function234():
         cleanup.query = """select p.pub_id, p.pub_title
@@ -6056,23 +6056,23 @@ def function238():
                                 parent_language = '&nbsp;'
 
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title)
-                        print '<td>%s</td>' % variant_language
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title)
-                        print '<td>%s</td>' % parent_language
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title))
+                        print('<td>%s</td>' % variant_language)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title))
+                        print('<td>%s</td>' % parent_language)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No translations without notes found for less common languages</h3>'
-        print '<p>'
+                print('<h3>No translations without notes found for less common languages</h3>')
+        print('<p>')
 
 def function239():
         query = """select t1.title_id, t1.title_title, l1.lang_name,
@@ -6107,23 +6107,23 @@ def function239():
                         parent_language = record[0][5]
 
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title)
-                        print '<td>%s</td>' % variant_language
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title)
-                        print '<td>%s</td>' % parent_language
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title))
+                        print('<td>%s</td>' % variant_language)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title))
+                        print('<td>%s</td>' % parent_language)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No Translations without the Tr Template in Notes found.</h3>'
-        print '<p>'
+                print('<h3>No Translations without the Tr Template in Notes found.</h3>')
+        print('<p>')
 
 ##        cleanup.none = 'No translations without the Tr template in notes found'
 ##        cleanup.print_title_table()
@@ -6362,19 +6362,19 @@ def function252():
                         pub_title = record[0][1]
                         pub_isbn = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td><a href="https://www.worldcat.org/isbn/%s">%s</a></td>' % (pub_isbn, pub_isbn)
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td><a href="https://www.worldcat.org/isbn/%s">%s</a></td>' % (pub_isbn, pub_isbn))
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publications with an OCLC Verification, an ISBN and no OCLC External ID.</h2>'
+                print('<h2>No Publications with an OCLC Verification, an ISBN and no OCLC External ID.</h2>')
 
 def function253():
         cleanup.query = """select distinct p.pub_id, p.pub_title
@@ -6428,9 +6428,9 @@ def function257():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Series with non-Latin Characters in the Series Name without a Transliterated Name found</h2>'
+                print('<h2>No Series with non-Latin Characters in the Series Name without a Transliterated Name found</h2>')
 
 def function258():
         nonLatinSeries(258)
@@ -6486,9 +6486,9 @@ def function263():
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No matching Series with Latin characters.</h2>'
+                print('<h2>No matching Series with Latin characters.</h2>')
         return
 
 def function264():
@@ -6691,19 +6691,19 @@ def function288():
                         pub_title = record[0][1]
                         pub_pages = record[0][2]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td>%s</td>' % pub_pages
-                        print '</tr>'
+                                print('<tr align=left class="table2">')
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td>%s</td>' % pub_pages)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No Publications with Invalid Page Numbers</h2>'
+                print('<h2>No Publications with Invalid Page Numbers</h2>')
 
 def function289():
         cleanup.query = """select distinct p.pub_id, p.pub_title, c.cleanup_id
@@ -6830,21 +6830,21 @@ def function295():
                         note_text = record[0][3]
                         field_names = note_text.lower().split('{{watchprepub|')[1].split('}}')[0]
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % int(count)
-                        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-                        print '<td>%s</td>' % pub_date
-                        print '<td>%s</td>' % field_names.capitalize()
-                        print '</tr>'
+                        print('<td>%d</td>' % int(count))
+                        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+                        print('<td>%s</td>' % pub_date)
+                        print('<td>%s</td>' % field_names.capitalize())
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No publications with the WatchPrePub template</h2>'
+                print('<h2>No publications with the WatchPrePub template</h2>')
 
 def function296():
         cleanup.query = """select distinct p.pub_id, p.pub_title, c.cleanup_id
@@ -7229,23 +7229,23 @@ def function327():
         result = db.store_result()
         record = result.fetch_row()
         if not record:
-                print '<h2>No records found</h2>'
+                print('<h2>No records found</h2>')
                 return
 
         bgcolor = 1
         PrintTableColumns(('Author', 'URL'))
         while record:
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % ISFDBLink('ea.cgi', record[0][0], record[0][1])
-                print '<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2]))
-                print '</tr>'
+                print('<td>%s</td>' % ISFDBLink('ea.cgi', record[0][0], record[0][1]))
+                print('<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2])))
+                print('</tr>')
                 bgcolor ^= 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def function328():
         cleanup.query = """select t.title_id, t.title_title
@@ -7366,22 +7366,22 @@ def translated_report(report_id):
                                 parent_language = '&nbsp;'
 
                         if bgcolor:
-                                print '<tr align=left class="table1">'
+                                print('<tr align=left class="table1">')
                         else:
-                                print '<tr align=left class="table2">'
+                                print('<tr align=left class="table2">')
 
-                        print '<td>%d</td>' % count
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title)
-                        print '<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title)
-                        print '<td>%s</td>' % parent_language
-                        print '</tr>'
+                        print('<td>%d</td>' % count)
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', variant_id, variant_title))
+                        print('<td>%s</td>' % ISFDBLink('title.cgi', parent_id, parent_title))
+                        print('<td>%s</td>' % parent_language)
+                        print('</tr>')
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h3>No %s translations without notes found.</h3>' % LANGUAGES[language_id]
-        print '<p>'
+                print('<h3>No %s translations without notes found.</h3>' % LANGUAGES[language_id])
+        print('<p>')
 
 def nonLatinSeries(report_id):
         reports = popularNonLatinLanguages('series')
@@ -7421,9 +7421,9 @@ def nonLatinSeriesDisplay(report_id, query, language):
                         bgcolor ^= 1
                         count += 1
                         record = result.fetch_row()
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No %s Series with Latin characters.</h2>' % language
+                print('<h2>No %s Series with Latin characters.</h2>' % language)
         return
 
 def containers_grid(report_id, script = 'empty_containers'):
@@ -7453,63 +7453,63 @@ def containers_grid(report_id, script = 'empty_containers'):
                         months[month] = months.get(month, 0) + count
                 record = result.fetch_row()
 
-        print '<h3 class="centered">Since 2000: By Year and Month</h3>'
-        print '<table class="seriesgrid">'
-        print '<tr class="table1">'
-        print '<th>Year</th>'
-        print '<th colspan="13">Month</th>'
-        print '</tr>'
+        print('<h3 class="centered">Since 2000: By Year and Month</h3>')
+        print('<table class="seriesgrid">')
+        print('<tr class="table1">')
+        print('<th>Year</th>')
+        print('<th colspan="13">Month</th>')
+        print('</tr>')
         # Get the next year based on system time
         next_year = localtime()[0] + 1
         bgcolor = 1
         for year in range(next_year, 1999, -1):
                 if year not in years:
                         continue
-                print '<tr class="table%d">' % (bgcolor+1)
-                print '<td>%s?year+%d+%d">%d (%d)</a></td>' % (anchor, year, report_id, year, years[year])
+                print('<tr class="table%d">' % (bgcolor+1))
+                print('<td>%s?year+%d+%d">%d (%d)</a></td>' % (anchor, year, report_id, year, years[year]))
                 for number in range(0,13):
                         month = year*100+number
                         if number in ISFDBmonthmap:
                                 month_name = ISFDBmonthmap[number]
                         else:
                                 month_name = 'None'
-                        print '<td>'
+                        print('<td>')
                         # No links for months with no empty containers
                         if month not in months:
-                                print month_name
+                                print(month_name)
                         else:
-                                print '%s?month+%d+%d">%s (%d)</a>' % (anchor, month, report_id, month_name, months[month])
-                        print '</td>'
-                print '</tr>'
+                                print('%s?month+%d+%d">%s (%d)</a>' % (anchor, month, report_id, month_name, months[month]))
+                        print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
-        print '</table>'
-        print '<p>'
-        print '<b>Unknown Year:</b> %s?unknown+0+%d">%d</a>' % (anchor, report_id, unknown)
+        print('</table>')
+        print('<p>')
+        print('<b>Unknown Year:</b> %s?unknown+0+%d">%d</a>' % (anchor, report_id, unknown))
         
-        print '<h3 class="centered">Pre-2000: By Year and Decade</h3>'
-        print '<table class="seriesgrid">'
-        print '<tr class="table1">'
-        print '<th>Decade</th>'
-        print '<th colspan="10">Years</th>'
-        print '</tr>'
+        print('<h3 class="centered">Pre-2000: By Year and Decade</h3>')
+        print('<table class="seriesgrid">')
+        print('<tr class="table1">')
+        print('<th>Decade</th>')
+        print('<th colspan="10">Years</th>')
+        print('</tr>')
         bgcolor = 1
         # Display all pre-21st century decades in reverse chronological order
         for decade in sorted(decades, reverse=1):
                 if decade > 199:
                         continue
-                print '<tr class="table%d">' % (bgcolor+1)
-                print '<td>%s?decade+%d+%d">%d0s (%d)</a></td>' % (anchor, decade, report_id, decade, decades[decade])
+                print('<tr class="table%d">' % (bgcolor+1))
+                print('<td>%s?decade+%d+%d">%d0s (%d)</a></td>' % (anchor, decade, report_id, decade, decades[decade]))
                 for year in range(decade*10, decade*10+10):
-                        print '<td>'
+                        print('<td>')
                         # No links for years without empty containers
                         if year not in years:
-                                print year
+                                print(year)
                         else:
-                                print '%s?year+%d+%d">%d (%d)</a>' % (anchor, year, report_id, year, years[year])
-                        print '</td>'
-                print '</tr>'
+                                print('%s?year+%d+%d">%d (%d)</a>' % (anchor, year, report_id, year, years[year]))
+                        print('</td>')
+                print('</tr>')
                 bgcolor ^= 1
-        print '</table>'
+        print('</table>')
 
 def function9999():
         nonModeratorMessage()
@@ -7527,7 +7527,7 @@ def function9999():
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No Suspected Duplicate Authors</h2>"
+                print("<h2>No Suspected Duplicate Authors</h2>")
                 return
 
         record = result.fetch_row()
@@ -7541,19 +7541,19 @@ def function9999():
                 author_name_2 = record[0][3]
                 cleanup_id = record[0][4]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id_1, author_name_1)
-                print '<td>%s</td>' % ISFDBLink('ea.cgi', author_id_2, author_name_2)
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id_1, author_name_1))
+                print('<td>%s</td>' % ISFDBLink('ea.cgi', author_id_2, author_name_2))
                 if cleanup_id and user.moderator:
-                        print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+9999' % int(cleanup_id), 'Ignore')
-                print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+9999' % int(cleanup_id), 'Ignore'))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 def Nightly_html(report_id, table, note_field, record_id_field, record_title_field, cgi_script):
         ui = isfdbUI()
@@ -7577,7 +7577,7 @@ def Nightly_html(report_id, table, note_field, record_id_field, record_title_fie
         result = db.store_result()
 
         if not result.num_rows():
-                print "<h2>No invalid HTML for records of this type.</h2>"
+                print("<h2>No invalid HTML for records of this type.</h2>")
                 return
 
         record = result.fetch_row()
@@ -7595,140 +7595,140 @@ def Nightly_html(report_id, table, note_field, record_id_field, record_title_fie
                 if '<' in note:
                         problem_part = cgi.escape(note.split('<')[1][:20])
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%d</td>' % count
-                print '<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record_id, record_name)
-                print '<td>&lt;%s</td>' % problem_part
-                print '</tr>'
+                        print('<tr align=left class="table2">')
+                print('<td>%d</td>' % count)
+                print('<td>%s</td>' % ISFDBLink('%s.cgi' % cgi_script, record_id, record_name))
+                print('<td>&lt;%s</td>' % problem_part)
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
 
 def PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % int(count)
-        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
+        print('<td>%d</td>' % int(count))
+        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this publication' % message[mode])
-        print '</tr>'
+                                                '%s this publication' % message[mode]))
+        print('</tr>')
 
 def PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % int(count)
-        print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title)
+        print('<td>%d</td>' % int(count))
+        print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_title))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this title' % message[mode])
-        print '</tr>'
+                                                '%s this title' % message[mode]))
+        print('</tr>')
 
 def PrintPublisherRecord(pub_id, pub_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink('publisher.cgi', pub_id, pub_name)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink('publisher.cgi', pub_id, pub_name))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this publisher ' % message[mode])
-        print '</tr>'
-        print '<p>'
+                                                '%s this publisher ' % message[mode]))
+        print('</tr>')
+        print('<p>')
 
 def PrintPubSeriesRecord(pub_series_id, pub_series_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink('pubseries.cgi', pub_series_id, pub_series_name)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink('pubseries.cgi', pub_series_id, pub_series_name))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this publication series' % message[mode])
-        print '</tr>'
-        print '<p>'
+                                                '%s this publication series' % message[mode]))
+        print('</tr>')
+        print('<p>')
 
 def PrintSeriesRecord(series_id, series_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink("pe.cgi", series_id, series_name)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink("pe.cgi", series_id, series_name))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this series' % message[mode])
-        print '</tr>'
+                                                '%s this series' % message[mode]))
+        print('</tr>')
 
 def PrintAwardTypeRecord(award_type_id, award_type_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type_id, award_type_name)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type_id, award_type_name))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this award type' % message[mode])
-        print '</tr>'
+                                                '%s this award type' % message[mode]))
+        print('</tr>')
 
 def PrintAwardCatRecord(award_cat_id, award_cat_name, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat_id, award_cat_name)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat_id, award_cat_name))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this award category' % message[mode])
-        print '</tr>'
+                                                '%s this award category' % message[mode]))
+        print('</tr>')
 
 def PrintAwardRecord(award_id, award_title, bgcolor, count, cleanup_id = 0, report_id = 0, mode = 1):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % count
-        print '<td>%s</td>' % ISFDBLink('award_details.cgi', award_id, award_title)
+        print('<td>%d</td>' % count)
+        print('<td>%s</td>' % ISFDBLink('award_details.cgi', award_id, award_title))
         if cleanup_id and user.moderator:
                 message = {0: 'Resolve', 1: 'Ignore'}
-                print '<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
+                print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
                                                 '%d+%d+%d' % (int(cleanup_id), int(mode), int(report_id)),
-                                                '%s this award' % message[mode])
-        print '</tr>'
+                                                '%s this award' % message[mode]))
+        print('</tr>')
 
 def PrintTitlesWithoutLanguage(result):
         PrintTableColumns(('', 'Title Type', 'Author', 'Title'))
@@ -7740,23 +7740,23 @@ def PrintTitlesWithoutLanguage(result):
                 title_id = record[0][1]
                 title_name = record[0][2]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
+                        print('<tr align=left class="table2">')
 
-                print '<td>%s</td>' % count
-                print '<td>%s</td>' % title_ttype
+                print('<td>%s</td>' % count)
+                print('<td>%s</td>' % title_ttype)
                 authors = SQLTitleBriefAuthorRecords(title_id)
-                print '<td>'
+                print('<td>')
                 for author in authors:
-                        print ISFDBLink('ea.cgi', author[0], author[1])
-                print '</td>'
-                print '<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_name)
-                print '</tr>'
+                        print(ISFDBLink('ea.cgi', author[0], author[1]))
+                print('</td>')
+                print('<td>%s</td>' % ISFDBLink('title.cgi', title_id, title_name))
+                print('</tr>')
                 bgcolor ^= 1
                 count += 1
                 record = result.fetch_row()
-        print '</table>'
+        print('</table>')
 
         
 if __name__ == '__main__':
@@ -7782,11 +7782,11 @@ if __name__ == '__main__':
         cleanup = Cleanup()
         cleanup.report_id = type_id
         if type_id in weeklies:
-                print '<h3>This report is regenerated once a week</h3>'
+                print('<h3>This report is regenerated once a week</h3>')
         elif type_id in monthlies:
-                print '<h3>This report is regenerated once a month</h3>'
+                print('<h3>This report is regenerated once a month</h3>')
         else:
-                print '<h3>This report is regenerated every night</h3>'
+                print('<h3>This report is regenerated every night</h3>')
         function()
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)

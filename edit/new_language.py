@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,10 +30,10 @@ if __name__ == '__main__':
 
         printHelpBox('Language', 'Language', 1)
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_new_language.cgi">'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submit_new_language.cgi">')
 
-        print '<table border="0">'
-        print '<tbody id="tagBody">'
+        print('<table border="0">')
+        print('<tbody id="tagBody">')
 
         printfield('Language Name', 'language_name', help)
 
@@ -44,11 +44,11 @@ if __name__ == '__main__':
         values['Yes'] = ''
         printdropdown('Latin-Derived', 'language_latin', values, help)
 
-        print '</table>'
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">'
-        print '</form>'
-        print '<p>'
+        print('</table>')
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Submit Data" tabindex="1">')
+        print('</form>')
+        print('<p>')
 
         PrintPostSearch(0, 0, 0, 0, 0)
 

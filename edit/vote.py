@@ -64,35 +64,35 @@ if __name__ == '__main__':
                 counter += 1
 
         title = SQLloadTitle(title_id)
-        print 'User Ratings for <b>%s</b>' % ISFDBLink("title.cgi", title_id, title[TITLE_TITLE])
-        print '<p>'
+        print('User Ratings for <b>%s</b>' % ISFDBLink("title.cgi", title_id, title[TITLE_TITLE]))
+        print('<p>')
 
         if total_votes == 1:
-                print "1 user has given an average vote of %2.2f / 10" % (float(total_ratings)/float(total_votes))
+                print("1 user has given an average vote of %2.2f / 10" % (float(total_ratings)/float(total_votes)))
         elif total_votes > 1:
-                print "%d users have given an average vote of %2.2f / 10" % (total_votes,  float(total_ratings)/float(total_votes))
+                print("%d users have given an average vote of %2.2f / 10" % (total_votes,  float(total_ratings)/float(total_votes)))
         else:
-                print "No votes have been recorded for this title"
+                print("No votes have been recorded for this title")
 
-        print '<table class="generic_table">'
-        print '<tr>'
-        print '<th>Rating</th>'
-        print '<th>Votes</th>'
-        print '<th>Percentage</th>'
-        print '</tr>'
+        print('<table class="generic_table">')
+        print('<tr>')
+        print('<th>Rating</th>')
+        print('<th>Votes</th>')
+        print('<th>Percentage</th>')
+        print('</tr>')
         counter = 1
         while counter < 11:
                 if total_votes:
                         percent = 100.0 * (float(ratings[counter]) /  float(total_votes))
                 else:
                         percent = 0.0
-                print '<tr>'
-                print '<td>%d</td>' % counter
-                print '<td>%d</td>' % ratings[counter]
-                print '<td>%2.2f</td>' % percent
-                print '</tr>'
+                print('<tr>')
+                print('<td>%d</td>' % counter)
+                print('<td>%d</td>' % ratings[counter])
+                print('<td>%2.2f</td>' % percent)
+                print('</tr>')
                 counter += 1
-        print '</table>'
+        print('</table>')
 
         (userid, username, usertoken) = GetUserData()
         userid = int(userid)
@@ -105,40 +105,40 @@ if __name__ == '__main__':
         else:
                 user_vote = 0
 
-        print '<p>Select a number 0-10 to indicate your rating of this work:'
-        print '<ul>'
-        print "<li>0 - <b>Remove your previous vote</b>."
-        print "<li>1 - Extremely poor. One of the worst titles ever written. Couldn't be any worse."
-        print '<li>2 - Very bad, with minor redeeming characteristics.'
-        print '<li>3 - Bad.'
+        print('<p>Select a number 0-10 to indicate your rating of this work:')
+        print('<ul>')
+        print("<li>0 - <b>Remove your previous vote</b>.")
+        print("<li>1 - Extremely poor. One of the worst titles ever written. Couldn't be any worse.")
+        print('<li>2 - Very bad, with minor redeeming characteristics.')
+        print('<li>3 - Bad.')
         ###########################
-        print '<li>4 - Below average.'
-        print '<li>5 - Slightly below average.'
-        print '<li>6 - Slightly above average.'
-        print '<li>7 - Above average.'
+        print('<li>4 - Below average.')
+        print('<li>5 - Slightly below average.')
+        print('<li>6 - Slightly above average.')
+        print('<li>7 - Above average.')
         ###########################
-        print '<li>8 - Good; recommended.'
-        print '<li>9 - Very good, but not quite perfect.'
-        print "<li>10 - Excellent. One of the best titles ever written. Couldn't be any better."
-        print '</ul>'
+        print('<li>8 - Good; recommended.')
+        print('<li>9 - Very good, but not quite perfect.')
+        print("<li>10 - Excellent. One of the best titles ever written. Couldn't be any better.")
+        print('</ul>')
 
         if user_vote:
-                print '<br><p>Your current vote: <b>%d</b>' % user_vote
+                print('<br><p>Your current vote: <b>%d</b>' % user_vote)
         else:
-                print '<br><p>Your vote:'
-        print '<form method="POST" action="/cgi-bin/edit/submitvote.cgi">'
-        print '<p>'
-        print '<select name="vote">'
+                print('<br><p>Your vote:')
+        print('<form method="POST" action="/cgi-bin/edit/submitvote.cgi">')
+        print('<p>')
+        print('<select name="vote">')
         counter = 0
         while counter < 11:
                 if counter == user_vote:
-                        print '<option selected="selected">%d</option>' % counter
+                        print('<option selected="selected">%d</option>' % counter)
                 else:
-                        print '<option>%d</option>' % counter
+                        print('<option>%d</option>' % counter)
                 counter += 1
-        print '</select>'
-        print '<input name="title_id" value="%d" type="HIDDEN">' % (title_id)
-        print '<input type="SUBMIT" value="Submit Vote">'
-        print '</form>'
+        print('</select>')
+        print('<input name="title_id" value="%d" type="HIDDEN">' % (title_id))
+        print('<input type="SUBMIT" value="Submit Vote">')
+        print('</form>')
 
         PrintPostSearch(0, 0, 0, 0, 0, 0)
