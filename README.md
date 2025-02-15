@@ -1,3 +1,5 @@
+This is the python code for the ISFDB ported to Python 3. This workk is currently in progress.
+
 Let's say the isfdb.org is down, the founders are not responding, and the wiki at isfdb.org is not available. How would one bootstrap a new version of isfdb.org? Here are the steps needed to bringup a new version of the web site.
 
 <h1>Prerequisites</h1>
