@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus
+#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,7 +20,7 @@ if __name__ == '__main__':
                 directory = sys.argv[2]
                 python = sys.argv[3]
         except:
-                print "Usage: install_nightly.py <basename> <directory> <pythonloc>"
+                print("Usage: install_nightly.py <basename> <directory> <pythonloc>")
                 sys.exit(0)
 
         fd = open(basename+ '.py')

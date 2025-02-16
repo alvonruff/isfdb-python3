@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -24,7 +24,7 @@ class elapsedTime:
                 sys.stdout = self.stdout
                 elapsed = time() - self.start
                 if elapsed > self.threshold:
-                        print '%s: Rpt %s: %.2f seconds, %d records' % (strftime('%H:%M:%S', localtime()), report_name, elapsed, record_count)
+                        print('%s: Rpt %s: %.2f seconds, %d records' % (strftime('%H:%M:%S', localtime()), report_name, elapsed, record_count))
                 self.start = time()
 
 def standardDelete(report_type):
