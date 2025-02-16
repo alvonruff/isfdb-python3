@@ -72,12 +72,12 @@ def isbnVariations(original):
         ######################################################################
         variations = []
         if original:
-                original = string.replace(original, 'x', 'X')
+                original = str.replace(original, 'x', 'X')
                 # Always original
                 variations.append(original)
                 if validISBN(original):
-                        collapsedOrig = string.replace(original, '-', '')
-                        collapsedOrig = string.replace(collapsedOrig, ' ', '')
+                        collapsedOrig = str.replace(original, '-', '')
+                        collapsedOrig = str.replace(collapsedOrig, ' ', '')
                         origLen = len(original)
                         collapsedLen = len(collapsedOrig)
                         if collapsedLen == origLen:
@@ -99,8 +99,8 @@ def isbnVariations(original):
 def ISBNValidFormat(isbn):
         # Returns 1 if the passed parameter follows the standard ISBN format, 0 otherwise
         # Note that only ISBN format is checked; checksum validation is not performed
-        isbn = string.replace(isbn, '-', '')
-        isbn = string.replace(isbn, ' ', '')
+        isbn = str.replace(isbn, '-', '')
+        isbn = str.replace(isbn, ' ', '')
         if (len(isbn) != 10) and (len(isbn) != 13):
                 return 0
         # ISBN-13s alway start with 978 or 979
@@ -122,13 +122,13 @@ def ISBNValidFormat(isbn):
         return 1
 
 def ISBNlength(isbn):
-        stripped_isbn = string.replace(isbn, '-', '')
-        stripped_isbn = string.replace(isbn, ' ', '')
+        stripped_isbn = str.replace(isbn, '-', '')
+        stripped_isbn = str.replace(isbn, ' ', '')
         return len(stripped_isbn)
 
 def validISBN13(isbn):
-        isbn = string.replace(isbn, '-', '')
-        isbn = string.replace(isbn, ' ', '')
+        isbn = str.replace(isbn, '-', '')
+        isbn = str.replace(isbn, ' ', '')
         if len(isbn) != 13:
                 return 0
 
@@ -154,8 +154,8 @@ def validISBN13(isbn):
                 return 0
 
 def validISBN(isbn):
-        isbn = string.replace(isbn, '-', '')
-        isbn = string.replace(isbn, ' ', '')
+        isbn = str.replace(isbn, '-', '')
+        isbn = str.replace(isbn, ' ', '')
         if len(isbn) != 10:
                 return validISBN13(isbn)
 

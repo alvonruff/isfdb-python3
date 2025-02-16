@@ -217,7 +217,7 @@ class awards(awardShared):
                                 self.award_movie = award[AWARD_MOVIE]
                                 self.used_movie = 1
                         if award[AWARD_AUTHOR]:
-                                authors = string.split(award[AWARD_AUTHOR], '+')
+                                authors = str.split(award[AWARD_AUTHOR], '+')
                                 self.num_authors = 0
                                 for author in authors:
                                         self.award_authors.append(author)
@@ -506,8 +506,8 @@ class awards(awardShared):
                         for author in self.award_authors:
                                 if counter:
                                         print(" <b>and</b> ")
-                                actual = string.split(author, '^')
-                                if string.find(actual[0], '***') > -1:
+                                actual = str.split(author, '^')
+                                if str.find(actual[0], '***') > -1:
                                         print('-')
                                 elif actual[0] == 'No Award':
                                         print('No Award')

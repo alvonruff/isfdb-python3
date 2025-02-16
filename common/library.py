@@ -69,18 +69,18 @@ def ISFDBAuthorInAuthorList(author_name, author_list):
 
 def ISFDBnormalizeAuthor(value):
         # Convert double quotes to single quotes
-        value = string.replace(value,'"',"'")
+        value = str.replace(value,'"',"'")
         # Strip all leading, trailing and double spaces
-        return string.join(string.split(value))
+        return str.join(str.split(value))
 
 def ISFDBnormalizeDate(date):
         now = datetime.datetime.now()
         # This function takes a date and normalizes it to be in the standard 'YYYY-MM-DD' format
         # For invalid dates, '0000-00-00' is returned
-        date = string.replace(date, "'", '')
-        date = string.replace(date, "<", '')
-        date = string.replace(date, ">", '')
-        date = string.replace(date, " ", '')
+        date = str.replace(date, "'", '')
+        date = str.replace(date, "<", '')
+        date = str.replace(date, ">", '')
+        date = str.replace(date, " ", '')
 
         # Check for missing date elements
         if len(date) < 4:
@@ -171,7 +171,7 @@ def ISFDBconvertDate(theDate, precise = 0):
                 elif precise:
                         datestr = theDate
                 else:
-                        month = string.split(theDate, "-")[1]
+                        month = str.split(theDate, "-")[1]
                         if month:
                                 try:
                                         strmonth = ISFDBmonthmap[int(month)]
@@ -259,30 +259,30 @@ def GetChildValue(doc, label):
         return value
 
 def XMLunescape(input, compliant = 0):
-        retval = string.replace(str(input), "&amp;", "&")
+        retval = str.replace(str(input), "&amp;", "&")
         # If standards-compliant XML was requested, unescape &apos;.
         # Internally we use HTML-specific &rsquo; instead (for now)
         if compliant:
-                retval = string.replace(retval, "&apos;", "'")
+                retval = str.replace(retval, "&apos;", "'")
         else:
-                retval = string.replace(retval, "&rsquo;", "'")
-        retval = string.replace(retval, "&quot;", '"')
-        retval = string.replace(retval, "&lt;", "<")
-        retval = string.replace(retval, "&gt;", ">")
-        retval = string.strip(retval)
-        retval = string.rstrip(retval)
+                retval = str.replace(retval, "&rsquo;", "'")
+        retval = str.replace(retval, "&quot;", '"')
+        retval = str.replace(retval, "&lt;", "<")
+        retval = str.replace(retval, "&gt;", ">")
+        retval = str.strip(retval)
+        retval = str.rstrip(retval)
         return retval
 
 def XMLunescape2(input):
         # un-encode quotes
-        retval = string.replace(str(input), "&rsquo;", "'")
-        retval = string.replace(retval, "&quot;", '"')
+        retval = str.replace(str(input), "&rsquo;", "'")
+        retval = str.replace(retval, "&quot;", '"')
         # sometimes we get \r + \n, sometimes just \n.
         # remove any \r instances.
-        retval = string.replace(retval, "\r", "")
+        retval = str.replace(retval, "\r", "")
         # remove leading + trailing spaces
-        retval = string.strip(retval)
-        retval = string.rstrip(retval)
+        retval = str.strip(retval)
+        retval = str.rstrip(retval)
         return retval
 
 ##############################################
@@ -370,27 +370,27 @@ def XMLescape(input, compliant = 0):
         # Replace the usual ASCII characters with
         # their escaped equivalents for XML
         ###########################################
-        retval = string.replace(retval, "&", "&amp;")
+        retval = str.replace(retval, "&", "&amp;")
         # If standards-compliant XML was requested, use &apos;. Internally we use HTML-specific &rsquo; instead (for now)
         if compliant:
-                retval = string.replace(retval, "'", "&apos;")
+                retval = str.replace(retval, "'", "&apos;")
         else:
-                retval = string.replace(retval, "'", "&rsquo;")
-        retval = string.replace(retval, '"', "&quot;")
-        retval = string.replace(retval, "<", "&lt;")
-        retval = string.replace(retval, ">", "&gt;")
+                retval = str.replace(retval, "'", "&rsquo;")
+        retval = str.replace(retval, '"', "&quot;")
+        retval = str.replace(retval, "<", "&lt;")
+        retval = str.replace(retval, ">", "&gt;")
 
         ###########################################
         # Sometimes we get \r + \n, sometimes just
         # \n.  Remove all instances of \r.
         ###########################################
-        retval = string.replace(retval, "\r", "")
+        retval = str.replace(retval, "\r", "")
 
         ###########################################
         # Strip off leading and trailing spaces
         ###########################################
-        retval = string.strip(retval)
-        retval = string.rstrip(retval)
+        retval = str.strip(retval)
+        retval = str.rstrip(retval)
         return retval
 
 def ISFDBHostCorrection(value, mode = 'start'):
@@ -885,21 +885,21 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
         retval = note
 
         # Remove all '<!--isfdb specific-->' strings which were used for magazine links in the past
-        retval = string.replace(retval, '<!--isfdb specific-->','')
+        retval = str.replace(retval, '<!--isfdb specific-->','')
         list_of_brs = ('br', 'br/', 'br /', 'Br', 'Br/', 'Br /', 'BR', 'BR/', 'BR /')
         # Replace double <br>s with <p> (which will be replaced with two newlines later)
         for element in list_of_brs:
                 double_element = '<' + element + '>' + '<' + element + '>'
                 while double_element in retval:
-                        retval = string.replace(retval, double_element, '<p>')
+                        retval = str.replace(retval, double_element, '<p>')
         # Replace HTML <br>s with regular carriage returns
         for element in list_of_brs:
                 enclosed_element = '<' + element + '>'
-                retval = string.replace(retval, enclosed_element, '\n')
+                retval = str.replace(retval, enclosed_element, '\n')
 
         # Convert all double carriage returns, which may have resulted from the <br> conversion above, into single carriage returns
         while '\n\n' in retval:
-                retval = string.replace(retval, '\n\n', '\n')
+                retval = str.replace(retval, '\n\n', '\n')
 
         # Remove all carriage returns before and after <p> and <ul> to avoid creating additional displayed new lines
         for element in ('p', '/p', 'ul', 'li', '/li'):
@@ -907,21 +907,21 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
                 enclosed_upper = enclosed.upper()
                 prefixed_element = ' ' + enclosed
                 while prefixed_element in retval:
-                        retval = string.replace(retval, prefixed_element, enclosed)
+                        retval = str.replace(retval, prefixed_element, enclosed)
                 suffixed_element = enclosed + ' '
                 while suffixed_element in retval:
-                        retval = string.replace(retval, suffixed_element, enclosed)
-                retval = string.replace(retval, '\n' + enclosed, enclosed)
-                retval = string.replace(retval, enclosed + '\n', enclosed)
-                retval = string.replace(retval, '\n' + enclosed_upper, enclosed_upper)
-                retval = string.replace(retval, enclosed_upper + '\n', enclosed_upper)
+                        retval = str.replace(retval, suffixed_element, enclosed)
+                retval = str.replace(retval, '\n' + enclosed, enclosed)
+                retval = str.replace(retval, enclosed + '\n', enclosed)
+                retval = str.replace(retval, '\n' + enclosed_upper, enclosed_upper)
+                retval = str.replace(retval, enclosed_upper + '\n', enclosed_upper)
 
         # Replace HTML <p>s with two regular carriage returns
-        retval = string.replace(retval, '<p>', '\n\n')
-        retval = string.replace(retval, '<P>', '\n\n')
+        retval = str.replace(retval, '<p>', '\n\n')
+        retval = str.replace(retval, '<P>', '\n\n')
 
         # Remove leading and trailing spaces (but not newlines)
-        retval = string.strip(retval, ' ')
+        retval = str.strip(retval, ' ')
 
         if div:
                 if note_type:
@@ -1556,7 +1556,7 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
                 displayName = ISFDBSubmissionType(subTypeName, subType, doc2)
                 (subjectLink, new_record) = getSubjectLink(record[0], doc2, subType)
                 submitter = GetElementValue(doc2, 'Submitter')
-                submitter = string.replace(submitter, ' ', '_')
+                submitter = str.replace(submitter, ' ', '_')
         except:
                 subjectLink = '<b>XML PARSE ERROR</b>'
                 submitter = SQLgetUserName(record[0][SUB_SUBMITTER])
@@ -1830,7 +1830,7 @@ def FormatExternalIDSite(sites, type_id, id_value):
         return formatted_id
 
 def FormatExternalIDLink(url, value, display_value):
-        return '<a href="%s" target="_blank">%s</a>' % (url % string.replace(value,' ',''), display_value)
+        return '<a href="%s" target="_blank">%s</a>' % (url % str.replace(value,' ',''), display_value)
 
 def LIBsameParentAuthors(title):
         pseudonym = 0

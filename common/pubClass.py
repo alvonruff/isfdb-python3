@@ -789,9 +789,9 @@ class pubs:
                 ###################################
                 if self.form.has_key('pub_tag'):
                         tag = self.form['pub_tag'].value
-                        tag = string.replace(tag, "'", '')
-                        tag = string.replace(tag, "<", '')
-                        tag = string.replace(tag, ">", '')
+                        tag = str.replace(tag, "'", '')
+                        tag = str.replace(tag, "<", '')
+                        tag = str.replace(tag, ">", '')
                         self.pub_tag = tag
                         self.used_tag = 1
                 try:
@@ -869,9 +869,9 @@ class pubs:
 
                 if self.form.has_key('pub_isbn'):
                         value = XMLescape(self.form['pub_isbn'].value)
-                        value = string.replace(value, '-', '')
-                        value = string.replace(value, ' ', '')
-                        value = string.replace(value, 'x', 'X')
+                        value = str.replace(value, '-', '')
+                        value = str.replace(value, ' ', '')
+                        value = str.replace(value, 'x', 'X')
                         if value:
                                 if len(value) > 99:
                                         self.error = 'ISBN value must be less than 100 characters long'
