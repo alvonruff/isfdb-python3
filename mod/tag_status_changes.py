@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,7 +41,7 @@ if __name__ == '__main__':
         if tags:
                 PrintTable(tags)
         else:
-                print '<h3>There are no tag status changes on file.</h3>'
+                print('<h3>There are no tag status changes on file.</h3>')
         PrintPostMod(0)
 
 

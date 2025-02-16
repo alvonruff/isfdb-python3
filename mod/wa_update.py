@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -30,7 +31,7 @@ def UpdateColumn(doc, tag, column, id):
                         update = "update awards set %s='%s' where award_id=%s" % (column, value, id)
                 else:
                         update = "update awards set %s=NULL where award_id=%s" % (column, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -45,9 +46,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -78,7 +79,7 @@ if __name__ == '__main__':
                                 austring += data
                                 counter += 1
                         update = "update awards set award_author='%s' where award_id=%s" % (db.escape_string(austring), Record)
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
 
@@ -94,17 +95,17 @@ if __name__ == '__main__':
                                 if res.num_rows():
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
-                                        print '<li> note_id:', note_id
+                                        print('<li> note_id:', note_id)
                                         update = "update notes set note_note='%s' where note_id='%d'" % (db.escape_string(value), int(note_id))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
                                 else:
                                         insert = "insert into notes(note_note) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", insert
+                                        print("<li> ", insert)
                                         db.query(insert)
                                         retval = db.insert_id()
                                         update = "update awards set award_note_id='%d' where award_id=%d" % (retval, int(Record))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
                         else:
                                 ##############################################################
@@ -117,10 +118,10 @@ if __name__ == '__main__':
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
-                                        print "<li> ", delete
+                                        print("<li> ", delete)
                                         db.query(delete)
                                         update = "update awards set award_note_id=NULL where award_id=%d" % int(Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                 submitter = GetElementValue(merge, 'Submitter')
@@ -132,11 +133,11 @@ if __name__ == '__main__':
 
         # Only display title links if this award was entered for a Title record
         if award.title_id:
-                print ISFDBLinkNoName('edit/edittitle.cgi', award.title_id, 'Edit This Title', True)
-                print ISFDBLinkNoName('title.cgi', award.title_id, 'View This Title', True)
-        print ISFDBLinkNoName('award_details.cgi', award.award_id, 'View This Award', True)
-        print ISFDBLinkNoName('edit/editaward.cgi', award.award_id, 'Edit This Award', True)
-        print ISFDBLinkNoName('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), 'View Award Year', True)
-        print '<p>'
+                print(ISFDBLinkNoName('edit/edittitle.cgi', award.title_id, 'Edit This Title', True))
+                print(ISFDBLinkNoName('title.cgi', award.title_id, 'View This Title', True))
+        print(ISFDBLinkNoName('award_details.cgi', award.award_id, 'View This Award', True))
+        print(ISFDBLinkNoName('edit/editaward.cgi', award.award_id, 'Edit This Award', True))
+        print(ISFDBLinkNoName('ay.cgi', '%s+%s' % (award.award_type_id, award.award_year[:4]), 'View Award Year', True))
+        print('<p>')
 
         PrintPostMod(0)

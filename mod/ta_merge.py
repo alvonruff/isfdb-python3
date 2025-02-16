@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -41,7 +42,7 @@ def dropCanonicalAuthors(db, DropId):
         # STEP 2 - Delete the author/title mapping
         ##############################################
         delete = "delete from canonical_author where title_id='%d'" % (int(DropId))
-        print "<li> ", delete
+        print("<li> ", delete)
         if debug == 0:
                 db.query(delete)
 
@@ -52,7 +53,7 @@ def dropCanonicalAuthors(db, DropId):
                 found = 0
                 for i in ['canonical_author', 'pub_authors']:
                         query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                         res = db.store_result()
                         record = res.fetch_row()
@@ -65,19 +66,19 @@ def dropCanonicalAuthors(db, DropId):
 
 def dropPubTitles(db, KeepId, DropId):
         update = "update pub_content set title_id=%d where title_id=%d" % (int(KeepId), int(DropId))
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
 
 def deleteTitle(db, id):
         delete = "delete from titles where title_id='%d'" % (int(id))
-        print "<li> ", delete
+        print("<li> ", delete)
         if debug == 0:
                 db.query(delete)
         
         # Delete the dropped title's views counters - may enhance in the future
         delete = "delete from title_views where title_id=%d" % int(id)
-        print "<li> ", delete
+        print("<li> ", delete)
         if debug == 0:
                 db.query(delete)
 
@@ -91,7 +92,7 @@ def moveSeriesNumber(db, keep, drop):
                 update = "update titles set title_seriesnum='%s' where title_id='%d'" % (db.escape_string(str(value)), int(keep))
         else:
                 update = "update titles set title_seriesnum=NULL where title_id='%d'" % (int(keep))
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
         query = "select title_seriesnum_2 from titles where title_id='%d'" % (int(drop))
@@ -103,7 +104,7 @@ def moveSeriesNumber(db, keep, drop):
                 update = "update titles set title_seriesnum_2='%s' where title_id='%d'" % (db.escape_string(str(value)), int(keep))
         else:
                 update = "update titles set title_seriesnum_2=NULL where title_id='%d'" % (int(keep))
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
 
@@ -117,14 +118,14 @@ def moveTitleColumn(db, column, keep, drop):
                 update = "update titles set %s='%s' where title_id='%d'" % (column, db.escape_string(str(value)), int(keep))
         else:
                 update = "update titles set %s=NULL where title_id='%d'" % (column, int(keep))
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
 
 def moveCanonicalAuthors(db, To, From):
         dropCanonicalAuthors(db, To)
         update = "update canonical_author set title_id=%d where title_id='%d'" % (int(To), int(From))
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
 
@@ -159,7 +160,7 @@ def dropNotes(db, KeepId, drop_ids, field_name):
                 return
         # Retrieve the note/synopsis ID that is used by the kept title record post-merge
         query = "select %s from titles where title_id=%d" % (db.escape_string(field_name), int(KeepId))
-        print "<li> ", query
+        print("<li> ", query)
         db.query(query)
         res = db.store_result()
         record = res.fetch_row()
@@ -180,7 +181,7 @@ def dropNotes(db, KeepId, drop_ids, field_name):
                 else:
                         in_clause += ",%s" % str(drop_id)
         update = "delete from notes where note_id in (%s)" % db.escape_string(in_clause)
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
         
 ########################################################################
@@ -232,7 +233,7 @@ def TitleMerge(db, doc):
         kept_title = SQLloadTitle(KeepId)
         if kept_title[TITLE_STORYLEN] and kept_title[TITLE_TTYPE] != 'SHORTFICTION':
                 update = "update titles set title_storylen = NULL where title_id = %d" % int(KeepId)
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
         for index in range(len(RecordIds)):
@@ -253,13 +254,13 @@ def TitleMerge(db, doc):
                         if result2.num_rows() > 0:
                                 # Already exists, so delete the spare
                                 delete = "delete from webpages where webpage_id='%d'" % (int(webpage_id))
-                                print "<li> ", delete
+                                print("<li> ", delete)
                                 if debug == 0:
                                         db.query(delete)
                         else:
                                 # Move webpage
                                 update = "update webpages set title_id='%d' where webpage_id='%d'" % (int(KeepId), int(webpage_id))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                         record = result.fetch_row()
@@ -279,13 +280,13 @@ def TitleMerge(db, doc):
                         if result2.num_rows() > 0:
                                 # Already exists, so delete the spare
                                 delete = "delete from trans_titles where trans_title_id=%d" % int(trans_title_id)
-                                print "<li> ", delete
+                                print("<li> ", delete)
                                 if debug == 0:
                                         db.query(delete)
                         else:
                                 # Move webpage
                                 update = "update trans_titles set title_id=%d where trans_title_id=%d" % (int(KeepId), int(trans_title_id))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                         record = result.fetch_row()
@@ -296,7 +297,7 @@ def TitleMerge(db, doc):
                 # Fixup any awards records to point to the new title
                 ######################################################
                 update = "update title_awards set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -304,7 +305,7 @@ def TitleMerge(db, doc):
                 # Fixup any variant title records to point to the new title
                 ######################################################
                 update = "update titles set title_parent=%d where title_parent=%d" % (int(KeepId), int(RecordIds[index]))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -312,7 +313,7 @@ def TitleMerge(db, doc):
                 # Fixup any vote records to point to the new title
                 ######################################################
                 update = "update votes set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -320,7 +321,7 @@ def TitleMerge(db, doc):
                 # Fixup any tag records to point to the new title
                 ######################################################
                 update = "update tag_mapping set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
                 
@@ -331,13 +332,13 @@ def TitleMerge(db, doc):
                 # Fixup any review relationship records to point to the new title
                 ######################################################
                 update = "update title_relationships set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
                 # When merging reviews, keep just one relationship record
                 update = "delete from title_relationships where review_id=%d" % int(RecordIds[index])
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)                
 
@@ -354,9 +355,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -368,8 +369,8 @@ if __name__ == '__main__':
                         if debug == 0:
                                 markIntegrated(db, submission, MergedTitle)
 
-        print ISFDBLinkNoName('edit/edittitle.cgi', MergedTitle, 'Edit This Title', True)
-        print ISFDBLinkNoName('title.cgi', MergedTitle, 'View This Title', True)
-        print '<hr>'
+        print(ISFDBLinkNoName('edit/edittitle.cgi', MergedTitle, 'Edit This Title', True))
+        print(ISFDBLinkNoName('title.cgi', MergedTitle, 'View This Title', True))
+        print('<hr>')
 
         PrintPostMod(0)

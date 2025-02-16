@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -25,7 +26,7 @@ from library import *
 def UpdateTitle(TitleRecord, column, value):
         if value:
                 update = "update titles set %s='%s' where title_id=%d" % (column, db.escape_string(value), int(TitleRecord))
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
 def doUnmerge(doc):
@@ -61,7 +62,7 @@ def doUnmerge(doc):
                 # STEP 1 - Save Content details
                 #################################################
                 query = "select pubc_page from pub_content where title_id=%s and pub_id=%s" % (Record, pub[PUB_PUBID])
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 pcresult = db.store_result()
                 pcrecord = pcresult.fetch_row()
@@ -74,7 +75,7 @@ def doUnmerge(doc):
                 # STEP 2 - Delete Content
                 #################################################
                 query = "delete from pub_content where title_id=%s and pub_id=%s" % (Record, pub[PUB_PUBID])
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 #################################################
@@ -85,7 +86,7 @@ def doUnmerge(doc):
                 else:
                         newTitle = pub[PUB_TITLE]
                 query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (db.escape_string(newTitle), pub[PUB_YEAR], title[TITLE_TTYPE])
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 TitleRecord = db.insert_id()
 
@@ -100,7 +101,7 @@ def doUnmerge(doc):
                 unmergedTitles.append(TitleRecord)
                 if title[TITLE_LANGUAGE]:
                         query = "update titles set title_language=%d where title_id=%d" % (title[TITLE_LANGUAGE], TitleRecord)
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                 
                 # If this is a REVIEW and it was linked to its reviewed Title, then link the new Review record to the same reviewed Title
@@ -108,7 +109,7 @@ def doUnmerge(doc):
                         reviewed_title_id = SQLfindReviewedTitle(int(Record))
                         if reviewed_title_id:
                                 update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (int(reviewed_title_id), int(TitleRecord))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 #################################################
@@ -119,11 +120,11 @@ def doUnmerge(doc):
                         query =  "insert into canonical_author(title_id, author_id, ca_status) " 
                         query += "select %d, author_id, ca_status from canonical_author " % (int(TitleRecord))
                         query += "where title_id = %d "  % (int(Record))
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                 else:
                         query = "insert into canonical_author(title_id, author_id, ca_status) select %d, author_id, 1 from pub_authors pa where pa.pub_id = %d" % (int(TitleRecord), int(pub[PUB_PUBID]))
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
         
                 #################################################
@@ -133,9 +134,9 @@ def doUnmerge(doc):
                         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (pub[PUB_PUBID], int(TitleRecord)) 
                 else:
                         query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (pub[PUB_PUBID], int(TitleRecord), pagenum) 
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
-                print "<li> ##########################################################"
+                print("<li> ##########################################################")
         return (merge, Record, unmergedTitles)
 
 
@@ -149,9 +150,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -163,7 +164,7 @@ if __name__ == '__main__':
         markIntegrated(db, submission, Record)
 
         if Record:
-                print ISFDBLinkNoName('title.cgi', Record, 'View Original Title', True)
+                print(ISFDBLinkNoName('title.cgi', Record, 'View Original Title', True))
         count_unmerged = 1
         duplicates_check = []
         for unmergedTitle in unmergedTitles:
@@ -172,11 +173,11 @@ if __name__ == '__main__':
                         title_display = 'Title %d' % count_unmerged
                 else:
                         title_display = 'Title'
-                print ISFDBLinkNoName('title.cgi', unmergedTitle, 'View New %s' % title_display, True)
+                print(ISFDBLinkNoName('title.cgi', unmergedTitle, 'View New %s' % title_display, True))
                 count_unmerged += 1
                 duplicates_check.append(str(unmergedTitle))
         duplicates_check_string = "+".join(duplicates_check)
-        print ISFDBLinkNoName('edit/find_title_dups.cgi', duplicates_check_string, 'Check for Duplicate Titles', True)
-        print '<p>'
+        print(ISFDBLinkNoName('edit/find_title_dups.cgi', duplicates_check_string, 'Check for Duplicate Titles', True))
+        print('<p>')
 
         PrintPostMod(0)

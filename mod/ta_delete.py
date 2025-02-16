@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -28,9 +29,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
-        print '<ul>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
+        print('<ul>')
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -41,13 +42,13 @@ if __name__ == '__main__':
                 title.load(Record)
                 success = title.delete()
                 if not success:
-                        print """<h3>Error: Title couldn't be deleted because
+                        print("""<h3>Error: Title couldn't be deleted because
                         it's associated with a publication. You will need to
-                        hard reject this submission</h3>"""
+                        hard reject this submission</h3>""")
                 else:
                         submitter = GetElementValue(merge, 'Submitter')
                         markIntegrated(db, submission, Record)
 
-        print '<p>'
+        print('<p>')
 
         PrintPostMod(0)

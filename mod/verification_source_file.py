@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus 
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,7 +33,7 @@ def UpdateColumn(doc, tag, column, record_id):
                         update = "update reference set %s = '%s' where reference_id = %d" % (column, db.escape_string(value), record_id)
                 else:
                         update = "update reference set %s = NULL where reference_id = %d" % (column, record_id)
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
 if __name__ == '__main__':
@@ -45,9 +46,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -63,7 +64,7 @@ if __name__ == '__main__':
 
                 markIntegrated(db, submission, Record)
 
-        print ISFDBLink('edit/edit_verification_source.cgi', Record, 'Edit This Verification Source', 1)
-        print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
+        print(ISFDBLink('edit/edit_verification_source.cgi', Record, 'Edit This Verification Source', 1))
+        print(ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1))
 
         PrintPostMod(0)

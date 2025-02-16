@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -24,7 +25,7 @@ def UpdateTitle(TitleRecord, column, value):
                 update = "update titles set %s = NULL where title_id = %d" % (column, int(TitleRecord))
         else:
                 update = "update titles set %s = '%s' where title_id = %d" % (column, db.escape_string(value), int(TitleRecord))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
 
@@ -34,7 +35,7 @@ def UpdateColumn(doc, tag, column, id):
                 value = XMLunescape(value)
                 value = db.escape_string(value)
                 update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -58,7 +59,7 @@ def addAuthor(author, title_id):
         #          title_authors
         ##############################################
         insert = "insert into canonical_author(title_id, author_id, ca_status) values('%d', '%d', 1);" % (int(title_id), author_id)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
 
@@ -73,9 +74,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -84,7 +85,7 @@ if __name__ == '__main__':
                 Parent = GetElementValue(merge, 'Parent')
 
                 query = "insert into titles(title_title) values('xxx');"
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 TitleRecord = db.insert_id()
@@ -99,7 +100,7 @@ if __name__ == '__main__':
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_titles(title_id, trans_title_title)
                                             values(%d, '%s')""" % (int(TitleRecord), db.escape_string(title_value))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 UpdateColumn(merge, 'Year',       'title_copyright',  TitleRecord)
@@ -128,7 +129,7 @@ if __name__ == '__main__':
                                 lang_id = SQLGetLangIdByName(XMLunescape(value))
                                 if lang_id:
                                         update = "update titles set title_language='%d' where title_id=%s" % (int(lang_id), TitleRecord)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
 
@@ -144,7 +145,7 @@ if __name__ == '__main__':
                                 rec = res.fetch_row()
                                 note_id = rec[0][0]
                                 update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                         else:
@@ -153,7 +154,7 @@ if __name__ == '__main__':
                                         db.query(insert)
                                 retval = db.insert_id()
                                 update = "update titles set note_id='%d' where title_id=%s" % (retval, TitleRecord)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -170,9 +171,9 @@ if __name__ == '__main__':
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, TitleRecord)
 
-        print ISFDBLinkNoName('title.cgi', Parent, 'View Original Title', True)
-        print ISFDBLinkNoName('title.cgi', TitleRecord, 'View New Title', True)
+        print(ISFDBLinkNoName('title.cgi', Parent, 'View Original Title', True))
+        print(ISFDBLinkNoName('title.cgi', TitleRecord, 'View New Title', True))
 
-        print "<p>"
+        print("<p>")
 
         PrintPostMod(0)

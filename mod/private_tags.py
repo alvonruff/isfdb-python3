@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,9 +33,9 @@ if __name__ == '__main__':
 
         tags = SQLLoadPrivateTags()
         if tags:
-                print """<h3>If you notice a misspelled or otherwise malformed tag,
-                             please post on the Moderator Noticeboard and a bureaucrat will remove it.</h3>"""
+                print("""<h3>If you notice a misspelled or otherwise malformed tag,
+                             please post on the Moderator Noticeboard and a bureaucrat will remove it.</h3>""")
                 PrintTable(tags)
         else:
-                print '<h3>There are no private tags on file.</h3>'
+                print('<h3>There are no private tags on file.</h3>')
         PrintPostMod(0)

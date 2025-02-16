@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -22,7 +23,7 @@ from SQLparsing import *
 
 
 def PrintError(message):
-        print message
+        print(message)
         PrintPostMod(0)
         sys.exit(1)
 
@@ -49,7 +50,7 @@ if __name__ == '__main__':
         else:
                 reason = ''
 
-        print "<ul>"
+        print("<ul>")
 
         (reviewerid, username, usertoken) = GetUserData()
         reviewer_is_moderator = SQLisUserModerator(reviewerid)
@@ -59,17 +60,17 @@ if __name__ == '__main__':
         update = """update submissions set sub_state='R', sub_reason='%s',
                     sub_reviewer='%d', sub_reviewed=NOW(), sub_holdid=0
                     where sub_id=%d""" % (db.escape_string(reason), int(reviewerid), sub_id)
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
-        print "</ul><p><hr>"
+        print("</ul><p><hr>")
         
-        print "Record %d has been moved to the Rejected state.<br>" % sub_id
-        print "<b>Reason:</b> ", reason
+        print("Record %d has been moved to the Rejected state.<br>" % sub_id)
+        print("<b>Reason:</b> ", reason)
 
-        print '<p>'
-        print '<hr>'
-        print '<p>'
+        print('<p>')
+        print('<hr>')
+        print('<p>')
         PrintSubmissionLinks(sub_id, reviewerid)
 
         PrintPostMod(0)

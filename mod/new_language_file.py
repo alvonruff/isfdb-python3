@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -31,22 +32,22 @@ if __name__ == '__main__':
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('NewLanguage')
         if not merge:
-                print '<div id="ErrorBox">'
-                print '<h3>Error: Bad argument</h3>'
-                print '</div>'
+                print('<div id="ErrorBox">')
+                print('<h3>Error: Bad argument</h3>')
+                print('</div>')
                 PrintPostMod()
                 sys.exit(0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
-        print '<ul>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
+        print('<ul>')
         lang_name = GetElementValue(merge, 'LanguageName')
         lang_code = GetElementValue(merge, 'LanguageCode')
         latin_script = GetElementValue(merge, 'Latin')
         insert = "insert into languages(lang_name, lang_code, latin_script) values('%s', '%s', '%s')" % (db.escape_string(lang_name),
                                                                                                          db.escape_string(lang_code),
                                                                                                          db.escape_string(latin_script))
-        print '<li> ', insert
+        print('<li> ', insert)
         db.query(insert)
 
         markIntegrated(db, submission)

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -49,13 +50,13 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         record = result.fetch_row()
-        print '<ol>'
+        print('<ol>')
 
         while record:
-                print '<li>%d - %s' % (record[0][1], record[0][2])
+                print('<li>%d - %s' % (record[0][1], record[0][2]))
                 update = 'update authors set author_marque=1 where author_id=%d' % int(record[0][0])
                 db.query(update)
                 record = result.fetch_row()
 
-        print '</ol>'
+        print('</ol>')
         PrintPostMod(0)

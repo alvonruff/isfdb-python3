@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
@@ -22,9 +23,9 @@ from library import *
 
 
 def doError(message):
-        print '<div id="ErrorBox">'
-        print '<h3>Error: %s</h3>' % message
-        print '</div>'
+        print('<div id="ErrorBox">')
+        print('<h3>Error: %s</h3>' % message)
+        print('</div>')
         PrintPostMod()
         sys.exit(0)
 
@@ -35,7 +36,7 @@ def deleteAuthor(author_id, pub_id):
         #          publication from pub_authors
         ##############################################
         query = "delete from pub_authors where author_id=%d and pub_id=%d" % (author_id, pub_id)
-        print "<li> ", query
+        print("<li> ", query)
         db.query(query)
 
         ##############################################
@@ -44,7 +45,7 @@ def deleteAuthor(author_id, pub_id):
         ##############################################
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 res = db.store_result()
                 record = res.fetch_row()
@@ -69,9 +70,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -94,7 +95,7 @@ if __name__ == '__main__':
                         rec = res.fetch_row()
                         note_id = rec[0][0]
                         update = "delete from notes where note_id=%d" % (note_id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
 
                 ##########################################################
@@ -127,7 +128,7 @@ if __name__ == '__main__':
                 # Delete pub/title map entries for this pub
                 ##########################################################
                 query = "delete from pub_content where pub_id=%d" % (int(Record))
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete COVERART titles for this title. The "delete" method
@@ -142,30 +143,30 @@ if __name__ == '__main__':
                 # Delete primary and secondary verifications for this pub
                 ##########################################################
                 query = "delete from primary_verifications where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 query = "delete from verification where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete transliterated titles 
                 query = "delete from trans_pubs where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete Web Pages
                 query = "delete from webpages where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete external identifiers
                 query = "delete from identifiers where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete the pub itself
                 query = "delete from pubs where pub_id=%d" % int(Record)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 # Delete Publication Series if there are no more pubs for it
@@ -183,6 +184,6 @@ if __name__ == '__main__':
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
 
-        print "<p>"
+        print("<p>")
 
         PrintPostMod(0)

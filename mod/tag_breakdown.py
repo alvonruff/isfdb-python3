@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,14 +17,14 @@ from library import *
 from login import *
 
 def PrintTable(tags, user):
-        print '<table>'
-        print '<tr>'
-        print '<th>Tag</th>'
-        print '<th>User</th>'
-        print '<th>User Tags</th>'
+        print('<table>')
+        print('<tr>')
+        print('<th>Tag</th>')
+        print('<th>User</th>')
+        print('<th>User Tags</th>')
         if user.bureaucrat:
-                print '<th>Remove</th>'
-        print '</tr>'
+                print('<th>Remove</th>')
+        print('</tr>')
         bgcolor = 1
         for tag_data in tags:
                 tag_id = tag_data[0]
@@ -31,17 +32,17 @@ def PrintTable(tags, user):
                 user_id = tag_data[2]
                 tagmapping_id = tag_data[3]
                 if bgcolor:
-                        print '<tr align=left class="table1">'
+                        print('<tr align=left class="table1">')
                 else:
-                        print '<tr align=left class="table2">'
-                print '<td>%s</td>' % ISFDBLink('tag.cgi', tag_id, tag_name)
-                print '<td>%s</td>' % WikiLink(SQLgetUserName(user_id))
-                print '<td>%s</td>' % ISFDBLink('usertag.cgi', user_id, 'User Tags')
+                        print('<tr align=left class="table2">')
+                print('<td>%s</td>' % ISFDBLink('tag.cgi', tag_id, tag_name))
+                print('<td>%s</td>' % WikiLink(SQLgetUserName(user_id)))
+                print('<td>%s</td>' % ISFDBLink('usertag.cgi', user_id, 'User Tags'))
                 if user.bureaucrat:
-                        print '<td>%s</td>' % ISFDBLink('/mod/remove_tag.cgi', tagmapping_id, 'Remove')
-                print '</tr>'
+                        print('<td>%s</td>' % ISFDBLink('/mod/remove_tag.cgi', tagmapping_id, 'Remove'))
+                print('</tr>')
                 bgcolor ^= 1
-        print '</table>'
+        print('</table>')
 
 if __name__ == '__main__':
 
@@ -57,13 +58,13 @@ if __name__ == '__main__':
         user.load()
         user.load_bureaucrat_flag()
         if not user.bureaucrat:
-                print 'Note that ISFDB bureaucrats can remove invalid tags. Requests should be posted on the Moderator Noticeboard.<p>'
+                print('Note that ISFDB bureaucrats can remove invalid tags. Requests should be posted on the Moderator Noticeboard.<p>')
         tags = SQLgetTitleTagsByUser(title[TITLE_PUBID])
-        print '<b>Tags Associated with</b> %s:<p>' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE])
+        print('<b>Tags Associated with</b> %s:<p>' % ISFDBLink('title.cgi', title[TITLE_PUBID], title[TITLE_TITLE]))
         if tags:
                 PrintTable(tags, user)
         else:
-                print '<h3>There are no tags for the specified title. If this is a variant title, its parent may have tags associated with it.</h3>'
+                print('<h3>There are no tags for the specified title. If this is a variant title, its parent may have tags associated with it.</h3>')
         PrintPostMod(0)
 
 

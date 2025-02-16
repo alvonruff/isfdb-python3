@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -64,16 +65,16 @@ if __name__ == '__main__':
                 db.query(query)
                 result = db.store_result()
                 if result.num_rows() == 0:
-                        print '<h3>No submissions present for the specified search criteria.</h3>'
+                        print('<h3>No submissions present for the specified search criteria.</h3>')
                 else:
-                        print '<h3>%s submissions created by user %s (%d - %d)</h3>' % (status, submitter_name, start+1, start+200)
+                        print('<h3>%s submissions created by user %s (%d - %d)</h3>' % (status, submitter_name, start+1, start+200))
                         ISFDBprintSubmissionTable(result, status_flag)
                         if result.num_rows() > 199:
-                                print '<p> %s' % ISFDBLinkNoName('mod/submission_search_results.cgi',
+                                print('<p> %s' % ISFDBLinkNoName('mod/submission_search_results.cgi',
                                                                  'submitter_name=%s&amp;start=%d&amp;status=%s' % (submitter_name, start+200, status),
-                                                                 'Next page (%d - %d)' % (start+201, start+400), True)
+                                                                 'Next page (%d - %d)' % (start+201, start+400), True))
         else:
-                print '<h3>Pending submissions created by user %s</h3>' % submitter_name
+                print('<h3>Pending submissions created by user %s</h3>' % submitter_name)
                 queue = Queue()
                 queue.display_pending_for_editor(submitter_id)
 

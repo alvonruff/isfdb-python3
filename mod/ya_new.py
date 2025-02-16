@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -27,9 +28,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         submitter = ''
         try:
@@ -42,7 +43,7 @@ if __name__ == '__main__':
                         if TagPresent(merge, 'Parent'):
                                 parent = GetElementValue(merge, 'Parent')
                                 insert = "insert into pseudonyms(author_id, pseudonym) values(%d,%d)" % (int(parent), int(Record))
-                                print "<li> ", insert
+                                print("<li> ", insert)
                                 if debug == 0:
                                         db.query(insert)
                 submitter = GetElementValue(merge, 'Submitter')
@@ -50,8 +51,8 @@ if __name__ == '__main__':
         except:
                 submitter = 'unknown'
 
-        print ISFDBLinkNoName('ea.cgi', parent, 'View Canonical Name', True)
-        print ISFDBLinkNoName('ea.cgi', Record, 'View Alternate Name', True)
-        print '<p>'
+        print(ISFDBLinkNoName('ea.cgi', parent, 'View Canonical Name', True))
+        print(ISFDBLinkNoName('ea.cgi', Record, 'View Alternate Name', True))
+        print('<p>')
 
         PrintPostMod(0)

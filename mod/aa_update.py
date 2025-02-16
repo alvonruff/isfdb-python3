@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -70,7 +71,7 @@ def UpdateColumn(doc, tag, column, id):
                 # If there is a value on file, change it to a string
                 if from_value:
                         from_value = str(from_value)
-                        print type(from_value)
+                        print(type(from_value))
 
                 to_value = GetElementValue(doc, tag)
                 # For languages, retrieve the language code based on the language name
@@ -82,7 +83,7 @@ def UpdateColumn(doc, tag, column, id):
                 else:
                         update = "update authors set %s = NULL where author_id=%s" % (column, id)
                         authorHistory(id, column, from_value, 'NULL')
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
 def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, history_column):
@@ -105,7 +106,7 @@ def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, hi
         # Delete the old records
         ##########################################################
         delete = "delete from %s where %s=%d" % (table_name, author_field, int(author_id))
-        print "<li> ", delete
+        print("<li> ", delete)
         db.query(delete)
 
         ##########################################################
@@ -117,7 +118,7 @@ def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, hi
                 new_value = XMLunescape(element.firstChild.data.encode('iso-8859-1'))
                 update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name,
                                                                       author_field, field_name, int(author_id), db.escape_string(new_value))
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
                 # Construct the new list of values
@@ -139,9 +140,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -194,8 +195,8 @@ if __name__ == '__main__':
 
                 markIntegrated(db, submission, Record)
 
-        print ISFDBLinkNoName('edit/editauth.cgi', Record, 'Edit This Author', True)
-        print ISFDBLinkNoName('ea.cgi', Record, 'View This Author', True)
-        print '<p>'
+        print(ISFDBLinkNoName('edit/editauth.cgi', Record, 'Edit This Author', True))
+        print(ISFDBLinkNoName('ea.cgi', Record, 'View This Author', True))
+        print('<p>')
 
         PrintPostMod(0)

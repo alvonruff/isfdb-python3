@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -28,34 +29,34 @@ def DoSubmission(db, submission):
         if doc.getElementsByTagName('LinkReview'):
                 merge = doc.getElementsByTagName('LinkReview')
 
-                print "<ul>"
+                print("<ul>")
 
                 if TagPresent(merge, 'Parent'):
                         ParentRecord = int(GetElementValue(merge, 'Parent'))
                 else:
-                        print '<div id="ErrorBox">'
-                        print "<h3>: No Parent listed</h3>"
-                        print '</div>'
+                        print('<div id="ErrorBox">')
+                        print("<h3>: No Parent listed</h3>")
+                        print('</div>')
                         PrintPostMod()
                         sys.exit(0)
 
                 if TagPresent(merge, 'Record'):
                         ChildRecord = int(GetElementValue(merge, 'Record'))
                 else:
-                        print '<div id="ErrorBox">'
-                        print "<h3>: No Review record listed</h3>"
-                        print '</div>'
+                        print('<div id="ErrorBox">')
+                        print("<h3>: No Review record listed</h3>")
+                        print('</div>')
                         PrintPostMod()
                         sys.exit(0)
 
                 update = "delete from title_relationships where review_id='%d';" % (int(ChildRecord))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
                 if int(ParentRecord):
                         update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (int(ParentRecord), int(ChildRecord))
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
 
@@ -75,17 +76,17 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
 
         (ParentRecord, ChildRecord) = DoSubmission(db, submission)
 
         if ParentRecord > 0:
-                print ISFDBLinkNoName('title.cgi', ParentRecord, 'View Reviewed Title', True)
+                print(ISFDBLinkNoName('title.cgi', ParentRecord, 'View Reviewed Title', True))
         if ChildRecord > 0:
-                print ISFDBLinkNoName('title.cgi', ChildRecord, 'View Review Title', True)
+                print(ISFDBLinkNoName('title.cgi', ChildRecord, 'View Review Title', True))
 
-        print '<p>'
+        print('<p>')
 
         PrintPostMod(0)
         

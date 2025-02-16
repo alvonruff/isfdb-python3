@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -30,9 +31,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         submitter = ''
         xml = SQLloadXML(submission)
@@ -50,7 +51,7 @@ if __name__ == '__main__':
                                 for child in children:
                                         record = int(child.firstChild.data)
                                         query = "delete from pub_content where pubc_id = %d and pub_id = %d" % (record, pub_id)
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
 
@@ -60,7 +61,7 @@ if __name__ == '__main__':
                                 for child in children:
                                         record = int(child.firstChild.data)
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
 
@@ -71,7 +72,7 @@ if __name__ == '__main__':
                                         record = int(child.firstChild.data)
                                         
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
                                         
@@ -81,14 +82,14 @@ if __name__ == '__main__':
                                 for child in children:
                                         record = int(child.firstChild.data)
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
 
         if debug == 0:
                 markIntegrated(db, submission, pub_id)
 
-        print ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True)
-        print ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True)
+        print(ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True))
 
         PrintPostMod(0)

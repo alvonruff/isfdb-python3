@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -28,62 +29,62 @@ if __name__ == '__main__':
         DbOnline = record[0][2]
         EditOnline = record[0][3]
 
-        print '<form id="data" METHOD="POST" ACTION="/cgi-bin/mod/submitcpanel.cgi">'
-        print '<p>'
+        print('<form id="data" METHOD="POST" ACTION="/cgi-bin/mod/submitcpanel.cgi">')
+        print('<p>')
 
         ###############################################################
         # VALUE 1 - ISFDB Version
         ###############################################################
-        print '<b>ISFDB Version:</b>'
-        print '<INPUT NAME="VERSION" SIZE=15 VALUE="%s">' % isfdb_version
-        print '<hr>'
+        print('<b>ISFDB Version:</b>')
+        print('<INPUT NAME="VERSION" SIZE=15 VALUE="%s">' % isfdb_version)
+        print('<hr>')
 
         ###############################################################
         # VALUE 2 - ISFDB Online/Offline
         ###############################################################
-        print '<p><b>ISFDB Status:</b><br>'
+        print('<p><b>ISFDB Status:</b><br>')
         if DbOnline:
-                print '<INPUT TYPE="radio" NAME="ONLINE" VALUE="1" CHECKED>'
-                print '<b>Online</b><br>'
-                print '<INPUT TYPE="radio" NAME="ONLINE" VALUE="0">'
-                print '<b>Offline</b><br>'
+                print('<INPUT TYPE="radio" NAME="ONLINE" VALUE="1" CHECKED>')
+                print('<b>Online</b><br>')
+                print('<INPUT TYPE="radio" NAME="ONLINE" VALUE="0">')
+                print('<b>Offline</b><br>')
         else:
-                print '<INPUT TYPE="radio" NAME="ONLINE" VALUE="1">'
-                print '<b>Online</b><br>'
-                print '<INPUT TYPE="radio" NAME="ONLINE" VALUE="0" CHECKED>'
-                print '<b>Offline</b><br>'
-        print '<hr>'
+                print('<INPUT TYPE="radio" NAME="ONLINE" VALUE="1">')
+                print('<b>Online</b><br>')
+                print('<INPUT TYPE="radio" NAME="ONLINE" VALUE="0" CHECKED>')
+                print('<b>Offline</b><br>')
+        print('<hr>')
 
         ###############################################################
         # VALUE 3 - Editing Online/Offline/Moderator
         ###############################################################
-        print '<p><b>Editing Status:</b><br>'
+        print('<p><b>Editing Status:</b><br>')
         if EditOnline == 0:
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="0" CHECKED>'
-                print '<b>Editing Offline</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="1">'
-                print '<b>Public Editing</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="2">'
-                print '<b>Moderator Editing Only</b><br>'
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="0" CHECKED>')
+                print('<b>Editing Offline</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="1">')
+                print('<b>Public Editing</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="2">')
+                print('<b>Moderator Editing Only</b><br>')
         elif EditOnline == 1:
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="0">'
-                print '<b>Editing Offline</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="1" CHECKED>'
-                print '<b>Public Editing</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="2">'
-                print '<b>Moderator Editing Only</b><br>'
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="0">')
+                print('<b>Editing Offline</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="1" CHECKED>')
+                print('<b>Public Editing</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="2">')
+                print('<b>Moderator Editing Only</b><br>')
         elif EditOnline == 2:
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="0">'
-                print '<b>Editing Offline</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="1">'
-                print '<b>Public Editing</b><br>'
-                print '<INPUT TYPE="radio" NAME="EDITING" VALUE="2" CHECKED>'
-                print '<b>Moderator Editing Only</b><br>'
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="0">')
+                print('<b>Editing Offline</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="1">')
+                print('<b>Public Editing</b><br>')
+                print('<INPUT TYPE="radio" NAME="EDITING" VALUE="2" CHECKED>')
+                print('<b>Moderator Editing Only</b><br>')
 
-        print '<hr>'
-        print '<p>'
-        print '<input TYPE="SUBMIT" VALUE="Submit Data">'
-        print '</form>'
+        print('<hr>')
+        print('<p>')
+        print('<input TYPE="SUBMIT" VALUE="Submit Data">')
+        print('</form>')
 
         PrintPostMod(0)
 

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -31,7 +32,7 @@ def UpdateColumn(doc, tag, column, id):
                 value = XMLunescape(value)
                 value = db.escape_string(value)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, value, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -55,7 +56,7 @@ def addAuthor(author, pub_id):
         #          pub_authors
         ##############################################
         insert = "insert into pub_authors(pub_id, author_id) values('%d', '%d');" % (int(pub_id), author_id)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
 
@@ -77,7 +78,7 @@ def deleteAuthor(author, pub_id):
         #          publication from pub_authors
         ##############################################
         query = "delete from pub_authors where author_id='%s' and pub_id='%s'" % (author_id, pub_id)
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -87,7 +88,7 @@ def deleteAuthor(author, pub_id):
         ##############################################
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 res = db.store_result()
                 record = res.fetch_row()
@@ -104,7 +105,7 @@ def deleteAuthor(author, pub_id):
 def insertCover(title, artists, date, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d)" % (int(pub_id), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -137,7 +138,7 @@ def mergeCover(record, title, artists, date, doArtists):
 def insertTitle(title, authors, date, page, type, length, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -183,7 +184,7 @@ def mergeTitle(record, title, authors, date, page, type, length, doAuthors):
 def insertReview(title, reviewees, reviewers, date, page, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -211,7 +212,7 @@ def insertReview(title, reviewees, reviewers, date, page, referral_lang):
                 parent = SQLFindReviewParent(title, reviewee, referral_lang)
                 if parent:
                         update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (parent, record)
-                        print "<li>", update
+                        print("<li>", update)
                         if debug == 0:
                                 db.query(update)
                         return
@@ -243,7 +244,7 @@ def mergeReview(record, title, reviewees, reviewers, date, page, doReviewees, do
 def insertInterview(title, interviewees, interviewers, date, page, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -301,9 +302,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -334,7 +335,7 @@ if __name__ == '__main__':
                         # Delete the old transliterated titles
                         ##########################################################
                         delete = "delete from trans_pubs where pub_id=%d" % int(Record)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)
 
                         ##########################################################
@@ -345,7 +346,7 @@ if __name__ == '__main__':
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_pubs(pub_id, trans_pub_title)
                                             values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 ##########################################################
@@ -356,7 +357,7 @@ if __name__ == '__main__':
                         # Delete the old external identifiers
                         ##########################################################
                         delete = "delete from identifiers where pub_id=%d" % int(Record)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)
                         ##########################################################
                         # Insert the new external identifiers
@@ -368,7 +369,7 @@ if __name__ == '__main__':
                                 insert = """insert into identifiers(identifier_type_id, identifier_value,
                                             pub_id) values(%d, '%s', %d)
                                             """ % (int(type_id), db.escape_string(id_value), int(Record))
-                                print "<li> ", insert
+                                print("<li> ", insert)
                                 db.query(insert)
 
                 ##########################################################
@@ -387,18 +388,18 @@ if __name__ == '__main__':
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
                                 else:
                                         ###########################################
                                         # Add a new note
                                         ###########################################
                                         insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
-                                        print "<li> ", insert
+                                        print("<li> ", insert)
                                         db.query(insert)
                                         retval = db.insert_id()
                                         update = "update pubs set note_id='%d' where pub_id=%s" % (retval, Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
                         else:
                                 query = 'select note_id from pubs where pub_id=%s and note_id is not null;' % Record
@@ -411,10 +412,10 @@ if __name__ == '__main__':
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         update = "delete from notes where note_id=%d" % (note_id)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
                                         update = "update pubs set note_id=NULL where pub_id=%s" % Record
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                 ##########################################################
@@ -434,7 +435,7 @@ if __name__ == '__main__':
 
                                 # STEP 2 - Get the ID for the new publisher
                                 query = "select publisher_id from publishers where publisher_name='%s';" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 db.query(query)
                                 res = db.store_result()
                                 if res.num_rows():
@@ -442,13 +443,13 @@ if __name__ == '__main__':
                                         NewPublisher = record[0][0]
                                 else:
                                         query = "insert into publishers(publisher_name) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         db.query(query)
                                         NewPublisher = db.insert_id()
 
                                 # STEP 3 - Update the publication record
                                 update = "update pubs set publisher_id='%d' where pub_id=%s" % (NewPublisher, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                                 # STEP 4 - Delete the old publisher if there are no other pubs referencing it
@@ -469,7 +470,7 @@ if __name__ == '__main__':
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set publisher_id=%s where pub_id=%s" % ('NULL', Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                                 # STEP 3 - Delete the old publisher if there are no other pubs referencing it
@@ -495,7 +496,7 @@ if __name__ == '__main__':
 
                                 # STEP 2 - Get the ID for the new publication series
                                 query = "select pub_series_id from pub_series where pub_series_name='%s';" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 db.query(query)
                                 res = db.store_result()
                                 if res.num_rows():
@@ -503,13 +504,13 @@ if __name__ == '__main__':
                                         NewPubSeries = record[0][0]
                                 else:
                                         query = "insert into pub_series(pub_series_name) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         db.query(query)
                                         NewPubSeries = db.insert_id()
 
                                 # STEP 3 - Update the publication record
                                 update = "update pubs set pub_series_id='%d' where pub_id=%s" % (NewPubSeries, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                                 # STEP 4 - Delete the old publication series if it's now empty
@@ -529,7 +530,7 @@ if __name__ == '__main__':
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set pub_series_id=%s where pub_id=%s" % ('NULL', Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                                 # STEP 3 - Delete the old publication series if it's now empty
@@ -547,7 +548,7 @@ if __name__ == '__main__':
                         # Delete the old webpages
                         ##########################################################
                         delete = 'delete from webpages where pub_id=%d' % int(Record)
-                        print '<li> ', delete
+                        print('<li> ', delete)
                         db.query(delete)
 
                         ##########################################################
@@ -557,7 +558,7 @@ if __name__ == '__main__':
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                                 update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
-                                print '<li> ', update
+                                print('<li> ', update)
                                 db.query(update)
 
                 ##########################################################
@@ -720,11 +721,11 @@ if __name__ == '__main__':
                 if debug == 0:
                         markIntegrated(db, submission, Record, pub_id)
 
-        print ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True)
-        print ISFDBLinkNoName('pl.cgi', Record,'View This Pub', True)
-        print ISFDBLinkNoName('edit/verify.cgi', Record, 'Verify This Pub', True)
-        print ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True)
-        print '<p>'
+        print(ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('pl.cgi', Record,'View This Pub', True))
+        print(ISFDBLinkNoName('edit/verify.cgi', Record, 'Verify This Pub', True))
+        print(ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True))
+        print('<p>')
         LIBPrintDuplicateWarning(Record)
 
         PrintPostMod(0)

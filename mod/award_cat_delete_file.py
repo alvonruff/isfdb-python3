@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,15 +33,15 @@ if __name__ == '__main__':
         doc = minidom.parseString(XMLunescape2(xml))
         merge = doc.getElementsByTagName('AwardCategoryDelete')
         if not merge:
-                print '<div id="ErrorBox">'
-                print '<h3>Error: Bad argument</h3>'
-                print '</div>'
+                print('<div id="ErrorBox">')
+                print('<h3>Error: Bad argument</h3>')
+                print('</div>')
                 PrintPostMod()
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         current = award_cat()
         current.award_cat_id = int(GetElementValue(merge, 'AwardCategoryId'))
@@ -50,7 +51,7 @@ if __name__ == '__main__':
         # Delete webpages
         ##############################################################
         delete = "delete from webpages where award_cat_id=%d" % current.award_cat_id
-        print "<li> ", delete
+        print("<li> ", delete)
         db.query(delete)
 
         ##############################################################
@@ -58,14 +59,14 @@ if __name__ == '__main__':
         ##############################################################
         if current.award_cat_note_id:
                 delete = "delete from notes where note_id=%d" % current.award_cat_note_id
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
 
         ##############################################################
         # Delete award category record
         ##############################################################
         delete = "delete from award_cats where award_cat_id=%d" % current.award_cat_id
-        print "<li> ", delete
+        print("<li> ", delete)
         db.query(delete)
 
         markIntegrated(db, submission, current.award_cat_id)

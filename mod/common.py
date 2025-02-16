@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
@@ -50,14 +51,14 @@ def PrintSubmissionLinks(submission_id, reviewer_id):
         # If the reviewer is a moderator, display the next submission by a non-self-approver
         next_sub = SQLloadNextSubmission(submission_id, reviewer_id)
         PrintNextSubmissionLink(next_sub)
-        print ISFDBLink('mod/list.cgi', 'N', 'Submission List', False, 'class="approval"')
+        print(ISFDBLink('mod/list.cgi', 'N', 'Submission List', False, 'class="approval"'))
 
 def PrintNextSubmissionLink(next_sub):
         if not next_sub:
                 return
         subtype = next_sub[SUB_TYPE]
         if SUBMAP.has_key(subtype):
-                print ISFDBLink('mod/submission_review.cgi', next_sub[SUB_ID], 'Next Submission', False, 'class="approval"')
+                print(ISFDBLink('mod/submission_review.cgi', next_sub[SUB_ID], 'Next Submission', False, 'class="approval"'))
 
         
 ########################################################################
@@ -65,7 +66,7 @@ def PrintNextSubmissionLink(next_sub):
 ########################################################################
 def createNewTitle(title):
         query = "insert into titles(title_title) values('%s');" % (db.escape_string(title))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         Record = db.insert_id()
@@ -73,19 +74,19 @@ def createNewTitle(title):
 
 def setTitleName(record, title):
         update = 'update titles set title_title="%s" where title_id=%d' % (db.escape_string(title), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
 def setTitleDate(record, date):
         update = 'update titles set title_copyright="%s" where title_id=%d' % (db.escape_string(date), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
 def setTitleType(record, type):
         update = 'update titles set title_ttype="%s" where title_id=%d' % (db.escape_string(type), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -94,7 +95,7 @@ def setTitleLength(record, length):
                 update = 'update titles set title_storylen=NULL where title_id=%d' % int(record)
         else:
                 update = 'update titles set title_storylen="%s" where title_id=%d' % (db.escape_string(length), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -108,7 +109,7 @@ def setTitlePage(record, page, pub_id):
                 update = "update pub_content set pubc_page=NULL where title_id=%d and pub_id=%d" % (int(record), int(pub_id))
         else:
                 update = "update pub_content set pubc_page='%s' where title_id=%d and pub_id=%d" % (db.escape_string(page), int(record), int(pub_id))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -117,7 +118,7 @@ def setTitleLang(record, referral_lang):
         if not referral_lang:
                 return
         update = 'update titles set title_language=%d where title_id=%d' % (int(referral_lang), int(record))
-        print "<li>", update
+        print("<li>", update)
         if debug == 0:
                 db.query(update)
 
@@ -153,7 +154,7 @@ def addTitleAuthor(author, title_id, status):
         elif status == 'REVIEWEE':
                 ca_status = 3
         insert = "insert into canonical_author(title_id, author_id, ca_status) values('%d', '%d', '%d');" % (int(title_id), author_id, ca_status)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
 
@@ -187,14 +188,14 @@ def update_directory(lastname):
         record = result.fetch_row()
 
         count = int(record[0][0])
-        print "<li> count %d for section [%s]" % (count, section)
+        print("<li> count %d for section [%s]" % (count, section))
 
         query = "select directory_mask from directory where directory_index='%s'" % (section[0])
         db.query(query)
         result = db.store_result()
         record = result.fetch_row()
         bitmap = record[0][0]
-        print "<li> Old bitmap: %08x" % bitmap
+        print("<li> Old bitmap: %08x" % bitmap)
         bitmask = 1
         for x in ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', "'"]:
                 if x == section[1]:
@@ -202,9 +203,9 @@ def update_directory(lastname):
                                 bitmap &= ~bitmask
                         else:
                                 bitmap |= bitmask
-                        print "<li> New bitmap: %08x" % bitmap
+                        print("<li> New bitmap: %08x" % bitmap)
                         query = "update directory set directory_mask='%d' where directory_index='%s'" % (bitmap, section[0])
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                         return
                 else:
@@ -217,54 +218,54 @@ def deleteFromAuthorTable(author_id):
         if result.num_rows():
                 record = result.fetch_row()
                 author_lastname = str(record[0][0])
-                print "<li>LASTNAME: [%s]" % author_lastname
+                print("<li>LASTNAME: [%s]" % author_lastname)
         else:
                 return
 
         query = "delete from authors where author_id='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete this author from the Pseudonym table where the author is the parent
         query = "delete from pseudonyms where author_id='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete this author from the Pseudonym table where the author is the alternate name
         query = "delete from pseudonyms where pseudonym='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete author's webpages
         query = "delete from webpages where author_id='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete author's emails
         query = "delete from emails where author_id='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete author's transliterated legal names
         query = "delete from trans_legal_names where author_id='%d'" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete author's transliterated canonical names
         query = "delete from trans_authors where author_id=%d" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
         #Delete author's views
         query = "delete from author_views where author_id=%d" % (int(author_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -296,7 +297,7 @@ def deleteTitleAuthor(author, title_id, status):
         #          title from canonical_author
         ##############################################
         query = "delete from canonical_author where author_id='%d' and title_id='%d' and ca_status='%d'" % (int(author_id), int(title_id), int(ca_status))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -306,7 +307,7 @@ def deleteTitleAuthor(author, title_id, status):
         ##############################################
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
                 res = db.store_result()
                 record = res.fetch_row()
@@ -355,7 +356,7 @@ def insertAuthorCanonical(author):
 
         # STEP 1: Insert the author into the author table
         insert = "insert into authors(author_canonical) values('%s');" % db.escape_string(author)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
         author_id = db.insert_id()
@@ -378,7 +379,7 @@ def insertAuthorCanonical(author):
         if lastname[-1] == ',':
                 lastname = lastname[0:-1]
         update = "update authors set author_lastname='%s' where author_id='%d'" %  (db.escape_string(lastname), author_id)
-        print "<li> ", update
+        print("<li> ", update)
         if debug == 0:
                 db.query(update)
 
@@ -434,11 +435,11 @@ def display_sources(submission_id):
 
         # Retrieve all Web sites that ISFDB knows about
         websites = SQLLoadWebSites(isbn, None, format)
-        print '<b>Additional sources:</b> '
-        print '<ul>'
+        print('<b>Additional sources:</b> ')
+        print('<ul>')
         for website in websites:
-                print '<li><a href="%s" target="_blank">%s</a>' % (website[1], website[0])
-        print '</ul>'
+                print('<li><a href="%s" target="_blank">%s</a>' % (website[1], website[0]))
+        print('</ul>')
 
 class Submission:
         def __init__(self, queue, submission_id):

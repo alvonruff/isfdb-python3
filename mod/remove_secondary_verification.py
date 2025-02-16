@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -45,9 +46,9 @@ if __name__ == '__main__':
                     """ % (int(pub_id), int(reference_id), int(verifier_id), verification_time, int(deleter_id))
         db.query(insert)
 
-        print 'Secondary Verification removed. <br>'
-        print '[%s]' % ISFDBLink('pl.cgi', pub_id, 'View This Pub')
-        print '[%s]' % ISFDBLink('edit/verify.cgi', pub_id, 'View/Add Verifications')
+        print('Secondary Verification removed. <br>')
+        print('[%s]' % ISFDBLink('pl.cgi', pub_id, 'View This Pub'))
+        print('[%s]' % ISFDBLink('edit/verify.cgi', pub_id, 'View/Add Verifications'))
 
         PrintPostMod(0)
 

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff nad Ahasuerus
+#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -29,9 +30,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -47,7 +48,7 @@ if __name__ == '__main__':
                 # Delete award/title map
                 ##########################################################
                 query = "delete from title_awards where award_id=%d" % current.award_id
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 ##############################################################
@@ -55,19 +56,19 @@ if __name__ == '__main__':
                 ##############################################################
                 if current.award_note_id:
                         delete = "delete from notes where note_id=%d" % int(current.award_note_id)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)
 
                 ##########################################################
                 # Delete the award itself
                 ##########################################################
                 query = "delete from awards where award_id=%d" % current.award_id
-                print "<li> ", query
+                print("<li> ", query)
                 db.query(query)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
 
-        print '<p>'
+        print('<p>')
 
         PrintPostMod(0)

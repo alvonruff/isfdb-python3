@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -90,7 +91,7 @@ def UpdatePubColumn(doc, tag, column, id):
                 value = XMLunescape(value)
                 value = db.escape_string(value)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, value, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -103,7 +104,7 @@ def UpdatePubColumn(doc, tag, column, id):
                 year = year[:4]
                 tag = CreateTag(db, title, year)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, tag, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -118,7 +119,7 @@ def UpdateTitleColumn(doc, tag, column, id):
 
                 elif column in ('title_synopsis', 'note_id'):
                         insert = "insert into notes(note_note) values('%s')" % db.escape_string(value)
-                        print "<li> ", insert
+                        print("<li> ", insert)
                         if debug == 0:
                                 db.query(insert)
                         # Get the ID of the created Notes record
@@ -129,7 +130,7 @@ def UpdateTitleColumn(doc, tag, column, id):
                         value = str(value)
 
                 update = "update titles set %s='%s' where title_id=%d" % (db.escape_string(column), db.escape_string(value), int(id))
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -153,7 +154,7 @@ def addPubAuthor(author, pub_id):
         #          pub_authors
         ##############################################
         insert = "insert into pub_authors(pub_id, author_id) values('%d', '%d');" % (int(pub_id), author_id)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
 
@@ -164,14 +165,14 @@ def integrateCover(title, authors, date, pub_id, lang_id):
         ########################################################
         query = """insert into titles(title_title, title_copyright, title_ttype)
                 values('%s', '%s', '%s')""" % (db.escape_string(title), db.escape_string(date), 'COVERART')
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         TitleRecord = db.insert_id()
         # Copy the language ID from the main Title record to this Cover title
         if lang_id:
                 query = "update titles set title_language = '%s' where title_id = %d" % (str(lang_id), int(TitleRecord))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
 
@@ -186,7 +187,7 @@ def integrateCover(title, authors, date, pub_id, lang_id):
         # STEP 3 - Create an entry in the pub_content table
         ####################################################
         query = "insert into pub_content(pub_id, title_id) values(%d, %d)" % (int(pub_id), int(TitleRecord))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         return TitleRecord
@@ -201,14 +202,14 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, lang_id):
                 query = "insert into titles(title_title, title_copyright, title_ttype, title_storylen) values('%s', '%s', '%s', '%s');" % (db.escape_string(title), date, type, length)
         else:
                 query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (db.escape_string(title), date, type)
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         TitleRecord = db.insert_id()
         # Copy the language ID from the main Title record to this Content Title record
         if lang_id:
                 query = "update titles set title_language = '%s' where title_id = '%d'" % (str(lang_id), int(TitleRecord))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
 
@@ -226,7 +227,7 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, lang_id):
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(TitleRecord))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(TitleRecord), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -237,14 +238,14 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, lang_id):
         # STEP 1 - Update the title table
         ####################################################
         query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'REVIEW');" % (db.escape_string(title), date)
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         TitleRecord = db.insert_id()
         # Copy the language ID from the main Title record to this Review record
         if lang_id:
                 query = "update titles set title_language = '%s' where title_id = '%d'" % (str(lang_id), int(TitleRecord))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
 
@@ -269,7 +270,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, lang_id):
                 parent = SQLFindReviewParent(title, author, lang_id)
                 if parent:
                         update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (parent, TitleRecord)
-                        print "<li>", update
+                        print("<li>", update)
                         if debug == 0:
                                 db.query(update)
                         break
@@ -281,7 +282,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, lang_id):
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(TitleRecord))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(TitleRecord), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -292,14 +293,14 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, la
         # STEP 1 - Update the title table
         ####################################################
         query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'INTERVIEW');" % (db.escape_string(title), date)
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
         TitleRecord = db.insert_id()
         # Copy the language ID from the main Title record to this Interview record
         if lang_id:
                 query = "update titles set title_language = '%s' where title_id = '%d'" % (str(lang_id), int(TitleRecord))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
 
@@ -324,7 +325,7 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, la
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(TitleRecord))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(TitleRecord), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -333,9 +334,9 @@ def DoSubmission(db, submission):
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('NewPub'):
 
-                print "<ul>"
+                print("<ul>")
                 query = "insert into pubs(pub_title) values('xxx');"
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 Record = db.insert_id()
@@ -351,7 +352,7 @@ def DoSubmission(db, submission):
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_pubs(pub_id, trans_pub_title)
                                             values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 UpdatePubColumn(merge, 'Tag',     'pub_tag',        Record)
@@ -373,10 +374,10 @@ def DoSubmission(db, submission):
                 source = GetElementValue(merge, 'Source')
                 if source == 'Primary':
                         insert = SQLInsertPrimaryVerification(Record, 0, submitterid)
-                        print '<li>%s' % (insert)
+                        print('<li>%s' % (insert))
                 elif source == 'Transient':
                         insert = SQLInsertPrimaryVerification(Record, 1, submitterid)
-                        print '<li>%s' % (insert)
+                        print('<li>%s' % (insert))
 
                 #################################################################
                 # NOTE, auto-updated with the Source information for some sources
@@ -394,17 +395,17 @@ def DoSubmission(db, submission):
                                 rec = res.fetch_row()
                                 note_id = rec[0][0]
                                 update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(note), note_id)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                         else:
                                 insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
-                                print "<li> ", insert
+                                print("<li> ", insert)
                                 if debug == 0:
                                         db.query(insert)
                                 retval = db.insert_id()
                                 update = "update pubs set note_id='%d' where pub_id=%s" % (retval, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -416,7 +417,7 @@ def DoSubmission(db, submission):
 
                         # STEP 1 - Get the ID for the new publisher
                         query = "select publisher_id from publishers where publisher_name='%s';" % (db.escape_string(value))
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                         res = db.store_result()
                         if res.num_rows():
@@ -424,14 +425,14 @@ def DoSubmission(db, submission):
                                 NewPublisher = record[0][0]
                         else:
                                 query = "insert into publishers(publisher_name) values('%s');" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 if debug == 0:
                                         db.query(query)
                                 NewPublisher = db.insert_id()
 
                         # STEP 2 - Update the publication record
                         update = "update pubs set publisher_id='%d' where pub_id=%s" % (NewPublisher, Record)
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
 
@@ -443,7 +444,7 @@ def DoSubmission(db, submission):
 
                         # STEP 1 - Get the ID for the new Publication Series
                         query = "select pub_series_id from pub_series where pub_series_name='%s';" % (db.escape_string(value))
-                        print "<li> ", query
+                        print("<li> ", query)
                         db.query(query)
                         res = db.store_result()
                         if res.num_rows():
@@ -451,14 +452,14 @@ def DoSubmission(db, submission):
                                 NewPublisher = record[0][0]
                         else:
                                 query = "insert into pub_series(pub_series_name) values('%s');" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 if debug == 0:
                                         db.query(query)
                                 NewPublisher = db.insert_id()
 
                         # STEP 2 - Update the publication record
                         update = "update pubs set pub_series_id='%d' where pub_id=%s" % (NewPublisher, Record)
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
 
@@ -469,7 +470,7 @@ def DoSubmission(db, submission):
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                                 update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 ##########################################################
@@ -493,7 +494,7 @@ def DoSubmission(db, submission):
                                 insert = """insert into identifiers(identifier_type_id, identifier_value,
                                             pub_id) values(%d, '%s', %d)
                                             """ % (int(type_id), db.escape_string(id_value), Record)
-                                print "<li> ", insert
+                                print("<li> ", insert)
                                 db.query(insert)
 
                 # Create a new Title record and populate its fields if specified
@@ -505,7 +506,7 @@ def DoSubmission(db, submission):
                         # TITLE
                         ##########################################################
                         query = "insert into titles(title_title) values('xxx');"
-                        print "<li> ", query
+                        print("<li> ", query)
                         if debug == 0:
                                 db.query(query)
                         TitleRecord = db.insert_id()
@@ -531,13 +532,13 @@ def DoSubmission(db, submission):
                                         series_id = SQLFindSeriesId(value)
                                         if not series_id:
                                                 query = "insert into series(series_title) values('%s')" % (db.escape_string(value))
-                                                print "<li> ", query
+                                                print("<li> ", query)
                                                 if debug == 0:
                                                         db.query(query)
                                                 series_id = db.insert_id()
 
                                         update = "update titles set series_id=%d where title_id=%d" % (int(series_id), int(TitleRecord))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
 
@@ -550,13 +551,13 @@ def DoSubmission(db, submission):
                                         series_list = value.split('.')
                                         if len(series_list):
                                                 update = "update titles set title_seriesnum=%d where title_id=%d" % (int(series_list[0]), int(TitleRecord))
-                                                print "<li> ", update
+                                                print("<li> ", update)
                                                 if debug == 0:
                                                         db.query(update)
                                         if len(series_list) > 1:
                                                 # The secondary series number is a string rather than an integer, e.g. "05" is allowed
                                                 update = "update titles set title_seriesnum_2='%s' where title_id=%d" % (db.escape_string(series_list[1]), int(TitleRecord))
-                                                print "<li> ", update
+                                                print("<li> ", update)
                                                 if debug == 0:
                                                         db.query(update)
 
@@ -568,7 +569,7 @@ def DoSubmission(db, submission):
                                         title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                         update = """insert into trans_titles(title_id, trans_title_title)
                                                     values(%d, '%s')""" % (int(TitleRecord), db.escape_string(title_value))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                         # Web Pages for the Title record
@@ -578,7 +579,7 @@ def DoSubmission(db, submission):
                                 for webpage in webpages:
                                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                                         update = "insert into webpages(title_id, url) values(%d, '%s')" % (int(TitleRecord), db.escape_string(address))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                         ##########################################################
@@ -592,7 +593,7 @@ def DoSubmission(db, submission):
                                         addTitleAuthor(data, TitleRecord, 'CANONICAL')
 
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(Record), int(TitleRecord))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
 
@@ -616,7 +617,7 @@ def DoSubmission(db, submission):
                                                         title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                                         update = """insert into trans_titles(title_id, trans_title_title)
                                                                     values(%d, '%s')""" % (int(coverTitle), db.escape_string(title_value))
-                                                        print "<li> ", update
+                                                        print("<li> ", update)
                                                         db.query(update)
 
                         ##########################################################
@@ -674,15 +675,15 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
 
         Record = DoSubmission(db, submission)
 
-        print ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True)
-        print ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True)
-        print ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True)
-        print '<p>'
+        print(ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True))
+        print(ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True))
+        print('<p>')
         LIBPrintDuplicateWarning(Record)
 
         PrintPostMod(0)

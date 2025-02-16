@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -29,7 +30,7 @@ def moveAuthorColumn(db, column, keep, drop):
                 update = "update authors set %s=NULL where author_id='%d'" % (column, int(keep))
         else:
                 update = "update authors set %s='%s' where author_id='%d'" % (column, db.escape_string(value), int(keep))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
 def MergeMultiple(keep_values, drop_values, table_name, author_column, value_column, KeepId):
@@ -39,7 +40,7 @@ def MergeMultiple(keep_values, drop_values, table_name, author_column, value_col
                 if value not in keep_values:
                         update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name, author_column, value_column, int(KeepId), db.escape_string(value))
                         db.query(update)
-                        print "<li> ", update
+                        print("<li> ", update)
 
 ########################################################################
 
@@ -105,16 +106,16 @@ def AuthorMerge(db, recno, doc):
         MergeMultiple(keep_webpages, drop_webpages, 'webpages', 'author_id', 'url', KeepId)
 
         update = "update canonical_author set author_id='%d' where author_id='%d'" % (int(KeepId), int(DropId))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
         update = "update pub_authors set author_id='%d' where author_id='%d'" % (int(KeepId), int(DropId))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
         # Re-point the deleted author's alternate names to the kept author ID
         update = "update pseudonyms set author_id = %d where author_id = %d" % (int(KeepId), int(DropId))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
         # Check if there are any references left to the dropped author
@@ -139,9 +140,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -149,5 +150,5 @@ if __name__ == '__main__':
         if merge:
                 KeepId = AuthorMerge(db, submission, doc)
                 markIntegrated(db, submission, KeepId)
-                print ISFDBLinkNoName('ea.cgi', KeepId, 'View This Author', True)
+                print(ISFDBLinkNoName('ea.cgi', KeepId, 'View This Author', True))
         PrintPostMod(0)

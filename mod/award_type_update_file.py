@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2013-2025   Ahasuerus, Klaus Elsbernd, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -38,7 +39,7 @@ def UpdateColumn(doc, tag, column, id):
                         update = "update award_types set %s='%s' where award_type_id=%s" % (column, db.escape_string(value), id)
                 else:
                         update = "update award_types set %s = NULL where award_type_id=%s" % (column, id)
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
 
@@ -55,15 +56,15 @@ if __name__ == '__main__':
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if not doc.getElementsByTagName('AwardTypeUpdate'):
-                print '<div id="ErrorBox">'
-                print '<h3>Invalid Submission</h3>'
-                print '</div>'
+                print('<div id="ErrorBox">')
+                print('<h3>Invalid Submission</h3>')
+                print('</div>')
                 PrintPostMod()
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
         merge = doc.getElementsByTagName('AwardTypeUpdate')
         subname = GetElementValue(merge, 'Submitter')
         submitter = SQLgetSubmitterID(subname)
@@ -101,7 +102,7 @@ if __name__ == '__main__':
                 # Delete the old webpages
                 ##########################################################
                 delete = "delete from webpages where award_type_id=%s" % (current.award_type_id)
-                print "<li> ", delete
+                print("<li> ", delete)
                 db.query(delete)
 
                 ##########################################################
@@ -112,7 +113,7 @@ if __name__ == '__main__':
                 for webpage in webpages:
                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                         update = "insert into webpages(award_type_id, url) values(%s, '%s')" % (current.award_type_id, db.escape_string(address))
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
 
                         # Construct the new list of webpages
@@ -133,16 +134,16 @@ if __name__ == '__main__':
                         if res.num_rows():
                                 rec = res.fetch_row()
                                 note_id = rec[0][0]
-                                print '<li> note_id:', note_id
+                                print('<li> note_id:', note_id)
                                 update = "update notes set note_note='%s' where note_id='%d'" % (db.escape_string(value), int(note_id))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
                         else:
                                 insert = "insert into notes(note_note) values('%s');" % (db.escape_string(value))
                                 db.query(insert)
                                 retval = db.insert_id()
                                 update = "update award_types set award_type_note_id='%d' where award_type_id='%s'" % (retval, current.award_type_id)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
                 else:
                         ##############################################################
@@ -155,16 +156,16 @@ if __name__ == '__main__':
                                 rec = res.fetch_row()
                                 note_id = rec[0][0]
                                 delete = "delete from notes where note_id=%d" % (note_id)
-                                print "<li> ", delete
+                                print("<li> ", delete)
                                 db.query(delete)
                                 update = "update award_types set award_type_note_id=NULL where award_type_id=%s" % (current.award_type_id)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
         markIntegrated(db, submission, current.award_type_id)
 
-        print ISFDBLinkNoName('edit/editawardtype.cgi', current.award_type_id, 'Edit This Award Type', True)
-        print ISFDBLinkNoName('awardtype.cgi', current.award_type_id, 'View This Award Type', True)
+        print(ISFDBLinkNoName('edit/editawardtype.cgi', current.award_type_id, 'Edit This Award Type', True))
+        print(ISFDBLinkNoName('awardtype.cgi', current.award_type_id, 'View This Award Type', True))
 
         PrintPostMod(0)
 

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -32,7 +33,7 @@ if __name__ == '__main__':
         db.query(query)
         result = db.store_result()
         if result.num_rows() == 0:
-                print '<h3>Specified submission ID does not exist</h3>'
+                print('<h3>Specified submission ID does not exist</h3>')
                 PrintPostMod()
                 sys.exit(0)
 
@@ -44,10 +45,10 @@ if __name__ == '__main__':
                 # display a message explaining what needs to be done and abort
                 if (int(holder_id) != int(reviewerid)) and (SQLisUserBureaucrat(reviewerid) == 0):
                         holder_name = SQLgetUserName(holder_id)
-                        print '''<h3> This submission is currently held by %s.
+                        print('''<h3> This submission is currently held by %s.
                         Please contact the holding moderator to discuss the submission. If the holding moderator is
                         inactive, please post on the Moderator Noticeboard and a bureaucrat will hard reject the
-                        submission.</h3>''' % WikiLink(holder_name)
+                        submission.</h3>''' % WikiLink(holder_name))
                         PrintPostMod(0)
                         sys.exit(0)
 
@@ -58,20 +59,20 @@ if __name__ == '__main__':
             and (SQLisUserModerator(submitter_id) == 1)
             and not SQLisUserBureaucrat(reviewerid)):
                 submitter_name = SQLgetUserName(submitter_id)
-                print '''<h3> This submission was created by %s, another moderator.
+                print('''<h3> This submission was created by %s, another moderator.
                 Please contact the submitter to discuss the submission. If the submitting moderator is
                 inactive, please post on the Moderator Noticeboard and a bureaucrat will hard reject the
-                submission.</h3>''' % WikiLink(submitter_name)
+                submission.</h3>''' % WikiLink(submitter_name))
                 PrintPostMod(0)
                 sys.exit(0)
 
         update = """update submissions
                 set sub_state='R', sub_reason='Forced', sub_reviewer=%d, sub_reviewed=NOW(), sub_holdid=0
                 where sub_id=%d""" % (int(reviewerid), int(sub_id))
-        print '<ul>'
-        print '<li> ', update
+        print('<ul>')
+        print('<li> ', update)
         db.query(update)
-        print '</ul>'
-        print '<p>'
+        print('</ul>')
+        print('<p>')
         PrintSubmissionLinks(sub_id, reviewerid)
         PrintPostMod(0)

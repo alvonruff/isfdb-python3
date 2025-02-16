@@ -36,7 +36,7 @@ if __name__ == '__main__':
         PrintPreMod('Pending NewPub Submission - %s' % language_name)
         PrintNavBar()
 
-        print ('<h3>Pending NewPub submissions - %s</h3>' % language_name)
+        print('<h3>Pending NewPub submissions - %s</h3>' % language_name)
         queue = Queue()
         queue.display_pending_for_language(language_name)
 

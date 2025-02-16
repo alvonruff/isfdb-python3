@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -92,7 +93,7 @@ def UpdatePubColumn(doc, tag, column, id):
                 value = XMLunescape(value)
                 value = db.escape_string(value)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, value, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
         if tag == 'Tag':
@@ -103,7 +104,7 @@ def UpdatePubColumn(doc, tag, column, id):
                 year = year[:4]
                 tag = CreateTag(db, title, year)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, tag, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -114,7 +115,7 @@ def UpdateTitleColumn(doc, tag, column, id):
                 value = db.escape_string(value)
                 if column == 'title_ttype' and value == 'CHAPBOOK':
                         update = "update titles set title_storylen=NULL where title_id=%s" % (id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
                         update = "update titles set title_ttype='SHORTFICTION' where title_id=%s" % (id)
@@ -124,7 +125,7 @@ def UpdateTitleColumn(doc, tag, column, id):
                         update = "update titles set title_ttype='EDITOR' where title_id=%s" % (id)
                 else:
                         update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -147,7 +148,7 @@ def addPubAuthor(author, pub_id):
         #          pub_authors
         ##############################################
         insert = "insert into pub_authors(pub_id, author_id) values('%d', '%d');" % (int(pub_id), author_id)
-        print "<li> ", insert
+        print("<li> ", insert)
         if debug == 0:
                 db.query(insert)
 
@@ -160,7 +161,7 @@ def integrateCover(title, artists, date, pub_id, cover_id, referral_lang):
                         query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'COVERART', %d)" % (db.escape_string(title), db.escape_string(date), int(referral_lang))
                 else:
                         query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'COVERART')" % (db.escape_string(title), db.escape_string(date))
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 cover_id = db.insert_id()
@@ -171,7 +172,7 @@ def integrateCover(title, artists, date, pub_id, cover_id, referral_lang):
                 
         # Create publication-title linkage
         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(cover_id))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -192,7 +193,7 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, title_id, r
                                 query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', '%s', '%s');" % (db.escape_string(title), date, type, str(referral_lang))
                         else:
                                 query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (db.escape_string(title), date, type)
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 title_id = db.insert_id()
@@ -211,7 +212,7 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, title_id, r
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -227,7 +228,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, ref
                         query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'REVIEW', '%s');" % (db.escape_string(title), date, str(referral_lang))
                 else:
                         query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'REVIEW');" % (db.escape_string(title), date)
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 title_id = db.insert_id()
@@ -253,7 +254,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, ref
                         parent = SQLFindReviewParent(title, author, referral_lang)
                         if parent:
                                 update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (parent, title_id)
-                                print "<li>", update
+                                print("<li>", update)
                                 if debug == 0:
                                         db.query(update)
                                 break
@@ -265,7 +266,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, ref
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -281,7 +282,7 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, ti
                         query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'INTERVIEW', '%s');" % (db.escape_string(title), date, str(referral_lang))
                 else:
                         query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'INTERVIEW');" % (db.escape_string(title), date)
-                print "<li> ", query
+                print("<li> ", query)
                 if debug == 0:
                         db.query(query)
                 title_id = db.insert_id()
@@ -307,7 +308,7 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, ti
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
                 query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
-        print "<li> ", query
+        print("<li> ", query)
         if debug == 0:
                 db.query(query)
 
@@ -318,7 +319,7 @@ def DoSubmission(db, submission):
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('NewPub'):
 
-                print "<ul>"
+                print("<ul>")
                 merge = doc.getElementsByTagName('NewPub')
                 Record = GetElementValue(merge, 'ClonedTo')
                 referral_lang = None
@@ -336,7 +337,7 @@ def DoSubmission(db, submission):
                 else:
                         doingExport = 0
                         query = "insert into pubs(pub_title) values('xxx');"
-                        print "<li> ", query
+                        print("<li> ", query)
                         if debug == 0:
                                 db.query(query)
                         Record = db.insert_id()
@@ -351,7 +352,7 @@ def DoSubmission(db, submission):
                                         title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                         update = """insert into trans_pubs(pub_id, trans_pub_title)
                                                     values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                         # Web Pages
@@ -361,7 +362,7 @@ def DoSubmission(db, submission):
                                 for webpage in webpages:
                                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                                         update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         db.query(update)
 
                         UpdatePubColumn(merge, 'Tag',     'pub_tag',        Record)
@@ -383,10 +384,10 @@ def DoSubmission(db, submission):
                         source = GetElementValue(merge, 'Source')
                         if source == 'Primary':
                                 insert = SQLInsertPrimaryVerification(Record, 0, submitterid)
-                                print '<li>%s' % (insert)
+                                print('<li>%s' % (insert))
                         elif source == 'Transient':
                                 insert = SQLInsertPrimaryVerification(Record, 1, submitterid)
-                                print '<li>%s' % (insert)
+                                print('<li>%s' % (insert))
 
                         #################################################################
                         # NOTE, auto-updated with the Source information for some sources
@@ -404,17 +405,17 @@ def DoSubmission(db, submission):
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(note), note_id)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
                                 else:
                                         insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
-                                        print "<li> ", insert
+                                        print("<li> ", insert)
                                         if debug == 0:
                                                 db.query(insert)
                                         retval = db.insert_id()
                                         update = "update pubs set note_id='%d' where pub_id=%s" % (retval, Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
 
@@ -426,7 +427,7 @@ def DoSubmission(db, submission):
 
                                 # STEP 1 - Get the ID for the new publisher
                                 query = "select publisher_id from publishers where publisher_name='%s';" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 db.query(query)
                                 res = db.store_result()
                                 if res.num_rows():
@@ -434,14 +435,14 @@ def DoSubmission(db, submission):
                                         NewPublisher = record[0][0]
                                 else:
                                         query = "insert into publishers(publisher_name) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
                                         NewPublisher = db.insert_id()
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set publisher_id='%d' where pub_id=%s" % (NewPublisher, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -453,7 +454,7 @@ def DoSubmission(db, submission):
 
                                 # STEP 1 - Get the ID for the new publication series
                                 query = "select pub_series_id from pub_series where pub_series_name='%s';" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 db.query(query)
                                 res = db.store_result()
                                 if res.num_rows():
@@ -461,14 +462,14 @@ def DoSubmission(db, submission):
                                         NewPubSeries = record[0][0]
                                 else:
                                         query = "insert into pub_series(pub_series_name) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 db.query(query)
                                         NewPubSeries = db.insert_id()
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set pub_series_id='%d' where pub_id=%s" % (NewPubSeries, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                         
@@ -489,7 +490,7 @@ def DoSubmission(db, submission):
                                 # TITLE
                                 ##########################################################
                                 query = "insert into titles(title_title) values('xxx');"
-                                print "<li> ", query
+                                print("<li> ", query)
                                 if debug == 0:
                                         db.query(query)
                                 TitleRecord = db.insert_id()
@@ -508,7 +509,7 @@ def DoSubmission(db, submission):
                                                 addTitleAuthor(data, TitleRecord, 'CANONICAL')
 
                         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(Record), int(TitleRecord))
-                        print "<li> ", query
+                        print("<li> ", query)
                         if debug == 0:
                                 db.query(query)
                         PubcRecord = db.insert_id()
@@ -524,7 +525,7 @@ def DoSubmission(db, submission):
                                         insert = """insert into identifiers(identifier_type_id, identifier_value,
                                                     pub_id) values(%d, '%s', %d)
                                                     """ % (int(type_id), db.escape_string(id_value), Record)
-                                        print "<li> ", insert
+                                        print("<li> ", insert)
                                         db.query(insert)
 
                 if doc.getElementsByTagName('Content'):
@@ -574,7 +575,7 @@ def DoSubmission(db, submission):
                                                         integrateTitle(title, authors, date, page, type, length, Record, tRecord, referral_lang)
                                                 elif page != '':
                                                         query = "update pub_content set pubc_page='%s' where pubc_id=%d;" % (db.escape_string(page), PubcRecord)
-                                                        print "<li> ", query
+                                                        print("<li> ", query)
                                                         if debug == 0:
                                                                 db.query(query)
                                 
@@ -628,20 +629,20 @@ if __name__ == '__main__':
                 sys.exit(0)
 
         if debug:
-                print '<div id="ErrorBox">'
-                print '<h3>Warning: This app is in debug mode. No writes actually occured to the database.</h3>'
-                print '</div>'
+                print('<div id="ErrorBox">')
+                print('<h3>Warning: This app is in debug mode. No writes actually occured to the database.</h3>')
+                print('</div>')
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
 
         Record = DoSubmission(db, submission)
 
-        print ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True)
-        print ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True)
-        print ISFDBLinkNoName('edit/verify.cgi', Record, 'Verify This Pub', True)
-        print ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True)
-        print '<p>'
+        print(ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True))
+        print(ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True))
+        print(ISFDBLinkNoName('edit/verify.cgi', Record, 'Verify This Pub', True))
+        print(ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True))
+        print('<p>')
         LIBPrintDuplicateWarning(Record)
 
         PrintPostMod(0)

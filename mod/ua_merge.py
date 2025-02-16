@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2008-2025   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -51,20 +52,20 @@ def doColumn(KeepId, merge, label, column):
                 update = "update publishers set %s='%s' where publisher_id=%d" % (column, db.escape_string(str(new_value)), int(KeepId))
         else:
                 update = "update publishers set %s=NULL where publisher_id=%d" % (column, int(KeepId))
-        print "<li> ", update
+        print("<li> ", update)
         db.query(update)
 
         if label == 'Note':
                 # Delete the Note record that was originally associated with the to-be-kept publisher (if exists)
                 if old_value:
                         update = "delete from notes where note_id=%d" % int(old_value)
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
                 
                 # Blank out the note ID in the to-be-dropped publisher record so that when
                 # it is deleted later on, the deletion process won't try to delete the Note record
                 update = "update publishers set %s=NULL where publisher_id=%d" % (column, int(selected_id))
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
 def PublisherMerge(doc, merge):
@@ -88,7 +89,7 @@ def PublisherMerge(doc, merge):
         for dropped_id in dropped_ids:
                 # Repoint all publications from this to-be-dropped publisher to the to-be-kept publisher
                 update = "update pubs set publisher_id=%d where publisher_id=%d" % (int(KeepId), dropped_id)
-                print "<li> ", update
+                print("<li> ", update)
                 db.query(update)
 
                 # Load the current data for the to-be-dropped publisher
@@ -102,7 +103,7 @@ def PublisherMerge(doc, merge):
                                 update = """insert into webpages(publisher_id, url)
                                 values(%d, '%s')""" % (int(KeepId), db.escape_string(webpage))
                                 db.query(update)
-                                print "<li> ", update
+                                print("<li> ", update)
 
                 for publisher_trans_name in drop_publisher.publisher_trans_names:
                         # If this transliterated name is not already associated with the publisher that we will keep,
@@ -111,7 +112,7 @@ def PublisherMerge(doc, merge):
                                 update = """insert into trans_publisher(publisher_id, trans_publisher_name)
                                 values(%d, '%s')""" % (int(KeepId), db.escape_string(publisher_trans_name))
                                 db.query(update)
-                                print "<li> ", update
+                                print("<li> ", update)
                 # Delete the to-be-dropped publisher
                 drop_publisher.delete()
         return KeepId
@@ -126,9 +127,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         KeepId = ''
         xml = SQLloadXML(submission)
@@ -140,14 +141,14 @@ if __name__ == '__main__':
                         submitter = GetElementValue(merge, 'Submitter')
                         markIntegrated(db, submission, KeepId)
         if not KeepId:
-                print '<div id="ErrorBox">'
-                print '<h3>Error: Publisher ID not specified</h3>'
-                print '</div>'
+                print('<div id="ErrorBox">')
+                print('<h3>Error: Publisher ID not specified</h3>')
+                print('</div>')
                 PrintPostMod()
                 sys.exit(0)
 
-        print ISFDBLinkNoName('publisher.cgi', KeepId, 'View Publisher', True)
-        print ISFDBLinkNoName('edit/editpublisher.cgi', KeepId, 'Edit Publisher', True)
-        print '<hr>'
+        print(ISFDBLinkNoName('publisher.cgi', KeepId, 'View Publisher', True))
+        print(ISFDBLinkNoName('edit/editpublisher.cgi', KeepId, 'Edit Publisher', True))
+        print('<hr>')
 
         PrintPostMod(0)

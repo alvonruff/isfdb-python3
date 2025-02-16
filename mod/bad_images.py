@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus 
+#     (C) COPYRIGHT 2014-2025   Ahasuerus , Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,23 +17,23 @@ from SQLparsing import *
 from library import *
 
 def PrintTableHeaders():
-        print '<table class="generic_table">'
-        print '<tr class="generic_table_header">'
+        print('<table class="generic_table">')
+        print('<tr class="generic_table_header">')
         for column in ('#', 'Publication', 'Suspect URL', 'Click Once Resolved'):
-                print '<th>%s</th>' % column
-        print '</tr>'
+                print('<th>%s</th>' % column)
+        print('</tr>')
 
 def PrintPubRecord(count, pub_id, url, pub_title, bgcolor):
         if bgcolor:
-                print '<tr align=left class="table1">'
+                print('<tr align=left class="table1">')
         else:
-                print '<tr align=left class="table2">'
+                print('<tr align=left class="table2">')
 
-        print '<td>%d</td>' % (count)
-        print '<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title)
-        print '<td>%s</td>' % (url)
-        print '<td>%s</td>' % ISFDBLink('mod/resolve_bad_url.cgi', pub_id, 'Click Once Resolved')
-        print '</tr>'
+        print('<td>%d</td>' % (count))
+        print('<td>%s</td>' % ISFDBLink('pl.cgi', pub_id, pub_title))
+        print('<td>%s</td>' % (url))
+        print('<td>%s</td>' % ISFDBLink('mod/resolve_bad_url.cgi', pub_id, 'Click Once Resolved'))
+        print('</tr>')
 
 if __name__ == '__main__':
 
@@ -62,8 +63,8 @@ if __name__ == '__main__':
                         bgcolor ^= 1
                         count += 1
 
-                print '</table>'
+                print('</table>')
         else:
-                print '<h2>No publications with bad images found</h2>'
+                print('<h2>No publications with bad images found</h2>')
 
         PrintPostMod(0)

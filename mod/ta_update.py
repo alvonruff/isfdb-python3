@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -34,7 +35,7 @@ def UpdateColumn(doc, tag, column, id):
                         update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
                 else:
                         update = "update titles set %s=NULL where title_id=%s" % (column, id)
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
@@ -49,9 +50,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -80,7 +81,7 @@ if __name__ == '__main__':
                                         update = "update titles set title_seriesnum='%d' where title_id=%d" % (int(series_list[0]), int(Record))
                                 else:
                                         update = "update titles set title_seriesnum=NULL where title_id=%d" % (int(Record))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                                         
@@ -89,17 +90,17 @@ if __name__ == '__main__':
                                         update = "update titles set title_seriesnum_2='%s' where title_id=%d" % (db.escape_string(series_list[1]), int(Record))
                                 else:
                                         update = "update titles set title_seriesnum_2=NULL where title_id=%d" % (int(Record))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
                         else:
                                 update = "update titles set title_seriesnum=NULL where title_id=%d" % (int(Record))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                                 update = "update titles set title_seriesnum_2=NULL where title_id=%d" % (int(Record))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -113,7 +114,7 @@ if __name__ == '__main__':
                                 lang_id = SQLGetLangIdByName(XMLunescape(value))
                                 if lang_id:
                                         update = "update titles set title_language='%d' where title_id=%s" % (int(lang_id), Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
 
@@ -126,7 +127,7 @@ if __name__ == '__main__':
                         # Delete the old webpages
                         ##########################################################
                         delete = "delete from webpages where title_id=%d" % int(Record)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)
 
                         ##########################################################
@@ -136,7 +137,7 @@ if __name__ == '__main__':
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
                                 update = "insert into webpages(title_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 ##########################################################
@@ -148,7 +149,7 @@ if __name__ == '__main__':
                         # Delete the old transliterated titles
                         ##########################################################
                         delete = "delete from trans_titles where title_id=%d" % int(Record)
-                        print "<li> ", delete
+                        print("<li> ", delete)
                         db.query(delete)
 
                         ##########################################################
@@ -159,7 +160,7 @@ if __name__ == '__main__':
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_titles(title_id, trans_title_title)
                                             values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
-                                print "<li> ", update
+                                print("<li> ", update)
                                 db.query(update)
 
                 ##########################################################
@@ -179,18 +180,18 @@ if __name__ == '__main__':
                                         note_id = rec[0][0]
                                         update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
                                         update2 = "update notes set note_note='%s' where note_id=%d" % (value, note_id)
-                                        print "<li> ", update2
+                                        print("<li> ", update2)
                                         if debug == 0:
                                                 db.query(update)
                                 else:
                                         insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
                                         insert2 = "insert into notes(note_note) values('%s');" % value
-                                        print "<li> ", insert2
+                                        print("<li> ", insert2)
                                         if debug == 0:
                                                 db.query(insert)
                                         retval = db.insert_id()
                                         update = "update titles set note_id='%d' where title_id=%s" % (retval, Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
                         else:
@@ -204,11 +205,11 @@ if __name__ == '__main__':
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
-                                        print "<li> ", delete
+                                        print("<li> ", delete)
                                         if debug == 0:
                                                 db.query(delete)
                                         update = "update titles set note_id=NULL where title_id=%s" % (Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
 
@@ -226,19 +227,19 @@ if __name__ == '__main__':
                                         note_id = rec[0][0]
                                         update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
                                         update2 = "update notes set note_note='%s' where note_id=%d" % (value, note_id)
-                                        print "<li> ", update2
+                                        print("<li> ", update2)
                                         if debug == 0:
                                                 db.query(update)
                                 else:
                                         insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
                                         insert2 = "insert into notes(note_note) values('%s');" % value
-                                        print "<li> ", insert2
+                                        print("<li> ", insert2)
                                         if debug == 0:
                                                 db.query(insert)
 
                                         retval = db.insert_id()
                                         update = "update titles set title_synopsis='%d' where title_id=%s" % (retval, Record)
-                                        print "<li> ", update
+                                        print("<li> ", update)
                                         if debug == 0:
                                                 db.query(update)
                         else:
@@ -252,11 +253,11 @@ if __name__ == '__main__':
                                         rec = res.fetch_row()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
-                                        print "<li> ", delete
+                                        print("<li> ", delete)
                                         if debug == 0:
                                                db.query(delete)
                                                update = "update titles set title_synopsis=NULL where title_id=%s" % (Record)
-                                               print "<li> ", update
+                                               print("<li> ", update)
                                         if debug == 0:
                                                db.query(update)
 
@@ -281,7 +282,7 @@ if __name__ == '__main__':
                                 # STEP 2 - Get the ID for the new series
                                 ################################################
                                 query = "select series_id from series where series_title='%s';" % (db.escape_string(value))
-                                print "<li> ", query
+                                print("<li> ", query)
                                 db.query(query)
                                 res = db.store_result()
                                 if res.num_rows():
@@ -289,12 +290,12 @@ if __name__ == '__main__':
                                         NewSeries = record[0][0]
                                 else:
                                         query = "insert into series(series_title) values('%s');" % (db.escape_string(value))
-                                        print "<li> ", query
+                                        print("<li> ", query)
                                         if debug == 0:
                                                 try:
                                                         db.query(query)
                                                 except Exception, e:
-                                                        print "db.query FAILED"
+                                                        print("db.query FAILED")
                                                         traceback.print_exc()
                                         NewSeries = db.insert_id()
 
@@ -302,7 +303,7 @@ if __name__ == '__main__':
                                 # STEP 3 - Update the title record
                                 ################################################
                                 update = "update titles set series_id='%d' where title_id=%s" % (NewSeries, Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -326,15 +327,15 @@ if __name__ == '__main__':
                                 # the two seriesnum fields
                                 ################################################
                                 update = "update titles set series_id=NULL where title_id=%s" % (Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                                 update = "update titles set title_seriesnum=NULL where title_id=%s" % (Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
                                 update = "update titles set title_seriesnum_2=NULL where title_id=%s" % (Record)
-                                print "<li> ", update
+                                print("<li> ", update)
                                 if debug == 0:
                                         db.query(update)
 
@@ -373,10 +374,10 @@ if __name__ == '__main__':
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
 
-        print ISFDBLinkNoName('edit/edittitle.cgi', Record, 'Edit This Title', True)
-        print ISFDBLinkNoName('title.cgi', Record, 'View This Title', True)
-        print ISFDBLinkNoName('edit/find_title_dups.cgi', Record, 'Check for Duplicate Titles', True)
+        print(ISFDBLinkNoName('edit/edittitle.cgi', Record, 'Edit This Title', True))
+        print(ISFDBLinkNoName('title.cgi', Record, 'View This Title', True))
+        print(ISFDBLinkNoName('edit/find_title_dups.cgi', Record, 'Check for Duplicate Titles', True))
 
-        print '<p>'
+        print('<p>')
 
         PrintPostMod(0)

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
@@ -30,9 +31,9 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print "<h1>SQL Updates:</h1>"
-        print "<hr>"
-        print "<ul>"
+        print("<h1>SQL Updates:</h1>")
+        print("<hr>")
+        print("<ul>")
 
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
@@ -80,7 +81,7 @@ if __name__ == '__main__':
                 # Insert into the awards table
                 #####################################
                 insert = "insert into awards(award_title, award_author, award_year, award_level, award_movie, award_type_id, award_cat_id) values('%s', '%s', '%s', '%s', '%s', '%s', '%d')" % (db.escape_string(tistring), db.escape_string(austring), db.escape_string(AwardYear), db.escape_string(AwardLevel), db.escape_string(AwardMovie), int(AwardType), int(AwardCategory))
-                print "<li> ", insert
+                print("<li> ", insert)
                 if debug == 0:
                         db.query(insert)
                 award_id = db.insert_id()
@@ -90,7 +91,7 @@ if __name__ == '__main__':
                 #####################################
                 if TagPresent(merge, 'Record'):
                         insert = "insert into title_awards(award_id, title_id) values(%d, %d)" % (int(award_id), int(Record))
-                        print "<li> ", insert
+                        print("<li> ", insert)
                         if debug == 0:
                                 db.query(insert)
 
@@ -101,11 +102,11 @@ if __name__ == '__main__':
                 note = GetElementValue(merge, 'AwardNote')
                 if note:
                         insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
-                        print "<li> ", insert
+                        print("<li> ", insert)
                         db.query(insert)
                         note_id = int(db.insert_id())
                         update = "update awards set award_note_id = %d where award_id=%d" % (note_id, award_id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         db.query(update)
 
         if debug == 0:
@@ -114,13 +115,13 @@ if __name__ == '__main__':
         try:
                 # Only display title links if this award was entered for a Title record
                 if TagPresent(merge, 'Record'):
-                        print ISFDBLinkNoName('edit/edittitle.cgi', Record, 'Edit This Title', True)
-                        print ISFDBLinkNoName('title.cgi', Record, 'View This Title', True)
-                print ISFDBLinkNoName('award_details.cgi', award_id, 'View This Award', True)
-                print ISFDBLinkNoName('edit/editaward.cgi', award_id, 'Edit This Award', True)
-                print ISFDBLinkNoName('ay.cgi','%s+%s' % (AwardType, AwardYear[:4]), 'View Award Year', True)
+                        print(ISFDBLinkNoName('edit/edittitle.cgi', Record, 'Edit This Title', True))
+                        print(ISFDBLinkNoName('title.cgi', Record, 'View This Title', True))
+                print(ISFDBLinkNoName('award_details.cgi', award_id, 'View This Award', True))
+                print(ISFDBLinkNoName('edit/editaward.cgi', award_id, 'Edit This Award', True))
+                print(ISFDBLinkNoName('ay.cgi','%s+%s' % (AwardType, AwardYear[:4]), 'View Award Year', True))
         except:
                 pass
-        print "<p>"
+        print("<p>")
 
         PrintPostMod(0)

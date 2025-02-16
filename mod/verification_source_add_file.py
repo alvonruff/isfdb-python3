@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus 
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff 
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,9 +33,9 @@ if __name__ == '__main__':
         if not merge:
                 SESSION.DisplayError('Invalid Submission', 0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
-        print '<ul>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
+        print('<ul>')
 
         reference_label = GetElementValue(merge, 'SourceLabel')
         reference_fullname = GetElementValue(merge, 'SourceName')
@@ -44,13 +45,13 @@ if __name__ == '__main__':
                     values('%s', '%s', '%s')""" % (db.escape_string(reference_label),
                                                    db.escape_string(reference_fullname),
                                                    db.escape_string(reference_url))
-        print '<li> ', insert
+        print('<li> ', insert)
         db.query(insert)
         new_record = db.insert_id()
 
         markIntegrated(db, submission, new_record)
 
-        print ISFDBLink('edit/edit_verification_source.cgi', new_record, 'Edit This Verification Source', 1)
-        print ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1)
+        print(ISFDBLink('edit/edit_verification_source.cgi', new_record, 'Edit This Verification Source', 1))
+        print(ISFDBLink('mod/list_verification_sources.cgi', '', 'View Verification Sources', 1))
 
         PrintPostMod(0)

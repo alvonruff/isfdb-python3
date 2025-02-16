@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -33,10 +34,10 @@ if __name__ == '__main__':
         update = """update submissions
                 set sub_state='N', sub_reason=NULL, sub_reviewer=0, sub_reviewed=NULL, sub_holdid=0
                 where sub_id=%d""" % int(sub_id)
-        print '<ul>'
-        print '<li> ', update
+        print('<ul>')
+        print('<li> ', update)
         db.query(update)
-        print '</ul>'
-        print '<p>'
-        print ISFDBLink('view_submission.cgi', sub_id, 'View Submission')
+        print('</ul>')
+        print('<p>')
+        print(ISFDBLink('view_submission.cgi', sub_id, 'View Submission'))
         PrintPostMod(0)

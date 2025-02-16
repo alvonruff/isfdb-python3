@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -27,14 +28,14 @@ if __name__ == '__main__':
         PrintPreMod("ISFDB Reference Submission")
         PrintNavBar()
 
-        print 'Reference table editing is temporarily disabled.'
+        print('Reference table editing is temporarily disabled.')
         PrintPostMod()
 
 
         sys.stderr = sys.stdout
         form = cgi.FieldStorage()
 
-        print '<pre>'
+        print('<pre>')
 
         index = 0
         skips = 0
@@ -81,15 +82,15 @@ if __name__ == '__main__':
                                 record = result.fetch_row()
                                 if record[0][1] != label_value:
                                         update = "update reference set reference_label='%s' where reference_id='%d'" % (label_value, index)
-                                        print update
+                                        print(update)
                                         db.query(update)
                                 if record[0][2] != fullname_value:
                                         update = "update reference set reference_fullname='%s' where reference_id='%d'" % (fullname_value, index)
-                                        print update
+                                        print(update)
                                         db.query(update)
                                 if record[0][3] != pub_value:
                                         update = "update reference set pub_id='%s' where reference_id='%d'" % (pub_value, index)
-                                        print update
+                                        print(update)
                                         db.query(update)
                                 if record[0][4] != url_value:
                                         try:
@@ -98,11 +99,11 @@ if __name__ == '__main__':
                                         except:
                                                 url_value = ''
                                         update = "update reference set reference_url='%s' where reference_id='%d'" % (url_value, index)
-                                        print update
+                                        print(update)
                                         db.query(update)
                         else:
                                 insert = "insert into reference(%s) values(%s)" % (fields, values)
-                                print insert
+                                print(insert)
                                 db.query(insert)
                 else:
                         skips += 1
@@ -110,6 +111,6 @@ if __name__ == '__main__':
                                 break
                 index += 1
 
-        print '</pre>'
+        print('</pre>')
 
         PrintPostMod()

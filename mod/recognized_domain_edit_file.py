@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus 
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -71,7 +71,7 @@ if __name__ == '__main__':
 
                 markIntegrated(db, submission, Record)
 
-        print ISFDBLink('edit/edit_delete_recognized_domain.cgi', Record, 'Edit This Recognized Domain', 1)
-        print ISFDBLink('mod/list_recognized_domains.cgi', '', 'View Recognized Domains', 1)
+        print(ISFDBLink('edit/edit_delete_recognized_domain.cgi', Record, 'Edit This Recognized Domain', 1))
+        print(ISFDBLink('mod/list_recognized_domains.cgi', '', 'View Recognized Domains', 1))
 
         PrintPostMod(0)

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2022-2025   Ahasuerus 
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,9 +33,9 @@ if __name__ == '__main__':
         if not merge:
                 SESSION.DisplayError('Invalid Submission', 0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
-        print '<ul>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
+        print('<ul>')
 
         template_name = GetElementValue(merge, 'TemplateName')
         template_display = GetElementValue(merge, 'TemplateDisplayedName')
@@ -49,7 +50,7 @@ if __name__ == '__main__':
                                                                db.escape_string(template_type),
                                                                db.escape_string(template_url),
                                                                db.escape_string(template_mouseover))
-        print '<li> ', insert
+        print('<li> ', insert)
         db.query(insert)
         new_record = db.insert_id()
 

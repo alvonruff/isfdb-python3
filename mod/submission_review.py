@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -18,7 +19,7 @@ from library import *
 import viewers
 
 def Approvable(app, submission_id):
-        print '<p>'
+        print('<p>')
         # First get the user information for the reviewing/approving moderator
         (reviewer_id, username, usertoken) = GetUserData()
         # Check the current status of the submission
@@ -34,62 +35,62 @@ def Approvable(app, submission_id):
         reviewer_is_moderator = SQLisUserModerator(reviewer_id)
 
         if sub_state in ('I', 'R'):
-                print '<h3>This submission was created on %s and ' % sub_time
+                print('<h3>This submission was created on %s and ' % sub_time)
                 if sub_state == 'R':
-                        print 'rejected'
+                        print('rejected')
                 else:
-                        print 'approved'
+                        print('approved')
                 moderator_name = SQLgetUserName(sub_reviewer)
-                print ' by %s on %s</h3>' % (WikiLink(moderator_name), sub_reviewed)
+                print(' by %s on %s</h3>' % (WikiLink(moderator_name), sub_reviewed))
                 if sub_state == 'R':
-                        print '<p>%s' % ISFDBLink('mod/unreject.cgi', submission_id, 'Unreject Submission')
+                        print('<p>%s' % ISFDBLink('mod/unreject.cgi', submission_id, 'Unreject Submission'))
                 return 0
 
         # Check if the submission was created by another moderator; if so, disallow approving
         if (int(submitter_id) != int(reviewer_id)) and SQLisUserModerator(submitter_id):
-                print '<h3>Submission created by %s</h3>' % WikiLink(submitting_user)
+                print('<h3>Submission created by %s</h3>' % WikiLink(submitting_user))
                 return 0
 
         wiki_edits = SQLWikiEditCount(submitting_user)
         if wiki_edits < 20:
-                print '<h3>New editor with %d Wiki edits.</h3><p>' % wiki_edits
+                print('<h3>New editor with %d Wiki edits.</h3><p>' % wiki_edits)
 
         # Check if the submission is currently on hold by another moderator
         if hold_id:
                 #If the submission is currently on hold by another moderator, don't allow moderation
                 if int(hold_id) != int(reviewer_id):
                         holding_user = SQLgetUserName(hold_id)
-                        print '<h3>Submission is currently on hold by %s</h3>' % WikiLink(holding_user)
+                        print('<h3>Submission is currently on hold by %s</h3>' % WikiLink(holding_user))
                         # Let bureaucrats unhold submissions held by other moderators
                         if SQLisUserBureaucrat(reviewer_id):
-                                print '%s <p>' % ISFDBLinkNoName('mod/unhold.cgi', submission_id, 'UNHOLD', False, 'class="hold" ')
+                                print('%s <p>' % ISFDBLinkNoName('mod/unhold.cgi', submission_id, 'UNHOLD', False, 'class="hold" '))
                         return 0
                 #If the submission is currently on hold by the reviewing moderator, allow to remove from hold
-                print '<h3>Submission is currently on hold by you.</h3><p>'
-                print '%s  ' % ISFDBLinkNoName('mod/unhold.cgi', submission_id, 'UNHOLD', False, 'class="hold" ')
+                print('<h3>Submission is currently on hold by you.</h3><p>')
+                print('%s  ' % ISFDBLinkNoName('mod/unhold.cgi', submission_id, 'UNHOLD', False, 'class="hold" '))
 
         # If the submission is not currently on hold and the reviewer is a moderator as opposed to a self-approver, allow putting it on hold
         elif reviewer_is_moderator:
-                print '%s  ' % ISFDBLinkNoName('mod/hold.cgi', submission_id, 'HOLD', False, 'class="hold" ')
+                print('%s  ' % ISFDBLinkNoName('mod/hold.cgi', submission_id, 'HOLD', False, 'class="hold" '))
 
-        print ISFDBLinkNoName('mod/%s' % app, submission_id, 'Approve', False, 'class="approval" ')
+        print(ISFDBLinkNoName('mod/%s' % app, submission_id, 'Approve', False, 'class="approval" '))
         DisplayPublicLinks(submission_id)
         PrintSubmissionLinks(submission_id, reviewer_id)
-        print '<hr>'
-        print '<form METHOD="POST" ACTION="/cgi-bin/mod/reject.cgi">'
-        print '<p class="topspace"><b>Rejection Reason</b><p>'
-        print '<p class="topspace"><textarea name="reason" rows="4" cols="45"></textarea>'
-        print '<input name="sub_id" value="%d" type="HIDDEN">' % int(submission_id)
-        print '<p class="topspace"><input id="rejection" type="SUBMIT" value="Reject">'
-        print '</form>'
+        print('<hr>')
+        print('<form METHOD="POST" ACTION="/cgi-bin/mod/reject.cgi">')
+        print('<p class="topspace"><b>Rejection Reason</b><p>')
+        print('<p class="topspace"><textarea name="reason" rows="4" cols="45"></textarea>')
+        print('<input name="sub_id" value="%d" type="HIDDEN">' % int(submission_id))
+        print('<p class="topspace"><input id="rejection" type="SUBMIT" value="Reject">')
+        print('</form>')
         return 1
 
 def DisplayPublicLinks(submission_id):
-        print '<span class="approval"><small>'
-        print ISFDBLinkNoName('view_submission.cgi', submission_id, 'Public View', False, 'class="approval" ')
-        print ISFDBLinkNoName('dumpxml.cgi', submission_id, 'View Raw XML', False, 'class="approval" ')
-        print '</small></span>'
-        print '<p><br>'
+        print('<span class="approval"><small>')
+        print(ISFDBLinkNoName('view_submission.cgi', submission_id, 'Public View', False, 'class="approval" '))
+        print(ISFDBLinkNoName('dumpxml.cgi', submission_id, 'View Raw XML', False, 'class="approval" '))
+        print('</small></span>')
+        print('<p><br>')
 
 if __name__ == '__main__':
 
@@ -117,7 +118,7 @@ if __name__ == '__main__':
                 from viewers import SubmissionViewer
                 submission_viewer = SubmissionViewer(function_name, submission_id)
                 submitter = submission_viewer.submitter
-        print '<b>Submitted by:</b> %s' % WikiLink(submitter)
+        print('<b>Submitted by:</b> %s' % WikiLink(submitter))
 
         if not Approvable('%s.cgi' % submission_filer, submission_id):
                 DisplayPublicLinks(submission_id)

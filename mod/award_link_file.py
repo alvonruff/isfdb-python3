@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2004-2025   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2004-2025   Ahasuerus, Klaus Elsbernd, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,9 +24,9 @@ from library import *
 debug = 0
 
 def DoError(text):
-        print '<div id="ErrorBox">'
-        print '<h3>%s</h3>' % text
-        print '</div>'
+        print('<div id="ErrorBox">')
+        print('<h3>%s</h3>' % text)
+        print('</div>')
         PrintPostMod()
         sys.exit(0)
 
@@ -37,7 +38,7 @@ def DoSubmission(db, submission):
         if doc.getElementsByTagName('LinkAward'):
                 merge = doc.getElementsByTagName('LinkAward')
 
-                print "<ul>"
+                print("<ul>")
 
                 if TagPresent(merge, 'Title'):
                         title_id = int(GetElementValue(merge, 'Title'))
@@ -52,13 +53,13 @@ def DoSubmission(db, submission):
                         DoError('No valid award record specified')
 
                 update = "delete from title_awards where award_id='%d';" % award_id
-                print "<li> ", update
+                print("<li> ", update)
                 if debug == 0:
                         db.query(update)
 
                 if int(title_id):
                         update = "insert into title_awards(title_id, award_id) values(%d, %d);" % (title_id, award_id)
-                        print "<li> ", update
+                        print("<li> ", update)
                         if debug == 0:
                                 db.query(update)
 
@@ -78,17 +79,17 @@ if __name__ == '__main__':
         if NotApprovable(submission):
                 sys.exit(0)
 
-        print '<h1>SQL Updates:</h1>'
-        print '<hr>'
+        print('<h1>SQL Updates:</h1>')
+        print('<hr>')
 
         (title_id, award_id) = DoSubmission(db, submission)
 
         if title_id > 0:
-                print ISFDBLinkNoName('title.cgi', title_id, 'View Title record', True)
+                print(ISFDBLinkNoName('title.cgi', title_id, 'View Title record', True))
         if award_id > 0:
-                print ISFDBLinkNoName('award_details.cgi', award_id, 'View Award record', True)
+                print(ISFDBLinkNoName('award_details.cgi', award_id, 'View Award record', True))
 
-        print '<p>'
+        print('<p>')
 
         PrintPostMod(0)
         
