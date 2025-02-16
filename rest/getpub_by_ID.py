@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2018-2025   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,15 +17,15 @@ from pub_output import pubOutput
 
 if __name__ == '__main__':
 
-        print 'Content-type: text/html\n'
+        print('Content-type: text/html\n')
 
         ext_id_name = SESSION.Parameter(0, 'str')
         ext_id_value = SESSION.Parameter(1, 'str')
         if not ext_id_name or not ext_id_value:
-                print """getpub_by_ID.cgi: Bad query.
+                print("""getpub_by_ID.cgi: Bad query.
                         The first parameter should be the External ID type name
                         (see Advanced Publication Search by External Identifier for a list.)
-                        The second parameter should be the External ID value."""
+                        The second parameter should be the External ID value.""")
                 sys.exit(1)
 
         ext_id_types = SQLLoadIdentifierTypes()
@@ -35,7 +36,7 @@ if __name__ == '__main__':
                         ext_id_type = ext_type_number
                         break
         if not ext_id_type:
-                print "getpub_by_ID.cgi: Non-existent External ID Type"
+                print("getpub_by_ID.cgi: Non-existent External ID Type")
                 sys.exit(1)
                 
         pub_bodies = SQLFindPubByExternalID(ext_id_type, ext_id_value)

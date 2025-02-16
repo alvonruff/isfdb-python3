@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
@@ -18,23 +19,23 @@ from pubClass import pubs
 
 
 def pubOutput(pub_bodies):
-        print '<?xml version="1.0" encoding="iso-8859-1" ?>'
-        print '<ISFDB>'
-        print '  <Records>%d</Records>' % len(pub_bodies)
-        print '  <Publications>'
+        print('<?xml version="1.0" encoding="iso-8859-1" ?>')
+        print('<ISFDB>')
+        print('  <Records>%d</Records>' % len(pub_bodies))
+        print('  <Publications>')
         for pub_body in pub_bodies:
                 onePubOutput(pub_body)
-        print '  </Publications>'
-        print '</ISFDB>'
+        print('  </Publications>')
+        print('</ISFDB>')
 
 def onePubOutput(publication):        
 
         pub = pubs(db)
         pub.pub_id = publication[PUB_PUBID]
 
-        print '    <Publication>'
-        print '      <Record>%s</Record>' % pub.pub_id
-        print '      <Title>%s</Title>' % XMLescape(publication[PUB_TITLE], 1)
+        print('    <Publication>')
+        print('      <Record>%s</Record>' % pub.pub_id)
+        print('      <Title>%s</Title>' % XMLescape(publication[PUB_TITLE], 1))
         authors = SQLPubAuthors(pub.pub_id)
         printMultiValued(authors, 'Authors', 'Author')
 
@@ -65,24 +66,24 @@ def onePubOutput(publication):
 
         pub.loadExternalIDs()
         if pub.identifiers:
-                print pub.xmlIdentifiers(1)
+                print(pub.xmlIdentifiers(1))
         
         pub.loadPubWebpages()
         printMultiValued(pub.pub_webpages, 'Webpages', 'Webpage')
         
         pub.loadTransTitles()
         printMultiValued(pub.pub_trans_titles, 'TransTitles', 'TransTitle')
-        print '    </Publication>'
+        print('    </Publication>')
 
 def printTag(value, tag):
         if not value:
                 return
-        print '      <%s>%s</%s>' % (tag, XMLescape(value, 1), tag)
+        print('      <%s>%s</%s>' % (tag, XMLescape(value, 1), tag))
 
 def printMultiValued(values, outer_tag, inner_tag):
         if not values:
                 return
-        print '      <%s>' % outer_tag
+        print('      <%s>' % outer_tag)
         for value in values:
-                print '        <%s>%s</%s>' % (inner_tag, XMLescape(value, 1), inner_tag)
-        print '      </%s>' % outer_tag
+                print('        <%s>%s</%s>' % (inner_tag, XMLescape(value, 1), inner_tag))
+        print('      </%s>' % outer_tag)
