@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -45,8 +46,8 @@ if __name__ == '__main__':
                         # in XMLescape when a submission is created. However, title tags
                         # are filed into the database directly and do not go through the
                         # standard submission process, so we need to strip spaces directly.
-                        tag = string.strip(tag)
-                        tag = string.rstrip(tag)
+                        tag = str.strip(tag)
+                        tag = str.rstrip(tag)
                         # Replace multiple adjacent spaces with single spaces
                         tag = ' '.join(tag.split())
                         # Only add the new tag to the list of tags if it's not already in the list

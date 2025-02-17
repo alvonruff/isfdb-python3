@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025 Al von Ruff, Bill Longley, Kevin Pulliam (kevin.pulliam@gmail.com), Ahasuerus, Jesse Weinstein <jesse@wefu.org>, Uzume and Dirk Stoecker
 #     ALL RIGHTS RESERVED
@@ -34,32 +35,32 @@ def displayError(message, title = '', cgi_script = '', record_id = 0):
         sys.exit(0)
 
 def XMLunescape2(input):
-        retval = string.replace(str(input), "&rsquo;", "'")
-        retval = string.replace(retval, "&quot;", '"')
-        retval = string.strip(retval)
-        retval = string.rstrip(retval)
+        retval = str.replace(str(input), "&rsquo;", "'")
+        retval = str.replace(retval, "&quot;", '"')
+        retval = str.strip(retval)
+        retval = str.rstrip(retval)
         return retval
 
 def escape_string(input):
-        retval = string.replace(str(input), "'", "&rsquo;")
-        retval = string.replace(retval, '"', "&quot;")
-        retval = string.replace(retval, '  ', ' ')
-        retval = string.replace(retval, "<", "&lt;")
-        retval = string.replace(retval, ">", "&gt;")
-        retval = string.replace(retval, "\\r\\n", "")
+        retval = str.replace(str(input), "'", "&rsquo;")
+        retval = str.replace(retval, '"', "&quot;")
+        retval = str.replace(retval, '  ', ' ')
+        retval = str.replace(retval, "<", "&lt;")
+        retval = str.replace(retval, ">", "&gt;")
+        retval = str.replace(retval, "\\r\\n", "")
         return retval
 
 def escape_quotes(input):
         if input:
-                return string.strip(repr(input+'"')[1:-2])
+                return str.strip(repr(input+'"')[1:-2])
         else:
                 return ''
 
 def escape_spaces(input):
-        return string.replace(input, ' ', '%20')
+        return str.replace(input, ' ', '%20')
 
 def unescape_spaces(input):
-        return string.replace(input, '%20', ' ')
+        return str.replace(input, '%20', ' ')
 
 
 ##################################################################

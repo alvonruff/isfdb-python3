@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -30,14 +31,14 @@ if __name__ == '__main__':
         parent_id = 0
         
         if form.has_key('ParentRec'):
-                parent_id = string.strip(form['ParentRec'].value)
+                parent_id = str.strip(form['ParentRec'].value)
         elif form.has_key('ParentName'):
-                parent_name = string.strip(form['ParentName'].value)
+                parent_name = str.strip(form['ParentName'].value)
         else:
                 submission.error('Parent record # or name must be specified')
 
         if form.has_key('author_id'):
-                author_id = string.strip(form['author_id'].value)
+                author_id = str.strip(form['author_id'].value)
                 author_data = SQLloadAuthorData(int(author_id))
         else:
                 submission.error('Author record must be specified')

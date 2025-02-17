@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
@@ -169,7 +170,7 @@ if __name__ == '__main__':
                                 # Re-assemble the string from the parsed list, removing spaces
                                 title_title = "".join(parsed_title)
                                 # Remove all punctuation characters
-                                title_title = title_title.translate(string.maketrans("",""), string.punctuation)
+                                title_title = title_title.translate(str.maketrans("",""), str.punctuation)
                         if title_title not in title_dict:
                                 title_dict[title_title] = [title]
                         else:

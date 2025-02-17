@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2011-2025   Ahasuerus, Bill Longley, Al von Ruff
 #         ALL RIGHTS RESERVED
@@ -2243,7 +2244,7 @@ def function51():
         isbns = {}
         record = result.fetch_row()
         while record:
-                normalized_isbn = string.replace(record[0][2],"-",'')
+                normalized_isbn = str.replace(record[0][2],"-",'')
                 if normalized_isbn not in isbns:
                         isbns[normalized_isbn] = []
                 isbns[normalized_isbn].append(record[0])
@@ -7589,8 +7590,8 @@ def Nightly_html(report_id, table, note_field, record_id_field, record_title_fie
                 record_name = record[0][1]
                 note = record[0][2]
                 for tag in ui.valid_tags:
-                        note = string.replace(note, tag.lower(), '')
-                        note = string.replace(note, tag.upper(), '')
+                        note = str.replace(note, tag.lower(), '')
+                        note = str.replace(note, tag.upper(), '')
                 problem_part = note
                 if '<' in note:
                         problem_part = cgi.escape(note.split('<')[1][:20])
