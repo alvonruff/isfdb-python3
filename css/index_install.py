@@ -19,7 +19,7 @@ def fillIn(in_filename, out_filename, replacement_dictionary):
         fd.close()
 
         for key in replacement_dictionary:
-                image = string.replace(image, key, replacement_dictionary[key])
+                image = str.replace(image, key, replacement_dictionary[key])
         fd = open(out_filename, 'w+')
         fd.write(image)
         fd.close()
