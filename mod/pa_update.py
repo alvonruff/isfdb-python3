@@ -115,7 +115,7 @@ def insertCover(title, artists, date, referral_lang):
         if referral_lang:
                 setTitleLang(record, referral_lang)
 
-        artistlist = string.split(artists, '+')
+        artistlist = str.split(artists, '+')
         NewArtists = []
         for artist in artistlist:
                 NewArtists.append(artist)
@@ -129,7 +129,7 @@ def mergeCover(record, title, artists, date, doArtists):
         setTitleType(record, 'COVERART')
 
         if doArtists:
-                artistlist = string.split(artists, '+')
+                artistlist = str.split(artists, '+')
                 NewArtists = []
                 for artist in artistlist:
                         NewArtists.append(artist)
@@ -153,7 +153,7 @@ def insertTitle(title, authors, date, page, type, length, referral_lang):
         if referral_lang:
                 setTitleLang(record, referral_lang)
 
-        authorlist = string.split(authors, '+')
+        authorlist = str.split(authors, '+')
         NewAuthors = []
         for author in authorlist:
                 NewAuthors.append(author)
@@ -174,7 +174,7 @@ def mergeTitle(record, title, authors, date, page, type, length, doAuthors):
                 setTitlePage(record, page, pub_id)
 
         if doAuthors:
-                authorlist = string.split(authors, '+')
+                authorlist = str.split(authors, '+')
                 NewAuthors = []
                 for author in authorlist:
                         NewAuthors.append(author)
@@ -196,13 +196,13 @@ def insertReview(title, reviewees, reviewers, date, page, referral_lang):
         if referral_lang:
                 setTitleLang(record, referral_lang)
 
-        reviewerlist = string.split(reviewers, '+')
+        reviewerlist = str.split(reviewers, '+')
         NewReviewers = []
         for reviewer in reviewerlist:
                 NewReviewers.append(reviewer)
         setTitleAuthors(record, NewReviewers)
 
-        revieweelist = string.split(reviewees, '+')
+        revieweelist = str.split(reviewees, '+')
         NewReviewees = []
         for reviewee in revieweelist:
                 NewReviewees.append(reviewee)
@@ -227,14 +227,14 @@ def mergeReview(record, title, reviewees, reviewers, date, page, doReviewees, do
                 setTitlePage(record, page, pub_id)
 
         if doReviewers:
-                reviewerlist = string.split(reviewers, '+')
+                reviewerlist = str.split(reviewers, '+')
                 NewReviewers = []
                 for reviewer in reviewerlist:
                         NewReviewers.append(reviewer)
                 setTitleAuthors(record, NewReviewers)
 
         if doReviewees:
-                revieweelist = string.split(reviewees, '+')
+                revieweelist = str.split(reviewees, '+')
                 NewReviewees = []
                 for reviewee in revieweelist:
                         NewReviewees.append(reviewee)
@@ -256,13 +256,13 @@ def insertInterview(title, interviewees, interviewers, date, page, referral_lang
         if referral_lang:
                 setTitleLang(record, referral_lang)
 
-        interviewerlist = string.split(interviewers, '+')
+        interviewerlist = str.split(interviewers, '+')
         NewInterviewers = []
         for interviewer in interviewerlist:
                 NewInterviewers.append(interviewer)
         setTitleAuthors(record, NewInterviewers)
 
-        intervieweelist = string.split(interviewees, '+')
+        intervieweelist = str.split(interviewees, '+')
         NewInterviewees = []
         for interviewee in intervieweelist:
                 NewInterviewees.append(interviewee)
@@ -278,14 +278,14 @@ def mergeInterview(record, title, interviewees, interviewers, date, page, doInte
                 setTitlePage(record, page, pub_id)
 
         if doInterviewers:
-                interviewerlist = string.split(interviewers, '+')
+                interviewerlist = str.split(interviewers, '+')
                 NewInterviewers = []
                 for interviewer in interviewerlist:
                         NewInterviewers.append(interviewer)
                 setTitleAuthors(record, NewInterviewers)
 
         if doInterviewees:
-                intervieweelist = string.split(interviewees, '+')
+                intervieweelist = str.split(interviewees, '+')
                 NewInterviewees = []
                 for interviewee in intervieweelist:
                         NewInterviewees.append(interviewee)

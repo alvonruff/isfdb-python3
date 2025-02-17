@@ -159,13 +159,13 @@ def addTitleAuthor(author, title_id, status):
                 db.query(insert)
 
 def update_directory(lastname):
-        lastname = string.replace(lastname, '.', '')
-        lastname = string.replace(lastname, ',', '')
-        lastname = string.replace(lastname, '"', '')
-        #lastname = string.replace(lastname, "'", '')
-        lastname = string.replace(lastname, "(", '')
-        lastname = string.replace(lastname, ")", '')
-        lastname = string.replace(lastname, " ", '')
+        lastname = str.replace(lastname, '.', '')
+        lastname = str.replace(lastname, ',', '')
+        lastname = str.replace(lastname, '"', '')
+        #lastname = str.replace(lastname, "'", '')
+        lastname = str.replace(lastname, "(", '')
+        lastname = str.replace(lastname, ")", '')
+        lastname = str.replace(lastname, " ", '')
         section  = lastname[0:2]
 
         # Bullet proofing section - Make sure section is in the range Aa-Zz
@@ -368,9 +368,9 @@ def insertAuthorCanonical(author):
         first_parent = author.find('(')
         if first_parent > 0:
                 author = author[0:first_parent]
-                author = string.strip(author)
+                author = str.strip(author)
         # Step 2.2: Get the last space-delimited segment of the author's name
-        fields = string.split(author, " ")
+        fields = str.split(author, " ")
         lastname = fields[-1]
         # If the last segment is a recognized suffix like 'Jr.' or 'III', skip it and get the previous segment
         if len(fields) > 1 and lastname in SESSION.recognized_suffixes:

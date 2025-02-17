@@ -37,7 +37,7 @@ def CreateTag(db, title, year):
         ########################################################
         # STEP 1 - Convert the entire title string to upper case
         ########################################################
-        newtitle = string.upper(title)
+        newtitle = str.upper(title)
 
         ########################################################
         # STEP 2 - Extract the consonants. Max length = 10
@@ -179,7 +179,7 @@ def integrateCover(title, authors, date, pub_id, lang_id):
         ####################################################
         # STEP 2 - Create author records for any new artists
         ####################################################
-        artist_list = string.split(authors, "+")
+        artist_list = str.split(authors, "+")
         for artist in artist_list:
                 addTitleAuthor(artist, TitleRecord, 'CANONICAL')
 
@@ -216,7 +216,7 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, lang_id):
         ####################################################
         # STEP 2 - Take care of the authors
         ####################################################
-        authorlist = string.split(authors, "+")
+        authorlist = str.split(authors, "+")
         for author in authorlist:
                 addTitleAuthor(author, TitleRecord, 'CANONICAL')
                 
@@ -252,14 +252,14 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, lang_id):
         ####################################################
         # STEP 2 - Take care of the reviewers
         ####################################################
-        authorlist = string.split(reviewers, "+")
+        authorlist = str.split(reviewers, "+")
         for author in authorlist:
                 addTitleAuthor(author, TitleRecord, 'CANONICAL')
                 
         ####################################################
         # STEP 3 - Take care of the reviewees
         ####################################################
-        authorlist = string.split(authors, "+")
+        authorlist = str.split(authors, "+")
         for author in authorlist:
                 addTitleAuthor(author, TitleRecord, 'REVIEWEE')
 
@@ -307,14 +307,14 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, la
         ####################################################
         # STEP 2 - Take care of the interviewers
         ####################################################
-        authorlist = string.split(interviewers, "+")
+        authorlist = str.split(interviewers, "+")
         for author in authorlist:
                 addTitleAuthor(author, TitleRecord, 'CANONICAL')
                 
         ####################################################
         # STEP 3 - Take care of the interviewees
         ####################################################
-        authorlist = string.split(interviewees, "+")
+        authorlist = str.split(interviewees, "+")
         for author in authorlist:
                 addTitleAuthor(author, TitleRecord, 'INTERVIEWEE')
                 
