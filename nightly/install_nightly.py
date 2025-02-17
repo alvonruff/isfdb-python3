@@ -27,7 +27,7 @@ if __name__ == '__main__':
         image = fd.read()
         fd.close()
 
-        image = string.replace(image, '_PYTHONLOC', python)
+        image = str.replace(image, '_PYTHONLOC', python)
         fd = open(directory +'/' +basename+ '.py', 'w+')
         fd.write(image)
         fd.close
