@@ -48,7 +48,7 @@ class ExtIDSearch:
 
                         try:
                                 self.id_value = form['ID_VALUE'].value
-                                self.id_value = string.strip(self.id_value)
+                                self.id_value = str.strip(self.id_value)
                                 self.id_value = self.id_value.replace('*', '%')
                         except:
                                 self.display_error('No search value specified')

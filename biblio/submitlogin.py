@@ -65,7 +65,7 @@ if __name__ == '__main__':
                 hash2.update(newstr)
 
                 submitted_password = hash2.hexdigest()
-                #real_password = string.split(str(record[0][1]), "'")[3]
+                #real_password = str.split(str(record[0][1]), "'")[3]
                 real_password = record[0][1]
 
                 if submitted_password != real_password:
@@ -82,7 +82,7 @@ if __name__ == '__main__':
 
                 # Extract the various fields stored in the user_password field
                 try:
-                        fields = string.split(str(wikiPass), ":")
+                        fields = str.split(str(wikiPass), ":")
                         encryption = fields[1]
                         hashAlgo = fields[2]
                         cost   = int(fields[3])

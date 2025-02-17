@@ -28,9 +28,9 @@ if __name__ == '__main__':
         PrintNavbar('dumpxml', 0, 0, 0, 0)
 
         outstr = submission_body[SUB_DATA]
-        outstr = string.replace(outstr, '<', '&lt;')
-        outstr = string.replace(outstr, '>', '&gt;')
-        outstr = string.replace(outstr, '\n', '<br>')
+        outstr = str.replace(outstr, '<', '&lt;')
+        outstr = str.replace(outstr, '>', '&gt;')
+        outstr = str.replace(outstr, '\n', '<br>')
 
         print(outstr)
 

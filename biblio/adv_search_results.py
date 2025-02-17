@@ -90,7 +90,7 @@ class AdvancedSearchResults(AdvancedSearch):
                         for key in raw_form.keys():
                                 value = raw_form[key].value
                                 if not self.user.keep_spaces_in_searches:
-                                        value = string.strip(value)
+                                        value = str.strip(value)
                                 if value:
                                         self.form[key] = value
 
@@ -321,10 +321,10 @@ class AdvancedSearchResults(AdvancedSearch):
 
         def format_entry(self, value):
                 # Double escape backslashes, which is required by the SQL syntax
-                value = string.replace(value, '\\', '\\\\')
+                value = str.replace(value, '\\', '\\\\')
                 value = db.escape_string(value)
                 # Change asterisks to % because * is also a supported wildcard character
-                value = string.replace(value, '*', '%')
+                value = str.replace(value, '*', '%')
                 return value
 
         def make_terms(self):

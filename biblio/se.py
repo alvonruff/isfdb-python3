@@ -257,13 +257,13 @@ if __name__ == '__main__':
                 # to be re-displayed in the search box
                 search_value = form['arg'].value.replace('"','&quot;')
                 # Replace asterisks with % to facilitate wild cards
-                arg = string.replace(normalizeInput(form['arg'].value), '*', '%')
+                arg = str.replace(normalizeInput(form['arg'].value), '*', '%')
                 # Double escape backslashes, which is required by the SQL syntax
-                arg = string.replace(arg, '\\', '\\\\')
+                arg = str.replace(arg, '\\', '\\\\')
                 user = User()
                 user.load()
                 if not user.keep_spaces_in_searches:
-                        arg = string.strip(arg)
+                        arg = str.strip(arg)
                 if not arg:
                         raise
         except:

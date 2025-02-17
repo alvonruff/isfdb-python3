@@ -54,7 +54,7 @@ class NoteSearch:
 
                 try:
                         self.note_value = form['NOTE_VALUE'].value
-                        self.note_value = string.strip(self.note_value)
+                        self.note_value = str.strip(self.note_value)
                         self.note_value = self.note_value.replace('*', '%')
                 except:
                         self.display_error('No note value specified')

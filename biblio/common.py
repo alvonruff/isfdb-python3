@@ -775,18 +775,18 @@ def PrintTrailer(page_type, arg1, arg2):
         print('</html>')
 
 def escape_spaces(input):
-        return string.replace(input, ' ', '%20')
+        return str.replace(input, ' ', '%20')
 
 def escapeLink2(input):
-        retval = string.replace(input, '\\', '')
-        retval = string.replace(retval, ' ', '%20')
-        retval = string.replace(retval, '&rsquo;', "'")
+        retval = str.replace(input, '\\', '')
+        retval = str.replace(retval, ' ', '%20')
+        retval = str.replace(retval, '&rsquo;', "'")
         return retval
 
 def escapeLink(input):
-        retval = string.replace(input, ' ', '_')
-        retval = string.replace(retval, "'", '&rsquo;')
-        retval = string.replace(retval, '"', '&quot;')
+        retval = str.replace(input, ' ', '_')
+        retval = str.replace(retval, "'", '&rsquo;')
+        retval = str.replace(retval, '"', '&quot;')
         return retval
 
 def displayAuthorList(authors):
@@ -1120,7 +1120,7 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
 
         # Pages
         if pub[PUB_PAGES]:
-                page_list = string.split(pub[PUB_PAGES],'+')
+                page_list = str.split(pub[PUB_PAGES],'+')
                 print('<td>')
                 first = 1
                 output = ''

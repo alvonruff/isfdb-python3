@@ -35,7 +35,7 @@ if __name__ == '__main__':
         form = cgi.FieldStorage()
         try:
                 user_name = form['USER_NAME'].value
-                user_name = string.strip(user_name)
+                user_name = str.strip(user_name)
         except:
                 print("<h2>No user name specified</h2>")
                 PrintTrailer('search', '', 0)

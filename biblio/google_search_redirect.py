@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2018-2021   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -37,7 +38,7 @@ class GoogleSearch:
 
                 try:
                         self.search_value = form['SEARCH_VALUE'].value
-                        self.search_value = urllib.quote(string.strip(self.search_value))
+                        self.search_value = urllib.quote(str.strip(self.search_value))
                 except:
                         SESSION.DisplayError('No search value specified')
 

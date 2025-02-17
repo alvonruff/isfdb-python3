@@ -172,8 +172,8 @@ if __name__ == '__main__':
                 print('<li> <b>Date:</b> %s' % (ISFDBconvertDate(pub.pub_year, 1)))
 
         if pub.pub_isbn:
-                compact = string.replace(pub.pub_isbn, '-', '')
-                compact = string.replace(compact, ' ', '')
+                compact = str.replace(pub.pub_isbn, '-', '')
+                compact = str.replace(compact, ' ', '')
 
                 # Bad ISBN format
                 if not ISBNValidFormat(pub.pub_isbn):

@@ -18,8 +18,8 @@ from isfdb import *
 #==========================================================
 
 def DecodeArg(arg):
-        arg = string.replace(arg, '_', ' ')
-        arg = string.replace(arg, '\\', '')
+        arg = str.replace(arg, '_', ' ')
+        arg = str.replace(arg, '\\', '')
         return arg
 
 

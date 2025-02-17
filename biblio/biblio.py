@@ -758,7 +758,7 @@ class Bibliography:
                 award.PrintAwardTable(self.au_awards)
 
         def ConvertDate(self, date):
-                decompose = string.split(date, '-')
+                decompose = str.split(date, '-')
                 ##################################
                 # Day
                 ##################################

@@ -49,7 +49,7 @@ class WebPagesSearch:
 
                 try:
                         self.note_value = form['WEBPAGE_VALUE'].value
-                        self.note_value = string.strip(self.note_value)
+                        self.note_value = str.strip(self.note_value)
                         self.note_value = self.note_value.replace('*', '%')
                 except:
                         self.display_error('No Web Page value specified')
