@@ -17,7 +17,7 @@ from library import normalizeInput, XMLunescape, XMLescape
 from login import User
 from xml.dom import minidom
 from xml.dom import Node
-        
+
 
 class Submission:
         def __init__ (self):
@@ -45,7 +45,7 @@ class Submission:
 
         def get_input(self):
                 input = sys.stdin.read()
-                index = string.find(input, "<?xml ")
+                index = str.find(input, "<?xml ")
                 self.XMLdata = input[index:]
                 try:
                         self.doc = minidom.parseString(self.XMLdata)
@@ -165,11 +165,11 @@ class Submission:
                 return value
 
         def delete_field(self, field_name):
-                index = string.find(self.XMLdata, '<%s>' % field_name)
+                index = str.find(self.XMLdata, '<%s>' % field_name)
                 if index == -1:
                         return
                 newxml = self.XMLdata[:index]
-                index = string.find(self.XMLdata, '</%s>' % field_name)
+                index = str.find(self.XMLdata, '</%s>' % field_name)
                 if index == -1:
                         return
                 index += len(field_name) + 3
