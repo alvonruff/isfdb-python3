@@ -244,7 +244,7 @@ def LengthCheck(arg, record_name, search_type):
 
 if __name__ == '__main__':
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 mode = form['mode'].value
                 if mode not in ('exact', 'contains'):

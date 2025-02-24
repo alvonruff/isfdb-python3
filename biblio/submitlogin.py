@@ -27,7 +27,7 @@ def doError(message):
 if __name__ == '__main__':
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 login = form['login'].value

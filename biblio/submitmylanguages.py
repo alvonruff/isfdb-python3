@@ -30,7 +30,7 @@ def DoError(message):
 if __name__ == '__main__':
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         user = User()
         user.load()

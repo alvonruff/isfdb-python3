@@ -32,7 +32,7 @@ if __name__ == '__main__':
                 print('<h3>For performance reasons, Advanced Searches are currently restricted to registered users.</h3>')
                 sys.exit(0)
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 user_name = form['USER_NAME'].value
                 user_name = str.strip(user_name)

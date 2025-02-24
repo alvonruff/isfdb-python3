@@ -111,7 +111,7 @@ class SeriesGrid:
 
                 print('<div class="ContentBox">')
                 print('<b>Format:</b> %s' % ISFDBPubFormat(self.default_format))
-                if len(self.formats.keys()) > 1:
+                if len(list(self.formats.keys())) > 1:
                         print('(unless indicated otherwise)')
                 print('<br>')
                 print('<b>Legend:</b> Unverified issues are gold, secondary verifications are light blue.')
@@ -129,7 +129,7 @@ class SeriesGrid:
                 for month in sorted(ISFDBmonthmap.keys()):
                         print('<th>%s</th>' % (ISFDBmonthmap[month]))
                 print('<th>No month</th></tr>')
-                for year in sorted(self.arr.keys(), reverse=self.displayOrder):
+                for year in sorted(list(self.arr.keys()), reverse=self.displayOrder):
                         self.bgcolor ^= 1
                         self.PrintOneYear(year)
                 
@@ -140,7 +140,7 @@ class SeriesGrid:
                 print('<tr align=center class="table%d">' % (self.bgcolor+1))
                 print('<th class="year">%s</th>' % ISFDBconvertYear(year))
                 for month in self.list_months:
-                        if not self.arr[year].has_key(unicode(month)):
+                        if unicode(month) not in self.arr[year]:
                                 print('<td>-</td>')
                                 continue
                         # Create a nested table

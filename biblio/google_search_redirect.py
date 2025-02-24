@@ -30,7 +30,7 @@ class GoogleSearch:
                 self.operators = ('exact', 'approximate')
 
         def get_search_parameters(self):
-                form = cgi.FieldStorage()
+                form = IsfdbFieldStorage()
                 try:
                         self.page_type = self.page_types[form['PAGE_TYPE'].value]
                 except:

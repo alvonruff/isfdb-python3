@@ -39,7 +39,7 @@ class WebPagesSearch:
                         }
 
         def get_search_parameters(self):
-                form = cgi.FieldStorage()
+                form = IsfdbFieldStorage()
                 try:
                         self.operator = form['OPERATOR'].value
                         if self.operator not in self.operators:

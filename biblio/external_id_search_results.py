@@ -37,7 +37,7 @@ class ExtIDSearch:
                 if not self.user.id:
                         self.display_error('For performance reasons, Advanced Searches are currently restricted to registered users.')
                 else:
-                        form = cgi.FieldStorage()
+                        form = IsfdbFieldStorage()
                         try:
                                 id_types = SQLLoadIdentifierTypes()
                                 self.id_type = int(form['ID_TYPE'].value)

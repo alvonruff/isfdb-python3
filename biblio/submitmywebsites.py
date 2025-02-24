@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         (user_id, username, usertoken) = GetUserData()
         if not user_id:

@@ -28,7 +28,7 @@ if __name__ == '__main__':
         PrintHeader("Publication Comparison")
         PrintNavbar('pubdiff', 0, 0, 0, 0)
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         pub_ids = {}
         try:

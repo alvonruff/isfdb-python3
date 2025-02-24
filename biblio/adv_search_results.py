@@ -82,12 +82,12 @@ class AdvancedSearchResults(AdvancedSearch):
 
         def parse_parameters(self):
                 sys.stderr = sys.stdout
-                raw_form = cgi.FieldStorage()
+                raw_form = IsfdbFieldStorage()
 
                 try:
                         # Strip leading and trailing spaces if the user's preferences call for it;
                         # move the parameters to a new dictionary, 'form'
-                        for key in raw_form.keys():
+                        for key in list(raw_form.keys()):
                                 value = raw_form[key].value
                                 if not self.user.keep_spaces_in_searches:
                                         value = str.strip(value)
@@ -204,7 +204,7 @@ class AdvancedSearchResults(AdvancedSearch):
         def process_terms(self):
                 for count in range(1, self.max_term + 1):
                         term = 'TERM_%d' % count
-                        if self.form.has_key(term):
+                        if term in self.form:
                                 use = self.form.get('USE_%d' % count)
                                 operator = self.form.get('O_%d' % count)
                                 if not operator:

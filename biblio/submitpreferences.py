@@ -32,66 +32,66 @@ if __name__ == '__main__':
         user_id = int(user.id)
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         #Initialize the value of the "Display Concise publication listing by default" user preference
         concise_display = 0
-        if form.has_key("concise_display"):
+        if "concise_display" in form:
                 concise_display = 1
 
         #Initialize the value of the "Display cover images on the Title page by default" user preference
         covers_display = 0
-        if form.has_key("covers_display"):
+        if "covers_display" in form:
                 covers_display = 1
 
         # Set the default language to 17 (English) even though the HTML form should always have a language code defined
         default_language = 17
-        if form.has_key("default_language"):
+        if "default_language" in form:
                 default_language = int(form["default_language"].value)
 
         #Initialize the value of the "Do not display translation warnings on Bibliography pages" user preference
         suppress_translation_warnings = 0
-        if form.has_key("suppress_translation_warnings"):
+        if "suppress_translation_warnings" in form:
                 suppress_translation_warnings = 1
 
         #Initialize the value of the "Do not display bibliographic warnings on Title pages" user preference
         suppress_bibliographic_warnings = 0
-        if form.has_key("suppress_bibliographic_warnings"):
+        if "suppress_bibliographic_warnings" in form:
                 suppress_bibliographic_warnings = 1
 
         #Initialize the value of the "Do not display awards on Title pages" user preference
         suppress_awards = 0
-        if form.has_key("suppress_awards"):
+        if "suppress_awards" in form:
                 suppress_awards = 1
 
         #Initialize the value of the "Do not display reviews on Title pages" user preference
         suppress_reviews = 0
-        if form.has_key("suppress_reviews"):
+        if "suppress_reviews" in form:
                 suppress_reviews = 1
 
         #Initialize the value of the "Display cover scan indicators on Title and search pages" user preference
         cover_links_display = 0
-        if form.has_key("cover_links_display"):
+        if "cover_links_display" in form:
                 cover_links_display = 1
 
         #Initialize the value of the "Keep leading and trailing spaces when searching" user preference
         keep_spaces_in_searches = 0
-        if form.has_key("keep_spaces_in_searches"):
+        if "keep_spaces_in_searches" in form:
                 keep_spaces_in_searches = 1
 
         #Initialize the value of the "Do not display mouseover help on Edit pages" user preference
         suppress_help_bubbles = 0
-        if form.has_key("suppress_help_bubbles"):
+        if "suppress_help_bubbles" in form:
                 suppress_help_bubbles = 1
 
         #Initialize the value of the "Display post-submission review pages" user preference
         display_post_submission = 0
-        if form.has_key("display_post_submission"):
+        if "display_post_submission" in form:
                 display_post_submission = 1
 
         #Initialize the value of the "Display translations on Title pages" user preference
         display_title_translations = 0
-        if form.has_key("display_title_translations"):
+        if "display_title_translations" in form:
                 display_title_translations = 1
 
         #Retrieve the value of the "Display translations" drop-down list
