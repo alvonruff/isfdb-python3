@@ -78,36 +78,36 @@ class RecognizedDomain():
                                 self.explicit_link_required_display = 'No'
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('domain_id'):
+                self.form = IsfdbFieldStorage()
+                if 'domain_id' in self.form:
                         self.domain_id = int(self.form['domain_id'].value)
                         self.used_domain_id = 1
                         if not SQLGetRecognizedDomainByID(self.domain_id):
                                 self.error = 'This Recognized Domain ID is not on file'
                                 return
 
-                if self.form.has_key('domain_name'):
+                if 'domain_name' in self.form:
                         self.domain_name = XMLescape(self.form['domain_name'].value)
                         self.used_domain_name = 1
                 else:
                         self.error = 'Recognized Domain Name is a required field'
                         return
 
-                if self.form.has_key('site_name'):
+                if 'site_name' in self.form:
                         self.site_name = XMLescape(self.form['site_name'].value)
                         self.used_site_name = 1
                 else:
                         self.error = 'Web Site name is a required field'
                         return
 
-                if self.form.has_key('site_url'):
+                if 'site_url' in self.form:
                         self.site_url = XMLescape(self.form['site_url'].value)
                         self.used_site_url = 1
                 else:
                         self.error = 'Web Site URL is a required field'
                         return
 
-                if self.form.has_key('linking_allowed'):
+                if 'linking_allowed' in self.form:
                         self.linking_allowed_display = self._CheckYesNoValue(XMLescape(self.form['linking_allowed'].value),
                                                                'Linking Allowed')
                         if self.error:
@@ -122,11 +122,11 @@ class RecognizedDomain():
                         self.error = 'Linking Allowed is a required field'
                         return
 
-                if self.form.has_key('required_segment'):
+                if 'required_segment' in self.form:
                         self.required_segment = XMLescape(self.form['required_segment'].value)
                         self.used_required_segment = 1
 
-                if self.form.has_key('explicit_link_required'):
+                if 'explicit_link_required' in self.form:
                         self.explicit_link_required_display = self._CheckYesNoValue(XMLescape(self.form['explicit_link_required'].value),
                                                                       'Explicit Credit Page Link Required')
                         if self.error:

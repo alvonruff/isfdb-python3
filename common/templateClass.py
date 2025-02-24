@@ -10,7 +10,7 @@
 
 import cgi
 from isfdb import *
-from library import XMLescape, XMLunescape
+from library import XMLescape, XMLunescape, IsfdbFieldStorage
 from SQLparsing import SQLGetTemplate, SQLGetTemplateByName
 
 
@@ -57,15 +57,15 @@ class Template():
                         self.used_mouseover = 1
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('template_id'):
+                self.form = IsfdbFieldStorage()
+                if 'template_id' in self.form:
                         self.id = int(self.form['template_id'].value)
                         self.used_id = 1
                         if not SQLGetTemplate(self.id):
                                 self.error = 'This Template ID is not on file'
                                 return
 
-                if self.form.has_key('template_name'):
+                if 'template_name' in self.form:
                         self.name = XMLescape(self.form['template_name'].value)
                         self.used_name = 1
                 else:
@@ -79,11 +79,11 @@ class Template():
                                 self.error = "Entered template name is aready associated with another ISFDB template"
                                 return
 
-                if self.form.has_key('template_displayed_name'):
+                if 'template_displayed_name' in self.form:
                         self.displayed_name = XMLescape(self.form['template_displayed_name'].value)
                         self.used_displayed_name = 1
 
-                if self.form.has_key('template_type'):
+                if 'template_type' in self.form:
                         self.type = XMLescape(self.form['template_type'].value)
                         self.used_type = 1
                         if self.type not in ('Internal URL', 'External URL', 'Substitute String'):
@@ -93,14 +93,14 @@ class Template():
                         self.error = 'Template Type is a required field'
                         return
 
-                if self.form.has_key('template_url'):
+                if 'template_url' in self.form:
                         self.url = XMLescape(self.form['template_url'].value)
                         self.used_url = 1
                 elif self.type in ('Internal URL', 'External URL'):
                         self.error = 'Internal/External Templates must have a URL defined'
                         return
 
-                if self.form.has_key('template_mouseover'):
+                if 'template_mouseover' in self.form:
                         self.mouseover = XMLescape(self.form['template_mouseover'].value)
                         self.used_mouseover = 1
 

@@ -72,8 +72,8 @@ class award_cat(awardShared):
 
         def cgi2obj(self):
                 sys.stderr = sys.stdout
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('award_cat_id'):
+                self.form = IsfdbFieldStorage()
+                if 'award_cat_id' in self.form:
                         self.award_cat_id = int(self.form['award_cat_id'].value)
                         self.used_cat_id = 1
 
@@ -102,14 +102,14 @@ class award_cat(awardShared):
                         self.error = 'Award category name is required'
                         return
 
-                if self.form.has_key('award_cat_order'):
+                if 'award_cat_order' in self.form:
                         self.award_cat_order = XMLescape(self.form['award_cat_order'].value)
                         self.used_cat_order = 1
                         if not re.match(r'^[1-9]{1}[0-9]{0,8}$', self.award_cat_order):
                                 self.error = 'Display Order must be an integer greater than 0 and must contain 1-9 digits'
                                 return
 
-                if self.form.has_key('award_cat_note'):
+                if 'award_cat_note' in self.form:
                         value = XMLescape(self.form['award_cat_note'].value)
                         if value:
                                 self.award_cat_note = value

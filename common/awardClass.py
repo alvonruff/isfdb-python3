@@ -236,17 +236,17 @@ class awards(awardShared):
                         return
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('award_id'):
+                self.form = IsfdbFieldStorage()
+                if 'award_id' in self.form:
                         self.award_id = self.form['award_id'].value
                         self.used_id = 1
 
                 # title_id is only present for Add (as opposed to Edit) Award submissions
-                if self.form.has_key('title_id'):
+                if 'title_id' in self.form:
                         self.title_id = self.form['title_id'].value
                         self.used_title_id = 1
                 
-                if self.form.has_key('award_title'):
+                if 'award_title' in self.form:
                         self.award_title = XMLescape(self.form['award_title'].value)
                         self.used_title = 1
                 else:
@@ -257,7 +257,7 @@ class awards(awardShared):
                 self.award_authors = []
                 counter = 0
                 while counter < 100:
-                        if self.form.has_key('title_author'+str(counter+1)):
+                        if 'title_author'+str(counter+1) in self.form:
                                 value = XMLescape(ISFDBnormalizeAuthor(self.form['title_author'+str(counter+1)].value))
                                 self.error = ISFDBAuthorError(value)
                                 if self.error:
@@ -267,7 +267,7 @@ class awards(awardShared):
                                         self.num_authors += 1
                         counter += 1
 
-                if self.form.has_key('award_year'):
+                if 'award_year' in self.form:
                         year = self.form['award_year'].value
                         # Take the submitted value and convert it to the standard YYYY-MM-DD format
                         self.award_year = ISFDBnormalizeDate(year)
@@ -282,21 +282,21 @@ class awards(awardShared):
                         self.error = "Missing YEAR value"
                         return
 
-                if self.form.has_key('award_type_id'):
+                if 'award_type_id' in self.form:
                         self.award_type_id = self.form['award_type_id'].value
                         self.used_type_id = 1
                 else:
                         self.error = "Missing Award Type ID"
                         return
 
-                if self.form.has_key('award_cat_id'):
+                if 'award_cat_id' in self.form:
                         self.award_cat_id = self.form['award_cat_id'].value
                         self.used_cat_id = 1
                 else:
                         self.error = "Missing Award Category ID"
                         return
 
-                if self.form.has_key('LEVEL'):
+                if 'LEVEL' in self.form:
                         if self.form['LEVEL'].value == 'WIN':
                                 self.award_level = '1'
                                 self.used_level = 1
@@ -304,7 +304,7 @@ class awards(awardShared):
                                 self.award_level = '9'
                                 self.used_level = 1
                         elif self.form['LEVEL'].value == 'LEVEL':
-                                if self.form.has_key('award_level'):
+                                if 'award_level' in self.form:
                                         try:
                                                 self.award_level = self.form['award_level'].value
                                                 self.used_level = 1
@@ -318,7 +318,7 @@ class awards(awardShared):
                                         self.error = "Missing award level value"
                                         return
                         elif self.form['LEVEL'].value == 'SPECIAL':
-                                if self.form.has_key('award_special'):
+                                if 'award_special' in self.form:
                                         try:
                                                 self.award_level = self.form['award_special'].value
                                                 self.used_level = 1
@@ -332,14 +332,14 @@ class awards(awardShared):
                                         self.error = "Missing special award level value"
                                         return
 
-                if self.form.has_key('award_movie'):
+                if 'award_movie' in self.form:
                         self.award_movie = XMLescape(self.form['award_movie'].value)
                         if self.award_movie[:2] != 'tt':
                                 self.error = "IMDB title codes must start with 'tt'. See mouseover Help for details"
                                 return
                         self.used_movie = 1
 
-                if self.form.has_key('award_note'):
+                if 'award_note' in self.form:
                         self.award_note = XMLescape(self.form['award_note'].value)
                         self.used_note = 1
 

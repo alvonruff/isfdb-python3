@@ -107,7 +107,7 @@ class pub_series:
 
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
+                self.form = IsfdbFieldStorage()
                 try:
                         self.pub_series_id = str(int(self.form['pub_series_id'].value))
                         self.used_id = 1
@@ -137,7 +137,7 @@ class pub_series:
                                         self.pub_series_trans_names.append(value)
                                         self.used_trans_names = 1
 
-                if self.form.has_key('pub_series_note'):
+                if 'pub_series_note' in self.form:
                         self.pub_series_note = XMLescape(self.form['pub_series_note'].value)
                         self.used_note = 1
 

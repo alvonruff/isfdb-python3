@@ -681,12 +681,12 @@ def roman2int(roman):
         sum = 0
         roman = roman.lower()
         for i in range(len(roman)):
-                if conversion.has_key(roman[i]):
+                if roman[i] in conversion:
                         value = conversion[roman[i]]
                 else:
                         return 0
                 if i < (len(roman)-1):
-                        if conversion.has_key(roman[i+1]):
+                        if roman[i+1] in conversion:
                                 nextvalue = conversion[roman[i+1]]
                         else:
                                 return 0
@@ -1979,3 +1979,10 @@ def _similarTitles(string1, string2):
                 return 1
         else:
                 return 0
+
+def IsfdbFieldStorage():
+        if PYTHONVER == 'python2':
+                form = cgi.FieldStorage()
+        else:
+                form = cgi.FieldStorage(encoding="iso-8859-1")
+        return form

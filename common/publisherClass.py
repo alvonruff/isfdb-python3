@@ -106,7 +106,7 @@ class publishers:
 
         def cgi2obj(self):
                 from login import User
-                self.form = cgi.FieldStorage()
+                self.form = IsfdbFieldStorage()
                 try:
                         self.publisher_id = str(int(self.form['publisher_id'].value))
                         self.used_id = 1
@@ -149,7 +149,7 @@ class publishers:
                                         self.publisher_trans_names.append(value)
                                         self.used_trans_names = 1
 
-                if self.form.has_key('publisher_note'):
+                if 'publisher_note' in self.form:
                         self.publisher_note = XMLescape(self.form['publisher_note'].value)
                         self.used_note = 1
 

@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025  Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -10,7 +10,7 @@
 
 import cgi
 from isfdb import *
-from library import XMLescape, XMLunescape
+from library import XMLescape, XMLunescape, IsfdbFieldStorage
 from SQLparsing import SQLGetVerificationSource, SQLGetVerificationSourceByLabel
 
 
@@ -47,8 +47,8 @@ class VerificationSource():
                         self.used_url = 1
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('source_id'):
+                self.form = IsfdbFieldStorage()
+                if 'source_id' in self.form:
                         self.id = int(self.form['source_id'].value)
                         self.used_id = 1
                         if not SQLGetVerificationSource(self.id):
@@ -70,14 +70,14 @@ class VerificationSource():
                         self.error = "Verification Source Label is a required field"
                         return
 
-                if self.form.has_key('source_name'):
+                if 'source_name' in self.form:
                         self.name = XMLescape(self.form['source_name'].value)
                         self.used_name = 1
                 else:
                         self.error = 'Verification Source Name is a required field'
                         return
 
-                if self.form.has_key('source_url'):
+                if 'source_url' in self.form:
                         self.url = XMLescape(self.form['source_url'].value)
                         self.used_url = 1
                 else:

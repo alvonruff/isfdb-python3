@@ -102,7 +102,7 @@ class series:
                         return
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
+                self.form = IsfdbFieldStorage()
                 try:
                         self.series_id = str(int(self.form['series_id'].value))
                         self.used_id = 1
@@ -134,7 +134,7 @@ class series:
                                         self.series_trans_names.append(value)
                                         self.used_trans_names = 1
 
-                if self.form.has_key('series_parent'):
+                if 'series_parent' in self.form:
                         self.series_parent = XMLescape(self.form['series_parent'].value)
                         if self.series_parent:
                                 self.used_parent = 1
@@ -144,12 +144,12 @@ class series:
                                         self.error = 'Parent series name cannot be the same as the series name'
                                         return
                 
-                if self.form.has_key('series_type'):
+                if 'series_type' in self.form:
                         self.series_type = XMLescape(self.form['series_type'].value)
                         if self.series_type:
                                 self.used_type = 1
                 
-                if self.form.has_key('series_parentposition'):
+                if 'series_parentposition' in self.form:
                         self.series_parentposition = XMLescape(self.form['series_parentposition'].value)
                         if self.series_parentposition:
                                 self.used_parentposition = 1
@@ -158,7 +158,7 @@ class series:
                                         self.error = "Series Parent Position must be an integer greater than 0 and contain 1-9 digits"
                                         return
                 
-                if self.form.has_key('series_note'):
+                if 'series_note' in self.form:
                         self.series_note = XMLescape(self.form['series_note'].value)
                         if self.series_note:
                                 self.used_note = 1

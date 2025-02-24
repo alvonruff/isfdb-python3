@@ -54,8 +54,8 @@ class authors:
 
                 self.error = ''
 
-        def load(self, id):
-                record = SQLloadAuthorData(id)
+        def load(self, author_id):
+                record = SQLloadAuthorData(author_id)
                 if record:
                         if record[AUTHOR_ID]:
                                 self.author_id = record[AUTHOR_ID]
@@ -113,7 +113,7 @@ class authors:
                                 self.used_note = 1
 
                 else:
-                        print("ERROR: author record not found: ", id)
+                        print("ERROR: author record not found: ", author_id)
                         self.error = 'Author record not found'
                         return
 
@@ -245,14 +245,14 @@ class authors:
 
         def cgi2obj(self):
                 import re
-                self.form = cgi.FieldStorage()
+                self.form = IsfdbFieldStorage()
                 try:
                         self.author_id = str(int(self.form['author_id'].value))
                         self.used_id = 1
                 except:
                         self.error = 'Author ID not specified'
                         return
-                
+
                 try:
                         self.author_canonical = XMLescape(self.form['author_canonical'].value)
                         self.used_canonical = 1
@@ -275,7 +275,7 @@ class authors:
                 if '+' in unescaped_name:
                         self.error = 'Plus signs are currently not allowed in canonical names'
                         return
-                
+
                 # Limit the ability to edit canonical names to moderators
                 user = User()
                 user.load()
@@ -294,7 +294,7 @@ class authors:
                                         self.author_trans_names.append(value)
                                         self.used_trans_names = 1
 
-                if self.form.has_key('author_legalname'):
+                if 'author_legalname' in self.form:
                         value = XMLescape(self.form['author_legalname'].value)
                         if value:
                                 self.author_legalname = value
@@ -306,7 +306,7 @@ class authors:
                                 if value:
                                         self.author_trans_legal_names.append(value)
                                         self.used_trans_legal_names = 1
-          
+
                 try:
                         self.author_lastname = XMLescape(self.form['author_lastname'].value)
                         self.used_lastname = 1
@@ -316,27 +316,27 @@ class authors:
                         self.error = 'Directory Entry is required'
                         return
 
-                if self.form.has_key('author_birthplace'):
+                if 'author_birthplace' in self.form:
                         value = XMLescape(self.form['author_birthplace'].value)
                         if value:
                                 self.author_birthplace = value
                                 self.used_birthplace = 1
-                
-                if self.form.has_key('author_birthdate'):
+
+                if 'author_birthdate' in self.form:
                         # Handle XML escaping, strip leading and trailing spaces, normalize the date
                         value = ISFDBnormalizeDate(XMLescape(self.form['author_birthdate'].value))
                         if value:
                                 self.author_birthdate = value
                                 self.used_birthdate = 1
-                
-                if self.form.has_key('author_deathdate'):
+
+                if 'author_deathdate' in self.form:
                         # Handle XML escaping, strip leading and trailing spaces, normalize the date
                         value = ISFDBnormalizeDate(XMLescape(self.form['author_deathdate'].value))
                         if value:
                                 self.author_deathdate = value
                                 self.used_deathdate = 1
-                
-                if self.form.has_key('author_image'):
+
+                if 'author_image' in self.form:
                         value = XMLescape(self.form['author_image'].value)
                         if value:
                                 self.error = invalidURL(value)
@@ -345,7 +345,7 @@ class authors:
                                         return
                                 self.author_image = value
                                 self.used_image = 1
-                
+
                 try:
                         value = XMLescape(self.form['author_language'].value)
                         if value:
@@ -356,7 +356,7 @@ class authors:
                 except:
                         self.error = 'Language is required'
                         return
-                
+
                 for key in self.form:
                         if key[:13] == 'author_emails':
                                 value = XMLescape(self.form[key].value)
@@ -382,7 +382,7 @@ class authors:
                                         self.author_webpages.append(value)
                                         self.used_webpages = 1
 
-                if self.form.has_key('author_note'):
+                if 'author_note' in self.form:
                         value = XMLescape(self.form['author_note'].value)
                         if value:
                                 self.author_note = value

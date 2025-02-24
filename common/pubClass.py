@@ -28,7 +28,7 @@ def lastRecord(form, field,counter):
         # (title, review or interview) in the submitted form
         for next in range(counter, counter+30):
                 key = field + str(next+1)
-                if form.has_key(key):
+                if key in form:
                         return 0
         return 1
 
@@ -722,8 +722,8 @@ class pubs:
         # cgi2obj converts input from an html form into a pubs class object.
         def cgi2obj(self, reference_title = 'explicit'):
                 sys.stderr = sys.stdout
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('pub_id'):
+                self.form = IsfdbFieldStorage()
+                if 'pub_id' in self.form:
                         try:
                                 self.pub_id = str(int(self.form['pub_id'].value))
                         except:
@@ -740,14 +740,14 @@ class pubs:
                         self.error = 'No title specified'
                         return
 
-                if self.form.has_key('title_id'):
+                if 'title_id' in self.form:
                         try:
                                 self.title_id = str(int(self.form['title_id'].value))
                         except:
                                 self.error = "Title ID must be an integer number"
                                 return
 
-                if self.form.has_key('editor'):
+                if 'editor' in self.form:
                         self.editor = self.form['editor'].value
 
                 for key in self.form:
@@ -764,7 +764,7 @@ class pubs:
                 self.pub_authors = []
                 counter = 0
                 while counter < 200:
-                        if self.form.has_key('pub_author'+str(counter+1)):
+                        if 'pub_author'+str(counter+1) in self.form:
                                 value = self.form['pub_author'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -787,7 +787,7 @@ class pubs:
                 ###################################
                 # METADATA
                 ###################################
-                if self.form.has_key('pub_tag'):
+                if 'pub_tag' in self.form:
                         tag = self.form['pub_tag'].value
                         tag = str.replace(tag, "'", '')
                         tag = str.replace(tag, "<", '')
@@ -806,19 +806,19 @@ class pubs:
                         self.error = 'No year was specified'
                         return
 
-                if self.form.has_key('pub_publisher'):
+                if 'pub_publisher' in self.form:
                         value = XMLescape(self.form['pub_publisher'].value)
                         if value:
                                 self.pub_publisher = value
                                 self.used_publisher = 1
 
-                if self.form.has_key('pub_series'):
+                if 'pub_series' in self.form:
                         value = XMLescape(self.form['pub_series'].value)
                         if value:
                                 self.pub_series = value
                                 self.used_series = 1
 
-                if self.form.has_key('pub_series_num'):
+                if 'pub_series_num' in self.form:
                         value = XMLescape(self.form['pub_series_num'].value)
                         if value:
                                 if len(value) > 63:
@@ -827,7 +827,7 @@ class pubs:
                                 self.pub_series_num = value
                                 self.used_series_num = 1
 
-                if self.form.has_key('pub_pages'):
+                if 'pub_pages' in self.form:
                         value = XMLescape(self.form['pub_pages'].value)
                         if value:
                                 if len(value) > 99:
@@ -836,7 +836,7 @@ class pubs:
                                 self.pub_pages = value
                                 self.used_pages = 1
 
-                if self.form.has_key('pub_ptype'):
+                if 'pub_ptype' in self.form:
                         value = XMLescape(self.form['pub_ptype'].value)
                         if value not in SESSION.db.formats:
                                 self.error = 'Invalid Publication Format - %s' % value
@@ -855,7 +855,7 @@ class pubs:
                         self.error = 'Invalid Publication Type - %s' % ctype
                         return
 
-                if self.form.has_key('pub_image'):
+                if 'pub_image' in self.form:
                         value = XMLescape(self.form['pub_image'].value)
                         if value:
                                 self.error = invalidURL(value)
@@ -867,7 +867,7 @@ class pubs:
                                 self.pub_image = value
                                 self.used_image = 1
 
-                if self.form.has_key('pub_isbn'):
+                if 'pub_isbn' in self.form:
                         value = XMLescape(self.form['pub_isbn'].value)
                         value = str.replace(value, '-', '')
                         value = str.replace(value, ' ', '')
@@ -879,7 +879,7 @@ class pubs:
                                 self.pub_isbn = value
                                 self.used_isbn = 1
 
-                if self.form.has_key('pub_catalog'):
+                if 'pub_catalog' in self.form:
                         value = XMLescape(self.form['pub_catalog'].value)
                         if value:
                                 self.pub_catalog = value
@@ -938,7 +938,7 @@ class pubs:
                                         continue
                                 self.identifiers[type_name][ext_id_value] = (id_type_number, type_full_name)
 
-                if self.form.has_key('pub_price'):
+                if 'pub_price' in self.form:
                         value = XMLescape(self.form['pub_price'].value)
                         if value:
                                 currency_map = {'B' : SESSION.currency.baht,
@@ -964,7 +964,7 @@ class pubs:
                                 self.used_price = 1
                                 self.pub_price = value
 
-                if self.form.has_key('pub_note'):
+                if 'pub_note' in self.form:
                         value = XMLescape(self.form['pub_note'].value)
                         if value:
                                 self.pub_note = value
@@ -974,7 +974,7 @@ class pubs:
                 # COVER ART CONTENT
                 #####################################################################
                 # Parse the submitted form and put its values in Python dictionaries
-                for key in self.form.keys():
+                for key in list(self.form.keys()):
                         # Put title cover IDs in self.cover_ids
                         splitstring = key.partition('cover_id')
                         cover_id = splitstring[2]
@@ -1131,12 +1131,12 @@ class pubs:
                         #############################
                         key = "title_title"+str(counter)
                         oldTitle = 0
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newTitle = titleEntry()
                                 newTitle.setTitle(self.form[key].value)
 
                                 key = "title_id"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         newTitle.setID(self.form[key].value)
                                         if int(newTitle.id) > 0:
                                                 oldTitle = titleEntry()
@@ -1145,11 +1145,11 @@ class pubs:
                                                 oldTitle.setID(newTitle.id)
                         else:
                                 key = "title_page"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Entry must have a title. Page=%s" % (self.form[key].value)
                                         return
                                 key = "title_author%s.1" % str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Entry must have a title. Author=%s" % (self.form[key].value)
                                         return
                                 # Check if this is the last submitted Title record
@@ -1163,7 +1163,7 @@ class pubs:
                         # PAGE
                         #############################
                         key = "title_page"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'title')
                                 if self.error:
@@ -1178,7 +1178,7 @@ class pubs:
                         # DATE
                         #############################
                         key = "title_date"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newTitle.setDate(self.form[key].value)
                         else:
                                 newTitle.setDate(self.pub_year)
@@ -1189,7 +1189,7 @@ class pubs:
                         # TTYPE
                         #############################
                         key = "title_ttype"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newTitle.setType(self.form[key].value)
                                 if newTitle.type not in SESSION.db.regular_title_types:
                                         self.error = 'Invalid title type'
@@ -1206,7 +1206,7 @@ class pubs:
                         # LENGTH
                         #############################
                         key = "title_storylen"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newTitle.setLength(self.form[key].value)
                                 if newTitle.length not in SESSION.db.storylen_codes:
                                         self.error = 'Invalid short fiction length'
@@ -1225,7 +1225,7 @@ class pubs:
                         total_skips = 0
                         while True:
                                 key = "title_author%s.%s" % (str(counter), str(author))
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
@@ -1241,7 +1241,7 @@ class pubs:
 
                         if authors == '':
                                 key = "title_title"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Entry must have an author. Title=%s" % (self.form[key].value)
                                 else:
                                         self.error = "Entry must have an author"
@@ -1323,7 +1323,7 @@ class pubs:
                         #############################
                         key = "review_title"+str(counter)
                         oldReview = 0
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newReview = reviewEntry()
                                 try:
                                         newReview.setTitle(self.form[key].value)
@@ -1332,7 +1332,7 @@ class pubs:
                                         break
 
                                 key = "review_id"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         newReview.setID(self.form[key].value)
                                         if int(newReview.id) > 0:
                                                 oldReview = reviewEntry()
@@ -1341,11 +1341,11 @@ class pubs:
                                                 oldReview.setID(newReview.id)
                         else:
                                 key = "review_page"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Reviews must have a title. Page=%s" % (self.form[key].value)
                                         return
                                 key = "review_author%s.1" % str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Reviews must have a title. Author=%s" % (self.form[key].value)
                                         return
                                 # Check if this is the last submitted Review record
@@ -1359,7 +1359,7 @@ class pubs:
                         # PAGE
                         #############################
                         key = "review_page"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'review')
                                 if self.error:
@@ -1374,7 +1374,7 @@ class pubs:
                         # DATE
                         #############################
                         key = "review_date"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newReview.setDate(self.form[key].value)
                         else:
                                 newReview.setDate(self.pub_year)
@@ -1389,7 +1389,7 @@ class pubs:
                         total_skips = 0
                         while True:
                                 key = "review_author%s.%s" % (str(counter), str(author))
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
@@ -1405,7 +1405,7 @@ class pubs:
 
                         if authors == '':
                                 key = "review_title"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Reviews must specify at least one reviewed author. Title=%s" % (self.form[key].value)
                                 else:
                                         self.error = "Reviews must specify at least one reviewed author"
@@ -1434,7 +1434,7 @@ class pubs:
                         total_skips = 0
                         while True:
                                 key = "review_reviewer%s.%s" % (str(counter), str(author))
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
@@ -1450,7 +1450,7 @@ class pubs:
 
                         if authors == '':
                                 key = "review_title"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Reviews must specify at least one reviewer. Title=%s" % (self.form[key].value)
                                 else:
                                         self.error = "Reviews must specify at least one reviewer"
@@ -1487,11 +1487,11 @@ class pubs:
                         #############################
                         key = "interview_title"+str(counter)
                         oldInterview = 0
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newInterview = interviewEntry()
                                 newInterview.setTitle(self.form[key].value)
                                 key = "interview_id"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         newInterview.setID(self.form[key].value)
                                         if int(newInterview.id) > 0:
                                                 oldInterview = interviewEntry()
@@ -1500,15 +1500,15 @@ class pubs:
                                                 oldInterview.setID(newInterview.id)
                         else:
                                 key = "interview_page"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Interviews must have a title. Page=%s" % (self.form[key].value)
                                         return
                                 key = "interviewee_author%s.1" % str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Interviews must have a title. Interviewee=%s" % (self.form[key].value)
                                         return
                                 key = "interviewer_author%s.1" % str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Interviews must have a title. Interviewer=%s" % (self.form[key].value)
                                         return
                                 # Check if this is the last submitted Interview record
@@ -1522,7 +1522,7 @@ class pubs:
                         # PAGE
                         #############################
                         key = "interview_page"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 page_number = self.form[key].value
                                 self.ValidatePageNumber(page_number, counter, 'interview')
                                 if self.error:
@@ -1537,7 +1537,7 @@ class pubs:
                         # DATE
                         #############################
                         key = "interview_date"+str(counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 newInterview.setDate(self.form[key].value)
                         else:
                                 newInterview.setDate(self.pub_year)
@@ -1553,7 +1553,7 @@ class pubs:
                         total_skips = 0
                         while True:
                                 key = "interviewee_author%s.%s" % (str(counter), str(author))
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
@@ -1569,7 +1569,7 @@ class pubs:
 
                         if authors == '':
                                 key = "interview_title"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Interviews must specify at least one interviewed author. Title=%s" % (self.form[key].value)
                                 else:
                                         self.error = "Interviews must specify at least one interviewed author"
@@ -1597,7 +1597,7 @@ class pubs:
                         total_skips = 0
                         while True:
                                 key = "interviewer_author%s.%s" % (str(counter), str(author))
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         value = ISFDBnormalizeAuthor(self.form[key].value)
                                         self.error = ISFDBAuthorError(value)
                                         if self.error:
@@ -1613,7 +1613,7 @@ class pubs:
 
                         if authors == '':
                                 key = "interview_title"+str(counter)
-                                if self.form.has_key(key):
+                                if key in self.form:
                                         self.error = "Interviews must specify at least one interviewer. Title=%s" % (self.form[key].value)
                                 else:
                                         self.error = "Interviews must specify at least one interviewer"
@@ -1652,11 +1652,11 @@ class pubs:
 
                 if error_text:
                         key = "%s_title%s" % (title_type, counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 self.error = '%s. Title=%s' % (error_text, self.form[key].value)
                                 return
                         key = "%s_author%s.1" % (title_type, counter)
-                        if self.form.has_key(key):
+                        if key in self.form:
                                 self.error = '%s. Author=%s' % (error_text, self.form[key].value)
                                 return
 

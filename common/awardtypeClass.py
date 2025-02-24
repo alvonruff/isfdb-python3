@@ -96,8 +96,8 @@ class award_type(awardShared):
                         self.used_webpages = 1
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('award_type_id'):
+                self.form = IsfdbFieldStorage()
+                if 'award_type_id' in self.form:
                         self.award_type_id = int(self.form['award_type_id'].value)
                         self.used_id = 1
 
@@ -131,25 +131,25 @@ class award_type(awardShared):
                         self.error = "Short name is required for Award types"
                         return
 
-                if self.form.has_key('award_type_by'):
+                if 'award_type_by' in self.form:
                         value = XMLescape(self.form['award_type_by'].value)
                         if value:
                                 self.award_type_by = value
                                 self.used_by = 1
                 
-                if self.form.has_key('award_type_for'):
+                if 'award_type_for' in self.form:
                         value = XMLescape(self.form['award_type_for'].value)
                         if value:
                                 self.award_type_for = value
                                 self.used_for = 1
 
-                if self.form.has_key('award_type_poll'):
+                if 'award_type_poll' in self.form:
                         value = XMLescape(self.form['award_type_poll'].value)
                         if value:
                                 self.award_type_poll = value
                                 self.used_poll = 1
 
-                if self.form.has_key('award_type_note'):
+                if 'award_type_note' in self.form:
                         value = XMLescape(self.form['award_type_note'].value)
                         if value:
                                 self.award_type_note = value
@@ -167,7 +167,7 @@ class award_type(awardShared):
                                         self.award_type_webpages.append(value)
                                         self.used_webpages = 1
 
-                if self.form.has_key('award_type_non_genre'):
+                if 'award_type_non_genre' in self.form:
                         value = XMLescape(self.form['award_type_non_genre'].value)
                         if value:
                                 self.award_type_non_genre = value

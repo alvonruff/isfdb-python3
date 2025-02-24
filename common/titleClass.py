@@ -186,7 +186,7 @@ class titles:
         def cgi2obj(self, from_form = 0):
                 sys.stderr = sys.stdout
                 if from_form == 0:
-                        self.form = cgi.FieldStorage()
+                        self.form = IsfdbFieldStorage()
                 else:
                         self.form = from_form
                 try:
@@ -217,7 +217,7 @@ class titles:
                 self.title_authors = []
                 counter = 0
                 while counter < 200:
-                        if self.form.has_key('title_author'+str(counter+1)):
+                        if 'title_author'+str(counter+1) in self.form:
                                 value = self.form['title_author'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -226,7 +226,7 @@ class titles:
                                 if not ISFDBAuthorInAuthorList(value, self.title_authors):
                                         self.title_authors.append(value)
                                         self.num_authors += 1
-                        elif self.form.has_key('review_reviewer1.'+str(counter+1)):
+                        elif 'review_reviewer1.'+str(counter+1) in self.form:
                                 value = self.form['review_reviewer1.'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -235,7 +235,7 @@ class titles:
                                 if not ISFDBAuthorInAuthorList(value, self.title_authors):
                                         self.title_authors.append(value)
                                         self.num_authors += 1
-                        elif self.form.has_key('interviewer_author1.'+str(counter+1)):
+                        elif 'interviewer_author1.'+str(counter+1) in self.form:
                                 value = self.form['interviewer_author1.'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -253,7 +253,7 @@ class titles:
                 self.title_subjauthors = []
                 counter = 0
                 while counter < 200:
-                        if self.form.has_key('review_author1.'+str(counter+1)):
+                        if 'review_author1.'+str(counter+1) in self.form:
                                 value = self.form['review_author1.'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -262,7 +262,7 @@ class titles:
                                 if not ISFDBAuthorInAuthorList(value, self.title_subjauthors):
                                         self.title_subjauthors.append(value)
                                         self.num_subjauthors += 1
-                        elif self.form.has_key('interviewee_author1.'+str(counter+1)):
+                        elif 'interviewee_author1.'+str(counter+1) in self.form:
                                 value = self.form['interviewee_author1.'+str(counter+1)].value
                                 value = XMLescape(ISFDBnormalizeAuthor(value))
                                 self.error = ISFDBAuthorError(value)
@@ -304,13 +304,13 @@ class titles:
         def validateOptional(self):
                 # This method is called from the NewPub submission script
                 # as well as from method cg2obj above
-                if self.form.has_key('title_series'):
+                if 'title_series' in self.form:
                         value = XMLescape(self.form['title_series'].value)
                         if value:
                                 self.title_series = value
                                 self.used_series = 1
                                 
-                if self.form.has_key('title_seriesnum'):
+                if 'title_seriesnum' in self.form:
                         value = XMLescape(self.form['title_seriesnum'].value)
                         if value:
                                 self.title_seriesnum = value
@@ -324,7 +324,7 @@ class titles:
                                                 e.g. 3.5 will appear between 3 and 4"""
                                         return
                                 
-                if self.form.has_key('title_translator'):
+                if 'title_translator' in self.form:
                         value = XMLescape(self.form['title_translator'].value)
                         if value:
                                 self.title_xlate = value
@@ -342,7 +342,7 @@ class titles:
                                         self.title_webpages.append(value)
                                         self.used_webpages = 1
         
-                if self.form.has_key('language'):
+                if 'language' in self.form:
                         value = XMLescape(self.form['language'].value)
                         if value:
                                 if value not in LANGUAGES:
@@ -351,7 +351,7 @@ class titles:
                                 self.title_language = value
                                 self.used_language = 1
                                 
-                if self.form.has_key('title_storylen'):
+                if 'title_storylen' in self.form:
                         value = XMLescape(self.form['title_storylen'].value)
                         if value:
                                 if value not in SESSION.db.storylen_codes:
@@ -363,53 +363,53 @@ class titles:
                                         return
                                 self.used_storylen = 1
 
-                if self.form.has_key('title_parent'):
+                if 'title_parent' in self.form:
                         value = XMLescape(self.form['title_parent'].value)
                         if value:
                                 self.title_parent = value
                                 self.used_parent = 1
                                 
-                if self.form.has_key('title_synopsis'):
+                if 'title_synopsis' in self.form:
                         value = XMLescape(self.form['title_synopsis'].value)
                         if value:
                                 self.title_synop = value
                                 self.used_synop = 1
                                 
-                if self.form.has_key('title_note'):
+                if 'title_note' in self.form:
                         value = XMLescape(self.form['title_note'].value)
                         if value:
                                 self.title_note = value
                                 self.used_note = 1
 
-                if self.form.has_key('title_non_genre'):
+                if 'title_non_genre' in self.form:
                         self.title_non_genre = 'Yes'
                         self.used_non_genre = 1
                 else:
                         self.title_non_genre = 'No'
                         self.used_non_genre = 1                        
 
-                if self.form.has_key('title_graphic'):
+                if 'title_graphic' in self.form:
                         self.title_graphic = 'Yes'
                         self.used_graphic = 1
                 else:
                         self.title_graphic = 'No'
                         self.used_graphic = 1
 
-                if self.form.has_key('title_nvz'):
+                if 'title_nvz' in self.form:
                         self.title_nvz = 'Yes'
                         self.used_nvz = 1
                 else:
                         self.title_nvz = 'No'
                         self.used_nvz = 1
 
-                if self.form.has_key('title_jvn'):
+                if 'title_jvn' in self.form:
                         self.title_jvn = 'Yes'
                         self.used_jvn = 1
                 else:
                         self.title_jvn = 'No'
                         self.used_jvn = 1
 
-                if self.form.has_key('title_content'):
+                if 'title_content' in self.form:
                         value = XMLescape(self.form['title_content'].value)
                         if value:
                                 if self.title_ttype != 'OMNIBUS':
