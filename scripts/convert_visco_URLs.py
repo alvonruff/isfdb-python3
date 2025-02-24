@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016   Ahasuerus
+#     (C) COPYRIGHT 2016-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -53,16 +54,16 @@ if __name__ == '__main__':
         pubs.append(record[0])
         record = result.fetch_row()
     if not pubs:
-        print "No old Visco URLs on file. Exiting."
+        print("No old Visco URLs on file. Exiting.")
         sys.exit(0)
     for pub in pubs:
         pub_id = pub[0]
         old_url = pub[1]
         new_url = str.replace(old_url, 'http://www.sfcovers.net/Magazines/', 'http://www.philsp.com/visco/Magazines/')
-        print old_url
-        print new_url
+        print(old_url)
+        print(new_url)
         update = "update pubs set pub_frontimage = '%s' where pub_id = %d" % (new_url, pub_id)
-        print update
-        print " "
+        print(update)
+        print(" ")
         db.query(update)
-    print 'Updated %d pubs' % len(pubs)
+    print('Updated %d pubs' % len(pubs))

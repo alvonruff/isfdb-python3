@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016   Ahasuerus
+#     (C) COPYRIGHT 2016-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -52,7 +53,7 @@ if __name__ == '__main__':
     while record:
             title_id = record[0][0]
             count += 1
-            print "Processed ",count
+            print("Processed ",count)
             query2 = """select distinct t.title_language
                         from titles t, pub_content pc1, pub_content pc2
                         where pc1.title_id = %d
@@ -72,4 +73,4 @@ if __name__ == '__main__':
                 db.query(update)
             record = result.fetch_row()
 
-    print "Count of updated titles: ",update_count
+    print("Count of updated titles: ",update_count)

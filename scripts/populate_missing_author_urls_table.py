@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,11 +41,11 @@ if __name__ == '__main__':
         onelist = oneline.split(',')
         url = onelist[0]
         author_id = onelist[1]
-        print url, author_id
+        print(url, author_id)
         if author_id:
             update = "insert into missing_author_urls (url_type, url, author_id, resolved) values('%d', '%s', '%d', '%d')" % (1, db.escape_string(url), int(author_id), 0)
         else:
             update = "insert into missing_author_urls (url_type, url, resolved) values('%d', '%s', '%d')" % (1, db.escape_string(url), 0)
-        print update
+        print(update)
         db.query(update)
     sys.exit(0)

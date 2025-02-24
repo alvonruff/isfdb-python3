@@ -1,7 +1,8 @@
 #!_PYTHONLOC
+from __future__ import print_function
 # -*- coding: cp1252 -*-
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,7 +41,7 @@ if __name__ == '__main__':
             title_id = title[0]
             title_title = title[1]
             new_title = db.escape_string(string.replace(title_title,'\x92',"'"))
-            #print new_title
+            #print(new_title)
             update = "update titles set title_title = '%s' where title_id = '%d'" % (new_title,title_id)
-            print update
+            print(update)
             db.query(update)

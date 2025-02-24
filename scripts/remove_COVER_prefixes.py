@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016   Ahasuerus
+#     (C) COPYRIGHT 2016-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -54,7 +55,7 @@ if __name__ == '__main__':
     result = db.store_result()
 
     if not result.num_rows():
-        print "No COVERART titles with a 'Cover: ' prefix on file."
+        print("No COVERART titles with a 'Cover: ' prefix on file.")
         sys.exit(0)
 
     record = result.fetch_row()
@@ -62,11 +63,11 @@ if __name__ == '__main__':
         title_id = record[0][0]
         old_title = record[0][1]
         new_title = old_title[7:]
-        print old_title
-        print new_title
+        print(old_title)
+        print(new_title)
         update = "update titles set title_title = '%s' where title_id = %d" % (db.escape_string(new_title), title_id)
-        print update
-        print " "
+        print(update)
+        print(" ")
         db.query(update)
         record = result.fetch_row()
-    print 'Updated %d titles' % int(result.num_rows())
+    print('Updated %d titles' % int(result.num_rows()))

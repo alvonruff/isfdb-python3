@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2022-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -158,14 +159,14 @@ if __name__ == "__main__":
             pass
         else:
             domains[domain] = domains.get(domain, 0) + 1
-            print webpage_id, url
+            print(webpage_id, url)
             new_url = 'https://%s' % url_segments
-            print new_url
+            print(new_url)
             update = """update webpages set url = '%s' where webpage_id = %d""" % (db.escape_string(new_url), webpage_id)
             db.query(update)
         record = result.fetch_row()
 
     domains_list = sorted(domains.items(), key=lambda x: x[1], reverse=True)
     for domain in domains_list:
-        print domain[0], domain[1]
+        print(domain[0], domain[1])
 

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -33,7 +34,7 @@ def convertEllipses(title):
     # Then convert ". . ." to "..."
     while ". . ." in title:
         title = title.replace(". . .", "...")
-    print title
+    print(title)
     return title
 
 if __name__ == '__main__':

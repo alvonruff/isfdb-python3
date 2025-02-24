@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2009-2025   Al von Ruff
 #       ALL RIGHTS RESERVED
@@ -104,10 +105,10 @@ if __name__ == '__main__':
                 continue
             count_matching_authors = count_matching_authors + 1
             update = "update titles set title_parent = %d where title_id = %d" % (novel_id,serial_id)
-            print update
+            print(update)
             db.query(update)
             #sys.exit(0)
-        print "Total non-VT serial records: %d" % (total)
-        print "Total well formed serial records: %d" % (count_well_formed)
-        print "Total serials with matching Novels/Shortfiction titles: %d" % (count_with_matches)
-        print "Total serials with matching authors : %d" % (count_matching_authors)
+        print("Total non-VT serial records: %d" % (total))
+        print("Total well formed serial records: %d" % (count_well_formed))
+        print("Total serials with matching Novels/Shortfiction titles: %d" % (count_with_matches))
+        print("Total serials with matching authors : %d" % (count_matching_authors))

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2017   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -59,10 +60,10 @@ if __name__ == '__main__':
         two_numbers = note_note.lower().split('/oclc/')[1].split('</a>')[0]
         number_list = two_numbers.split('">')
         if number_list[0] != number_list[1]:
-            print pub_id, number_list
+            print(pub_id, number_list)
             continue
         oclc_id = number_list[0]
-        print oclc_id
+        print(oclc_id)
         insert = """insert into identifiers (identifier_type_id, identifier_value, pub_id)
                      values(12, '%s', %d)""" % (db.escape_string(oclc_id), pub_id)
         db.query(insert)

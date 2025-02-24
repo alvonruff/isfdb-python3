@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -55,5 +56,5 @@ if __name__ == '__main__':
         site_url = db.escape_string(site[0])
         site_name = db.escape_string(site[1])
         update = "insert into websites (site_url, site_name) values('%s','%s')" % (site_url, site_name)
-        print update
+        print(update)
         db.query(update)

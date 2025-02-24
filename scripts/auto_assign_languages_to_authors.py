@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2017   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -58,7 +59,7 @@ if __name__ == '__main__':
             author_id = record[0][0]
             language = record[0][1]
             count += 1
-            print count, author_id, language
+            print(count, author_id, language)
             update = "update authors set author_language=%d where author_id=%d" % (int(language), int(author_id))
             db.query(update)
             record = result.fetch_row()

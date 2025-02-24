@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2015   Ahasuerus
+#     (C) COPYRIGHT 2015-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -32,7 +33,7 @@ def convertDiacritics(title):
         while key in title:
             title = title.replace(key, replace[key])
     if ('&#7' in title) or ('&#8' in title):
-        print title
+        print(title)
     return title
 
 def combiningDiacritics():
@@ -275,7 +276,7 @@ if __name__ == '__main__':
 
     for title in titles:
         title_id = int(title[0])
-        print title_id
+        print(title_id)
         title_title = title[1]
         new_title = convertDiacritics(title_title)
         update = "update titles set title_title='%s' where title_id=%d" % (db.escape_string(new_title), title_id)
@@ -293,7 +294,7 @@ if __name__ == '__main__':
 
     for title in titles:
         title_id = int(title[0])
-        print title_id
+        print(title_id)
         title_title = title[1]
         new_title = convertDiacritics(title_title)
         update = "update pubs set pub_title='%s' where pub_id=%d" % (db.escape_string(new_title), title_id)

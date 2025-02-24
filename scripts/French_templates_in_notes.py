@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -55,7 +56,7 @@ if __name__ == '__main__':
                 update = """update notes set note_note = '%s' where note_id = %d""" % (db.escape_string(new_note), int(note_id))
                 db.query(update)
                 record = result.fetch_row()
-        print count
+        print(count)
 
         query = """select p.pub_id, n.note_id, n.note_note from notes n, pubs p
                    where p.note_id = n.note_id
@@ -86,5 +87,5 @@ if __name__ == '__main__':
                 update = """update notes set note_note = '%s' where note_id = %d""" % (db.escape_string(new_note), int(note_id))
                 db.query(update)
                 record = result.fetch_row()
-        print count
+        print(count)
         

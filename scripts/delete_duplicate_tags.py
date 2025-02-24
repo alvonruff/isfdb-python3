@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -52,4 +53,4 @@ if __name__ == '__main__':
             db.query(update)
             update = "insert into tag_mapping(tag_id, title_id, user_id) values(%d, %d, %d)" % (int(tag_id), int(title_id), int(user_id))
             db.query(update)
-    print "Total processed: %d rows in %d tags" % (row_count, tag_count)
+    print("Total processed: %d rows in %d tags" % (row_count, tag_count))

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -34,5 +35,5 @@ if __name__ == '__main__':
     BINDINGS = ('unknown','hc','tp','pb','ph','digest','dos','ebook','webzine','pulp','bedsheet','tabloid','A4','A5','quarto','octavo','audio CD','audio MP3 CD','audio cassette','audio LP','digital audio player','digital audio download','other')
     for binding in BINDINGS:
         update = "update pubs set pub_ptype='%s' where pub_ptype = '%s'" % (binding, binding)
-        print update
+        print(update)
         db.query(update)

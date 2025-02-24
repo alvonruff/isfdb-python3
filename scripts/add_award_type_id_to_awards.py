@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von RUff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -42,10 +43,10 @@ if __name__ == '__main__':
         code = record[0][1]
         codes[code] = id
         record = result.fetch_row()
-    print codes
+    print(codes)
 
     for code in codes:
         id = codes[code]
         update = "update awards set award_type_id=%d where award_ttype='%s'" % (id, code)
-        print update
+        print(update)
         db.query(update)

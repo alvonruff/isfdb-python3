@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2022-2025   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -50,8 +51,8 @@ if __name__ == "__main__":
                       'g-ec5.images-amazon.com'):
             domains[domain] = domains.get(domain, 0) + 1
             new_url = 'https://m.media-amazon.com/%s' % '/'.join(url_segments.split('/')[1:])
-##            print pub_id, pub_frontimage
-##            print new_url
+##            print(pub_id, pub_frontimage)
+##            print(new_url)
 
             update = """update pubs set pub_frontimage = '%s' where pub_id = %d""" % (db.escape_string(new_url), pub_id)
             db.query(update)
@@ -59,5 +60,5 @@ if __name__ == "__main__":
 
     domains_list = sorted(domains.items(), key=lambda x: x[1], reverse=True)
     for domain in domains_list:
-        print domain[0], domain[1]
+        print(domain[0], domain[1])
 

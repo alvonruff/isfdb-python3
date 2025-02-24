@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -41,7 +42,7 @@ def one_type(field, table = ''):
 
     update = "update %s set %s_wikipedia = NULL" % (table, field)
     db.query(update)
-    print table, "done"
+    print(table, "done")
     
 
 if __name__ == '__main__':
@@ -50,11 +51,7 @@ if __name__ == '__main__':
     db.select_db(DBASE)
 
     one_type('author', 'authors')
-
     one_type('award_type', 'award_types')
-
     one_type('publisher', 'publishers')
-
     one_type('pub_series')
-
     one_type('title', 'titles')

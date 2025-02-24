@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2017   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -56,7 +57,7 @@ if __name__ == '__main__':
         count += 1
         asin = note_note[13:23]
         new_note = note_note[27:]
-        print count, asin, pub_id, new_note[:20]
+        print(count, asin, pub_id, new_note[:20])
         record = result.fetch_row()
         insert = """insert into identifiers (identifier_type_id, identifier_value, pub_id)
                      values(1, '%s', %d)""" % (db.escape_string(asin), int(pub_id))

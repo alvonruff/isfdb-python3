@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,7 +40,7 @@ if __name__ == '__main__':
         author_id = pair[0]
         url = pair[1]
         update = "insert into webpages (author_id, url) values('%s', '%s')" % (author_id, db.escape_string(url))
-        print update
+        print(update)
         db.query(update)
 
     update = "update authors set author_imdb = NULL"

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2015   Ahasuerus
+#     (C) COPYRIGHT 2015-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -43,7 +44,7 @@ if __name__ == '__main__':
     while record:
         user_preferences.append(record[0])
         record = result.fetch_row()
-    print user_preferences
+    print(user_preferences)
 
     query = 'update user_preferences set display_all_languages = null'
     db.query(query)
@@ -77,4 +78,4 @@ if __name__ == '__main__':
     for user_id in user_ids:
         update = "insert into user_languages (user_id, lang_id, user_choice) values(%d, 17, 1)" % user_id
         db.query(update)
-        print user_id
+        print(user_id)

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2018-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -87,7 +88,7 @@ if __name__ == '__main__':
             for user_id in delete_vers[pub_id]:
                 ver_id = delete_vers[pub_id][user_id]
                 count += 1
-                print count, pub_id, user_id, ver_id, 'http://www.isfdb.org/cgi-bin/pl.cgi?%d' % pub_id
+                print(count, pub_id, user_id, ver_id, 'http://www.isfdb.org/cgi-bin/pl.cgi?%d' % pub_id)
                 delete = "delete from primary_verifications where verification_id = %d" % ver_id
                 #print delete
                 db.query(delete)

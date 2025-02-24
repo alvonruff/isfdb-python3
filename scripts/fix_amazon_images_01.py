@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2019   Ahasuerus
+#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -42,10 +43,10 @@ if __name__ == '__main__':
         image = record[0][1]
         pubs[pub_id] = '%s.jpg' % image.split('.01.LZZZZZZZ.jpg')[0]
         record = result.fetch_row()
-    print result.num_rows()
+    print(result.num_rows())
 
     for pub_id in pubs:
         image = pubs[pub_id]
         update = "update pubs set pub_frontimage = '%s' where pub_id = %d" % (db.escape_string(pubs[pub_id]), pub_id)
-        print update
+        print(update)
         db.query(update)

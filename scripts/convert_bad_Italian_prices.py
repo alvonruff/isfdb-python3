@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -43,11 +44,11 @@ if __name__ == '__main__':
         pub_price = record[0][1]
         numeric_price = pub_price.split(' Lit')[0]
         new_price = 'Lit %s' % numeric_price
-        print 'ID: ', pub_id
-        print 'Old: ', numeric_price
-        print 'New: ', new_price
+        print('ID: ', pub_id)
+        print('Old: ', numeric_price)
+        print('New: ', new_price)
         update = "update pubs set pub_price = '%s' where pub_id = %d" % (db.escape_string(new_price), int(pub_id))
         db.query(update)
         record = result.fetch_row()
-    print "Total processed: %d" % int(result.num_rows())
+    print("Total processed: %d" % int(result.num_rows()))
 

@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2019   Ahasuerus
+#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -44,6 +45,6 @@ if __name__ == '__main__':
 
     update = """update titles set title_synopsis=NULL
                 where title_id in (85496,87408,119072,1670052)"""
-    print update
+    print(update)
     db.query(update)
-    print "Title records updated"
+    print("Title records updated")

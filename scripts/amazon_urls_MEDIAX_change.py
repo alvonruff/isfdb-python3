@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2024-2025   Ahasuerus
+#     (C) COPYRIGHT 2024-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -41,9 +42,9 @@ if __name__ == "__main__":
         first_segment = new_url_list[0]
         second_segment = new_url_list[1].split('/images/')[1]
         new_url = first_segment + '/images/' + second_segment
-        print new_url
+        print(new_url)
         update = """update pubs set pub_frontimage = '%s' where pub_id = %d""" % (db.escape_string(new_url), pub_id)
         db.query(update)
         record = result.fetch_row()
         count += 1
-    print count
+    print(count)

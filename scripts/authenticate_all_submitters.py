@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016   Ahasuerus
+#     (C) COPYRIGHT 2016-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -58,12 +59,12 @@ if __name__ == '__main__':
         users.append(record[0][0])
         record = result.fetch_row()
     if not users:
-        print "No unauthenticated users with submissions. Exiting."
+        print("No unauthenticated users with submissions. Exiting.")
         sys.exit(0)
     users_in_clause = list_to_in_clause(users)
 
     query = """update mw_user set user_email_authenticated=20160128010101
                 where user_id in (%s)""" % users_in_clause
-    print query
+    print(query)
     db.query(query)
-    print "User records updated"
+    print("User records updated")

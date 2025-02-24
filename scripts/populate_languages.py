@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009   Ahasuerus
+#     (C) COPYRIGHT 2009-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -113,5 +114,5 @@ if __name__ == '__main__':
         lang_code = db.escape_string(lang[0])
         lang_name = db.escape_string(lang[1])
         update = "insert into languages (lang_name, lang_code) values('%s','%s')" % (lang_name, lang_code)
-        print update
+        print(update)
         db.query(update)

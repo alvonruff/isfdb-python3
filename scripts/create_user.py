@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import print_function
 #    (C) COPYRIGHT 2008-2025   Al von Ruff, MaryD, RobertGl and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
@@ -34,9 +35,9 @@ if __name__ == '__main__':
                 username = sys.argv[1]
                 password = sys.argv[2]
         except:
-                print 'usage: create_user.py username password'
-                print '       The third parameter, if specified, should be 1 for moderator/bureaucrat users'
-                print '       and 0 for non-privileged users. The default is 1, i.e. moderator AND bureaucrat.'
+                print('usage: create_user.py username password')
+                print('       The third parameter, if specified, should be 1 for moderator/bureaucrat users')
+                print('       and 0 for non-privileged users. The default is 1, i.e. moderator AND bureaucrat.')
                 sys.exit(1)
 
         # By default, the new user is a moderator AND bureaucrat. The third parameter passed to this script (if '0')

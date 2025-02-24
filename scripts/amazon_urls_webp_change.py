@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -47,4 +48,4 @@ if __name__ == "__main__":
         db.query(update)
         record = result.fetch_row()
         count += 1
-    print count
+    print(count)

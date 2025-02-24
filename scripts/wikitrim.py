@@ -1,5 +1,6 @@
 #!/usr/bin/python
-#    (C) COPYRIGHT 2008-2022   Al von Ruff and Ahasuerus
+from __future__ import print_function
+#    (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,7 +40,7 @@ def trimpages(db, page_id):
     while record:
         if (counter > 50):
             delete = "delete from mw_text where old_id='%d'" % (record[0][0])
-            print delete
+            print(delete)
             db.query(delete)
         record = result.fetch_row()
         counter += 1
@@ -48,9 +49,9 @@ def trimpages(db, page_id):
 
 if __name__ == '__main__':
 
-    print """This script has been disabled. It works for version 1.12 of the
+    print("""This script has been disabled. It works for version 1.12 of the
              MediaWiki software, but does not work for newer versions. It will
-             need to be rewritten before it can be reactivated."""
+             need to be rewritten before it can be reactivated.""")
     sys.exit(0)
 
 ##    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())

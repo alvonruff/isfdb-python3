@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020   Ahasuerus
+#     (C) COPYRIGHT 2020-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -50,8 +51,8 @@ if __name__ == '__main__':
         record_id = GetElementValue(merge, 'ClonedTo')
         if record_id:
             imports += 1
-            print sub_id, record_id
+            print(sub_id, record_id)
             update = "update submissions set affected_record_id = %d where sub_id = %d" % (int(record_id), int(sub_id))
             db.query(update)
         record = result.fetch_row()
-    print "Imports: %d" % imports
+    print("Imports: %d" % imports)

@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2013-2025   Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -36,17 +37,17 @@ if __name__ == '__main__':
         db.query(query_main)
         result_main = db.store_result()
         row = result_main.fetch_row(0)
-        print len(row)
+        print(len(row))
         count = 0
         for record in row:
-            print record
+            print(record)
             count += 1
             # Remove ALL rows for this title/review combination
             delete = "delete from title_relationships where title_id=%d and review_id=%d;" % (int(record[1]), int(record[2]))
-            print delete
+            print(delete)
             db.query(delete)
             # Insert a new record for this title/review combination into the table
             insert = "insert into title_relationships (title_id, review_id) values(%d,%d);" % (int(record[1]), int(record[2]))
-            print insert
+            print(insert)
             db.query(insert)
-        print "Total duplicate title_relationship entries processed : %d" % (count)
+        print("Total duplicate title_relationship entries processed : %d" % (count))
