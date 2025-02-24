@@ -40,7 +40,7 @@ if __name__ == '__main__':
         for title in titles:
             title_id = title[0]
             title_title = title[1]
-            new_title = db.escape_string(string.replace(title_title,'\x92',"'"))
+            new_title = db.escape_string(str.replace(title_title,'\x92',"'"))
             #print(new_title)
             update = "update titles set title_title = '%s' where title_id = '%d'" % (new_title,title_id)
             print(update)
