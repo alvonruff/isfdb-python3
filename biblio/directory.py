@@ -84,7 +84,7 @@ if __name__ == '__main__':
         else:
                 records_map = SQLGetAuthorDirectory()
         
-        first_characters = str.ascii_lowercase + "'"
+        first_characters = string.ascii_lowercase + "'"
         if dir_type != 'author':
                 # The Author Directory doesn't support asterisks in author names because
                 # it uses the Advanced Author Search logic, which treats asterisks as wildcards
