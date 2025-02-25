@@ -29,7 +29,7 @@ if __name__ == '__main__':
                 SESSION.DisplayError('You must be logged in to add tags')
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 title_id = int(form['title_id'].value)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         counter = 1
         while counter < 100:
                 key = "tag_name%d" % counter
-                if form.has_key(key):
+                if key in form:
                         tag = form[key].value
                         # Strip off leading and trailing spaces. Normally it happens
                         # in XMLescape when a submission is created. However, title tags

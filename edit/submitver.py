@@ -43,9 +43,9 @@ if __name__ == '__main__':
         PrintNavBar(0, 0)
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
-        if form.has_key('pubid'):
+        if 'pubid' in form:
                 pub_id = int(form['pubid'].value)
         else:
                 PrintPostSearch(0, 0, 0, 0, 0)

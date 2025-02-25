@@ -28,7 +28,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'linkreview'
         submission.type = MOD_REVIEW_LINK
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 parent_id = form['Parent'].value
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title[TITLE_TITLE])))
         update_string += "    <Record>%d</Record>\n" % int(title_id)
         update_string += "    <Parent>%d</Parent>\n" % int(parent_id)
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
         update_string += "  </LinkReview>\n"
         update_string += "</IsfdbSubmission>\n"

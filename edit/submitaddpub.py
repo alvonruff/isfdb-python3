@@ -131,10 +131,10 @@ if __name__ == '__main__':
         update_string += val
         changes += changed
 
-        if new.form.has_key('mod_note'):
+        if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
 
-        if new.form.has_key('Source'):
+        if 'Source' in new.form:
                 update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
 
                         

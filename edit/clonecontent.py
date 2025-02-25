@@ -79,8 +79,8 @@ if __name__ == '__main__':
         print('<a href="%s://%s/index.php/Help:Screen:EditPub">Help on entering additional contents</a><p>' % (PROTOCOL, WIKILOC))
         print('</div>')
 
-        form = cgi.FieldStorage()
-        if form.has_key('ExportTo'):
+        form = IsfdbFieldStorage()
+        if 'ExportTo' in form:
                 ToTag = form['ExportTo'].value
                 # Drop everything to the left of the last question mark in case a pub URL was entered
                 ToTag = ToTag.split('?')[-1]
@@ -101,7 +101,7 @@ if __name__ == '__main__':
         pub_id = 0
         pub_type = ''
         # Check if we are importing/exporting the contents of a publication
-        if form.has_key('ExportFrom'):
+        if 'ExportFrom' in form:
                 FromTag = form['ExportFrom'].value
                 # Drop everything to the left of the last question mark in case a pub URL was entered
                 FromTag = FromTag.split('?')[-1]
@@ -118,26 +118,26 @@ if __name__ == '__main__':
                         errorPage("Specified tag/ID does not exist")
                 titles = getSortedTitlesInPub(publication[PUB_PUBID])
                 # Set pub_id to the Publication ID only if we need to include page numbers
-                if form.has_key('IncludePages'):
+                if 'IncludePages' in form:
                         pub_id=clone_from
                 pub_type = publication[PUB_CTYPE]
-                if form.has_key('IncludeCoverArt'):
+                if 'IncludeCoverArt' in form:
                         include_coverart = 1
                 else:
                         include_coverart = 0
-                if form.has_key('IncludeInteriorArt'):
+                if 'IncludeInteriorArt' in form:
                         include_interiorart = 1
                 else:
                         include_interiorart = 0
 
         # Check if we are importing individual titles
-        elif form.has_key('ImportTitles1'):
+        elif 'ImportTitles1' in form:
                 # Always include COVERART and INTERIORART titles when importing individual titles
                 include_coverart = 1
                 include_interiorart = 1
                 titles = []
                 titles_dict = {}
-                for key in form.keys():
+                for key in list(form.keys()):
                         if 'ImportTitles' not in key:
                                 continue
                         title_id = XMLescape(form[key].value)

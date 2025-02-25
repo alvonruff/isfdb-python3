@@ -29,7 +29,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'deletepub'
         submission.type = MOD_PUB_DELETE
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 pub_id = int(form['pub_id'].value)
                 pubname = SQLgetPubTitle(pub_id)
@@ -41,7 +41,7 @@ if __name__ == '__main__':
         if not submission.user.id:
                 submission.error('', pub_id)
         
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 reason = form['mod_note'].value
         else:
                 reason = 'No reason given.'

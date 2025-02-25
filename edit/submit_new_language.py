@@ -22,15 +22,15 @@ class Language():
                 self.latin = ''
 
         def cgi2obj(self):
-                self.form = cgi.FieldStorage()
-                if self.form.has_key('language_name'):
+                self.form = IsfdbFieldStorage()
+                if 'language_name' in self.form:
                         self.name = XMLescape(self.form['language_name'].value)
                 else:
                         SESSION.DisplayError('Language Name is a required field')
                 if SQLGetLangIdByName(self.name):
                         SESSION.DisplayError('This ISO 639-2 language name is already on file')
 
-                if self.form.has_key('language_code'):
+                if 'language_code' in self.form:
                         self.code = XMLescape(self.form['language_code'].value)
                 else:
                         SESSION.DisplayError('Language Code is a required field')
@@ -39,7 +39,7 @@ class Language():
                 if SQLGetLangIdByCode(self.code):
                         SESSION.DisplayError('This ISO 639-2 language code is already on file')
 
-                if self.form.has_key('language_latin'):
+                if 'language_latin' in self.form:
                         self.latin = XMLescape(self.form['language_latin'].value)
                 else:
                         SESSION.DisplayError('Latin-Derived is a required field')

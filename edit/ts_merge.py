@@ -28,7 +28,8 @@ class Form:
                 self.targetID = 1000000000
 
         def get_form_data(self):
-                self.form_data = cgi.FieldStorage()
+
+                self.form_data = IsfdbFieldStorage()
 
         def parse_form_data(self):
                 # Retrieve all submitted IDs starting with "record" and sort them by number
@@ -69,7 +70,7 @@ class Form:
                 self.add_payload_line('    <Subject>%s</Subject>\n' % (db.escape_string(XMLescape(titlename))))
 
         def add_column(self, column, tag):
-                if self.form_data.has_key(column):
+                if column in self.form_data:
                         value = self.form_data[column].value
                         index = int(value)-1
                         record_id = int(self.records[index])
@@ -79,7 +80,7 @@ class Form:
                                 self.parent_id = parent_title[TITLE_PARENT]
 
         def add_mod_note(self):
-                if self.form_data.has_key('mod_note'):
+                if 'mod_note' in self.form_data:
                         mod_note = self.form_data['mod_note'].value
                         self.add_payload_line('    <ModNote>%s</ModNote>\n' % (db.escape_string(XMLescape(mod_note))))
 

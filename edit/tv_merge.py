@@ -148,8 +148,8 @@ if __name__ == '__main__':
         # Gather the form input
         ##################################################################
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
-        if form.has_key('merge'):
+        form = IsfdbFieldStorage()
+        if 'merge' in form:
                 RecordNumber = form.getlist('merge')
                 MaxRecords = len(RecordNumber)
                 rec = 0

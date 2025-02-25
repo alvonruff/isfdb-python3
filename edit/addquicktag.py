@@ -37,14 +37,14 @@ if __name__ == '__main__':
                 DoError('You must be logged in to tag titles', 0)
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
-        if form.has_key('title_id'):
+        if 'title_id' in form:
                 title_id = form['title_id'].value
         else:
                 DoError('Specified title ID does not exit', 0)
 
-        if form.has_key('tag'):
+        if 'tag' in form:
                 new_tag = form['tag'].value
         else:
                 DoError('No tag specified', 0)

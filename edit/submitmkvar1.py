@@ -28,7 +28,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'mkvariant'
         submission.type = MOD_TITLE_MKVARIANT
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 # Drop everything to the left of the last question mark in case a title URL was entered
@@ -63,7 +63,7 @@ if __name__ == '__main__':
         update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title[TITLE_TITLE])))
         update_string += "    <Record>%d</Record>\n" % (title_id)
         update_string += "    <Parent>%d</Parent>\n" % (parent_id)
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
         update_string += "  </MakeVariant>\n"
         update_string += "</IsfdbSubmission>\n"

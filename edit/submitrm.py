@@ -28,7 +28,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'rmtitles'
         submission.type = MOD_RMTITLE
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 pubid = int(form['pub_id'].value)
@@ -51,7 +51,7 @@ if __name__ == '__main__':
                 entry = 1
                 while entry < 2000:
                         name = 'cover%d' % entry
-                        if form.has_key(name):
+                        if name in form:
                                 val = form[name].value
                                 update_string += "    <CoverRecord>%d</CoverRecord>\n" % (int(val))
                         else:
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 entry = 1
                 while entry < 2000:
                         name = 'title%d' % entry
-                        if form.has_key(name):
+                        if name in form:
                                 val = form[name].value
                                 update_string += "    <TitleRecord>%d</TitleRecord>\n" % (int(val))
                         else:
@@ -71,7 +71,7 @@ if __name__ == '__main__':
                 entry = 1
                 while entry < 2000:
                         name = 'review%d' % entry
-                        if form.has_key(name):
+                        if name in form:
                                 val = form[name].value
                                 update_string += "    <ReviewRecord>%d</ReviewRecord>\n" % (int(val))
                         else:
@@ -81,7 +81,7 @@ if __name__ == '__main__':
                 entry = 1
                 while entry < 2000:
                         name = 'interview%d' % entry
-                        if form.has_key(name):
+                        if name in form:
                                 val = form[name].value
                                 update_string += "    <InterviewRecord>%d</InterviewRecord>\n" % (int(val))
                         else:
@@ -96,7 +96,7 @@ if __name__ == '__main__':
         except:
                 submission.error("At least one title must be selected")
 
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
 
         update_string += "  </TitleRemove>\n"

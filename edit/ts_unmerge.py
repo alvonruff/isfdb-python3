@@ -28,7 +28,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'tv_unmerge'
         submission.type = MOD_TITLE_UNMERGE
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 record = int(form['record'].value)
         except:
@@ -52,7 +52,7 @@ if __name__ == '__main__':
         pub_count = 0
         while entry < 2000:
                 name = 'pub%d' % entry
-                if form.has_key(name):
+                if name in form:
                         try:
                                 val = int(form[name].value)
                         except:
@@ -65,7 +65,7 @@ if __name__ == '__main__':
         if not pub_count:
                 submission.error("No publications selected to be unmerged")
 
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
 
         update_string += "  </TitleUnmerge>\n"

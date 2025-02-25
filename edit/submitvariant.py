@@ -81,7 +81,7 @@ if __name__ == '__main__':
         (val, changed) = DoField('Note', new.used_note, new.title_note)
         update_string += val
 
-        if new.form.has_key('mod_note'):
+        if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
 
         #############################################################

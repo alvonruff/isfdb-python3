@@ -141,7 +141,7 @@ if __name__ == '__main__':
                         submission.error("""This publication has been primary verified by at least one editor other than you.
                                          Please enter a moderator note to document the submitted changes""")
 
-        if new.form.has_key('Source'):
+        if 'Source' in new.form:
                 update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
 
         # Only add the submitted identifiers to the submission if they are

@@ -34,7 +34,7 @@ if __name__ == '__main__':
         if new.error:
                 submission.error(new.error)
 
-        if new.form.has_key('child_id'):
+        if 'child_id' in new.form:
                 record = int(new.form['child_id'].value)
         else:
                 record = 0
@@ -105,10 +105,10 @@ if __name__ == '__main__':
                 update_string += "    <Image>%s</Image>\n" % (db.escape_string(new.pub_image))
         if new.used_note:
                 update_string += "    <Note>%s</Note>\n" % (db.escape_string(new.pub_note))
-        if new.form.has_key('mod_note'):
+        if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
 
-        if new.form.has_key('Source'):
+        if 'Source' in new.form:
                 update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
 
         #############################################################

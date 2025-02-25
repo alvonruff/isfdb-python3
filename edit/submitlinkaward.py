@@ -29,7 +29,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'linkaward'
         submission.type = MOD_AWARD_LINK
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 title_id = form['title_id'].value
@@ -68,7 +68,7 @@ if __name__ == '__main__':
         update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title_title)))
         update_string += "    <Award>%d</Award>\n" % (award_id)
         update_string += "    <Title>%d</Title>\n" % (title_id)
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
         update_string += "  </LinkAward>\n"
         update_string += "</IsfdbSubmission>\n"

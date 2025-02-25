@@ -28,7 +28,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'deleteawardtype'
         submission.type = MOD_AWARD_TYPE_DELETE
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 record = int(form['award_type_id'].value)
@@ -40,7 +40,7 @@ if __name__ == '__main__':
         except:
                 submission.error('Invalid award type')
         
-        if form.has_key('reason'):
+        if 'reason' in form:
                 reason = form['reason'].value
         else:
                 reason = 'No reason given.'

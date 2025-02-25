@@ -1,5 +1,4 @@
 #!_PYTHONLOC
-from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -26,18 +25,18 @@ if __name__ == '__main__':
         submission.cgi_script = 'mkpseudo'
         submission.type = MOD_AUTHOR_PSEUDO
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         parent_id = 0
         
-        if form.has_key('ParentRec'):
+        if 'ParentRec' in form:
                 parent_id = str.strip(form['ParentRec'].value)
-        elif form.has_key('ParentName'):
+        elif 'ParentName' in form:
                 parent_name = str.strip(form['ParentName'].value)
         else:
                 submission.error('Parent record # or name must be specified')
 
-        if form.has_key('author_id'):
+        if 'author_id' in form:
                 author_id = str.strip(form['author_id'].value)
                 author_data = SQLloadAuthorData(int(author_id))
         else:
@@ -81,7 +80,7 @@ if __name__ == '__main__':
         update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(author_data[AUTHOR_CANONICAL])))
         update_string += "    <Record>%d</Record>\n" % (int(author_id))
         update_string += "    <Parent>%d</Parent>\n" % (int(parent_id))
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
         update_string += "  </MakePseudonym>\n"
         update_string += "</IsfdbSubmission>\n"

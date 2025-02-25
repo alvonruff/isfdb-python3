@@ -85,7 +85,7 @@ def printpubrecord(pub, image_url, reuse_external_ids):
 
 if __name__ == '__main__':
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 pub_id = int(form['CloneTo'].value)
                 pub = pubs(db)
@@ -104,25 +104,25 @@ if __name__ == '__main__':
         # Check if the editor wants to clone COVERART and image URL
         cover_art = 0
         image_url = 0
-        if form.has_key('ReuseCoverArt'):
+        if 'ReuseCoverArt' in form:
                 image_url = 1
                 if covers:
                         cover_art = 1
 
         # Check if the editor wants to clone INTERIORART
-        if form.has_key('ReuseInteriorArt'):
+        if 'ReuseInteriorArt' in form:
                 interior_art = 1
         else:
                 interior_art = 0
 
         # Check if the editor wants to reuse old page numbers
-        if form.has_key('ReusePageNumbers'):
+        if 'ReusePageNumbers' in form:
                 reuse_page_numbers = 1
         else:
                 reuse_page_numbers = 0
 
         # Check if the editor wants to reuse external identifiers
-        if form.has_key('ReuseExternalIDs'):
+        if 'ReuseExternalIDs' in form:
                 reuse_external_ids = 1
         else:
                 reuse_external_ids = 0

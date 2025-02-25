@@ -79,7 +79,7 @@ if __name__ == '__main__':
         if new.used_note:
                 update_string += "    <AwardNote>%s</AwardNote>\n" % (db.escape_string(new.award_note))
 
-        if new.form.has_key('mod_note'):
+        if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
 
         update_string += "  </NewAward>\n"

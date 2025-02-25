@@ -28,13 +28,13 @@ if __name__ == '__main__':
         submission.cgi_script = 'deleteseries'
         submission.type = MOD_DELETE_SERIES
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 series_id = int(form['series_id'].value)
                 series_name = form['series_name'].value
         except:
                 submission.error('Invalid series information')
-        if form.has_key('reason'):
+        if 'reason' in form:
                 reason = form['reason'].value
         else:
                 reason = 'No reason given.'

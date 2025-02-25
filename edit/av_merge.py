@@ -66,8 +66,8 @@ if __name__ == '__main__':
         # Gather the form input
         ##################################################################
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
-        if form.has_key('merge'):
+        form = IsfdbFieldStorage()
+        if 'merge' in form:
                 try:
                         recno1 = int(form['merge'][0].value)
                 except:

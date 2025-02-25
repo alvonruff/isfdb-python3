@@ -31,7 +31,7 @@ if __name__ == '__main__':
 
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 title_id = int(form['title_id'].value)

@@ -61,7 +61,7 @@ if __name__ == '__main__':
         PrintNavBar(0, 0)
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 ver = verifications()

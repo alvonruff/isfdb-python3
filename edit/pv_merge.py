@@ -79,8 +79,8 @@ if __name__ == '__main__':
         # Gather the form input
         ##################################################################
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
-        if form.has_key('merge'):
+        form = IsfdbFieldStorage()
+        if 'merge' in form:
                 while 1:
                         try:
                                 RecordNumber[MaxRecords] = form['merge'][MaxRecords].value

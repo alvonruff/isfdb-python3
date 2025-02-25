@@ -20,7 +20,7 @@ from library import ISFDBLocalRedirect
 if __name__ == '__main__':
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 title_id = int(form['title_id'].value)
                 # If the passed in title ID is not 0, i.e. this is a title-based award, so load the associated title data

@@ -21,7 +21,7 @@ from login import *
 from SQLparsing import *
 
 def DoColumn(column, tag, recno1, recno2):
-        if form.has_key(column):
+        if column in form:
                 value = form[column].value
                 if value == '1':
                         retval = "    <%s>%d</%s>\n" % (tag, int(recno1), tag)
@@ -38,13 +38,13 @@ if __name__ == '__main__':
         submission.cgi_script = 0
         submission.type = MOD_AUTHOR_MERGE
 
-        form = cgi.FieldStorage()
-        if form.has_key('record1'):
+        form = IsfdbFieldStorage()
+        if 'record1' in form:
                 recno1 = form['record1'].value
         else:
                 submission.error('Could not extract record1 ID')
 
-        if form.has_key('record2'):
+        if 'record2' in form:
                 recno2 = form['record2'].value
         else:
                 submission.error('Could not extract record2 ID')

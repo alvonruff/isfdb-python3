@@ -28,14 +28,14 @@ if __name__ == '__main__':
         submission.cgi_script = 'deletetitle'
         submission.type = MOD_TITLE_DELETE
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 title_id = int(form['title_id'].value)
         except:
                 submission.error('Invalid title number')
         
-        if form.has_key('reason'):
+        if 'reason' in form:
                 reason = form['reason'].value
         else:
                 reason = 'No reason given.'

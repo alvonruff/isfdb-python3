@@ -155,10 +155,10 @@ if __name__ == '__main__':
         # Retrieve the Source and the Mod Note values from the "form" dictionary, which was
         # created by cgi.FieldStorage, because they are not either in the Pub or in the Title class
 
-        if new.form.has_key('Source'):
+        if 'Source' in new.form:
                 update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
 
-        if new.form.has_key('mod_note'):
+        if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
 
         # Get the Content data

@@ -27,7 +27,7 @@ if __name__ == '__main__':
         submission.cgi_script = 'mkpseudo'
         submission.type = MOD_REMOVE_PSEUDO
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         try:
                 parent_id = int(form['parent_id'].value)
@@ -58,7 +58,7 @@ if __name__ == '__main__':
         update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(author_data[AUTHOR_CANONICAL])))
         update_string += "    <Record>%d</Record>\n" % (author_id)
         update_string += "    <Parent>%d</Parent>\n" % (parent_id)
-        if form.has_key('mod_note'):
+        if 'mod_note' in form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
         update_string += "  </RemovePseud>\n"
         update_string += "</IsfdbSubmission>\n"
