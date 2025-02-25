@@ -2416,7 +2416,7 @@ def SQLwikiLinkExists(namespace, title):
         else:
                 num = 0
 
-        newlink = string.replace(title, ' ', '_')
+        newlink = str.replace(title, ' ', '_')
         query = "select page_id from mw_page where page_title='%s' and page_namespace='%d';" % (db.escape_string(newlink), num)
         # Use try/except in case this ISFDB instance has no Wiki tables
         try:

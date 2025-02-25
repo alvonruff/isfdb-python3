@@ -170,7 +170,7 @@ if __name__ == '__main__':
                                 # Re-assemble the string from the parsed list, removing spaces
                                 title_title = "".join(parsed_title)
                                 # Remove all punctuation characters
-                                title_title = title_title.translate(str.maketrans("",""), str.punctuation)
+                                title_title = title_title.translate(str.maketrans("",""), string.punctuation)
                         if title_title not in title_dict:
                                 title_dict[title_title] = [title]
                         else:

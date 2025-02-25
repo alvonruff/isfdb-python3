@@ -16,7 +16,7 @@ from library import *
 def dup_authors():
         # Report 9999: Suspected Duplicate Authors. This report is run monthly
         # because it takes many hours to compile.
-        for letter in tuple(str.ascii_uppercase):
+        for letter in tuple(string.ascii_uppercase):
                 author_similarity(letter, 9999)
 
 def author_similarity(letter, report_type):
