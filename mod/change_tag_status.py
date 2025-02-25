@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
         try:
                 sys.stderr = sys.stdout
-                form = cgi.FieldStorage()
+                form = IsfdbFieldStorage()
                 new_status = form["new_status"].value
                 if new_status == 'Private':
                         numeric_status = 1

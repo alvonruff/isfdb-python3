@@ -33,7 +33,7 @@ if __name__ == '__main__':
 
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         print('<pre>')
 
@@ -48,27 +48,27 @@ if __name__ == '__main__':
                 fields = ''
                 values = ''
 
-                if form.has_key(label_str):
+                if label_str in form:
                         id_value = form[id_str].value
-                        if form.has_key(label_str):
+                        if label_str in form:
                                 label_value = form[label_str].value
                                 fields += 'reference_label'
                                 values += "'%s'" % label_value
                         else:
                                 label_value = 0
-                        if form.has_key(fullname_str):
+                        if fullname_str in form:
                                 fullname_value = form[fullname_str].value
                                 fields += ', reference_fullname'
                                 values += ", '%s'" % fullname_value
                         else:
                                 fullname_value = 0
-                        if form.has_key(pub_str):
+                        if pub_str in form:
                                 pub_value = form[pub_str].value
                                 fields += ', pub_id'
                                 values += ", '%s'" % pub_value
                         else:
                                 pub_value = 0
-                        if form.has_key(url_str):
+                        if url_str in form:
                                 url_value = form[url_str].value
                                 fields += ', reference_url'
                                 values += ", '%s'" % url_value

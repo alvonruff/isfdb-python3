@@ -57,7 +57,7 @@ def PrintNextSubmissionLink(next_sub):
         if not next_sub:
                 return
         subtype = next_sub[SUB_TYPE]
-        if SUBMAP.has_key(subtype):
+        if subtype in SUBMAP:
                 print(ISFDBLink('mod/submission_review.cgi', next_sub[SUB_ID], 'Next Submission', False, 'class="approval"'))
 
         

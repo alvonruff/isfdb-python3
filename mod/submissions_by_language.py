@@ -18,7 +18,7 @@ import cgi
 
 if __name__ == '__main__':
 
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         try:
                 language_name = form['language'].value
         except:

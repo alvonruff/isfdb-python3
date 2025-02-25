@@ -28,7 +28,7 @@ if __name__ == '__main__':
         PrintNavBar()
         
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
         
         try:
                 user_name = form['user_name'].value

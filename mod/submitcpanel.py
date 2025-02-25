@@ -32,11 +32,11 @@ if __name__ == '__main__':
         oldEditOnline = record[0][3]
 
         sys.stderr = sys.stdout
-        form = cgi.FieldStorage()
+        form = IsfdbFieldStorage()
 
         print('<pre>')
         changes = 0
-        if form.has_key('VERSION'):
+        if 'VERSION' in form:
                 newVersion = XMLescape(form['VERSION'].value)
                 if newVersion != oldVersion:
                         query = "update metadata set metadata_schemaversion='%s'" % db.escape_string(newVersion)
@@ -44,7 +44,7 @@ if __name__ == '__main__':
                         db.query(query)
                         changes += 1
 
-        if form.has_key('ONLINE'):
+        if 'ONLINE' in form:
                 newDbOnline = int(form['ONLINE'].value)
                 if newDbOnline != oldDbOnline:
                         query = "update metadata set metadata_dbstatus=%d" % newDbOnline
@@ -52,7 +52,7 @@ if __name__ == '__main__':
                         db.query(query)
                         changes += 1
 
-        if form.has_key('EDITING'):
+        if 'EDITING' in form:
                 newEditOnline = int(form['EDITING'].value)
                 if newEditOnline != oldEditOnline:
                         query = "update metadata set metadata_editstatus=%d" % newEditOnline
