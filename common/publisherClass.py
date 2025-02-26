@@ -12,7 +12,6 @@ from __future__ import print_function
 import cgi
 import sys
 import os
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -171,24 +170,24 @@ class publishers:
                         return
 
                 query = 'select COUNT(publisher_id) from pubs where publisher_id=%d' % (int(self.publisher_id))
-                db.query(query)
                 print("<li> ", query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 # Do not delete the publisher if there are pubs associated with it
                 if record[0][0] != 0:
                         return
 
                 delete = 'delete from publishers where publisher_id=%d' % int(self.publisher_id)
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
                 delete = 'delete from trans_publisher where publisher_id=%d' % int(self.publisher_id)
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
                 delete = "delete from webpages where publisher_id=%d" % int(self.publisher_id)
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
                 if self.publisher_note:
                         delete = "delete from notes where note_id=%d" % int(self.publisher_note_id)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)

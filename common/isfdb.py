@@ -141,6 +141,7 @@ class Session:
                 self.new_editor_threshold = 20
                 self.parameters = []
                 self.query_string = ''
+                self.SQLlog = []
                 self.recognized_suffixes = (
                         'II',
                         'III',

@@ -47,32 +47,32 @@ class Sfe3:
                 self.file_new_urls()
 
         def load_URLs_in_author_records(self):
+                CNX = MYSQL_CONNECTOR()
                 query = """select distinct url
                         from webpages
                         where author_id is not null
-                        and url like '%%%s/%%'""" % db.escape_string(self.host)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                        and url like '%%%s/%%'""" % CNX.DB_ESCAPE_STRING(self.host)
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         full_url = record[0][0]
                         url_segments = full_url.split('/')
                         last_segment = url_segments[-1]
                         self.URLs_in_author_records.append(last_segment)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def count_of_unresolved(self):
                 query = "select count(*) from sfe3_authors where resolved is null"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 return record[0][0]
         
         def load_resolved_and_unresolved_URLs(self):
                 query = "select url, author_name, resolved from sfe3_authors"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         url = record[0][0]
                         author_name = record[0][1]
@@ -81,7 +81,7 @@ class Sfe3:
                                 self.resolved_URLs[url] = author_name
                         else:
                                 self.unresolved_URLs[url] = author_name
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def reconcile_newly_entered_URLs(self):
                 for url in self.URLs_in_author_records:
@@ -90,9 +90,10 @@ class Sfe3:
                                 self.urls_to_delete_from_sfe3_authors.append(url)
 
         def delete_newly_entered_unresolved_URLs(self):
+                CNX = MYSQL_CONNECTOR()
                 for url in self.urls_to_delete_from_sfe3_authors:
-                        delete = "delete from sfe3_authors where url = '%s'" % db.escape_string(url)
-                        db.query(delete)
+                        delete = "delete from sfe3_authors where url = '%s'" % CNX.DB_ESCAPE_STRING(url)
+                        CNX.DB_QUERY(delete)
 
         def download_URLs_from_SFE3(self):
                 fragment_separator = 'a href="/entry/'
@@ -136,10 +137,11 @@ class Sfe3:
                 print('New URLs after removing URLs in sfe3_authors: ',len(self.online_URLs))
 
         def file_new_urls(self):
+                CNX = MYSQL_CONNECTOR()
                 for segment in self.online_URLs:
                         author_name = self.online_URLs[segment]
-                        update = "insert into sfe3_authors(url, author_name) values('%s', '%s')" % (db.escape_string(segment), db.escape_string(author_name))
-                        db.query(update)
+                        update = "insert into sfe3_authors(url, author_name) values('%s', '%s')" % (CNX.DB_ESCAPE_STRING(segment), CNX.DB_ESCAPE_STRING(author_name))
+                        CNX.DB_QUERY(update)
                 print('Updated')
 
         def display_report(self):

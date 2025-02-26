@@ -10,10 +10,12 @@ from __future__ import print_function
 #     Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
 
 import string
-import datetime
+import traceback
+import cgi
 from SQLparsing import *
 from xml.dom import minidom
 from xml.dom import Node
+from datetime import datetime
 
 ################################################################
 # The functions and classes in this module are used across all
@@ -21,7 +23,7 @@ from xml.dom import Node
 ################################################################
 
 def ISFDBDate():
-        return datetime.datetime.today().strftime('%Y-%m-%d')
+        return datetime.today().strftime('%Y-%m-%d')
 
 ISFDBmonthmap = {
         1  : 'Jan',
@@ -71,7 +73,9 @@ def ISFDBnormalizeAuthor(value):
         # Convert double quotes to single quotes
         value = str.replace(value,'"',"'")
         # Strip all leading, trailing and double spaces
-        return str.join(str.split(value))
+        # How did this ever work?
+        #return str.join(str.split(value))
+        return ' '.join(str.split(value))
 
 def ISFDBnormalizeDate(date):
         now = datetime.datetime.now()
@@ -777,7 +781,7 @@ def getPubContentList(pubid):
         # Build a list of content items with "sort group" and "normalized page number" information
         for pub_content_record in pub_content_list:
                 page = pub_content_record[PUB_CONTENTS_PAGE]
-                (group, normalized_page, decimal_part) = ConvertPageNumber(page)
+                (group, normalized_page, decimal_part) = ConvertPageNumber(str(page))
                 sorted_list.append((group, normalized_page, decimal_part, alphabetical_position, pub_content_record))
                 alphabetical_position += 1
         # Re-sort the list of content items based on group, page number and record's title
@@ -805,7 +809,10 @@ def getSortedTitlesInPub(pub_id):
         return new_titles
 
 def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, record_type = '', div = 1):
-        import urllib
+        if PYTHONVER == 'python2':
+                import urllib
+        else:
+                import urllib.request, urllib.parse, urllib.error
         import re
         note = ISFDBHostCorrection(note, 'all')
         if display_mode == 'short' and '{{BREAK}}' in note:
@@ -1351,7 +1358,10 @@ def ISFDBMouseover(mouseover_values, display_value, tag = 'td', indicator = SESS
         return display
 
 def invalidURL(url):
-        from urlparse import urlparse
+        if PYTHONVER == 'python2':
+                from urlparse import urlparse
+        else:
+                from urllib.parse import urlparse
         error = invalidURLcharacters(url, 'URL', 'escaped')
         if error:
                 return error
@@ -1386,9 +1396,9 @@ def invalidURLcharacters(url, field_name, escaped_flag):
 def WikiExists():
         query = """select count(*) from information_schema.tables
                 where table_schema = 'isfdb' and table_name = 'mw_page'"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         if record[0][0]:
                 return 1
         else:
@@ -1483,20 +1493,20 @@ def ISFDBtranslatedReports():
         return reports
 
 def ISFDBprintTime():
-        print('<p><b>Current ISFDB time:</b> %s' % str(datetime.datetime.now()).split('.')[0])
+        print('<p><b>Current ISFDB time:</b> %s' % str(datetime.now()).split('.')[0])
 
 def ISFDBdaysFromToday(future_date):
         if future_date == '8888-00-00' or future_date == '0000-00-00':
                 return 0
-        today_date = datetime.datetime.today()
+        today_date = datetime.today()
         try:
-                normalized_future_date = datetime.datetime.strptime(future_date, "%Y-%m-%d")
+                normalized_future_date = datetime.strptime(future_date, "%Y-%m-%d")
         except:
                 return 0 # Invalid date format
         days_from_today = normalized_future_date - today_date
         return days_from_today.days
 
-def ISFDBprintSubmissionTable(result, status):
+def ISFDBprintSubmissionTable(CNX, status):
         from login import GetUserData
         ISFDBprintTime()
         print('<table class="generic_table">')
@@ -1530,12 +1540,12 @@ def ISFDBprintSubmissionTable(result, status):
                 print('<th>Unreject?</th>')
         
         print('</tr>')
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         color = 0
         while record:
                 ISFDBprintSubmissionRecord(record, color, status, unreject)
                 color = color ^ 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
@@ -1657,7 +1667,10 @@ def AdvSearchLink(params):
         return link
 
 def EscapeParams(params):
-        import urllib
+        if PYTHONVER == "python2":
+                import urllib
+        elif PYTHONVER == "python3":
+                import urllib.request, urllib.parse, urllib.error
         param_string = ''
         for param in params:
                 param_string += '&amp;%s=%s' % (urllib.quote(param[0]), urllib.quote(param[1]))
@@ -1790,7 +1803,7 @@ class isfdbUI:
 
         def unrecognizedTemplate(self, value):
                 new_value = value.lower()
-                templates = SQLLoadAllTemplates().keys()
+                templates = list(SQLLoadAllTemplates().keys())
                 templates.append('break')
                 for template in templates:
                         non_linking_template = '{{%s}}' % template.lower()
@@ -1830,7 +1843,7 @@ def FormatExternalIDSite(sites, type_id, id_value):
         return formatted_id
 
 def FormatExternalIDLink(url, value, display_value):
-        return '<a href="%s" target="_blank">%s</a>' % (url % str.replace(value,' ',''), display_value)
+        return '<a href="%s" target="_blank">%s</a>' % (url % str.replace(str(value),' ',''), display_value)
 
 def LIBsameParentAuthors(title):
         pseudonym = 0

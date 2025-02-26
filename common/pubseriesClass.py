@@ -12,7 +12,6 @@ from __future__ import print_function
 import cgi
 import sys
 import os
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -158,25 +157,28 @@ class pub_series:
                 if not self.pub_series_id:
                         return
 
+                CNX = MYSQL_CONNECTOR()
                 query = 'select COUNT(pub_series_id) from pubs where pub_series_id=%d' % (int(self.pub_series_id))
-                db.query(query)
                 print("<li> ", query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 # Do not delete the publication series if there are pubs associated with it
                 if record[0][0] != 0:
                         return
 
                 query = 'delete from pub_series where pub_series_id=%d' % (int(self.pub_series_id))
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
+
                 query = 'delete from trans_pub_series where pub_series_id=%d' % (int(self.pub_series_id))
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
+
                 delete = "delete from webpages where pub_series_id=%d" % (int(self.pub_series_id))
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
+
                 if self.pub_series_note:
                         delete = "delete from notes where note_id=%d" % int(self.pub_series_note_id)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)

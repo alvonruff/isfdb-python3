@@ -14,7 +14,6 @@ import sys
 import re
 import os
 import time
-import MySQLdb
 from SQLparsing import *
 from isfdb import *
 from isfdblib import *
@@ -487,6 +486,7 @@ class pubs:
                 return retval
 
         def xmlIdentifiers(self, include_type_name = 0):
+                CNX = MYSQL_CONNECTOR()
                 update_string = "    <External_IDs>\n"
                 for type_name in self.identifiers:
                         for id_value in self.identifiers[type_name]:
@@ -494,9 +494,9 @@ class pubs:
                                 update_string += "      <External_ID>\n"
                                 update_string += "          <IDtype>%d</IDtype>\n" % int(type_id)
                                 if include_type_name:
-                                        update_string += "          <IDtypeName>%s</IDtypeName>\n" % db.escape_string(XMLescape(type_name))
+                                        update_string += "          <IDtypeName>%s</IDtypeName>\n" % CNX.DB_ESCAPE_STRING(XMLescape(type_name))
                                 # Identifier values must be XML-escaped here since they are not escaped in cgi2obj
-                                update_string += "          <IDvalue>%s</IDvalue>\n" % db.escape_string(XMLescape(id_value))
+                                update_string += "          <IDvalue>%s</IDvalue>\n" % CNX.DB_ESCAPE_STRING(XMLescape(id_value))
                                 update_string += "      </External_ID>\n"
                 update_string += "    </External_IDs>\n"
                 return update_string
@@ -532,10 +532,11 @@ class pubs:
         def load(self, id):
                 if id == 0:
                         return
-                query = "select * from pubs where pub_id=%d" % int(id)
-                self.db.query(query)
-                result = self.db.store_result()
-                record = result.fetch_row()
+                query = "select %s from pubs where pub_id=%d" % (CNX_PUBS_STAR, int(id))
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("pubClass::load: %s" % query)
+                record = CNX.DB_FETCHONE()
                 if record:
                         if record[0][PUB_PUBID]:
                                 self.pub_id = record[0][PUB_PUBID]
@@ -577,14 +578,14 @@ class pubs:
                         query = """select authors.author_canonical from authors, pub_authors
                                    where pub_authors.author_id=authors.author_id and
                                    pub_authors.pub_id=%d""" % record[0][PUB_PUBID]
-                        self.db.query(query)
-                        res2 = self.db.store_result()
-                        rec2 = res2.fetch_row()
+                        CNX.DB_QUERY(query)
+                        SQLlog("pubClass::load: %s" % query)
+                        rec2 = CNX.DB_FETCHMANY()
                         while rec2:
                                 try:
                                         self.pub_authors.append(rec2[0][0])
                                         self.num_authors += 1
-                                        rec2 = res2.fetch_row()
+                                        rec2 = CNX.DB_FETCHMANY()
                                 except:
                                         break
 
@@ -599,9 +600,9 @@ class pubs:
 
                         if record[0][PUB_PUBLISHER]:
                                 query = "select publisher_name from publishers where publisher_id='%d'" % (record[0][PUB_PUBLISHER])
-                                self.db.query(query)
-                                res2 = self.db.store_result()
-                                rec2 = res2.fetch_row()
+                                CNX.DB_QUERY(query)
+                                SQLlog("pubClass::load: %s" % query)
+                                rec2 = CNX.DB_FETCHONE()
                                 if rec2:
                                         self.used_publisher = 1
                                         self.pub_publisher_id = record[0][PUB_PUBLISHER]
@@ -609,9 +610,9 @@ class pubs:
 
                         if record[0][PUB_SERIES]:
                                 query = "select pub_series_name from pub_series where pub_series_id='%d'" % (record[0][PUB_SERIES])
-                                self.db.query(query)
-                                res2 = self.db.store_result()
-                                rec2 = res2.fetch_row()
+                                CNX.DB_QUERY(query)
+                                SQLlog("pubClass::load: %s" % query)
+                                rec2 = CNX.DB_FETCHONE()
                                 if rec2:
                                         self.used_series = 1
                                         self.pub_series = rec2[0][0]
@@ -619,9 +620,9 @@ class pubs:
 
                         if record[0][PUB_NOTE]:
                                 query = "select note_note from notes where note_id='%d'" % (int(record[0][PUB_NOTE]))
-                                self.db.query(query)
-                                res2 = self.db.store_result()
-                                rec2 = res2.fetch_row()
+                                CNX.DB_QUERY(query)
+                                SQLlog("pubClass::load: %s" % query)
+                                rec2 = CNX.DB_FETCHONE()
                                 if rec2:
                                         self.used_note = 1
                                         self.pub_note = rec2[0][0]

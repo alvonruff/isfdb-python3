@@ -13,7 +13,6 @@ import cgi
 import sys
 import re
 import os
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -448,10 +447,11 @@ class titles:
                 #  and 0 if the title couldn't be deleted
                 Record = int(self.title_id)
                 # Check that the title is not in any pubs
+                CNX = MYSQL_CONNECTOR()
                 query = "select * from pub_content where title_id = %d" % Record
-                db.query(query)
-                res = db.store_result()
-                if res.num_rows():
+                CNX.DB_QUERY(query)
+                SQLlog("titleClass::delete: %s" % query)
+                if CNX.DB_NUMROWS():
                         # If this title is in a pub, do not delete it
                         # and return with the status code set to failure 
                         return 0
@@ -462,7 +462,7 @@ class titles:
                 if self.title_note_id:
                         update = "delete from notes where note_id=%d" % (self.title_note_id)
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # Delete Synopsis
@@ -470,107 +470,107 @@ class titles:
                 if self.title_synop_id:
                         update = "delete from notes where note_id=%d" % (self.title_synop_id)
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # Delete Any Stranded Series
                 ##########################################################
                 #query = 'select series_id from titles where title_id=%d and series_id is not null' % (Record)
-                #db.query(query)
-                #res = db.store_result()
-                #if res.num_rows():
-                #        record = res.fetch_row()
+                #CNX.DB_QUERY(query)
+                #if CNX.DB_NUMROWS():
+                #        record = CNX.DB_FETCHONE()
                 #        Series = record[0][0]
                 #        query = 'select COUNT(series_id) from titles where series_id=%d' % (int(Series))
-                #        db.query(query)
-                #        res = db.store_result()
-                #        rec = res.fetch_row()
+                #        CNX.DB_QUERY(query)
+                #        rec = CNX.DB_FETCHONE()
                 #        if rec[0][0] == 1:
                 #                query = 'delete from series where series_id=%d' % (int(Series))
                 #                print "<li> ", query
-                #                db.query(query)
+                #                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete Any Stranded Authors
                 ##########################################################
                 query = """select a.author_id from authors a, canonical_author ca
                         where a.author_id=ca.author_id and ca.title_id=%d""" % (Record)
-                db.query(query)
-                res = db.store_result()
-                author = res.fetch_row()
+                CNX.DB_QUERY(query)
+                SQLlog("titleClass::delete: %s" % query)
+                author = CNX.DB_FETCHMANY()
                 while author:
                         self.deleteAuthor(author[0][0])
-                        author = res.fetch_row()
+                        author = CNX.DB_FETCHMANY()
 
                 ##########################################################
                 # Delete pub/title map
                 ##########################################################
                 query = "delete from pub_content where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete any title relationships
                 ##########################################################
                 query = "delete from title_relationships where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
                 query = "delete from title_relationships where review_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete Votes
                 ##########################################################
                 query = "delete from votes where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete Tag Mappings for this Title
                 ##########################################################
                 query = "delete from tag_mapping where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete any Tags that are no longer used by other Titles
                 ##########################################################
                 query = "delete from tags where not exists (select 1 from tag_mapping where tags.tag_id=tag_mapping.tag_id)"
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete Webpages
                 ##########################################################
                 query = "delete from webpages where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##########################################################
                 # Delete Transliterated Titles
                 ##########################################################
                 delete = 'delete from trans_titles where title_id=%d' % Record
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
                 ##########################################################
                 # Delete title views
                 ##########################################################
                 delete = 'delete from title_views where title_id=%d' % Record
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
                 ##########################################################
                 # Delete the title itself
                 ##########################################################
                 query = "delete from titles where title_id=%d" % (Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
                 return 1
 
         def deleteAuthor(self, author_id):
                 from common import deleteFromAuthorTable
+
+                CNX = MYSQL_CONNECTOR()
 
                 ##############################################
                 # STEP 1 - Delete the author entry for this
@@ -578,7 +578,7 @@ class titles:
                 ##############################################
                 query = "delete from canonical_author where author_id=%d and title_id=%d" % (int(author_id), self.title_id)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##############################################
                 # STEP 2 - If the author still has an entry
@@ -587,9 +587,8 @@ class titles:
                 for i in ['canonical_author', 'pub_authors']:
                         query = 'select COUNT(author_id) from %s where author_id=%d' % (i, int(author_id))
                         print("<li> ", query)
-                        db.query(query)
-                        res = db.store_result()
-                        record = res.fetch_row()
+                        CNX.DB_QUERY(query)
+                        record = CNX.DB_FETCHONE()
                         if record[0][0]:
                                 return
 
