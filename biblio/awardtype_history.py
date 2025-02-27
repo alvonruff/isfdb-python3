@@ -32,12 +32,13 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d, %d)
                 order by sub_reviewed desc
                 """ % (awardtype_id, MOD_AWARD_TYPE_NEW, MOD_AWARD_TYPE_UPDATE, MOD_AWARD_TYPE_DELETE)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("awardtype_history::query: %s" % query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No submission data on file for this award type.</h3>')
         else:
-                ISFDBprintSubmissionTable(result, 'I')
+                ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('awardtype_history', 0, 0)
 

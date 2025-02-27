@@ -16,10 +16,11 @@ from login import *
 from library import *
 from navbar import *
 from isbn import ISBNValidFormat
+from datetime import datetime
 
 
 def validateMonth(string):
-        now = datetime.datetime.now()
+        now = datetime.now()
         # Validate that the passed string is in the YYYY-MM format
         error = "Month must be specified using the YYYY-MM format"
         if len(string ) != 7:
@@ -761,6 +762,11 @@ def PrintEditTools(page_type, userid, arg1, arg2):
                 print('</ul>')
 
 def PrintTrailer(page_type, arg1, arg2):
+        if len(SESSION.SQLlog) > 0:
+                print('<div class="VerificationBox">')
+                print('<h2>Debug SQL Log:</h2>')
+                SQLoutputLog()
+                print("</div>")
         print('</div>')
         print('<div id="bottom">')
         print(COPYRIGHT)
@@ -817,7 +823,7 @@ def PrintWebPages(webpages, format = '<li>'):
                 printed[display].append(corrected_webpage)
         total = 0
         # Sort all domain names, recognized as well as unrecognized, in a case-insensitive way
-        for display in sorted(printed.keys(), key=lambda x: x.lower()):
+        for display in sorted(list(printed.keys()), key=lambda x: x.lower()):
                 count = 1
                 # Retrieve Web page urls for this domain name
                 for webpage in printed[display]:
@@ -1120,7 +1126,7 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
 
         # Pages
         if pub[PUB_PAGES]:
-                page_list = str.split(pub[PUB_PAGES],'+')
+                page_list = str.split(str(pub[PUB_PAGES]),'+')
                 print('<td>')
                 first = 1
                 output = ''
@@ -1425,10 +1431,10 @@ def PrintAuthorRecord(record, pseudonym, bgcolor, user, trans_names, trans_legal
                 query = "select 1 from dual where exists (select * from canonical_author a, titles t"
                 query += " WHERE a.author_id ='%d'" % (record[AUTHOR_ID])
                 query += " AND t.title_id = a.title_id AND t.title_parent = 0 AND a.ca_status = 1);"
-                db.query(query)
-                result = db.store_result()
-                count = result.fetch_row()
-                if count:
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("common::query: %s" % query)
+                if CNX.DB_NUMROWS():
                         print("<td>Has pseud. titles")
                 else:
                         print("<td>Alternate Name")

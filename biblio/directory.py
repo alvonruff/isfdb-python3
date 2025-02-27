@@ -13,7 +13,6 @@ from __future__ import print_function
 from SQLparsing import *
 from biblio import *
 from library import ISFDBText
-from login import *
 
 def PrintPublisherTableColumns():
         print('<table class="generic_table">')
@@ -139,7 +138,7 @@ if __name__ == '__main__':
                         PrintTrailer('directory', 0, 0)
                         sys.exit(0)
                 # Display a link to the previous sub-directory if available
-                for char in reversed(range(0, second_characters.find(section[1]))):
+                for char in reversed(list(range(0, second_characters.find(section[1])))):
                         key = section[0] + second_characters[char]
                         if key in records_map:
                                 first = key[0]
@@ -168,7 +167,8 @@ if __name__ == '__main__':
                                                                             'class="bold"'))
                                 break
 
-                search_string = db.escape_string(section[0] + section[1] + '%')
+                CNX = MYSQL_CONNECTOR()
+                search_string = CNX.DB_ESCAPE_STRING(section[0] + section[1] + '%')
 
                 # Magazine Directory
                 if dir_type == 'magazine':
@@ -180,7 +180,7 @@ if __name__ == '__main__':
                                 Number of %s names starting with "%s": %d </b>""" % (dir_type, ISFDBText(section), count))
                                 PrintMagazineTableColumns()
                                 bgcolor = 1
-                                for title in sorted(results.keys(), key=lambda x: x.lower()):
+                                for title in sorted(list(results.keys()), key=lambda x: x.lower()):
                                         for series_id in results[title]:
                                                 parent_id = results[title][series_id][0]
                                                 series_name = results[title][series_id][1]
@@ -202,20 +202,20 @@ if __name__ == '__main__':
                         and tp.trans_publisher_name like _utf8"%s"
                         COLLATE 'utf8_general_ci'
                         order by publisher_name""" % (search_string, search_string)
-                db.query(query)
-                result = db.store_result()
-                number_of_records = result.num_rows()
+                CNX.DB_QUERY(query)
+                SQLlog("directory::query: %s" % query)
+                number_of_records = CNX.DB_NUMROWS()
                 if number_of_records:
                         print('<h3>Number of publisher names starting with "%s": %d </h3>' % (section, number_of_records))
                         bgcolor = 1
                         PrintPublisherTableColumns()
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         while record:
                                 record_name = record[0][1]
                                 record_id = record[0][0]
                                 PrintPublisherRecord(record_id, record_name, bgcolor)
                                 bgcolor ^= 1
-                                record = result.fetch_row()
+                                record = CNX.DB_FETCHMANY()
                         print('</table><p>')
                 else:
                         print('<h3>No %s names found starting with: %s</h3>' % (dir_type, ISFDBText(section)))

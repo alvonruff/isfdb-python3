@@ -74,33 +74,34 @@ if __name__ == '__main__':
         elif displayed_type == 'Other Title Types Authors':
                 query += ' and title_type not in ("NOVEL", "SHORTFICTION", "COLLECTION", "ANTHOLOGY", "NONFICTION")'
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("popular_authors::query: %s" % query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No %s with awards or nominations for the specified period</h3>' % displayed_type)
                 PrintTrailer('top', 0, 0)
                 sys.exit(0)
 
         # Initialize the dictionary which will list scores by title_id
         title_dict = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = str(record[0][0])
                 title_dict[title_id] = record[0][1]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Retrieve the author IDs for the identified titles
         query = "select title_id, author_id from canonical_author where ca_status=1 and title_id in (%s)" % dict_to_in_clause(title_dict)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        SQLlog("popular_authors::query: %s" % query)
+        record = CNX.DB_FETCHMANY()
         author_dict = {}
         while record:
                 title_id = str(record[0][0])
                 author_id = record[0][1]
                 score = title_dict[title_id]
                 author_dict[author_id] = author_dict.get(author_id, 0) + score
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         print('<h3>This report is generated once a day</h3>')
         print('<b>Note</b>: Some recent awards are yet to be integrated into the database. Only title-based awards are used for ranking purposes.<br>')

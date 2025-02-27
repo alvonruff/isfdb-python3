@@ -37,12 +37,12 @@ if __name__ == '__main__':
                 """ % (title_id, MOD_TITLE_UPDATE, MOD_TITLE_DELETE,
                        MOD_TITLE_MKVARIANT, MOD_REVIEW_LINK,
                        MOD_VARIANT_TITLE, MOD_TITLE_UNMERGE, MOD_TITLE_MERGE)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No submission data on file for this title.</h3>')
         else:
-                ISFDBprintSubmissionTable(result, 'I')
+                ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('title_history', 0, 0)
 

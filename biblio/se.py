@@ -27,7 +27,10 @@ from isbn import *
 ##########################################################################################
 
 def validateYear(string):
-        now = datetime.datetime.now()
+        if PYTHONVER == 'python2':
+                now = datetime.datetime.now()
+        else:
+                now = datetime.now()
         # Validate that the passed string is in the YYYY format
         error = "Year must be specified using the YYYY format"
         if len(string ) != 4:

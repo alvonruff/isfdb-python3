@@ -34,12 +34,12 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d)
                 order by sub_reviewed desc
                 """ % (publisher_id, MOD_PUBLISHER_UPDATE, MOD_PUBLISHER_MERGE)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No submission data on file for this publisher.</h3>')
         else:
-                ISFDBprintSubmissionTable(result, 'I')
+                ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('publisher_history', 0, 0)
 

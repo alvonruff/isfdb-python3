@@ -123,16 +123,17 @@ if __name__ == '__main__':
                 order by c.change_time desc, sub_id desc
                 limit %d,%d""" % (int(user.id), int(user.id), start, 200)
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("changed_verified_pubs::query: %s" % query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
                 last = num
                 if last > 200:
                         last = 200
                 print('<h3>Displaying changed primary verifications %d-%d:</h3>' % (start+1, start+last))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns()
                 count = start + 1
@@ -140,7 +141,7 @@ if __name__ == '__main__':
                         PrintPubRecord(count, record[0], previous_last_viewed, bgcolor)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
                 if num > 199:
                         print(ISFDBLinkNoName('changed_verified_pubs.cgi', start+200, '%d-%d' % (start+201, start+400), True))

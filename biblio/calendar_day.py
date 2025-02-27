@@ -12,7 +12,6 @@
 
 import string
 import sys
-import MySQLdb
 from isfdb import *
 from common import *
 from login import *

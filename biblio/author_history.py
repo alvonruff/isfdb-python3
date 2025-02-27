@@ -43,12 +43,13 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d, %d, %d)
                 order by sub_reviewed desc
                 """ % (author_id, MOD_AUTHOR_UPDATE, MOD_AUTHOR_PSEUDO, MOD_REMOVE_PSEUDO, MOD_AUTHOR_MERGE)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("author_history::query: %s" % query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No submission data on file for this author</h3>')
         else:
-                ISFDBprintSubmissionTable(result, 'I')
+                ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('author_history', 0, 0)
 

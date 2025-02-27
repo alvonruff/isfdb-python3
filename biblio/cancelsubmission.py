@@ -37,12 +37,13 @@ if __name__ == '__main__':
 
         print('<ul>')
 
+        CNX = MYSQL_CONNECTOR()
         reason = 'Cancelled by the submitter'
         update = """update submissions
                 set sub_state='R', sub_reason='%s', sub_reviewer=%d, sub_reviewed=NOW(), sub_holdid=0
-                where sub_id=%d""" % (db.escape_string(reason), int(myID), submission_id)
+                where sub_id=%d""" % (CNX.DB_ESCAPE_STRING(reason), int(myID), submission_id)
         print('<li> ', update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         print('</ul><p><hr>')
 

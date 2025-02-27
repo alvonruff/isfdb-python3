@@ -34,6 +34,7 @@ if __name__ == '__main__':
         print('<th>Number of Titles</th>')
         print('</tr>')
 
+        CNX = MYSQL_CONNECTOR()
         if year:
                 year_selector = '= %d' % year
         else:
@@ -42,10 +43,10 @@ if __name__ == '__main__':
                 from authors_by_debut_date ad, authors a
                 where ad.debut_year %s
                 and ad.author_id = a.author_id
-                order by debut_year, a.author_lastname, a.author_canonical""" % db.escape_string(year_selector)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+                order by debut_year, a.author_lastname, a.author_canonical""" % CNX.DB_ESCAPE_STRING(year_selector)
+        CNX.DB_QUERY(query)
+        SQLlog("authors_by_debut_year::query: %s" % query)
+        record = CNX.DB_FETCHMANY()
         color = 0
         while record:
                 debut_year = record[0][0]
@@ -61,7 +62,7 @@ if __name__ == '__main__':
                 print('<td>%d</td>' % title_count)
                 print('</tr>')
                 color = color ^ 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table><p>')
 
         PrintTrailer('frontpage', 0, 0)

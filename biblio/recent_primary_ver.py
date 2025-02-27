@@ -27,17 +27,17 @@ if __name__ == '__main__':
         # in MySQL 5.0 is not always smart enough to use all available indices for multi-table queries
         query = "select * from primary_verifications order by ver_time desc limit %d,200" % start
 
-        db.query(query)
-        result0 = db.store_result()
-        if result0.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS() == 0:
                 print('<h3>No primary verifications present</h3>')
                 PrintTrailer('recent', 0, 0)
                 sys.exit(0)
-        ver = result0.fetch_row()
+        ver = CNX.DB_FETCHMANY()
         ver_set = []
         while ver:
                 ver_set.append(ver[0])
-                ver = result0.fetch_row()
+                ver = CNX.DB_FETCHMANY()
 
         print('<table cellpadding=3 class="generic_table">')
         print('<tr class="generic_table_header">')
@@ -54,9 +54,8 @@ if __name__ == '__main__':
                            from mw_user mu, pubs p
                            where mu.user_id=%d
                            and p.pub_id=%d""" % (ver[PRIM_VERIF_USER_ID], pub_id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 color = color ^ 1
                 while record:
                         user_name = record[0][0]
@@ -73,7 +72,7 @@ if __name__ == '__main__':
                         else:
                                 print('<td>&nbsp;</td>')
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         print('</table>')
         print('<p> %s' % ISFDBLinkNoName('recent_primary_ver.cgi', start+200, 'MORE', True))

@@ -13,7 +13,6 @@ from __future__ import print_function
 import cgi
 import sys
 import string
-import MySQLdb
 from isfdb import *
 from common import *
 from SQLparsing import *
@@ -218,7 +217,7 @@ class AdvancedSearch:
                                       )
 
         def parseArguments(self):
-                self.selector_id = SESSION.Parameter(0, 'str', None, self.search_types.keys())
+                self.selector_id = SESSION.Parameter(0, 'str', None, list(self.search_types.keys()))
                 self.search_type = self.search_types[self.selector_id]
 
         def display_selection(self):

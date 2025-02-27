@@ -60,7 +60,8 @@ class NoteSearch:
                         self.display_error('No note value specified')
 
         def build_query_clause(self):
-                escaped_value = db.escape_string(self.note_value)
+                CNX = MYSQL_CONNECTOR()
+                escaped_value = CNX.DB_ESCAPE_STRING(self.note_value)
                 if self.operator == 'exact':
                         self.clause = "like '%s'" % escaped_value
                 elif self.operator == 'contains':
@@ -78,30 +79,32 @@ class NoteSearch:
         def get_author_notes(self):
                 query = """select author_id, author_canonical, author_note, author_lastname
                                 from authors where author_note %s limit 1000""" % self.clause
-                db.query(query)
-                result = db.store_result()
-                self.num = result.num_rows()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("note_search_results::query: %s" % query)
+                self.num = CNX.DB_NUMROWS()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         author_id = record[0][0]
                         author_name = record[0][1]
                         note_text = record[0][2]
                         author_lastname = record[0][3]
                         self.records['Authors'][author_lastname][author_name][author_id] = note_text
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def get_other_notes(self):
                 notes = {}
                 query = """select note_id, note_note from notes where note_note %s order by note_id desc limit 1000""" % self.clause
-                db.query(query)
-                result = db.store_result()
-                self.num = result.num_rows()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("note_search_results::query: %s" % query)
+                self.num = CNX.DB_NUMROWS()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         note_id = record[0][0]
                         note_text = record[0][1]
                         notes[note_id] = note_text
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 if not notes:
                         return
                 in_clause = dict_to_in_clause(notes)
@@ -115,10 +118,10 @@ class NoteSearch:
                         note_field = self.record_types[record_type][2]
                         ordering_field = self.record_types[record_type][5]
                         query = """select %s, %s, %s, %s from %s where %s in (%s)""" % (id_field, name_field, note_field, ordering_field, table, note_field, in_clause)
-                        db.query(query)
-                        result = db.store_result()
-                        self.num = result.num_rows()
-                        record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        SQLlog("note_search_results::query: %s" % query)
+                        self.num = CNX.DB_NUMROWS()
+                        record = CNX.DB_FETCHMANY()
                         while record:
                                 record_id = record[0][0]
                                 record_name = record[0][1]
@@ -126,7 +129,7 @@ class NoteSearch:
                                 note_text = notes[note_id]
                                 ordering_name = record[0][3]
                                 self.records[record_type][ordering_name][record_name][record_id] = note_text
-                                record = result.fetch_row()
+                                record = CNX.DB_FETCHMANY()
 
         def print_notes(self):
                 if not self.records:

@@ -33,9 +33,10 @@ if __name__ == '__main__':
                 and tags.tag_id=tag_mapping.tag_id
                 group by tag_mapping.tag_id
                 order by xx desc""" % user_id
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        SQLlog("usertag - query: %s" % query)
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         first = 1
         bgcolor = 1
         while record:
@@ -61,7 +62,7 @@ if __name__ == '__main__':
                 print('</td>')
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         print('</table>')
         print('<p><p>')

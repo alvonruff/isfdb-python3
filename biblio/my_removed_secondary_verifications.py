@@ -38,17 +38,18 @@ if __name__ == '__main__':
                 order by deletion_time desc
                 limit %d, %d""" % (int(user.id), start, per_page)
 
-        db.query(query)
-        result0 = db.store_result()
-        if result0.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("my_removed_secondary_verifications::query: %s" % query)
+        if CNX.DB_NUMROWS() == 0:
                 print('<h3>No removed secondary verifications present for the specified ID range</h3>')
                 PrintTrailer('my_removed_secondary_verifications', 0, 0)
                 sys.exit(0)
-        deleted = result0.fetch_row()
+        deleted = CNX.DB_FETCHMANY()
         deleted_verifications = []
         while deleted:
                 deleted_verifications.append(deleted[0])
-                deleted = result0.fetch_row()
+                deleted = CNX.DB_FETCHMANY()
 
         print('<table cellpadding=3 class="generic_table">')
         print('<tr class="generic_table_header">')
@@ -74,9 +75,8 @@ if __name__ == '__main__':
                            where r.reference_id = %d
                            and u.user_id = %d
                            and p.pub_id=%d""" % (reference_id, deleter_id, pub_id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 color = color ^ 1
                 while record:
                         count += 1
@@ -94,7 +94,7 @@ if __name__ == '__main__':
                         print('<td>%s</td>' % WikiLink(deleter_name))
                         print('<td>%s</td>' % deletion_time)
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         print('</table>')
         if result0.num_rows() > (per_page - 1):

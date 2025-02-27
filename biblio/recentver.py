@@ -30,17 +30,18 @@ if __name__ == '__main__':
         # in MySQL 5.0 is not always smart enough to use all available indices for multi-table queries
         query = "select verification.* from verification where ver_status = 1 order by ver_time desc limit %d, %d" % (start, per_page)
 
-        db.query(query)
-        result0 = db.store_result()
-        if result0.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        firstNumRows = CNX.DB_NUMROWS()
+        if firstNumRows == 0:
                 print('<h3>No verifications present</h3>')
                 PrintTrailer('recentver', 0, 0)
                 sys.exit(0)
-        ver = result0.fetch_row()
+        ver = CNX.DB_FETCHMANY()
         ver_set = []
         while ver:
                 ver_set.append(ver[0])
-                ver = result0.fetch_row()
+                ver = CNX.DB_FETCHMANY()
 
         print('<table cellpadding=3 class="generic_table">')
         print('<tr class="generic_table_header">')
@@ -63,9 +64,8 @@ if __name__ == '__main__':
                            where r.reference_id = %d
                            and mu.user_id = %d
                            and p.pub_id = %d""" % (verification_id, verifier_id, pub_id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 color = color ^ 1
                 while record:
                         count += 1
@@ -82,10 +82,10 @@ if __name__ == '__main__':
                         print('<td>%s</td>' % WikiLink(user_name))
                         print('<td>%s</td>' % verification_time)
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         print('</table>')
-        if result0.num_rows() > (per_page - 1):
+        if firstNumRows > (per_page - 1):
                 print('<p> [%s]' % ISFDBLink('recentver.cgi', start + per_page, 'MORE'))
 
         PrintTrailer('recentver', 0, 0)

@@ -133,6 +133,7 @@ if __name__ == '__main__':
                 update += "display_post_submission = %d, " % display_post_submission
                 update += "display_title_translations = %d " % display_title_translations
                 update += "where user_pref_id =%d" % user.preferences_id
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
         
         ISFDBLocalRedirect('index.cgi')

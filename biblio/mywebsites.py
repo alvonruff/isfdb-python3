@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import string
 import sys
-import MySQLdb
 from isfdb import *
 from common import *
 from login import *
@@ -33,23 +32,24 @@ if __name__ == '__main__':
 
         #Get a list of currently defined Web sites
         query = "select site_id, site_name from websites order by site_name"
-        db.query(query)
-        result = db.store_result()
-        row = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("mywebsites::query: %s" % query)
+        row = CNX.DB_FETCHMANY()
         websites = []
         while row:
                 websites.append(row[0])
-                row = result.fetch_row()
+                row = CNX.DB_FETCHMANY()
 
         # Get the currently defined site preferences for the logged-in user
         query = "select site_id,user_choice from user_sites where user_id='%d'" % (myID)
-        db.query(query)
-        result = db.store_result()
-        row = result.fetch_row()
+        CNX.DB_QUERY(query)
+        SQLlog("mywebsites::query: %s" % query)
+        row = CNX.DB_FETCHMANY()
         user_sites = []
         while row:
                 user_sites.append(row[0])
-                row = result.fetch_row()
+                row = CNX.DB_FETCHMANY()
 
         print('<h3>Select Web Sites to link Publications to. At least one Amazon site needs to be selected since ISFDB links to Amazon-hosted images.</h3>')
         print('<form id="data" METHOD="POST" ACTION="/cgi-bin/submitmywebsites.cgi">')

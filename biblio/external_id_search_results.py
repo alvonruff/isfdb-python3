@@ -67,7 +67,8 @@ class ExtIDSearch:
                 sys.exit(0)
 
         def build_query_clause(self):
-                escaped_value = db.escape_string(self.id_value)
+                CNX = MYSQL_CONNECTOR()
+                escaped_value = CNX.DB_ESCAPE_STRING(self.id_value)
                 if self.operator == 'exact':
                         self.clause = "like '%s'" % escaped_value
                 elif self.operator == 'contains':
@@ -93,14 +94,15 @@ class ExtIDSearch:
                         ) as xx, pubs p
                         where p.pub_id = xx.pub_id
                         order by p.pub_title""" % (self.id_type, self.clause)
-                db.query(query)
-                result = db.store_result()
-                self.num = result.num_rows()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("external_id_search_results::query: %s" % query)
+                self.num = CNX.DB_NUMROWS()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         pub_data = record[0]
                         self.pubs.append(pub_data)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def print_headers(self):
                 PrintHeader('ISFDB Publication Search by External ID')

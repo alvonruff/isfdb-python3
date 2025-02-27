@@ -54,11 +54,11 @@ class Stats:
 
         def output(self):
                 query = 'select report_data from reports where report_id = %d' % stats.report_id
-                db.query(query)
-                result = db.store_result()
-                if result.num_rows():
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                if CNX.DB_NUMROWS():
                         print('<h3>This report is generated once a week</h3>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHONE()
                         print(record[0][0])
                 else:
                         print('<h3>This report is currently unavailable. It will be regenerated later.</h3>')

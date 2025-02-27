@@ -56,9 +56,10 @@ if __name__ == '__main__':
                 and t.title_id = v.title_id
                 order by %s
                 limit %d, %d""" % (myID, order_by, start, titles_per_page)
-        db.query(query)
-        result = db.store_result()
-        result_count = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        SQLlog("myvotes::query: %s" % query)
+        CNX.DB_QUERY(query)
+        result_count = CNX.DB_NUMROWS()
         if not result_count:
                 print('<h3>No votes present for the specified title range</h3>')
                 PrintTrailer('votes', 0, 0)
@@ -74,7 +75,7 @@ if __name__ == '__main__':
         print('<th>Author</th>')
         print('</tr>')
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         color = 0
         while record:
                 title_id = record[0][1]
@@ -92,7 +93,7 @@ if __name__ == '__main__':
                 print('<td>%s</td>' % FormatAuthors(authors))
                 print('</tr>')
                 color = color ^ 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         print('</table>')
         print('<p>')

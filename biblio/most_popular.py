@@ -64,9 +64,10 @@ if __name__ == '__main__':
                 query += ' and title_type not in ("NOVEL", "SHORTFICTION", "COLLECTION", "ANTHOLOGY", "NONFICTION")'
         query += ' order by score desc, year desc limit 500'
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("most_popular::query: %s" % query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No awards or nominations for the specified period</h3>')
                 PrintTrailer('top', 0, 0)
                 sys.exit(0)
@@ -85,7 +86,7 @@ if __name__ == '__main__':
         print('<th>Type</th>')
         print('<th>Authors</th>')
         print('</tr>')
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 0
         place = 0
         while record:
@@ -109,7 +110,7 @@ if __name__ == '__main__':
                 PrintAllAuthors(title_id)
                 print('</td>')
                 print('</tr>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 place += 1
                 bgcolor = bgcolor ^ 1
         print('</table>')

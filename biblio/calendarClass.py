@@ -21,7 +21,7 @@ class CalendarMenu:
         def __init__(self):
                 self.month = 0
                 self.num_days = 0
-                today = datetime.date.today()
+                today = datetime.today()
                 self.current_month = today.month
                 self.current_day = today.day
 
@@ -96,7 +96,7 @@ class CalendarDay:
                 PrintTrailer('calendar_day', 0, 0)
 
         def parse_parameters(self):
-                self.month = SESSION.Parameter(0, 'int', None, range(1, 13))
+                self.month = SESSION.Parameter(0, 'int', None, list(range(1, 13)))
                 self.day = SESSION.Parameter(1, 'int')
                 if self.day < 1 or self.day > calendar.monthrange(2000, self.month)[1]:
                         SESSION.DisplayError('Invalid day for this month')

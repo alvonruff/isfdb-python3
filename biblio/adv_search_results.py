@@ -13,7 +13,6 @@ from __future__ import print_function
 import cgi
 import sys
 import string
-import MySQLdb
 from isfdb import *
 from common import *
 from SQLparsing import *
@@ -322,7 +321,8 @@ class AdvancedSearchResults(AdvancedSearch):
         def format_entry(self, value):
                 # Double escape backslashes, which is required by the SQL syntax
                 value = str.replace(value, '\\', '\\\\')
-                value = db.escape_string(value)
+                CNX = MYSQL_CONNECTOR()
+                value = CNX.DB_ESCAPE_STRING(value)
                 # Change asterisks to % because * is also a supported wildcard character
                 value = str.replace(value, '*', '%')
                 return value
@@ -346,7 +346,16 @@ class AdvancedSearchResults(AdvancedSearch):
 
         def execute_query(self):
                 if self.action == 'query':
-                        self.query = 'select distinct %s.* from ' % self.table
+                        if self.table == 'authors':
+                                self.query = 'select distinct %s from ' % (CNX_ADV_AUTHORS_STAR)
+                        elif self.table == 'titles':
+                                self.query = 'select distinct %s from ' % (CNX_ADV_TITLES_STAR)
+                        elif self.table == 'pubs':
+                                self.query = 'select distinct %s from ' % (CNX_ADV_PUBS_STAR)
+                        elif self.table == 'awards':
+                                self.query = 'select distinct %s from ' % (CNX_ADV_AWARDS_STAR)
+                        else:
+                                self.query = 'select distinct %s.* from ' % self.table
                 elif self.action == 'count':
                         self.query = 'select count(distinct %s.%s) from ' % (self.table, self.id_field)
                 self.build_full_query()
@@ -403,17 +412,18 @@ class AdvancedSearchResults(AdvancedSearch):
                 self.print_merge_button()
 
         def search(self):
-                db.query(self.query)
-                result = db.store_result()
-                self.num = result.num_rows()
+                SQLlog("AdvancedSearchResults::search, query=%s" % self.query)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(self.query)
+                self.num = CNX.DB_NUMROWS()
 
                 if not self.num:
                         self.display_message('No records found')
 
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         self.records.append(record[0])
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def build_full_query(self):
                 first = 1
@@ -465,7 +475,7 @@ class AdvancedSearchResults(AdvancedSearch):
                 else:
                         new_start = self.start + 100
                 print('<input NAME="START" value="%s" type="HIDDEN">' % new_start)
-                for key in self.form.keys():
+                for key in list(self.form.keys()):
                         if key != 'START':
                                 key_value = ISFDBText(self.form[key], True)
                                 print('<input NAME="%s" value="%s" type="HIDDEN">' % (key, key_value))
@@ -577,9 +587,9 @@ class AdvancedSearchResults(AdvancedSearch):
                 elif field == 'author_birthplace':
                         clause = "authors.author_birthplace %s" % sql_value
                 elif field == 'author_birthdate':
-                        clause = "authors.author_birthdate %s" % sql_value
+                        clause = "DATE_FORMAT(authors.author_birthdate, '%Y-%m-%d') %s" % sql_value
                 elif field == 'author_deathdate':
-                        clause = "authors.author_deathdate %s" % sql_value
+                        clause = "DATE_FORMAT(authors.author_deathdate, '%Y-%m-%d') %s" % sql_value
                 elif field in ('author_language', 'author_language_free'):
                         clause = "languages.lang_name %s" % sql_value
                         dbases = [tableInfo('authors'), tableInfo('languages')]

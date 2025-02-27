@@ -37,10 +37,10 @@ if __name__ == '__main__':
         except:
                 doError('Required fields missing')
 
-        query = "select user_id,user_password,user_name,user_token from mw_user where user_name='%s'" % (db.escape_string(login))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select user_id,user_password,user_name,user_token from mw_user where user_name='%s'" % (CNX.DB_ESCAPE_STRING(login))
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         if not record:
                 doError("""User name not recognized.<br>Note that both user name and password are case
                 sensitive and that the software forces the first character of the user name to uppercase.<br>
@@ -75,6 +75,7 @@ if __name__ == '__main__':
                 import base64
                 try:
                     from backports.pbkdf2 import pbkdf2_hmac
+                    #from hashlib import pbkdf2_hmac
                 except:
                         doError('PBKDF2 Import FAILED')
 

@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import string
 import sys
-import MySQLdb
 from isfdb import *
 from common import *
 from login import *

@@ -55,7 +55,8 @@ class WebPagesSearch:
                         self.display_error('No Web Page value specified')
 
         def build_query_clause(self):
-                escaped_value = db.escape_string(self.note_value)
+                CNX = MYSQL_CONNECTOR()
+                escaped_value = CNX.DB_ESCAPE_STRING(self.note_value)
                 if self.operator == 'exact':
                         self.clause = "like '%s'" % escaped_value
                 elif self.operator == 'contains':
@@ -72,10 +73,10 @@ class WebPagesSearch:
 
         def get_web_pages(self):
                 query = "select * from webpages where url %s limit 1000" % self.clause
-                db.query(query)
-                result = db.store_result()
-                self.num = result.num_rows()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                self.num = CNX.DB_NUMROWS()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         fields = record[0]
                         record_type = ''
@@ -106,7 +107,7 @@ class WebPagesSearch:
                                 record_id = fields[WEBPAGE_PUB]
                         if record_type:
                                 self.webpages[record_type][record_id] = fields[WEBPAGE_URL]
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def get_records(self):
                 if not self.webpages:
@@ -119,16 +120,16 @@ class WebPagesSearch:
                         table = self.record_types[record_type][3]
                         ordering_field = self.record_types[record_type][4]
                         query = "select %s, %s, %s from %s where %s in (%s)" % (id_field, name_field, ordering_field, table, id_field, in_clause)
-                        db.query(query)
-                        result = db.store_result()
-                        self.num = result.num_rows()
-                        record = result.fetch_row()
+                        CNX = MYSQL_CONNECTOR()
+                        CNX.DB_QUERY(query)
+                        self.num = CNX.DB_NUMROWS()
+                        record = CNX.DB_FETCHMANY()
                         while record:
                                 record_id = record[0][0]
                                 record_name = record[0][1]
                                 ordering_field = record[0][2]
                                 self.records[record_type][ordering_field][record_name][record_id] = self.webpages[record_type][record_id]
-                                record = result.fetch_row()
+                                record = CNX.DB_FETCHMANY()
 
         def print_results(self):
                 if not self.records:

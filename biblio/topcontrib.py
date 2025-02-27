@@ -18,10 +18,10 @@ from SQLparsing import *
 
 def output_data(sub_type):
         query = 'select report_data from reports where report_id = 3 and report_param = %d' % sub_type
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 print(record[0][0])
         else:
                 print('<h3>This report is currently unavailable. It is regenerated once a week.</h3>')

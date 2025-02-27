@@ -32,12 +32,12 @@ if __name__ == '__main__':
                 and sub_type in (%d, %d)
                 order by sub_reviewed desc
                 """ % (series_id, MOD_SERIES_UPDATE, MOD_DELETE_SERIES)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>No submission data on file for this series</h3>')
         else:
-                ISFDBprintSubmissionTable(result, 'I')
+                ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('series_history', 0, 0)
 

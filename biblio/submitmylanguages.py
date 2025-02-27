@@ -42,7 +42,7 @@ if __name__ == '__main__':
         langs = []
         choices = []
         try:
-                for key in form.keys():
+                for key in list(form.keys()):
                         if '.' not in key:
                                 continue
                         key_type = key.split('.')[0]
@@ -68,15 +68,15 @@ if __name__ == '__main__':
                                 break
                 updates.append((lang_id,status))
 
+        CNX = MYSQL_CONNECTOR()
         for update in updates:
                 lang_id = update[0]
                 status = update[1]
                 query = "select user_lang_id,user_choice from user_languages where lang_id=%d and user_id=%d" % (lang_id, user_id)
-                db.query(query)
-                result = db.store_result()
+                CNX.DB_QUERY(query)
 
                 #If this user/language combination is not already on file:
-                if result.num_rows() < 1:
+                if CNX.DB_NUMROWS() < 1:
                         # If the language is not selected and not on file, skip it
                         if status == 0:
                                 continue
@@ -85,7 +85,7 @@ if __name__ == '__main__':
 
                 #If this user/language combination is already on file, retrieve the row ID and current value
                 else:
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHONE()
                         user_lang_id = int(record[0][0])
                         current_choice = record[0][1]
                         # If the user choice is on file and the entered user choice is the same, don't change anything
@@ -98,7 +98,7 @@ if __name__ == '__main__':
                         elif (current_choice == 0) and (status == 1):
                                 update = "update user_languages set user_choice = %d where user_lang_id = %d" % (status, user_lang_id)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
         ISFDBLocalRedirect('mypreferences.cgi')
 

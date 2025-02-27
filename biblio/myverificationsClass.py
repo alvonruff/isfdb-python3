@@ -68,23 +68,24 @@ class MyVerifications:
                 else:
                         print('<h2>A software error has occurred. Please post this URL on the ISFDB Community Portal.</h2>')
                         return
-                db.query(query)
-                result = db.store_result()
-                self.retrieved_count = result.num_rows()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                SQLlog("myverificationsClass::query: %s" % query)
+                self.retrieved_count = CNX.DB_NUMROWS()
 
                 if self.retrieved_count:
                         last_displayed = self.retrieved_count
                         if self.retrieved_count > self.per_page:
                                 last_displayed = self.per_page
                         print('<h3>Displaying primary verifications %d - %d:</h3>' % (start + 1, start + last_displayed))
-                        self.record = result.fetch_row()
+                        self.record = CNX.DB_FETCHMANY()
                         self.printTableColumns()
                         while self.record:
                                 self.displayed_count += 1
                                 if self.displayed_count > self.per_page:
                                         break
                                 self.printPubRecord()
-                                self.record = result.fetch_row()
+                                self.record = CNX.DB_FETCHMANY()
                         print('</table>')
                         if self.retrieved_count > self.per_page:
                                 print(ISFDBLink('%s.cgi' % script, start + self.per_page,

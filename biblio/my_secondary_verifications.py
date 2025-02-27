@@ -40,17 +40,18 @@ if __name__ == '__main__':
                 order by ver_time desc
                 limit %d, %d""" % (int(user.id), start, per_page)
 
-        db.query(query)
-        result0 = db.store_result()
-        if result0.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("my_secondary_verifications::query: %s" % query)
+        if CNX.DB_NUMROWS():
                 print('<h3>No verifications present</h3>')
                 PrintTrailer('recentver', 0, 0)
                 sys.exit(0)
-        ver = result0.fetch_row()
+        ver = CNX.DB_FETCHMANY()
         ver_set = []
         while ver:
                 ver_set.append(ver[0])
-                ver = result0.fetch_row()
+                ver = CNX.DB_FETCHMANY()
 
         print('<table cellpadding=3 class="generic_table">')
         print('<tr class="generic_table_header">')
@@ -71,9 +72,9 @@ if __name__ == '__main__':
                            from reference r, pubs p
                            where r.reference_id = %d
                            and p.pub_id = %d""" % (verification_id, pub_id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                SQLlog("my_secondary_verifications::query: %s" % query)
+                record = CNX.DB_FETCHMANY()
                 color = color ^ 1
                 while record:
                         count += 1
@@ -88,7 +89,7 @@ if __name__ == '__main__':
                         print('<td>%s</td>' % reference_name)
                         print('<td>%s</td>' % verification_time)
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         print('</table>')
         if result0.num_rows() > (per_page - 1):

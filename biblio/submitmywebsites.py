@@ -40,7 +40,7 @@ if __name__ == '__main__':
         sites = []
         choices = []
         try:
-                for key in form.keys():
+                for key in list(form.keys()):
                         key_type = key.split('.')[0]
                         key_number = int(key.split('.')[1])
                         if key_type == 'site_id':
@@ -69,22 +69,22 @@ if __name__ == '__main__':
         if amazon == 0:
                 DoError('At least one Amazon store must be specified since ISFDB links to Amazon-hosted images')
 
+        CNX = MYSQL_CONNECTOR()
         for update in updates:
                 site_id = update[0]
                 status = update[1]
                 query = "select user_site_id from user_sites where site_id=%d and user_id=%d" % (site_id, user_id)
-                db.query(query)
-                result = db.store_result()
+                CNX.DB_QUERY(query)
 
                 #If this user/site combination is not already on file, create a new one
-                if result.num_rows() < 1:
+                if CNX.DB_NUMROWS() < 1:
                         update = "insert into user_sites(site_id,user_id,user_choice) values(%d,%d,%d)" % (site_id, user_id, status)
 
                 #If this user/site combination is already on file, retrieve the row ID
                 else:
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHONE()
                         user_site_id = int(record[0][0])
                         update = "update user_sites set user_choice = %d where user_site_id = %d" % (status, user_site_id)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         ISFDBLocalRedirect('mypreferences.cgi')

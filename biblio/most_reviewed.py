@@ -45,9 +45,10 @@ if __name__ == '__main__':
 
         print('<h3>This report is generated once a day</h3>')
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        SQLlog("most_reviewed::query: %s" % query)
+        if not CNX.DB_NUMROWS():
                 print('<h3>This report is currently unavailable. It will be regenerated overnight.</h3>')
         else:
                 # Print the table headers        
@@ -61,7 +62,7 @@ if __name__ == '__main__':
                 print('<th>Type</th>')
                 print('<th>Authors</th>')
                 print('</tr>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 0
                 count = 1
                 while record:
@@ -85,7 +86,7 @@ if __name__ == '__main__':
                         PrintAllAuthors(title_id)
                         print('</td>')
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor = bgcolor ^ 1
                         count += 1
                 print('</table>')
