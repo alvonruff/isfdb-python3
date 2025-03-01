@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from pubClass import *
@@ -43,8 +42,9 @@ def EvalField(Label, NewUsed, OldUsed, NewValue, OldValue):
         elif (NewUsed == 0) and OldUsed:
                 NewValue = ""
                 update = 1
+        CNX = MYSQL_CONNECTOR()
         if update:
-                retval = "    <%s>%s</%s>\n" % (Label, db.escape_string(NewValue), Label)
+                retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:
                 return("", 0)
@@ -70,13 +70,14 @@ if __name__ == '__main__':
         if old.error:
                 submission.error(old.error)
 
+        CNX = MYSQL_CONNECTOR()
         changes = 0
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <PubUpdate>\n"
         update_string += "    <Record>%d</Record>\n" % (int(new.pub_id))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(new.pub_title))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(new.pub_title))
 
         (val, changed) = EvalField('Title', new.used_title, old.used_title, new.pub_title, old.pub_title)
         update_string += val
@@ -135,14 +136,14 @@ if __name__ == '__main__':
         except:
                 mod_note = ''
         if mod_note:
-                update_string += "    <ModNote>%s</ModNote>\n" % db.escape_string(mod_note)
+                update_string += "    <ModNote>%s</ModNote>\n" % CNX.DB_ESCAPE_STRING(mod_note)
         else:
                 if new.requiresModeratorNote(submission.user.id):
                         submission.error("""This publication has been primary verified by at least one editor other than you.
                                          Please enter a moderator note to document the submitted changes""")
 
         if 'Source' in new.form:
-                update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
+                update_string += "    <Source>%s</Source>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['Source'].value)))
 
         # Only add the submitted identifiers to the submission if they are
         # different from the identifiers that are currently on file
@@ -152,7 +153,7 @@ if __name__ == '__main__':
         if ISFDBDifferentAuthorLists(new.pub_authors, old.pub_authors):
                 update_string += "    <Authors>\n"
                 for new_author in new.pub_authors:
-                        update_string += "      <Author>%s</Author>\n" % db.escape_string(new_author)
+                        update_string += "      <Author>%s</Author>\n" % CNX.DB_ESCAPE_STRING(new_author)
                 update_string += "    </Authors>\n"
 
         # Transliterated titles
@@ -170,7 +171,7 @@ if __name__ == '__main__':
                 update_string += val
 
         # Build the XML payload for the Content section
-        update_string += db.escape_string(new.xmlContent())
+        update_string += CNX.DB_ESCAPE_STRING(new.xmlContent())
         update_string += "  </PubUpdate>\n"
         update_string += "</IsfdbSubmission>\n"
 

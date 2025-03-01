@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from SQLparsing import *
@@ -24,7 +23,8 @@ def insert_verif_record(pub_id, refID, status, userid):
         insert = """insert into verification(pub_id, reference_id, user_id, ver_time, ver_status)
                     values(%d, %d, %d, NOW(), %d)""" % (pub_id, refID, int(userid), int(status))
         print("<li> %s" % insert)
-        db.query(insert)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(insert)
 
 def update_verif_record(verification_id, ver_status, userid):
         update = """update verification
@@ -33,7 +33,8 @@ def update_verif_record(verification_id, ver_status, userid):
                     ver_time=NOW()
                     where verification_id=%d""" % (ver_status, int(userid), verification_id)
         print("<li> "+update)
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
 
 if __name__ == '__main__':
         ##################################################################

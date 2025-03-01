@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2017-2025   Ahasuerus
+#     (C) COPYRIGHT 2017-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from pubClass import *
@@ -35,6 +34,7 @@ def EvalField(Label, NewUsed, OldUsed, NewValue, OldValue):
                 OldValue   = XMLescape(OldValue)
 
         update = 0
+        CNX = MYSQL_CONNECTOR()
         if NewUsed and OldUsed:
                 if CheckValue != OldValue:
                         update = 1
@@ -44,7 +44,7 @@ def EvalField(Label, NewUsed, OldUsed, NewValue, OldValue):
                 NewValue = ""
                 update = 1
         if update:
-                retval = "    <%s>%s</%s>\n" % (Label, db.escape_string(NewValue), Label)
+                retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:
                 return("", 0)
@@ -69,11 +69,12 @@ if __name__ == '__main__':
         old.load(int(new.pub_id))
 
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <NewPub>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(new.pub_title))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(new.pub_title))
         update_string += "    <Parent>%d</Parent>\n" % (int(new.title_id))
 
         (val, changed) = EvalField('Title', new.used_title, old.used_title, new.pub_title, old.pub_title)
@@ -132,10 +133,10 @@ if __name__ == '__main__':
         changes += changed
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
 
         if 'Source' in new.form:
-                update_string += "    <Source>%s</Source>\n" % (db.escape_string(XMLescape(new.form['Source'].value)))
+                update_string += "    <Source>%s</Source>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['Source'].value)))
 
                         
         #############################################################
@@ -155,7 +156,7 @@ if __name__ == '__main__':
                 update_string += "    <Authors>\n"
                 counter = 0
                 while counter < new.num_authors:
-                        update_string += "      <Author>%s</Author>\n" % (db.escape_string(new.pub_authors[counter]))
+                        update_string += "      <Author>%s</Author>\n" % (CNX.DB_ESCAPE_STRING(new.pub_authors[counter]))
                         counter += 1
                 update_string += "    </Authors>\n"
 
@@ -174,7 +175,7 @@ if __name__ == '__main__':
                 update_string += val
 
         # Build the XML payload for the Content section
-        update_string += db.escape_string(new.xmlContent())
+        update_string += CNX.DB_ESCAPE_STRING(new.xmlContent())
         update_string += "  </NewPub>\n"
         update_string += "</IsfdbSubmission>\n"
 

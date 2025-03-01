@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from SQLparsing import *
@@ -34,6 +33,7 @@ class verifications:
                 print("<li> %s" % insert)
 
         def update_ver(self):
+                CNX = MYSQL_CONNECTOR()
                 if self.transient:
                         update = """update primary_verifications
                                     set ver_transient=%d,
@@ -45,13 +45,14 @@ class verifications:
                                     ver_time=NOW()
                                     where pub_id=%d and user_id = %d""" % (self.pub_id, self.user_id)
                 print("<li> %s" % update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         def delete_ver(self):
+                CNX = MYSQL_CONNECTOR()
                 delete = """delete from primary_verifications
                             where user_id = %d and pub_id = %d""" % (self.user_id, self.pub_id)
                 print("<li> %s" % delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
 if __name__ == '__main__':
         ##################################################################

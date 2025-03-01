@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2006-2025   Ahasuerus
+#     (C) COPYRIGHT 2006-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from SQLparsing import *
@@ -54,12 +53,13 @@ if __name__ == '__main__':
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <RemovePseud>\n"
 
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(author_data[AUTHOR_CANONICAL])))
+        CNX = MYSQL_CONNECTOR()
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(author_data[AUTHOR_CANONICAL])))
         update_string += "    <Record>%d</Record>\n" % (author_id)
         update_string += "    <Parent>%d</Parent>\n" % (parent_id)
         if 'mod_note' in form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(form['mod_note'].value)))
         update_string += "  </RemovePseud>\n"
         update_string += "</IsfdbSubmission>\n"
 

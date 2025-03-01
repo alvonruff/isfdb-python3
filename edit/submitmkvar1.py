@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from SQLparsing import *
@@ -54,17 +53,18 @@ if __name__ == '__main__':
         if not submission.user.id:
                 submission.error("", title_id)
         
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <MakeVariant>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
 
         title = SQLloadTitle(title_id)
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(title[TITLE_TITLE])))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(title[TITLE_TITLE])))
         update_string += "    <Record>%d</Record>\n" % (title_id)
         update_string += "    <Parent>%d</Parent>\n" % (parent_id)
         if 'mod_note' in form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(form['mod_note'].value)))
         update_string += "  </MakeVariant>\n"
         update_string += "</IsfdbSubmission>\n"
 

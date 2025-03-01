@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from seriesClass import *
@@ -54,21 +53,21 @@ if __name__ == '__main__':
                 DoError('You must be logged in in order to vote')
 
         # If the submitted vote was 0, then delete this user's vote
+        CNX = MYSQL_CONNECTOR()
         if vote == 0:
                 delete = "delete from votes where title_id=%d and user_id=%d" % (title_id, userid)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
         else:
                 # Check to see if this user has already voted for this title
                 query = "select * from votes where title_id=%d and user_id=%d" % (title_id, userid)
-                db.query(query)
-                result = db.store_result()
-                if result.num_rows() > 0:
-                        record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                if CNX.DB_NUMROWS() > 0:
+                        record = CNX.DB_FETCHONE()
                         record_id = record[0][0]
                         update = "update votes set rating=%d where vote_id=%d" % (vote, record_id)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
                 else:
                         insert = "insert into votes(title_id, user_id, rating) values(%d, %d, %d)" % (title_id, userid, vote)
-                        db.query(insert)
+                        CNX.DB_QUERY(insert)
 
         ISFDBLocalRedirect('title.cgi?%d' % int(title_id))

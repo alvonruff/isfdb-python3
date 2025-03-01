@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from login import *
@@ -48,13 +47,14 @@ if __name__ == '__main__':
         if not submission.user.id:
                 submission.error('', awardCat.award_cat_id)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AwardCategoryDelete>\n"
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(awardCat.award_cat_name)))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(awardCat.award_cat_name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <AwardCategoryId>%d</AwardCategoryId>\n" % (awardCat.award_cat_id)
-        update_string += "    <Reason>%s</Reason>\n" % db.escape_string(XMLescape(reason))
+        update_string += "    <Reason>%s</Reason>\n" % CNX.DB_ESCAPE_STRING(XMLescape(reason))
         update_string += "  </AwardCategoryDelete>\n"
         update_string += "</IsfdbSubmission>\n"
 

@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from seriesClass import *
@@ -51,13 +50,14 @@ def CheckSeriesField(newUsed, oldUsed, newField, oldField, tag, multi):
                 update = 1
 
         if update:
+                CNX = MYSQL_CONNECTOR()
                 if multi:
                         update_string = "    <%ss>\n" % (tag)
                         for field in newField:
-                                update_string += "      <%s>%s</%s>\n" % (tag, db.escape_string(field), tag)
+                                update_string += "      <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(field), tag)
                         update_string += "    </%ss>\n" % (tag)
                 else:
-                        update_string = "    <%s>%s</%s>\n" % (tag, db.escape_string(newField), tag)
+                        update_string = "    <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(newField), tag)
 
                 changes = 1
         return (changes, update_string)
@@ -81,11 +81,12 @@ if __name__ == '__main__':
         old = series(db)
         old.loadXML(int(new.series_id))
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <SeriesUpdate>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.series_name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.series_name)))
         update_string += "    <Record>%d</Record>\n" % (int(new.series_id))
 
         (changes, update) = CheckSeriesField(new.used_name, old.used_name, new.series_name, old.series_name, 'Name', 0)
@@ -113,7 +114,7 @@ if __name__ == '__main__':
                 update_string += update
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
         
         update_string += "  </SeriesUpdate>\n"
         update_string += "</IsfdbSubmission>\n"

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -35,11 +35,12 @@ if __name__ == '__main__':
         if domain.error:
                 SESSION.DisplayError(domain.error)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <DeleteRecognizedDomain>\n"
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(domain.domain_name)))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(domain.domain_name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Record>%d</Record>\n" % domain_id
         update_string += "  </DeleteRecognizedDomain>\n"
         update_string += "</IsfdbSubmission>\n"

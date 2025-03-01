@@ -25,10 +25,10 @@ if __name__ == '__main__':
         PrintPreSearch("Title Vote")
         PrintNavBar(0, 0)
 
+        CNX = MYSQL_CONNECTOR()
         query = "select COUNT(vote_id) from votes where title_id='%d'" % (title_id)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         total_votes = int(record[0][0])
 
         if total_votes:
@@ -37,10 +37,9 @@ if __name__ == '__main__':
                 ratings.append(0)
                 while counter < 11:
                         query = "select COUNT(rating) from votes where title_id='%d' and rating='%d'" % (title_id, counter)
-                        db.query(query)
-                        result = db.store_result()
-                        if result.num_rows() > 0:
-                                record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS() > 0:
+                                record = CNX.DB_FETCHONE()
                                 if record[0][0]:
                                         ratings.append(int(record[0][0]))
                                 else:
@@ -97,10 +96,9 @@ if __name__ == '__main__':
         (userid, username, usertoken) = GetUserData()
         userid = int(userid)
         query = "select rating from votes where title_id=%d and user_id=%d" % (title_id, userid)
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHONE()
                 user_vote = record[0][0]
         else:
                 user_vote = 0

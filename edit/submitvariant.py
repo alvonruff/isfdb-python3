@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from titleClass import *
@@ -25,8 +24,9 @@ def DoField(Label, NewUsed, NewValue):
                 CheckValue = XMLunescape(NewValue)
         else:
                 CheckValue = NewValue
+        CNX = MYSQL_CONNECTOR()
         if NewUsed:
-                retval = "    <%s>%s</%s>\n" % (Label, db.escape_string(NewValue), Label)
+                retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:
                 return("", 0)
@@ -51,12 +51,13 @@ if __name__ == '__main__':
         if parent_data[TITLE_PARENT]:
                 submission.error('Parent title is currently a variant of another title. Variants of variants are not allowed')
 
+        CNX = MYSQL_CONNECTOR()
         titlename = SQLgetTitle(new.title_id)
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <VariantTitle>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(titlename)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(titlename)))
         update_string += "    <Parent>%d</Parent>\n" % (int(new.title_id))
         
         (val, changed) = DoField('Title', new.used_title, new.title_title)
@@ -65,7 +66,7 @@ if __name__ == '__main__':
         if new.used_trans_titles:
                 update_string += "    <TransTitles>\n"
                 for trans_title in new.title_trans_titles:
-                        update_string += "      <TransTitle>%s</TransTitle>\n" % (db.escape_string(trans_title))
+                        update_string += "      <TransTitle>%s</TransTitle>\n" % (CNX.DB_ESCAPE_STRING(trans_title))
                 update_string += "    </TransTitles>\n"
 
         (val, changed) = DoField('Year', new.used_year, new.title_year)
@@ -82,13 +83,13 @@ if __name__ == '__main__':
         update_string += val
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
 
         #############################################################
         update_string += "    <Authors>\n"
         counter = 0
         while counter < new.num_authors:
-                update_string += "      <Author>%s</Author>\n" % (db.escape_string(new.title_authors[counter]))
+                update_string += "      <Author>%s</Author>\n" % (CNX.DB_ESCAPE_STRING(new.title_authors[counter]))
                 counter += 1
         update_string += "    </Authors>\n"
 

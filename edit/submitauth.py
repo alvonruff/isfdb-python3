@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -49,13 +48,14 @@ def CheckAuthField(newUsed, oldUsed, newField, oldField, tag, multi):
                 update = 1
 
         if update:
+                CNX = MYSQL_CONNECTOR()
                 if multi:
                         update_string = "    <%ss>\n" % (tag)
                         for field in newField:
-                                update_string += "      <%s>%s</%s>\n" % (tag, db.escape_string(field), tag)
+                                update_string += "      <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(field), tag)
                         update_string += "    </%ss>\n" % (tag)
                 else:
-                        update_string = "    <%s>%s</%s>\n" % (tag, db.escape_string(newField), tag)
+                        update_string = "    <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(newField), tag)
 
                 changes = 1
         return (changes, update_string)
@@ -79,13 +79,14 @@ if __name__ == '__main__':
         old = authors(db)
         old.load(int(new.author_id))
         
+        CNX = MYSQL_CONNECTOR()
         changes = 0
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AuthorUpdate>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Record>%d</Record>\n" % (int(new.author_id))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.author_canonical)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.author_canonical)))
         
         (changes, update) = CheckAuthField(new.used_canonical, old.used_canonical, new.author_canonical, old.author_canonical, 'Canonical', 0)
         if changes:
@@ -135,7 +136,7 @@ if __name__ == '__main__':
                 update_string += update
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
         
         update_string += "  </AuthorUpdate>\n"
         update_string += "</IsfdbSubmission>\n"

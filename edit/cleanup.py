@@ -33,7 +33,7 @@ class CleanupMenu():
 
         def load_report_definitions(self):
                 (self.reports, self.sections, self.non_moderator, self.weeklies, self.monthlies) = reportsDict()
-                for report_type in self.reports.keys():
+                for report_type in list(self.reports.keys()):
                         self.counts[int(report_type)] = 0
                         # Report 199 is temporary and not regenerated nightly
                         if int(report_type) == 199:
@@ -65,16 +65,16 @@ class CleanupMenu():
 
         def load_record_count(self):
                 # Determine the number of outstanding records for each report type that is regenerated every night
+                CNX = MYSQL_CONNECTOR()
                 query = "select count(*), report_type from cleanup where resolved is null group by report_type"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         count = record[0][0]
                         report_type = record[0][1]
                         if self.user.moderator or (report_type in self.non_moderator):
                                 self.counts[report_type] = count
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def build_displayed_sections(self):
                 for section in self.sections:
@@ -147,10 +147,10 @@ class CleanupMenu():
 
                 if self.user.moderator:
                         # Determine the number of suspect pub images
+                        CNX = MYSQL_CONNECTOR()
                         query = "select count(*) from bad_images"
-                        db.query(query)
-                        result = db.store_result()
-                        record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        record = CNX.DB_FETCHONE()
                         if int(record[0][0]) or self.all_reports:
                                 print(ISFDBLink('mod/bad_images.cgi', '',
                                                 'Publications with Suspect Images (%d)' % int(record[0][0]),
@@ -162,15 +162,16 @@ class CleanupMenu():
                                 False, 'class="button"'))
                 print('<p>')
 
-menu = CleanupMenu()
-menu.load_report_definitions()
-menu.load_record_count()
-menu.build_displayed_sections()
+if __name__ == '__main__':
+        menu = CleanupMenu()
+        menu.load_report_definitions()
+        menu.load_record_count()
+        menu.build_displayed_sections()
 
-menu.display_header()
-menu.display_legend()
-menu.display_list_of_sections()
-menu.display_sections()
-menu.display_other_sources()
+        menu.display_header()
+        menu.display_legend()
+        menu.display_list_of_sections()
+        menu.display_sections()
+        menu.display_other_sources()
 
-PrintPostSearch(0, 0, 0, 0, 0, 0)
+        PrintPostSearch(0, 0, 0, 0, 0, 0)

@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from titleClass import *
@@ -41,11 +40,12 @@ if __name__ == '__main__':
         if not submission.user.id:
                 submission.error("", record)
         
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <TitleUnmerge>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(titlename)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(titlename)))
         update_string += "    <Record>%d</Record>\n" % (record)
 
         entry = 1
@@ -66,7 +66,7 @@ if __name__ == '__main__':
                 submission.error("No publications selected to be unmerged")
 
         if 'mod_note' in form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(form['mod_note'].value)))
 
         update_string += "  </TitleUnmerge>\n"
         update_string += "</IsfdbSubmission>\n"

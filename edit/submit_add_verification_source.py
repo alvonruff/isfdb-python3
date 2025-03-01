@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -36,14 +36,15 @@ if __name__ == '__main__':
         if source.error:
                 submission.error(source.error)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="%s" ?>\n' % UNICODE
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <VerificationSource>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % db.escape_string(XMLescape(submission.user.name))
-        update_string += "    <Subject>%s</Subject>\n" % db.escape_string(source.name)
-        update_string += "    <SourceLabel>%s</SourceLabel>\n" % db.escape_string(source.label)
-        update_string += "    <SourceName>%s</SourceName>\n" % db.escape_string(source.name)
-        update_string += "    <SourceURL>%s</SourceURL>\n" % db.escape_string(source.url)
+        update_string += "    <Submitter>%s</Submitter>\n" % CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name))
+        update_string += "    <Subject>%s</Subject>\n" % CNX.DB_ESCAPE_STRING(source.name)
+        update_string += "    <SourceLabel>%s</SourceLabel>\n" % CNX.DB_ESCAPE_STRING(source.label)
+        update_string += "    <SourceName>%s</SourceName>\n" % CNX.DB_ESCAPE_STRING(source.name)
+        update_string += "    <SourceURL>%s</SourceURL>\n" % CNX.DB_ESCAPE_STRING(source.url)
         update_string += "  </VerificationSource>\n"
         update_string += "</IsfdbSubmission>\n"
 

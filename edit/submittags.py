@@ -57,7 +57,8 @@ if __name__ == '__main__':
 
         # Delete the old tags
         update = 'delete from tag_mapping where title_id=%d and user_id=%d' % (int(title_id), int(user.id))
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
 
         # Insert the new tags
         for tag in tags:

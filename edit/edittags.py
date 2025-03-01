@@ -83,25 +83,24 @@ if __name__ == '__main__':
         query = "select distinct tag_id,count(tag_id) from tag_mapping group by tag_id order by count(tag_id) desc"
         if not showall:
                 query += " limit 1000"
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         tag_map = []
         tag_ids = []
         while record:
                 tag_map.append(record[0])
                 tag_ids.append(str(record[0][0]))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Get the tag names for the tags that were retrieved above and put them in a dictionary
-        query = "select tag_id,tag_name from tags where tag_id in (%s)" % (db.escape_string((",".join(tag_ids))))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        query = "select tag_id,tag_name from tags where tag_id in (%s)" % (CNX.DB_ESCAPE_STRING((",".join(tag_ids))))
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         tag_names = {}
         while record:
                 tag_names[record[0][0]] = record[0][1]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         first = 1
         output = ''

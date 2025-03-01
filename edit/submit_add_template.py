@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022-2025   Ahasuerus
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -36,19 +36,20 @@ if __name__ == '__main__':
         if template.error:
                 submission.error(template.error)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="%s" ?>\n' % UNICODE
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <NewTemplate>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % db.escape_string(XMLescape(submission.user.name))
-        update_string += "    <Subject>%s</Subject>\n" % db.escape_string(template.name)
-        update_string += "    <TemplateName>%s</TemplateName>\n" % db.escape_string(template.name)
+        update_string += "    <Submitter>%s</Submitter>\n" % CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name))
+        update_string += "    <Subject>%s</Subject>\n" % CNX.DB_ESCAPE_STRING(template.name)
+        update_string += "    <TemplateName>%s</TemplateName>\n" % CNX.DB_ESCAPE_STRING(template.name)
         if template.displayed_name:
-                update_string += "    <TemplateDisplayedName>%s</TemplateDisplayedName>\n" % db.escape_string(template.displayed_name)
-        update_string += "    <TemplateType>%s</TemplateType>\n" % db.escape_string(template.type)
+                update_string += "    <TemplateDisplayedName>%s</TemplateDisplayedName>\n" % CNX.DB_ESCAPE_STRING(template.displayed_name)
+        update_string += "    <TemplateType>%s</TemplateType>\n" % CNX.DB_ESCAPE_STRING(template.type)
         if template.url:
-                update_string += "    <TemplateURL>%s</TemplateURL>\n" % db.escape_string(template.url)
+                update_string += "    <TemplateURL>%s</TemplateURL>\n" % CNX.DB_ESCAPE_STRING(template.url)
         if template.mouseover:
-                update_string += "    <TemplateMouseoverHelp>%s</TemplateMouseoverHelp>\n" % db.escape_string(template.mouseover)
+                update_string += "    <TemplateMouseoverHelp>%s</TemplateMouseoverHelp>\n" % CNX.DB_ESCAPE_STRING(template.mouseover)
         update_string += "  </NewTemplate>\n"
         update_string += "</IsfdbSubmission>\n"
 

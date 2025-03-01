@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from pubClass import *
@@ -45,13 +44,14 @@ if __name__ == '__main__':
 
         titlename = SQLgetTitle(title_id)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <TitleDelete>\n"
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(titlename)))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(titlename)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Record>%d</Record>\n" % int(title_id)
-        update_string += "    <Reason>%s</Reason>\n" % db.escape_string(XMLescape(reason))
+        update_string += "    <Reason>%s</Reason>\n" % CNX.DB_ESCAPE_STRING(XMLescape(reason))
         update_string += "  </TitleDelete>\n"
         update_string += "</IsfdbSubmission>\n"
 

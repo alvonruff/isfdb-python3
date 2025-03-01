@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -36,17 +36,18 @@ if __name__ == '__main__':
         if domain.error:
                 submission.error(domain.error)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="%s" ?>\n' % UNICODE
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AddRecognizedDomain>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % db.escape_string(XMLescape(submission.user.name))
-        update_string += "    <Subject>%s</Subject>\n" % db.escape_string(domain.domain_name)
-        update_string += "    <DomainName>%s</DomainName>\n" % db.escape_string(domain.domain_name)
-        update_string += "    <SiteName>%s</SiteName>\n" % db.escape_string(domain.site_name)
-        update_string += "    <SiteURL>%s</SiteURL>\n" % db.escape_string(domain.site_url)
-        update_string += "    <LinkingAllowed>%s</LinkingAllowed>\n" % db.escape_string(domain.linking_allowed_display)
-        update_string += "    <RequiredSegment>%s</RequiredSegment>\n" % db.escape_string(domain.required_segment)
-        update_string += "    <ExplicitLinkRequired>%s</ExplicitLinkRequired>\n" % db.escape_string(domain.explicit_link_required_display)
+        update_string += "    <Submitter>%s</Submitter>\n" % CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name))
+        update_string += "    <Subject>%s</Subject>\n" % CNX.DB_ESCAPE_STRING(domain.domain_name)
+        update_string += "    <DomainName>%s</DomainName>\n" % CNX.DB_ESCAPE_STRING(domain.domain_name)
+        update_string += "    <SiteName>%s</SiteName>\n" % CNX.DB_ESCAPE_STRING(domain.site_name)
+        update_string += "    <SiteURL>%s</SiteURL>\n" % CNX.DB_ESCAPE_STRING(domain.site_url)
+        update_string += "    <LinkingAllowed>%s</LinkingAllowed>\n" % CNX.DB_ESCAPE_STRING(domain.linking_allowed_display)
+        update_string += "    <RequiredSegment>%s</RequiredSegment>\n" % CNX.DB_ESCAPE_STRING(domain.required_segment)
+        update_string += "    <ExplicitLinkRequired>%s</ExplicitLinkRequired>\n" % CNX.DB_ESCAPE_STRING(domain.explicit_link_required_display)
         update_string += "  </AddRecognizedDomain>\n"
         update_string += "</IsfdbSubmission>\n"
 

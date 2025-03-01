@@ -12,7 +12,6 @@
 
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from library import *
 from isfdblib import *
@@ -68,11 +67,12 @@ if __name__ == '__main__':
         author2 = authors(db)
         author2.load(int(recno2))
 
+        CNX = MYSQL_CONNECTOR()
         merge_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         merge_string += "<IsfdbSubmission>\n"
         merge_string += "  <AuthorMerge>\n"
-        merge_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        merge_string += "    <Subject>%s/%s</Subject>\n" % (db.escape_string(XMLescape(author1.author_canonical)),db.escape_string(XMLescape(author2.author_canonical)))
+        merge_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        merge_string += "    <Subject>%s/%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(author1.author_canonical)),CNX.DB_ESCAPE_STRING(XMLescape(author2.author_canonical)))
         merge_string += "    <KeepId>%d</KeepId>\n" % (targetID)
         merge_string += "    <DropId>%d</DropId>\n" % (deleteID)
 

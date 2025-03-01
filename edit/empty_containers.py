@@ -72,9 +72,9 @@ if __name__ == '__main__':
                         and t.title_ttype in ('NOVEL', 'SHORTFICTION', 'POEM', 'SERIAL')
                         )
                 order by pub_title""" % (report_id, date_range)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('No eligible publications for the specified date range.')
                 print(ISFDBLink('edit/cleanup_report.cgi', report_id, 'Return to the main report'))
                 sys.exit(0)
@@ -87,7 +87,7 @@ if __name__ == '__main__':
                 PrintTableColumns(('', 'Title', 'Authors', 'Pub. Date', 'Type', '1st Edition', 'Publisher', 'Note', 'Ignore'), user)
         else:
                 PrintTableColumns(('', 'Title', 'Editors', 'Pub. Date', 'Publisher', 'Note', 'Ignore'), user)
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         count = 1
         bgcolor = 1
         while record:
@@ -133,6 +133,6 @@ if __name__ == '__main__':
                 print('</tr>')
                 count += 1
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         
         PrintPostSearch(0, 0, 0, 0, 0)

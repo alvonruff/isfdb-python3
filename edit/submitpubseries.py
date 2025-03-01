@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus
+#     (C) COPYRIGHT 2010-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -39,12 +38,13 @@ if __name__ == '__main__':
         old.load(int(new.pub_series_id))
         
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <PubSeriesUpdate>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Record>%d</Record>\n" % (int(new.pub_series_id))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.pub_series_name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.pub_series_name)))
         
         (changes, update) = submission.CheckField(new.used_name, old.used_name, new.pub_series_name, old.pub_series_name, 'Name', 0)
         if changes:
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 update_string += update
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
         
         update_string += "  </PubSeriesUpdate>\n"
         update_string += "</IsfdbSubmission>\n"

@@ -12,7 +12,6 @@
 
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from publisherClass import *
@@ -82,8 +81,9 @@ if __name__ == '__main__':
         except:
                 submission.error('Invalid publisher ID')
 
-        merge_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        merge_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(publishername)))
+        CNX = MYSQL_CONNECTOR()
+        merge_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        merge_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(publishername)))
 
 
         merge_string += DoColumn('publisher_name',        'Publisher')

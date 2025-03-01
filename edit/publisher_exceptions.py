@@ -27,15 +27,15 @@ if __name__ == '__main__':
         PrintNavBar('edit/publisher_exceptions.cgi', publisher_id)
 
         query = "select pub_id, pub_title from pubs where publisher_id = %d" % publisher_id
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         pubs_list = []
         while record:
                 pub_id = record[0][0]
                 pub_title = record[0][1]
                 pubs_list.append(pub_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         in_clause = list_to_in_clause(pubs_list)
 
@@ -46,9 +46,8 @@ if __name__ == '__main__':
                 and t.title_language = l.lang_id
                 and l.latin_script = 'No'
                 order by t.title_title""" % in_clause
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         titles = {}
         while record:
                 title_id = record[0][0]
@@ -56,7 +55,7 @@ if __name__ == '__main__':
                 if title_id not in titles:
                         titles[title_id] = []
                 titles[title_id].append(pub_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         if not titles:
                 print('<h2>No exceptions found</h2>')

@@ -66,8 +66,9 @@ class Form:
         def build_submit_data(self):
                 titlename = SQLgetTitle(form.targetID)
                 submitter = getSubmitter()
-                self.add_payload_line('    <Submitter>%s</Submitter>\n' % (db.escape_string(XMLescape(submitter))))
-                self.add_payload_line('    <Subject>%s</Subject>\n' % (db.escape_string(XMLescape(titlename))))
+                CNX = MYSQL_CONNECTOR()
+                self.add_payload_line('    <Submitter>%s</Submitter>\n' % (CNX.DB_ESCAPE_STRING(XMLescape(submitter))))
+                self.add_payload_line('    <Subject>%s</Subject>\n' % (CNX.DB_ESCAPE_STRING(XMLescape(titlename))))
 
         def add_column(self, column, tag):
                 if column in self.form_data:
@@ -82,7 +83,8 @@ class Form:
         def add_mod_note(self):
                 if 'mod_note' in self.form_data:
                         mod_note = self.form_data['mod_note'].value
-                        self.add_payload_line('    <ModNote>%s</ModNote>\n' % (db.escape_string(XMLescape(mod_note))))
+                        CNX = MYSQL_CONNECTOR()
+                        self.add_payload_line('    <ModNote>%s</ModNote>\n' % (CNX.DB_ESCAPE_STRING(XMLescape(mod_note))))
 
         def build_footer(self):
                 self.add_payload_line(' </TitleMerge>\n')

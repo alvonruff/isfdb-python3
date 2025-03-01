@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -40,11 +40,12 @@ if __name__ == '__main__':
         if current.error:
                 submission.error(new.error)
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="%s" ?>\n' % UNICODE
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <VerificationSource>\n"
-        update_string += "    <Submitter>%s</Submitter>\n" % db.escape_string(XMLescape(submission.user.name))
-        update_string += "    <Subject>%s</Subject>\n" % db.escape_string(new.name)
+        update_string += "    <Submitter>%s</Submitter>\n" % CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name))
+        update_string += "    <Subject>%s</Subject>\n" % CNX.DB_ESCAPE_STRING(new.name)
         update_string += "    <Record>%d</Record>\n" % int(new.id)
         (changes, update) = submission.CheckField(new.used_label, current.used_label, new.label, current.label, 'SourceLabel', 0)
         if changes:

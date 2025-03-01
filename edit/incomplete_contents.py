@@ -59,9 +59,9 @@ if __name__ == '__main__':
                 and c.report_type = 277
                 and c.record_id_2 like '%d%%'
                 """ % date_range
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('No eligible publications for the specified date range')
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
                 sys.exit(0)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         user.load_moderator_flag()
 
         PrintTableColumns(('', 'Title', 'Authors', 'Pub. Date', 'Type', '1st Edition', 'Publisher', 'Note',), user)
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         count = 1
         bgcolor = 1
         while record:
@@ -114,6 +114,6 @@ if __name__ == '__main__':
                 print('</tr>')
                 count += 1
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         
         PrintPostSearch(0, 0, 0, 0, 0)

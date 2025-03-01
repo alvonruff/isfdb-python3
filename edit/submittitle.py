@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from titleClass import *
@@ -48,13 +47,14 @@ def EvalField(Label, NewUsed, OldUsed, newField, oldField, multi):
                 update = 1
 
         if update:
+                CNX = MYSQL_CONNECTOR()
                 if multi:
                         update_string = "    <%ss>\n" % (Label)
                         for field in newField:
-                                update_string += "      <%s>%s</%s>\n" % (Label, db.escape_string(field), Label)
+                                update_string += "      <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(field), Label)
                         update_string += "    </%ss>\n" % (Label)
                 else:
-                        update_string = "    <%s>%s</%s>\n" % (Label, db.escape_string(newField), Label)
+                        update_string = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(newField), Label)
 
                 return(update_string, 1)
         else:
@@ -88,8 +88,9 @@ if __name__ == '__main__':
                 update_string += "  <TitleUpdate>\n"
                 update_string += "    <Record>%d</Record>\n" % (int(new.title_id))
 
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.title_title)))
+        CNX = MYSQL_CONNECTOR()
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.title_title)))
         
         (val, changed) = EvalField('Title', new.used_title, old.used_title, new.title_title, old.title_title,0)
         update_string += val
@@ -160,25 +161,25 @@ if __name__ == '__main__':
         changes += changed
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
 
         if ISFDBDifferentAuthorLists(new.title_authors, old.title_authors):
                 update_string += "    <Authors>\n"
                 for new_author in new.title_authors:
-                        update_string += "      <Author>%s</Author>\n" % db.escape_string(new_author)
+                        update_string += "      <Author>%s</Author>\n" % CNX.DB_ESCAPE_STRING(new_author)
                 update_string += "    </Authors>\n"
 
         if old.title_ttype == 'REVIEW':
                 if ISFDBDifferentAuthorLists(new.title_subjauthors, old.title_subjauthors):
                         update_string += "    <BookAuthors>\n"
                         for new_author in new.title_subjauthors:
-                                update_string += "      <BookAuthor>%s</BookAuthor>\n" % db.escape_string(new_author)
+                                update_string += "      <BookAuthor>%s</BookAuthor>\n" % CNX.DB_ESCAPE_STRING(new_author)
                         update_string += "    </BookAuthors>\n"
         elif old.title_ttype == 'INTERVIEW':
                 if ISFDBDifferentAuthorLists(new.title_subjauthors, old.title_subjauthors):
                         update_string += "    <Interviewees>\n"
                         for new_author in new.title_subjauthors:
-                                update_string += "      <Interviewee>%s</Interviewee>\n" % db.escape_string(new_author)
+                                update_string += "      <Interviewee>%s</Interviewee>\n" % CNX.DB_ESCAPE_STRING(new_author)
                         update_string += "    </Interviewees>\n"
 
 

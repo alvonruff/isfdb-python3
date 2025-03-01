@@ -12,7 +12,6 @@ from __future__ import print_function
 
 import string
 import sys
-import MySQLdb
 import cgi
 from cleanup_lib import *
 from isfdb import *
@@ -30,16 +29,16 @@ class Cleanup():
                 self.note = ''
                 self.print_record_function = None
                 self.record_name = ''
+                self.CNX = MYSQL_CONNECTOR()
 
         def print_generic_table(self):
-                db.query(self.query)
-                result = db.store_result()
-                num = result.num_rows()
+                self.CNX.DB_QUERY(self.query)
+                num = self.CNX.DB_NUMROWS()
 
                 if num > 0:
                         if self.note:
                                 print('<div class="bold">%s</div>' % self.note)
-                        record = result.fetch_row()
+                        record = self.CNX.DB_FETCHMANY()
                         bgcolor = 1
                         if self.ignore:
                                 PrintTableColumns(('#', self.record_name, 'Ignore'))
@@ -56,7 +55,7 @@ class Cleanup():
                                         self.print_record_function(record_id, record_title, bgcolor, count)
                                 bgcolor ^= 1
                                 count += 1
-                                record = result.fetch_row()
+                                record = self.CNX.DB_FETCHMANY()
                         print('</table>')
                 else:
                         print('<h2>%s.</h2>' % self.none)
@@ -105,13 +104,12 @@ class Cleanup():
                 excluded.print_data()
 
         def print_pub_with_date_table(self):
-                db.query(self.query)
-                result = db.store_result()
-                num = result.num_rows()
+                self.CNX.DB_QUERY(self.query)
+                num = self.CNX.DB_NUMROWS()
                 if num > 0:
                         if self.note:
                                 print('<h3>%s</h3>' % self.note)
-                        record = result.fetch_row()
+                        record = self.CNX.DB_FETCHMANY()
                         bgcolor = 1
                         count = 1
                         PrintTableColumns(('', 'Publication', 'Date'))
@@ -130,7 +128,7 @@ class Cleanup():
                                 print('</tr>')
                                 bgcolor ^= 1
                                 count += 1
-                                record = result.fetch_row()
+                                record = self.CNX.DB_FETCHMANY()
                         print('</table>')
                 else:
                         print('<h2>%s</h2>' % self.none)
@@ -213,14 +211,13 @@ class Cleanup():
                                are considered "short". Titles with 0000-00-00 and 8888-00-00 dates are not
                                included."""
 
-                db.query(self.query)
-                result = db.store_result()
-                num = result.num_rows()
+                self.CNX.DB_QUERY(self.query)
+                num = self.CNX.DB_NUMROWS()
 
                 if num > 0:
                         if self.note:
                                 print('<div class="bold">%s</div>' % self.note)
-                        record = result.fetch_row()
+                        record = self.CNX.DB_FETCHMANY()
                         bgcolor = 1
                         PrintTableColumns(('#', 'Language', 'Title', 'Type'))
                         count = 1
@@ -241,7 +238,7 @@ class Cleanup():
                                 print('</tr>')
                                 bgcolor ^= 1
                                 count += 1
-                                record = result.fetch_row()
+                                record = self.CNX.DB_FETCHMANY()
                         print('</table>')
                 else:
                         print('<h2>%s.</h2>' % self.none)
@@ -257,6 +254,7 @@ class ExcludedTitleTypes():
                 self.pub_id = 0
                 self.pub_title = ''
                 self.mode = 1
+                self.CNX = MYSQL_CONNECTOR()
 
         def retrieve_data(self):
                 self.query = """select p.pub_id, p.pub_title, c.cleanup_id
@@ -273,15 +271,14 @@ class ExcludedTitleTypes():
                         order by p.pub_title""" % (self.pub_type, list_to_in_clause(self.excluded_title_types), self.report_id)
                 self.none = 'No %s Publications with Invalid Title Types' % self.pub_type.lower().capitalize()
                 self.note = 'Invalid title types for %s publications: %s' % (self.pub_type.capitalize(), ', '.join(self.excluded_title_types))
-                db.query(self.query)
-                self.result = db.store_result()
-                self.num = self.result.num_rows()
+                self.CNX.DB_QUERY(self.query)
+                self.num = self.CNX.DB_NUMROWS()
 
         def print_data(self):
                 if self.num > 0:
                         if self.note:
                                 print('<h3>%s</h3>' % self.note)
-                        record = self.result.fetch_row()
+                        record = self.CNX.DB_FETCHMANY()
                         if self.ignore:
                                 PrintTableColumns(('#', 'Publication', 'Invalid Titles', 'Ignore'))
                         else:
@@ -295,7 +292,7 @@ class ExcludedTitleTypes():
                                 self.print_row()
                                 self.bgcolor ^= 1
                                 self.count += 1
-                                record = self.result.fetch_row()
+                                record = self.CNX.DB_FETCHMANY()
                         print('</table>')
                 else:
                         print('<h2>%s.</h2>' % self.none)
@@ -354,10 +351,10 @@ def function1():
                  (select ca.title_id from canonical_author ca where ca.title_id = t.title_id)
                 and c.report_type=1 
                 order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Title',))
@@ -369,7 +366,7 @@ def function1():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No titles without authors found</h2>")
@@ -400,10 +397,10 @@ def function2():
                   or pca.author_id = 6677 or vca.author_id = 6677)
                   )
                  order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('Count', 'Title','Ignore'))
@@ -416,7 +413,7 @@ def function2():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 2)
                         bgcolor = bgcolor ^ 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No VT-alternate name mismatches found</h2>")
@@ -432,15 +429,15 @@ def function3():
                 and c.record_id=t1.title_id 
                 and c.resolved IS NULL
                 order by t1.title_ttype, t1.title_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No eligible titles without publications.</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         titles = {}
         while record:
                 cleanup_id = record[0][0]
@@ -450,9 +447,9 @@ def function3():
                 if title_type not in titles:
                         titles[title_type] = []
                 titles[title_type].append((cleanup_id, title_id, title_title))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
-        for title_type in titles.keys():
+        for title_type in list(titles.keys()):
                 if not titles[title_type]:
                         print("<h3>No %s titles without publications.</h3>" % title_type)
                         continue
@@ -477,14 +474,14 @@ def function5():
         MismatchesInNotes(query, 'Mismatched Angle Brackets')
 
 def MismatchesInNotes(query, header):
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if not num:
                 print('<h2>No %s in Notes/Synopses</h2>' % header)
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         note_ids = []
         while record:
                 note_id = str(record[0][0])
@@ -492,7 +489,7 @@ def MismatchesInNotes(query, header):
                         note_ids = note_id
                 else:
                         note_ids += ",%s" % note_id
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         OneType('pub_id', 'pub_title', 'pubs', 'Publications', 'pl', 'note_id', 'Notes', note_ids, header)
         OneType('title_id', 'title_title', 'titles', 'Title Notes', 'title', 'note_id', 'Notes', note_ids, header)
@@ -506,12 +503,12 @@ def MismatchesInNotes(query, header):
 
 def OneType(record_id, record_title, table, record_name, cgi_script, note_id, term, note_ids, header):
         query = "select %s, %s from %s where %s in (%s) order by %s" % (record_id, record_title, table, note_id, note_ids, record_title)
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('', record_name))
                 bgcolor = 1
                 count = 1
@@ -526,7 +523,7 @@ def OneType(record_id, record_title, table, record_name, cgi_script, note_id, te
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h3>No %s with %s in %s</h3>' % (record_name, header, term))
@@ -541,12 +538,12 @@ def function6():
                 and c.report_type = 6
                 order by a.author_lastname"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Directory Entry', 'Author', 'Working Language'))
@@ -568,7 +565,7 @@ def function6():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No invalid directory names found</h2>')
@@ -638,14 +635,14 @@ def function8():
                 and c.resolved IS NULL
                 order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No records found</h2>")
                 return
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         PrintTableColumns(('Title', 'Author(s)', 'Reviewer(s)'))
         while record:
@@ -669,7 +666,7 @@ def function8():
                 print('</td>')
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function9():
@@ -680,12 +677,12 @@ def function9():
                 and titles.series_id !=0
                 and titles.title_parent !=0"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title',))
@@ -695,7 +692,7 @@ def function9():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -706,15 +703,15 @@ def function10():
                 and exists (select 1 from canonical_author c, titles t where a.author_id=c.author_id 
                 and c.ca_status=1 and c.title_id=t.title_id and t.title_parent=0) 
                 order by a.author_lastname"""
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No alternate names with canonical titles found</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('Alternate Name', 'Count'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         while record:
                 if bgcolor:
@@ -727,13 +724,13 @@ def function10():
                 query2 = """select count(t.title_id) from canonical_author c, titles t
                         where c.author_id=%d and c.ca_status=1 and c.title_id=t.title_id
                         and t.title_parent=0""" % int(record[0][0])
-                db.query(query2)
-                result2 = db.store_result()
-                record2 = result2.fetch_row()
+                CNX2 = MYSQL_CONNECTOR()
+                CNX2.DB_QUERY(query2)
+                record2 = CNX2.DB_FETCHONE()
                 print("<td>%s</td>" % record2[0][0])
                 print("</tr>")
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function11():
@@ -747,13 +744,13 @@ def function11():
                 group by c.author_id
                 order by count(c.author_id) desc"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Author', '# of Titles'))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 while record:
@@ -766,7 +763,7 @@ def function11():
                         print('<td>%s</td>' % ISFDBLink('ea.cgi', record[0][0], record[0][1]))
                         print('<td>%s</td>' % record[0][2])
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         count += 1
                 print('</table>')
@@ -774,19 +771,19 @@ def function11():
                 print('<h2>No authors without a defined language found</h2>')
 
 def function12():
-        query = """select titles.* from titles, cleanup
+        query = """select %s from titles, cleanup
                 where titles.title_ttype = 'EDITOR'
                 and titles.series_id IS NULL 
                 and titles.title_parent = 0
                 and titles.title_id=cleanup.record_id
-                and cleanup.report_type=12"""
+                and cleanup.report_type=12""" % (CNX_ADV_TITLES_STAR)
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
@@ -804,7 +801,7 @@ def function12():
                         print('</td>')
                         print('</tr>')
                         bgcolor ^= 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -814,12 +811,12 @@ def function13():
                 and t.series_id IS NOT NULL and t.title_parent != 0 
                 and t.title_id=cleanup.record_id and cleanup.report_type=13"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
@@ -839,7 +836,7 @@ def function13():
 
                         print("</tr>")
                         bgcolor ^= 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -850,12 +847,12 @@ def function14():
                 where pubs.pub_id = cleanup.record_id
                 and cleanup.report_type=14"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication',))
@@ -865,7 +862,7 @@ def function14():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -882,12 +879,12 @@ def function15():
                 HAVING COUNT(*) > 1
                 order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication',))
@@ -897,7 +894,7 @@ def function15():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publications with Extra EDITOR Records found</h2>")
@@ -907,12 +904,12 @@ def function16():
                 where s1.series_id=cleanup.record_id and cleanup.report_type=16 and not exists 
                 (select 1 from titles t where t.series_id = s1.series_id) and not exists 
                 (select 1 from series s2 where s2.series_parent = s1.series_id)"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series Name',))
@@ -922,7 +919,7 @@ def function16():
                         PrintSeriesRecord(series_id, series_name, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -933,12 +930,12 @@ def function17():
                 and titles.series_id = cleanup.record_id and cleanup.report_type=17 
                 group by series_id, title_seriesnum, title_seriesnum_2 having cnt >1"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', 'Series Number'))
@@ -961,7 +958,7 @@ def function17():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No series with duplicate series numbers found</h2>")
@@ -971,21 +968,21 @@ def function18():
                 where t.title_title like '%. . .%' and c.report_type=18 
                 and t.title_id=c.record_id order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if not num:
                 print("<h2>No titles with bad ellipses found.</h2>")
                 return
         PrintTableColumns(('', 'Title'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = record[0][0]
                 title_title = record[0][1]
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor ^= 1
                 count += 1
         print("</table>")
@@ -999,12 +996,12 @@ def function19():
                 (select 1 from pseudonyms p where a.author_id = p.pseudonym) 
                 and t.title_id=cleanup.record_id and cleanup.report_type=19"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title',))
@@ -1014,7 +1011,7 @@ def function19():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1024,12 +1021,12 @@ def function20():
                 where tp.title_id = t.title_parent and tp.title_parent != 0 
                 and t.title_id=cleanup.record_id and cleanup.report_type=20"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title',))
@@ -1039,7 +1036,7 @@ def function20():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1049,12 +1046,12 @@ def function21():
                 and not exists (select 1 from titles pt where t.title_parent=pt.title_id) 
                 and t.title_id=cleanup.record_id and cleanup.report_type=21"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title',))
@@ -1064,7 +1061,7 @@ def function21():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1075,20 +1072,20 @@ def function22():
                 t.title_id=cleanup.record_id and cleanup.report_type=22 
                 order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Serial'))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 while record:
                         title_id = record[0][0]
                         title_title = record[0][1]
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         count += 1
                 print("</table>")
@@ -1108,15 +1105,15 @@ def function23():
                 and cleanup.report_type = 23 
                 order by award_type_id, award_year, award_level"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if not num:
                 print("<h2>No records found</h2>")
                 return
 
         PrintTableColumns(('Award Title', 'Award Name', 'Award Year', 'Award Category', 'Award Level'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         while record:
                 if bgcolor:
@@ -1134,7 +1131,7 @@ def function23():
                 print('<td>%s</td>' % award.award_displayed_level)
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function24():
@@ -1147,15 +1144,15 @@ def function24():
                 and cleanup.resolved IS NULL 
                 order by a.award_type_id, a.award_year, a.award_level"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
+        if not CNX.DB_NUMROWS():
                 print("<h2>No records found</h2>")
                 return
 
         PrintTableColumns(('Award Title', 'Award Name', 'Award Year', 'Award Category', 'Award Level', ''))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         while record:
                 if bgcolor:
@@ -1174,7 +1171,7 @@ def function24():
                 print('<td>%s</td>' % ISFDBLinkNoName('mod/resolve_cleanup.cgi', '%s+1+24' % record[0][0], 'Ignore this award'))
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function25():
@@ -1185,13 +1182,13 @@ def function25():
                 and cleanup.record_id=award_types.award_type_id
                 and cleanup.report_type=25"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('Award Type',))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 while record:
                         if bgcolor:
@@ -1202,7 +1199,7 @@ def function25():
                         award_type_name = record[0][AWARD_TYPE_NAME]
                         print('<td>%s</td>' % ISFDBLink('awardtype.cgi', award_type_id, award_type_name))
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
 
                 print('</table>')
@@ -1218,13 +1215,13 @@ def function26():
                 and cleanup.record_id=award_cats.award_cat_id
                 and cleanup.report_type=26"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('Award Category',))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 while record:
                         if bgcolor:
@@ -1235,7 +1232,7 @@ def function26():
                         award_cat_name = record[0][AWARD_CAT_NAME]
                         print('<td>%s</td>' % ISFDBLink('award_category.cgi', award_cat_id, award_cat_name))
                         print('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                 print('</table>')
         else:
@@ -1247,13 +1244,13 @@ def function27():
                 (select 1 from titles t where t.title_ttype='CHAPBOOK'
                 and t.series_id = s.series_id) 
                 order by s.series_title"""
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print("<h2>No records found</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', 'Series',))
@@ -1263,7 +1260,7 @@ def function27():
                 PrintSeriesRecord(series_id, series_name, bgcolor, count)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function28():
@@ -1271,12 +1268,12 @@ def function28():
                 where t.title_ttype='CHAPBOOK' and t.title_synopsis !=0 
                 and c.record_id=t.title_id and c.report_type=28 order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title',))
@@ -1286,7 +1283,7 @@ def function28():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1300,12 +1297,12 @@ def function29():
                    and pubs.pub_id=cleanup.record_id and cleanup.report_type=29 
                    order by pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('', 'Publication Title'))
                 bgcolor = 1
                 count = 1
@@ -1315,7 +1312,7 @@ def function29():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1327,13 +1324,13 @@ def function30():
                 UNION select t1.title_id,t1.title_title from titles t1, titles t2, cleanup c where 
                 t1.title_ttype!='CHAPBOOK' and t2.title_parent=t1.title_id and t2.title_ttype='CHAPBOOK' 
                 and (t1.title_id=c.record_id or t2.title_id=c.record_id) and c.report_type=30"""
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print("<h2>No records found</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', 'Title',))
@@ -1343,7 +1340,7 @@ def function30():
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function31():
@@ -1355,12 +1352,12 @@ def function31():
                 p.pub_year !='9999-00-00')) and p.pub_id=c.record_id and 
                 c.report_type=31 and c.resolved IS NULL order by pub_year, pub_isbn"""
                 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('Count', 'Date', 'ISBN', ''))
@@ -1379,7 +1376,7 @@ def function31():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -1390,12 +1387,12 @@ def function32():
                 and c.report_type=32 group by pub_tag having count(*) > 1) p2 
                 where p1.pub_tag = p2.pub_tag order BY 2,1,3"""
         
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('Publication Title', 'Publication Tag'))
                 while record:
@@ -1408,7 +1405,7 @@ def function32():
                         print('<td>%s</td>' % record[0][1])
                         print('</tr>')
                         bgcolor ^= 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1443,12 +1440,12 @@ def function33():
                 and p.pub_id=cleanup.record_id and cleanup.report_type=33
                 order by order_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Author'))
@@ -1463,7 +1460,7 @@ def function33():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -1479,12 +1476,12 @@ def function34():
                 and cleanup.report_type=34
                 order by pubs.pub_title"""
                 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication Title',))
@@ -1494,7 +1491,7 @@ def function34():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1506,15 +1503,15 @@ def function35():
                 and pubs.pub_id=cleanup.record_id and cleanup.report_type=35 
                 order by pubs.pub_ptype, pubs.pub_title""" % (formats)
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No matching records</h2>')
                 return
         
         PrintTableColumns(('Format', 'Publication'))
         bgcolor = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 format = record[0][0]
                 pub_id = record[0][1]
@@ -1530,7 +1527,7 @@ def function35():
                 print('</td>')
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function36():
@@ -1565,9 +1562,9 @@ def function36():
                 and SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(pub_frontimage,'//',2),'//',-1),'/',1) not like '%%sf-encyclopedia.com'
                 and (%s)""" % subquery
         query += ' order by pub_title'
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         if not record:
                 print('<h2>No records found</h2>')
                 return
@@ -1584,7 +1581,7 @@ def function36():
                 print('<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2])))
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function37():
@@ -1603,12 +1600,12 @@ def function37():
                 ) 
                 order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('', 'Publication Title', 'Ignore'))
                 bgcolor = 1
                 count = 1
@@ -1619,7 +1616,7 @@ def function37():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id, 37)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -1630,20 +1627,20 @@ def function38():
                 where pc.pub_id=c.record_id and c.report_type=38 \
                 group by pc.pub_id, pc.title_id having cnt>1'
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         pubs = {}
         titles = {}
         pub_data = {}
         title_data = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_id = record[0][0]
                 # Skip records where pub_id is NULL -- they will have to be cleaned up manually
                 if not pub_id:
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         continue
                 title_id = record[0][1]
                 count = record[0][2]
@@ -1653,7 +1650,7 @@ def function38():
                         pubs[pub_id] = [(title_id, count), ]
                 else:
                         pubs[pub_id].append((title_id, count), )
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         if not pubs:
                 print("<h2>No publications with duplicate titles found</h2>")
@@ -1690,21 +1687,21 @@ def function39():
                 where p.pub_title like '%. . .%' and c.report_type=39 
                 and p.pub_id=c.record_id order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if not num:
                 print("<h2>No publications with bad ellipses found.</h2>")
                 return
         PrintTableColumns(('', 'Publication'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_id = record[0][0]
                 pub_title = record[0][1]
                 PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor ^= 1
                 count += 1
         print("</table>")
@@ -1714,15 +1711,15 @@ def function40():
                 (select 1 from canonical_author ca where ca.title_id=t.title_id and ca.ca_status=3) 
                 and t.title_id=c.record_id and c.report_type=40 order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Reviews without Reviewed Authors</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('', 'Review',))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -1731,7 +1728,7 @@ def function40():
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function41():
@@ -1742,15 +1739,15 @@ def function41():
                 and t1.title_id=c.record_id and c.report_type=41
                 order by t1.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Reviews not Linked to Titles</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('', 'Review'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -1759,7 +1756,7 @@ def function41():
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function42():
@@ -1775,15 +1772,15 @@ def function42():
                 and c.record_id=t1.title_id 
                 and c.resolved IS NULL
                 order by t2.title_ttype, t2.title_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print('<h2>No Reviews of Uncommon Title Types.</h2>')
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         titles = {}
         while record:
                 cleanup_id = record[0][0]
@@ -1793,9 +1790,9 @@ def function42():
                 if title_type not in titles:
                         titles[title_type] = []
                 titles[title_type].append((cleanup_id, title_id, title_title))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
-        for title_type in titles.keys():
+        for title_type in list(titles.keys()):
                 if not titles[title_type]:
                         print('<h3>No reviews of %ss.</h3>' % title_type)
                         continue
@@ -1822,19 +1819,19 @@ def function43():
         query = """select p1.publisher_name from publishers p1, publishers p2, cleanup c where 
                 p1.publisher_id!=p2.publisher_id and p1.publisher_name=p2.publisher_name 
                 and p1.publisher_id=c.record_id and c.report_type=43 order by p1.publisher_name"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         PrintTableColumns(('', 'Publisher', ))
                         publisher_name = record[0][0]
-                        query2 = "select publisher_id from publishers where publisher_name = '%s'" % db.escape_string(publisher_name)
-                        db.query(query2)
-                        result2 = db.store_result()
-                        record2 = result2.fetch_row()
+                        query2 = "select publisher_id from publishers where publisher_name = '%s'" % CNX.DB_ESCAPE_STRING(publisher_name)
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        record2 = CNX2.DB_FETCHMANY()
                         bgcolor = 1
                         count = 1
                         while record2:
@@ -1842,8 +1839,8 @@ def function43():
                                 PrintPublisherRecord(publisher_id, publisher_name, bgcolor, count)
                                 bgcolor ^= 1
                                 count += 1
-                                record2 = result2.fetch_row()
-                        record = result.fetch_row()
+                                record2 = CNX2.DB_FETCHMANY()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -1856,17 +1853,17 @@ def function44():
                 and c.record_id = p1.publisher_id
                 and c.record_id_2 = p2.publisher_id
                 order by p1.publisher_name"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print('<h2>No similar publisher records found</h2>')
                 return
 
         PrintTableColumns(('', 'Publisher 1', 'Publisher 2', 'Ignore'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 publisher_id_1 = record[0][0]
                 publisher_name_1 = record[0][1]
@@ -1884,7 +1881,7 @@ def function44():
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function45():
@@ -1899,24 +1896,24 @@ def function45():
                 and v.title_id=c.record_id
                 and c.report_type=45
                 order by v.title_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No variant title type mismatches</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         titles = {}
         while record:
                 variant_type = record[0][2]
                 if variant_type not in titles:
                         titles[variant_type] = []
                 titles[variant_type].append(record[0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
-        for variant_type in titles.keys():
+        for variant_type in list(titles.keys()):
                 if not titles[variant_type]:
                         print("<h3>No %s title type mismatches</h3>" % variant_type)
                         continue
@@ -1949,12 +1946,12 @@ def function46():
                 and t.title_id=c.record_id
                 and c.report_type=46"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('Year', 'Title', 'Editors'))
                 while record:
@@ -1973,7 +1970,7 @@ def function46():
                         print('</td>')
                         print('</tr>')
                         bgcolor ^= 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -2007,15 +2004,15 @@ def function47():
                 )
                 and t.title_id = c.record_id
                 and c.report_type = 47"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No Title Dates after Publication Dates.</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         titles = {}
         while record:
                 title_id = record[0][0]
@@ -2024,7 +2021,7 @@ def function47():
                 if title_type not in titles:
                         titles[title_type] = []
                 titles[title_type].append((title_title, title_id))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         for title_type in sorted(titles.keys()):
                 if not titles[title_type]:
@@ -2050,17 +2047,17 @@ def function48():
         
         # First retrieve all series IDs found by the nightly cleanup report
         query = "select record_id from cleanup where report_type=48 and resolved IS NULL"
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Series with Numbering Gaps</h2>')
                 return
 
         series_ids = []
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 series_ids.append(str(record[0][0]))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         # Convert the resulting list to a comma-delimited string
         series_string = ",".join(series_ids)
 
@@ -2084,15 +2081,14 @@ def function48():
                 tmp2, cleanup c where c.record_id=tmp2.series_id and c.report_type=48 
                 order by tmp2.series_title""" % (series_string, series_string)
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Series with Numbering Gaps</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('', 'Series', 'Ignore'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -2102,7 +2098,7 @@ def function48():
                 PrintSeriesRecord(series_id, series_name, bgcolor, count, cleanup_id, 48)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 
@@ -2129,15 +2125,15 @@ def function49():
                 and c.report_type=49 
                 order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Publications with Invalid ISBN Formats</h2>')
                 return
         PrintTableColumns(('', 'ISBN', 'Publication'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_isbn = record[0][0]
                 pub_id = record[0][1]
@@ -2155,7 +2151,7 @@ def function49():
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function50():
@@ -2199,14 +2195,14 @@ def function50():
                  != SUBSTR(isbn,13,1)) 
                  order by pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Publications with Invalid ISBN Checksums</h2>')
                 return
 
         PrintTableColumns(('', 'ISBN', 'Publication', ''))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -2228,27 +2224,27 @@ def function50():
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function51():
         query = """select p.pub_id, p.pub_title, p.pub_isbn, p.pub_year, c.cleanup_id 
                 from pubs p, cleanup c where p.pub_isbn!='' and p.pub_isbn IS NOT NULL 
                 and p.pub_id=c.record_id and c.report_type=51 and c.resolved IS NULL"""
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Publications with Identical ISBNs and Different Titles</h2>')
                 return
 
         isbns = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 normalized_isbn = str.replace(record[0][2],"-",'')
                 if normalized_isbn not in isbns:
                         isbns[normalized_isbn] = []
                 isbns[normalized_isbn].append(record[0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Blank out ISBNs whose titles have been made identical since the report last ran
         for isbn in isbns:
@@ -2321,15 +2317,15 @@ def function52():
                         subquery += "(t.title_ttype='%s')" % title_type
                 query += "(" + subquery + "))!=1)"
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No Publications with 0 or 2+ Reference Titles.</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         pubs = {}
         while record:
                 pub_id = record[0][0]
@@ -2338,7 +2334,7 @@ def function52():
                 if pub_type not in pubs:
                         pubs[pub_type] = []
                 pubs[pub_type].append(record[0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         for pub_type in sorted(pubs.keys()):
                 if not pubs[pub_type]:
@@ -2364,15 +2360,15 @@ def function53():
                 and p.author_id = c.record_id and c.report_type = 53 \
                 group by p.author_id, p.pseudonym \
                 having count(*) > 1"
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Authors with Duplicate Alternate Names Found</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('','Altrenate Name', 'Author', 'Count'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -2388,7 +2384,7 @@ def function53():
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function54():
@@ -2401,10 +2397,10 @@ def function54():
                 from titles t, pubs p, pub_content pc, cleanup c where
                 t.title_id=c.record_id and c.report_type=54 and
                 t.title_id=pc.title_id and pc.pub_id=p.pub_id limit 1000"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
         if not num:
                 print("<h2>No Collections/Anthologies without Contents Whose Other Editions Have Contents</h2>")
                 return
@@ -2424,7 +2420,7 @@ def function54():
                         titles[title_title][title_id] = []
                 titles[title_title][title_id].append((pub_id, pub_title, pub_year))
                 pubs_set.add(str(pub_id))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         pubs_string = ",".join(pubs_set)
         query = """select p.pub_id from pubs p
@@ -2433,13 +2429,12 @@ def function54():
                         where pc.pub_id=p.pub_id and
                         t.title_id=pc.title_id and
                         t.title_ttype in ('SHORTFICTION','POEM','SERIAL'))""" % pubs_string
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         empty_pubs = []
         while record:
                 empty_pubs.append(record[0][0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         PrintTableColumns(('#', 'Title', 'Publications'))
         count = 0
@@ -2471,7 +2466,8 @@ def function54():
                         print('</td>')
                         print('</tr>')
                         color = color ^ 1
-                        record = result.fetch_row()
+                        # This seems like a spurious fetch that does nothing
+                        #record = CNX.DB_FETCHMANY()
         print('</table><p>')
 
 def function55():
@@ -2480,20 +2476,20 @@ def function55():
                 where t.title_id=c.record_id and c.report_type=55
                 and %s""" % ui.goodHtmlClause('t', 'title_title')
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Title'))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 while record:
                         title_id = record[0][0]
                         title_title = record[0][1]
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         count += 1
 
@@ -2507,20 +2503,20 @@ def function56():
         where p.pub_id=c.record_id and c.report_type=56
         and %s""" % ui.goodHtmlClause('p', 'pub_title')
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Publication'))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 while record:
                         pub_id = record[0][0]
                         pub_title = record[0][1]
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         count += 1
 
@@ -2541,12 +2537,12 @@ def function57():
                    and pub_frontimage not like '%/robinson/%'
                    order by pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('', 'Publication'))
                 count = 1
@@ -2556,7 +2552,7 @@ def function57():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No invalid SFE image links found</h2>')
@@ -2644,10 +2640,10 @@ def function62():
                 )
                 and c.record_id=t.title_id and c.report_type=62
                 order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Title'))
@@ -2659,7 +2655,7 @@ def function62():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor = bgcolor ^ 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No Titles with Invalid Length Values found</h2>")
@@ -2673,9 +2669,9 @@ def function63():
                 and c.report_type = 63
                 order by t1.title_title"""
         
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No Genre/Non-Genre Mismatches.</h2>")
@@ -2684,14 +2680,14 @@ def function63():
         PrintTableColumns(('', 'Title'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = record[0][0]
                 title_title = record[0][1]
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor = bgcolor ^ 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function64():
@@ -2703,15 +2699,15 @@ def function64():
                  and exists(select 1 from titles t where t.series_id = s.series_id and t.title_ttype = 'EDITOR')
                  and exists(select 1 from titles t where t.series_id = s.series_id and t.title_ttype != 'EDITOR')
                  order by s.series_title"""
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 print('<h2>No Series with EDITOR and non-EDITOR Titles</h2>')
                 return
 
         # Print table headers
         PrintTableColumns(('', 'Series', 'Ignore'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -2721,7 +2717,7 @@ def function64():
                 PrintSeriesRecord(series_id, series_name, bgcolor, count, cleanup_id, 64)
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print("</table>")
 
 def function65():
@@ -2794,11 +2790,11 @@ def function71():
                 and t.title_copyright != '8888-00-00'
                 and t.title_id=c.record_id and c.report_type=71
                 order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Date'))
@@ -2817,7 +2813,7 @@ def function71():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Forthcoming Titles Found</h2>')
@@ -2842,11 +2838,11 @@ def function73():
                 and p.publisher_id=c.record_id and c.report_type=73
                 and c.resolved IS NULL
                 order by p.publisher_name""" % pattern_match
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publisher', 'Ignore'))
@@ -2857,7 +2853,7 @@ def function73():
                         PrintPublisherRecord(id, name, bgcolor, count, cleanup_id, 73)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publishers with Suspect Unicode Characters Found</h2>")
@@ -2870,11 +2866,11 @@ def function74():
                 and t.title_id=c.record_id and c.report_type=74
                 and c.resolved IS NULL
                 order by t.title_title""" % pattern_match
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Ignore'))
@@ -2885,7 +2881,7 @@ def function74():
                         PrintTitleRecord(id, title, bgcolor, count, cleanup_id, 74)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Titles with Suspect Unicode Characters Found</h2>")
@@ -2898,11 +2894,11 @@ def function75():
                 and p.pub_id=c.record_id and c.report_type=75
                 and c.resolved IS NULL
                 order by p.pub_title""" % pattern_match
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Ignore'))
@@ -2913,7 +2909,7 @@ def function75():
                         PrintPublicationRecord(id, name, bgcolor, count, cleanup_id, 75)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publications with Suspect Unicode Characters Found</h2>")
@@ -2926,11 +2922,11 @@ def function76():
                 and s.series_id=c.record_id and c.report_type=76
                 and c.resolved IS NULL
                 order by s.series_title""" % pattern_match
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', 'Ignore'))
@@ -2941,7 +2937,7 @@ def function76():
                         PrintSeriesRecord(id, name, bgcolor, count, cleanup_id, 76)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Series with Suspect Unicode Characters Found</h2>")
@@ -2954,11 +2950,11 @@ def function77():
                 and p.pub_series_id=c.record_id and c.report_type=77
                 and c.resolved IS NULL
                 order by p.pub_series_name""" % pattern_match
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication Series', 'Ignore'))
@@ -2969,7 +2965,7 @@ def function77():
                         PrintPubSeriesRecord(id, name, bgcolor, count, cleanup_id, 77)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publication Series with Suspect Unicode Characters Found</h2>")
@@ -3001,11 +2997,11 @@ def function79():
                 and p.pub_id=c.record_id and c.report_type=79
                 and c.resolved IS NULL
                 order by p.pub_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', ''))
@@ -3016,7 +3012,7 @@ def function79():
                         PrintPublicationRecord(id, name, bgcolor, count, cleanup_id, 79)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No NOVEL publications with fewer than 80 pages</h2>")
@@ -3035,21 +3031,21 @@ def function80():
                 GROUP BY p.pub_id, p.pub_title, t.title_title
                 HAVING count(*) > 1"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No Duplicate SHORTFICTION in Magazines/Fanzines</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         data = {}
         while record:
                 pub_id = record[0][0]
                 if pub_id not in data:
                         data[pub_id] = []
                 data[pub_id].append(record[0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         PrintTableColumns(('', 'Publication', 'Title(s)', 'Ignore'))
         bgcolor = 1
@@ -3083,11 +3079,11 @@ def function81():
                 and s.series_id=c.record_id
                 and c.report_type=81
                 and c.resolved IS NULL"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', ''))
@@ -3098,7 +3094,7 @@ def function81():
                         PrintSeriesRecord(series_id, series_title, bgcolor, count, cleanup_id, 81)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Series with Slashes and No Spaces</h2>")
@@ -3109,12 +3105,12 @@ def function82():
                 from award_types a, cleanup c
                 where c.record_id=a.award_type_note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Award Types</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Award Type', 'Resolve'))
@@ -3125,7 +3121,7 @@ def function82():
                         PrintAwardTypeRecord(award_type_id, award_type_name, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Award Type Notes</h2>")
@@ -3134,12 +3130,11 @@ def function82():
                 from award_cats a, cleanup c
                 where c.record_id=a.award_cat_note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Award Categories</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Award Category', 'Resolve'))
@@ -3150,7 +3145,7 @@ def function82():
                         PrintAwardCatRecord(award_cat_id, award_cat_name, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Award Category Notes</h2>")
@@ -3159,12 +3154,11 @@ def function82():
                 from awards a, cleanup c
                 where c.record_id=a.award_note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Awards</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Award', 'Resolve'))
@@ -3175,7 +3169,7 @@ def function82():
                         PrintAwardRecord(award_id, award_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Award Notes</h2>")
@@ -3184,12 +3178,11 @@ def function82():
                 from series s, cleanup c
                 where c.record_id=s.series_note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Series</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', 'Resolve'))
@@ -3200,7 +3193,7 @@ def function82():
                         PrintSeriesRecord(series_id, series_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Series Notes</h2>")
@@ -3209,12 +3202,11 @@ def function82():
                 from publishers p, cleanup c
                 where c.record_id=p.note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Publishers</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publisher', 'Resolve'))
@@ -3225,7 +3217,7 @@ def function82():
                         PrintPublisherRecord(publisher_id, publisher_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Publisher Notes</h2>")
@@ -3234,12 +3226,11 @@ def function82():
                 from pub_series p, cleanup c
                 where c.record_id=p.pub_series_note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Publication Series</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication Series', 'Resolve'))
@@ -3250,7 +3241,7 @@ def function82():
                         PrintPubSeriesRecord(pub_series_id, pub_series_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Publication Series Notes</h2>")
@@ -3259,12 +3250,11 @@ def function82():
                 from titles t, cleanup c
                 where c.record_id=t.note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Title Notes</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Resolve'))
@@ -3275,7 +3265,7 @@ def function82():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Title Notes</h2>")
@@ -3284,12 +3274,11 @@ def function82():
                 from titles t, cleanup c
                 where c.record_id=t.title_synopsis
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Synopses</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Resolve'))
@@ -3300,7 +3289,7 @@ def function82():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Synopses</h2>")
@@ -3309,12 +3298,11 @@ def function82():
                 from pubs p, cleanup c
                 where c.record_id=p.note_id
                 and c.report_type=82"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print('<h2>Publications</h2>')
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Resolve'))
@@ -3325,7 +3313,7 @@ def function82():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id, 82, 0)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Invalid Record URLs in Publication Notes</h2>")
@@ -3342,11 +3330,11 @@ def function83():
                 and c.record_id=t.title_id
                 and c.resolved is NULL
                 order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Ignore'))
@@ -3357,7 +3345,7 @@ def function83():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 83)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Serials without Standard Parenthetical Disambiguators Found</h2>")
@@ -3381,11 +3369,11 @@ def function84():
                 and c.report_type = 84
                 and c.resolved IS NULL
                 order by x.title_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Ignore'))
@@ -3396,7 +3384,7 @@ def function84():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 84)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Serials with Potentially Unnecessary Disambiguation Found</h2>")
@@ -3411,12 +3399,12 @@ def function85():
                 and c.report_type = 85
                 order by a.author_lastname"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Canonical Name', 'Legal Name', 'Language'))
@@ -3439,7 +3427,7 @@ def function85():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -3452,11 +3440,11 @@ def function86():
                 and p.pub_id=c.record_id and c.report_type=86
                 and pv.user_id = u.user_id
                 order by u.user_name, p.pub_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Verifiers', 'Publication'))
@@ -3484,7 +3472,7 @@ def function86():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Primary-Verified Publications with Unknown Format</h2>')
@@ -3510,11 +3498,11 @@ def function87():
                 and c.record_id=t.title_id
                 order by t.title_ttype, a.author_lastname, a.author_canonical, t.title_title
                  """
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title Type', 'Author', 'Title', 'Ignore'))
@@ -3544,7 +3532,7 @@ def function87():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Author/Title Language Mismatches Found.</h2>')
@@ -3565,13 +3553,13 @@ def function88():
                 and c.report_type=88
                 and c.resolved IS NULL
                 order by p.pub_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No publications with multiple COVERART titles</h2>")
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', 'Publication', 'Authors', 'Primary Verifiers', 'Ignore'))
@@ -3614,7 +3602,7 @@ def function88():
 
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
         return
 
@@ -3755,13 +3743,13 @@ def function89():
                      and c.record_id = authors.author_id
                      order by authors.author_lastname"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
         print("""<h3>See <a href="%s://%s/index.php?title=Template:AuthorFields:BirthPlace">
                         this template</a> for formatting information.</h3>""" % (PROTOCOL, WIKILOC))
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Name', 'Birthplace', 'Birthdate'))
@@ -3780,7 +3768,7 @@ def function89():
                         print('<td>%s</td>' % birthdate)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No authors with invalid birthplaces</h2>')
@@ -3793,11 +3781,11 @@ def function90():
                 group by series_parent, series_parent_position
                 having count(*) >1
                 """
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Parent Series', 'Position', 'Sub-series'))
@@ -3814,9 +3802,9 @@ def function90():
                                         from series s1, series s2
                                         where s1.series_parent = s2.series_id
                                         and s1.series_id = %s""" % series_id
-                        db.query(query1)
-                        result1 = db.store_result()
-                        record1 = result1.fetch_row()
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query1)
+                        record1 = CNX2.DB_FETCHONE()
                         parent_series_id = record1[0][0]
                         parent_series_name = record1[0][1]
                         print('<td>%s</td>' % ISFDBLink('pe.cgi', parent_series_id, parent_series_name))
@@ -3824,9 +3812,8 @@ def function90():
                         # Retrieve the sub-series position
                         query2 = """select series_parent_position from series where
                                         series_id = %s""" % series_id
-                        db.query(query2)
-                        result2 = db.store_result()
-                        record2 = result2.fetch_row()
+                        CNX2.DB_QUERY(query2)
+                        record2 = CNX2.DB_FETCHONE()
                         parent_position = record2[0][0]
                         print('<td>%d</td>' % parent_position)
                         
@@ -3834,9 +3821,8 @@ def function90():
                         query3 = """select series_id, series_title from series where
                                         series_parent = %s and series_parent_position
                                         = %s""" % (parent_series_id, parent_position)
-                        db.query(query3)
-                        result3 = db.store_result()
-                        record3 = result3.fetch_row()
+                        CNX2.DB_QUERY(query3)
+                        record3 = CNX2.DB_FETCHONE()
                         print('<td>')
                         while record3:
                                 subseries_id = record3[0][0]
@@ -3847,7 +3833,7 @@ def function90():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No duplicate sub-series numbers within a series found</h2>")
@@ -3866,9 +3852,9 @@ def function91():
                    and c.report_type = 91 and c.record_id = t.title_id
                    order by t.title_ttype, a.author_lastname, t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTitlesWithoutLanguage(result)
@@ -3894,15 +3880,15 @@ def function92():
                 and pa.author_id = a.author_id
                 and pv.user_id = u.user_id
                 order by u.user_name, a.author_lastname, p.pub_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 if not user.moderator:
                         print("""<h2>If you find a legitimate Contents-less publication,
                         please post on the Moderator Noticeboard and a moderator will
                         remove it from this report.</h2>""")
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Verifier', 'Authors', 'Publication', 'Ignore'))
@@ -3939,7 +3925,7 @@ def function92():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Primary-Verified Anthologies/Collections without Contents Titles found</h2>')
@@ -4001,11 +3987,11 @@ def function96():
                    )
                    and t.title_id = c.record_id and c.report_type=96
                    order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title'))
@@ -4015,7 +4001,7 @@ def function96():
                         PrintTitleRecord(id, title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No COVERART Titles with a 'Cover: ' Prefix</h2>")
@@ -4031,11 +4017,11 @@ def function97():
                 and c.report_type=97 and c.resolved IS NULL
                 order by ps.pub_series_name"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication Series', 'Ignore'))
@@ -4046,7 +4032,7 @@ def function97():
                         PrintPubSeriesRecord(pub_series_id, pub_series_name, bgcolor, count, cleanup_id, 97)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publication Series with Latin Characters in the Pub. Series Name and non-Latin Title Records Found</h2>")
@@ -4059,19 +4045,19 @@ def function98():
                 and ps1.pub_series_name=ps2.pub_series_name
                 and ps1.pub_series_id=c.record_id and c.report_type=98
                 order by ps1.pub_series_name"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 while record:
                         PrintTableColumns(('', 'Publication Series', ))
                         pub_series_name = record[0][0]
-                        query2 = "select pub_series_id from pub_series where pub_series_name = '%s'" % db.escape_string(pub_series_name)
-                        db.query(query2)
-                        result2 = db.store_result()
-                        record2 = result2.fetch_row()
+                        query2 = "select pub_series_id from pub_series where pub_series_name = '%s'" % CNX.DB_ESCAPE_STRING(pub_series_name)
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        record2 = CNX2.DB_FETCHMANY()
                         bgcolor = 1
                         count = 1
                         while record2:
@@ -4079,8 +4065,8 @@ def function98():
                                 PrintPubSeriesRecord(pub_series_id, pub_series_name, bgcolor, count)
                                 bgcolor ^= 1
                                 count += 1
-                                record2 = result2.fetch_row()
-                        record = result.fetch_row()
+                                record2 = CNX2.DB_FETCHMANY()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -4096,11 +4082,11 @@ def function99():
                 and c.resolved IS NULL
                 order by p.publisher_name"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publisher', 'Problem Pubs', 'Ignore'))
@@ -4121,7 +4107,7 @@ def function99():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publishers with Latin Characters and non-Latin Title Records Found</h2>')
@@ -4165,15 +4151,15 @@ def function100():
                 order by p.pub_title
                 """
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
+        if CNX.DB_NUMROWS() > 0:
                 print("""<h2>See <a href="%s">this Help template</a> and
                          <a href="%s">this Help page</a> for valid price
                          formats</h2>""" % (ISFDBWikiTemplate('PublicationFields:Price'),
                                             ISFDBWikiPage('Help:List of currency symbols')))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Price'))
@@ -4192,7 +4178,7 @@ def function100():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publication Records with Invalid Prices Found</h2>')
@@ -4261,7 +4247,7 @@ def function120():
 def WikiPages(report_number, namespace_number, namespace_name, record_name,
               table, record_id_field, record_title_field, linking_field,
               script, sort_name = ''):
-        import urllib
+        import urllib.request, urllib.parse, urllib.error
         if not sort_name:
                 sort_name = record_title_field
         # First check that Wiki tables exist in this instance of ISFDB
@@ -4277,20 +4263,20 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
                 """ % (table, record_id_field, table, table, record_id_field, int(report_number),
                        int(namespace_number), table, linking_field, table, sort_name)
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No records found</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         records = {}
         while record:
                 record_id = record[0][0]
                 page_title = record[0][1]
                 records[record_id] = page_title
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Step 2:
         query = """select distinct %s from webpages
@@ -4299,14 +4285,13 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
 
         # Step 3:
         #  Retrieve records and delete them from the record ID list built in Step 1
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 record_id = record[0][0]
                 if record_id in records:
                         del records[record_id]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         if not records:
                 print("<h2>No records found</h2>")
@@ -4322,14 +4307,13 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
 
         query = """select %s, %s from %s where %s in (%s) order by %s
                 """ % (record_id_field, record_title_field, table, record_id_field, records_in_clause, sort_name)
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No records found</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', record_name, 'Wiki Link'))
@@ -4344,15 +4328,15 @@ def WikiPages(report_number, namespace_number, namespace_name, record_name,
 
                 print('<td>%d</td>' % int(count))
                 print('<td>%s</td>' % ISFDBLink('%s.cgi' % script, record_id, record_title))
-                print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(wiki_title), wiki_title))
+                print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, Portable_urllib_quote(wiki_title), wiki_title))
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def StrandedWikiPages(report_number, namespace_number, namespace_name):
-        import urllib
+        import urllib.request, urllib.parse, urllib.error
         # First check that Wiki tables exist in this instance of ISFDB
         if not WikiExists():
                 print('<h2>Wiki data does not exist in this instance of ISFDB, so this report is not available.</h2>')
@@ -4364,12 +4348,12 @@ def StrandedWikiPages(report_number, namespace_number, namespace_name):
                         and c.report_type=%d order by mw.page_title
                         """ % (int(namespace_number), int(report_number))
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Wiki Link'))
@@ -4381,11 +4365,11 @@ def StrandedWikiPages(report_number, namespace_number, namespace_name):
                                 print('<tr align=left class="table2">')
 
                         print('<td>%d</td>' % int(count))
-                        print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, urllib.quote(page_title), page_title))
+                        print('<td><a href="%s://%s/index.php/%s:%s">%s</a></td>' % (PROTOCOL, WIKILOC, namespace_name, Portable_urllib_quote(page_title), page_title))
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -4398,11 +4382,11 @@ def function121():
                 and ps.pub_series_id = c.record_id and c.report_type=121
                 order by ps.pub_series_name"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication Series'))
@@ -4412,7 +4396,7 @@ def function121():
                         PrintPubSeriesRecord(pub_series_id, pub_series_name, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Publication Series with Latin Characters in the Pub. Series Name and no Transliterated Names.</h2>")
@@ -4426,11 +4410,11 @@ def function122():
                 and p.publisher_id = c.record_id and c.report_type=122
                 order by p.publisher_name"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publisher'))
@@ -4441,7 +4425,7 @@ def function122():
                         PrintPublisherRecord(publisher_id, publisher_name, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publishers with Latin Characters and no Transliterated Names.</h2>')
@@ -4459,12 +4443,12 @@ def function123():
                 and c.report_type = 123
                 order by a.author_lastname"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Canonical Name', 'Legal Name', 'Language'))
@@ -4487,7 +4471,7 @@ def function123():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No records found</h2>')
@@ -4570,11 +4554,11 @@ def transliteratedTitles(report_id):
         transliteratedTitlesDisplay(query, language)
 
 def transliteratedTitlesDisplay(query, language):
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Authors'))
@@ -4596,7 +4580,7 @@ def transliteratedTitlesDisplay(query, language):
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No %s Titles with no Transliterated Names.</h2>' % language)
@@ -4656,11 +4640,11 @@ def nonLatinTitles(report_id):
 
 def nonLatinTitlesDisplay(report_id, query, language):
         nonModeratorMessage()
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Ignore'))
@@ -4671,7 +4655,7 @@ def nonLatinTitlesDisplay(report_id, query, language):
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, report_id)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No %s Titles with Latin characters.</h2>" % language)
@@ -4697,11 +4681,11 @@ def function144():
                    and c.record_id = x.series_id
                    order by x.series_title"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series Title', 'Other Series Titles', 'Ignore'))
@@ -4720,10 +4704,10 @@ def function144():
                         print('<td>')
                         query2 = """select series_id, series_title
                                     from series
-                                    where series_title like '%s (%%'""" % db.escape_string(series_title)
-                        db.query(query2)
-                        result2 = db.store_result()
-                        record2 = result2.fetch_row()
+                                    where series_title like '%s (%%'""" % CNX.DB_ESCAPE_STRING(series_title)
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        record2 = CNX2.DB_FETCHMANY()
                         count2 = 1
                         while record2:
                                 parenthetical_id = record2[0][0]
@@ -4732,7 +4716,7 @@ def function144():
                                         print('<br>')
                                 print(ISFDBLink('pe.cgi', parenthetical_id, parenthetical_title))
                                 count2 += 1
-                                record2 = result2.fetch_row()
+                                record2 = CNX2.DB_FETCHMANY()
                         
                         if user.moderator:
                                 print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi',
@@ -4741,7 +4725,7 @@ def function144():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Series Names That May Need Disambiguation Found</h2>')
@@ -4759,11 +4743,11 @@ def function145():
                         )
                 order by t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title'))
@@ -4773,7 +4757,7 @@ def function145():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No Romanian titles with s-cedilla or t-cedilla in the title.</h2>")
@@ -4794,11 +4778,11 @@ def function146():
                         )
                 order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication'))
@@ -4808,7 +4792,7 @@ def function146():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No pubs with Romanian titles with s-cedilla or t-cedilla.</h2>")
@@ -4821,11 +4805,11 @@ def function147():
                    and p.pub_id = c.record_id and c.report_type=147
                    order by p.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication'))
@@ -4835,7 +4819,7 @@ def function147():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No pubs with fullwidth yen signs.</h2>")
@@ -4923,11 +4907,11 @@ def transliteratedPubs(report_id):
         transliteratedPubsDisplay(query, language)
 
 def transliteratedPubsDisplay(query, language):
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication'))
@@ -4937,7 +4921,7 @@ def transliteratedPubsDisplay(query, language):
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No %s Publications without Transliterated Titles.</h2>" % language)
@@ -5001,11 +4985,11 @@ def nonLatinPubs(report_id):
 
 def nonLatinPubsDisplay(report_id, query, language):
         nonModeratorMessage()
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Ignore'))
@@ -5016,7 +5000,7 @@ def nonLatinPubsDisplay(report_id, query, language):
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id, report_id)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No %s Publications with Latin characters.</h2>" % language)
@@ -5036,12 +5020,12 @@ def function168():
                    and a.author_id = c.record_id and c.report_type=168
                    order by a.author_lastname"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Author', 'Language'))
@@ -5061,7 +5045,7 @@ def function168():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No records found</h2>")
@@ -5190,11 +5174,11 @@ def function188():
 
 def nonLatinAuthorsDisplay(report_id, query, language):
         nonModeratorMessage()
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title', 'Title Type', 'Authors', 'Ignore'))
@@ -5220,7 +5204,7 @@ def nonLatinAuthorsDisplay(report_id, query, language):
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No %s Titles with a Latin author name.</h2>' % language)
@@ -5263,11 +5247,11 @@ def function189():
                    and c.record_id = x.pub_series_id
                    order by x.pub_series_name"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Pub. Series Title', 'Other Pub. Series Titles', 'Ignore'))
@@ -5285,10 +5269,10 @@ def function189():
 
                         print('<td>')
                         query2 = """select pub_series_id, pub_series_name from pub_series
-                                where pub_series_name like '%s (%%'""" % db.escape_string(pub_series_title)
-                        db.query(query2)
-                        result2 = db.store_result()
-                        record2 = result2.fetch_row()
+                                where pub_series_name like '%s (%%'""" % CNX.DB_ESCAPE_STRING(pub_series_title)
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        record2 = CNX2.DB_FETCHMANY()
                         count2 = 1
                         while record2:
                                 parenthetical_id = record2[0][0]
@@ -5297,14 +5281,14 @@ def function189():
                                         print('<br>')
                                 print(ISFDBLink("pubseries.cgi", parenthetical_id, parenthetical_title))
                                 count2 += 1
-                                record2 = result2.fetch_row()
+                                record2 = CNX2.DB_FETCHMANY()
                         
                         if user.moderator:
                                 print('<td>%s</td>' % ISFDBLink('mod/resolve_cleanup.cgi', '%d+1+189' % int(cleanup_id), 'Ignore this series'))
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publication Series Names That May Need Disambiguation Found</h2>')
@@ -5319,12 +5303,12 @@ def function190():
                    and SUBSTRING(a.award_movie, 1, 2) != 'tt'
                    order by a.award_movie"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Movie/TV Show'))
@@ -5340,7 +5324,7 @@ def function190():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No invalid award records found</h2>")
@@ -5386,12 +5370,12 @@ def function193():
                    order by p.pub_ctype, p.pub_title
                 """
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Pub. Type', 'Publication', 'Ignore'))
@@ -5415,7 +5399,7 @@ def function193():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No outstanding multilingual publications found</h2>')
@@ -5428,11 +5412,11 @@ def function194():
                    and c.report_type = 194
                    order by t.title_ttype, t.title_title"""
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Title Type', 'Title', 'Author'))
@@ -5456,7 +5440,7 @@ def function194():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No titles without a language found.</h2>')
@@ -5474,10 +5458,10 @@ def function195():
                    )
                    and c.record_id = t.title_id and c.report_type = 195
                    order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Title'))
@@ -5489,7 +5473,7 @@ def function195():
                         PrintTitleRecord(title_id, title_title, bgcolor, count)
                         bgcolor = bgcolor ^ 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No Titles with invalid content values found</h2>")
@@ -5503,9 +5487,9 @@ def function196():
                 and c.report_type = 196
                 order by t1.title_title"""
         
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No Juvenile/Non-Juvenile Mismatches.</h2>")
@@ -5514,14 +5498,14 @@ def function196():
         PrintTableColumns(('', 'Title'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = record[0][0]
                 title_title = record[0][1]
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor = bgcolor ^ 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function197():
@@ -5533,9 +5517,9 @@ def function197():
                 and c.report_type = 197
                 order by t1.title_title"""
         
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if not num:
                 print("<h2>No Novelization/Non-Novelization Mismatches.</h2>")
@@ -5544,14 +5528,14 @@ def function197():
         PrintTableColumns(('', 'Title'))
         bgcolor = 1
         count = 1
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = record[0][0]
                 title_title = record[0][1]
                 PrintTitleRecord(title_id, title_title, bgcolor, count)
                 bgcolor = bgcolor ^ 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function198():
@@ -5580,11 +5564,11 @@ def function199():
                    where a.note_id is not null
                    and a.note_id=n.note_id
                    order by a.author_lastname"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Author', 'Old Note', 'New Note'))
@@ -5607,7 +5591,7 @@ def function199():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No author/alternate name language mismatches found.</h2>')
@@ -5706,11 +5690,11 @@ def ids_in_notes(report_number, pattern_match, display_name, allow_ignore = 0, l
                  and c.resolved is NULL
                  order by p.pub_title""" % (like_modifier, pattern_match, int(report_number))
 
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 if allow_ignore:
@@ -5727,7 +5711,7 @@ def ids_in_notes(report_number, pattern_match, display_name, allow_ignore = 0, l
                                 PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print("</table>")
         else:
                 print("<h2>No publications with %s in Notes.</h2>" % display_name)
@@ -5742,10 +5726,10 @@ def function227():
                 and c.resolved is NULL
                 having cnt != 0
                 order by t.title_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Title', 'Ignore'))
@@ -5758,7 +5742,7 @@ def function227():
                         PrintTitleRecord(title_id, title_title, bgcolor, count, cleanup_id, 227)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No titles with mismatched parentheses found</h2>")
@@ -5779,10 +5763,10 @@ def function228():
                 and c.report_type = 228
                 and c.resolved is null
                 order by p.pub_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Publication', 'Ignore'))
@@ -5795,7 +5779,7 @@ def function228():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count, cleanup_id, 228)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No ISBN-less e-publications without an ASIN found</h2>")
@@ -5815,10 +5799,10 @@ def function229():
         query += """) and p.pub_id = c.record_id
                 and c.report_type = 229
                 order by p.pub_title"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableColumns(('', 'Publication'))
@@ -5830,7 +5814,7 @@ def function229():
                         PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table><p>')
         else:
                 print("<h2>No publications with mismatches HTML tags found.</h2>")
@@ -5843,14 +5827,14 @@ def function230():
                 '<a href=\"https:\/\/www.worldcat.org\/oclc\/[[:digit:]]{1,11}"\>[[:digit:]]{1,11}\<\/a>'
                 and p.pub_id = c.record_id
                 and c.report_type = 230"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         pubs = []
         while record:
                 pub_id = int(record[0][0])
                 note_note = record[0][1]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 two_numbers = note_note.lower().split('/oclc/')[1].split('</a>')[0]
                 number_list = two_numbers.split('">')
                 if number_list[0] != number_list[1]:
@@ -5859,10 +5843,9 @@ def function230():
         if pubs:
                 in_clause = list_to_in_clause(pubs)
                 query = "select pub_id, pub_title from pubs where pub_id in (%s) order by pub_title" % in_clause
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
-                num = result.num_rows()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
+                num = CNX.DB_NUMROWS()
                 if num:
                         PrintTableColumns(('', 'Publication'))
                         bgcolor = 1
@@ -5873,7 +5856,7 @@ def function230():
                                 PrintPublicationRecord(pub_id, pub_title, bgcolor, count)
                                 bgcolor ^= 1
                                 count += 1
-                                record = result.fetch_row()
+                                record = CNX.DB_FETCHMANY()
                         print('</table><p>')
         else:
                 print("<h2>No publications with mismatched OCLC URLs in Notes.</h2>")
@@ -5933,12 +5916,12 @@ def function233():
                    group by t.title_id
                    order by p1.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('', 'Publication 1', 'Publication 2', 'Ignore'))
                 count = 1
@@ -5961,7 +5944,7 @@ def function233():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No potential duplicate e-book publications found.</h2>')
@@ -6031,12 +6014,12 @@ def function238():
                 and c.report_type = 238
                 and t1.title_id = c.record_id
                 order by t1.title_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('#', 'Translated Title', 'Tr. Language', 'Original Title', 'Orig. Language'))
                 bgcolor = 1
                 count = 1
@@ -6069,7 +6052,7 @@ def function238():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h3>No translations without notes found for less common languages</h3>')
@@ -6090,12 +6073,12 @@ def function239():
                 and c.report_type = 239
                 and t1.title_id = c.record_id
                 order by l1.lang_name, t1.title_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('#', 'Translated Title', 'Trans. Language', 'Original Title', 'Orig. Language'))
                 bgcolor = 1
                 count = 1
@@ -6120,7 +6103,7 @@ def function239():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h3>No Translations without the Tr Template in Notes found.</h3>')
@@ -6350,11 +6333,11 @@ def function252():
             and i.identifier_type_id = it.identifier_type_id
             and it.identifier_type_name = 'OCLC/WorldCat')
             order by p.pub_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 PrintTableColumns(('#', 'Publication', 'ISBN link to OCLC'))
                 count = 1
@@ -6372,7 +6355,7 @@ def function252():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publications with an OCLC Verification, an ISBN and no OCLC External ID.</h2>')
@@ -6413,12 +6396,12 @@ def function257():
                   (select 1 from trans_series ts
                   where ts.series_id = s.series_id)
                  order by s.series_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series Name',))
@@ -6428,7 +6411,7 @@ def function257():
                         PrintSeriesRecord(series_id, series_name, bgcolor, count)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Series with non-Latin Characters in the Series Name without a Transliterated Name found</h2>')
@@ -6471,11 +6454,11 @@ def function263():
                    """ % languages_in_clause
 
         nonModeratorMessage()
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', 'Ignore'))
@@ -6486,7 +6469,7 @@ def function263():
                         PrintSeriesRecord(series_id, series_title, bgcolor, count, cleanup_id, 263)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No matching Series with Latin characters.</h2>')
@@ -6550,12 +6533,13 @@ def function273():
         MismatchesInNotes(query, 'Mismatched Braces')
 
 def function274():
+        CNX = MYSQL_CONNECTOR()
         query = """select cleanup.record_id, notes.note_id
                 from cleanup, notes where """
         replace_string = "REPLACE(lower(note_note), '{{break', '')"
         for template in SQLLoadAllTemplates():
                 query += "REPLACE("
-                replace_string += ", '{{%s', '')" % db.escape_string(template.lower())
+                replace_string += ", '{{%s', '')" % CNX.DB_ESCAPE_STRING(template.lower())
         query += "%s like '%%{{%%'" % replace_string
         query += """ and cleanup.record_id=notes.note_id
                 and cleanup.report_type=274"""
@@ -6678,12 +6662,12 @@ def function288():
                 and c.report_type = 288
                 order by p.pub_title""" % regexp
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Page Count'))
@@ -6701,7 +6685,7 @@ def function288():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No Publications with Invalid Page Numbers</h2>')
@@ -6816,11 +6800,11 @@ def function295():
                 and c.record_id = p.pub_id
                 and c.report_type = 295
                 order by p.pub_year, p.pub_title"""
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Publication', 'Date', 'Questionable Field(s)'))
@@ -6842,7 +6826,7 @@ def function295():
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No publications with the WatchPrePub template</h2>')
@@ -7226,9 +7210,9 @@ def function327():
                 and SUBSTRING_INDEX(SUBSTRING_INDEX(SUBSTRING_INDEX(author_image,'//',2),'//',-1),'/',1) not like '%%sf-encyclopedia.com'
                 and (%s)""" % subquery
         query += ' order by author_canonical'
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         if not record:
                 print('<h2>No records found</h2>')
                 return
@@ -7245,7 +7229,7 @@ def function327():
                 print('<td><a href="%s">%s</a></td>' % (ISFDBText(record[0][2]), ISFDBText(record[0][2])))
                 print('</tr>')
                 bgcolor ^= 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def function328():
@@ -7346,12 +7330,12 @@ def translated_report(report_id):
                 and c.report_type = %d
                 and t1.title_id = c.record_id
                 order by t1.title_title""" % (language_id, report_id)
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num > 0:
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 PrintTableColumns(('#', 'Translated Title', 'Original Title', 'Orig. Language'))
                 bgcolor = 1
                 count = 1
@@ -7378,7 +7362,7 @@ def translated_report(report_id):
                         print('</tr>')
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h3>No %s translations without notes found.</h3>' % LANGUAGES[language_id])
@@ -7406,11 +7390,11 @@ def nonLatinSeries(report_id):
 
 def nonLatinSeriesDisplay(report_id, query, language):
         nonModeratorMessage()
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if result.num_rows() > 0:
-                record = result.fetch_row()
+        if CNX.DB_NUMROWS() > 0:
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 PrintTableColumns(('', 'Series', 'Ignore'))
@@ -7421,7 +7405,7 @@ def nonLatinSeriesDisplay(report_id, query, language):
                         PrintSeriesRecord(series_id, series_title, bgcolor, count, cleanup_id, report_id)
                         bgcolor ^= 1
                         count += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 print('</table>')
         else:
                 print('<h2>No %s Series with Latin characters.</h2>' % language)
@@ -7438,21 +7422,21 @@ def containers_grid(report_id, script = 'empty_containers'):
                    where report_type = %d
                    and resolved IS NULL
                    group by record_id_2""" % report_id
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 count = record[0][0]
                 month = record[0][1]
                 if not month:
                         unknown += count
                 else:
-                        year = month/100
-                        decade = year/10
+                        year = int(month/100)
+                        decade = int(year/10)
                         years[year] = years.get(year, 0) + count
                         decades[decade] = decades.get(decade, 0) + count
                         months[month] = months.get(month, 0) + count
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         print('<h3 class="centered">Since 2000: By Year and Month</h3>')
         print('<table class="seriesgrid">')
@@ -7524,14 +7508,14 @@ def function9999():
                 and not exists(select 1 from pseudonyms p
                 where c.record_id_2=p.pseudonym)
                 order by a1.author_canonical"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No Suspected Duplicate Authors</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', 'Author 1', 'Author 2', 'Ignore'))
@@ -7553,7 +7537,7 @@ def function9999():
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 def Nightly_html(report_id, table, note_field, record_id_field, record_title_field, cgi_script):
@@ -7574,14 +7558,14 @@ def Nightly_html(report_id, table, note_field, record_id_field, record_title_fie
                            and c.report_type = %s
                         """ % (record_id_field, record_title_field, table, ui.badHtmlClause('n', 'note_note'),
                                note_field, record_id_field, report_id)
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
-        if not result.num_rows():
+        if not CNX.DB_NUMROWS():
                 print("<h2>No invalid HTML for records of this type.</h2>")
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         PrintTableColumns(('', 'Record', 'Invalid HTML starts close to'))
@@ -7605,7 +7589,7 @@ def Nightly_html(report_id, table, note_field, record_id_field, record_title_fie
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
 
@@ -7733,7 +7717,7 @@ def PrintAwardRecord(award_id, award_title, bgcolor, count, cleanup_id = 0, repo
 
 def PrintTitlesWithoutLanguage(result):
         PrintTableColumns(('', 'Title Type', 'Author', 'Title'))
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         bgcolor = 1
         count = 1
         while record:
@@ -7756,7 +7740,7 @@ def PrintTitlesWithoutLanguage(result):
                 print('</tr>')
                 bgcolor ^= 1
                 count += 1
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         print('</table>')
 
         

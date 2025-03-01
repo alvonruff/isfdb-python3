@@ -42,9 +42,9 @@ class ExternalIdRanges:
                         where identifier_type_id in (%s)
                         and identifier_value regexp '^[[:digit:]]{1,30}$'
                         order by CAST(identifier_value as UNSIGNED)""" % self.in_clause
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         type_number = record[0][0]
                         type_name = self.types_with_ranges[type_number]
@@ -52,7 +52,7 @@ class ExternalIdRanges:
                         if type_name not in self.id_values:
                                 self.id_values[type_name] = []
                         self.id_values[type_name].append(id_value)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def create_ranges(self):
                 for type_name in sorted(self.id_values):

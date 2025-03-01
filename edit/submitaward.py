@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from awardClass import *
 from isfdb import *
 from isfdblib import *
@@ -31,8 +30,9 @@ def EvalField(Label, NewUsed, OldUsed, NewValue, OldValue):
         elif (NewUsed == 0) and OldUsed:
                 NewValue = ""
                 update = 1
+        CNX = MYSQL_CONNECTOR()
         if update:
-                retval = "    <%s>%s</%s>\n" % (Label, db.escape_string(NewValue), Label)
+                retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:
                 return("", 0)
@@ -55,12 +55,13 @@ if __name__ == '__main__':
         old = awards(db)
         old.loadXML(int(new.award_id))
 
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AwardUpdate>\n"
         update_string += "    <Record>%d</Record>\n" % (int(new.award_id))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.award_title)))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.award_title)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
 
         changes = 0
 
@@ -106,7 +107,7 @@ if __name__ == '__main__':
                 update_string += "    <AwardAuthors>\n"
                 counter = 0
                 while counter < new.num_authors:
-                        update_string += "      <AwardAuthor>%s</AwardAuthor>\n" % (db.escape_string(new.award_authors[counter]))
+                        update_string += "      <AwardAuthor>%s</AwardAuthor>\n" % (CNX.DB_ESCAPE_STRING(new.award_authors[counter]))
                         counter += 1
                 update_string += "    </AwardAuthors>\n"
 
@@ -115,7 +116,7 @@ if __name__ == '__main__':
         changes += changed
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
 
         update_string += "  </AwardUpdate>\n"
         update_string += "</IsfdbSubmission>\n"

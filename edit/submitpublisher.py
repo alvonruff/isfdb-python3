@@ -12,7 +12,6 @@
         
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -39,12 +38,13 @@ if __name__ == '__main__':
         old.load(int(new.publisher_id))
         
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <PublisherUpdate>\n"
         update_string += "    <Record>%d</Record>\n" % (int(new.publisher_id))
-        update_string += "    <Subject>%s</Subject>\n" % (db.escape_string(XMLescape(old.publisher_name)))
-        update_string += "    <Submitter>%s</Submitter>\n" % (db.escape_string(XMLescape(submission.user.name)))
+        update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.publisher_name)))
+        update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         
         (changes, update) = submission.CheckField(new.used_name, old.used_name, new.publisher_name, old.publisher_name, 'Name', 0)
         if changes:
@@ -63,7 +63,7 @@ if __name__ == '__main__':
                 update_string += update
 
         if 'mod_note' in new.form:
-                update_string += "    <ModNote>%s</ModNote>\n" % (db.escape_string(XMLescape(new.form['mod_note'].value)))
+                update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
                 
         update_string += "  </PublisherUpdate>\n"
         update_string += "</IsfdbSubmission>\n"
