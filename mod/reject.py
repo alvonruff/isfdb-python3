@@ -14,7 +14,6 @@ from __future__ import print_function
 import string
 import sys
 import cgi
-import MySQLdb
 from isfdb import *
 from common import *
 from isfdblib import *
@@ -57,11 +56,12 @@ if __name__ == '__main__':
         if not reviewer_is_moderator and not SelfCreated(sub_id, reviewerid):
                 PrintError("This submission wasn't created by you. Self-approvers can only reject their own submissions.")
 
+        CNX = MYSQL_CONNECTOR()
         update = """update submissions set sub_state='R', sub_reason='%s',
                     sub_reviewer='%d', sub_reviewed=NOW(), sub_holdid=0
-                    where sub_id=%d""" % (db.escape_string(reason), int(reviewerid), sub_id)
+                    where sub_id=%d""" % (CNX.DB_ESCAPE_STRING(reason), int(reviewerid), sub_id)
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         print("</ul><p><hr>")
         

@@ -45,7 +45,8 @@ if __name__ == '__main__':
                                 insert = "insert into pseudonyms(author_id, pseudonym) values(%d,%d)" % (int(parent), int(Record))
                                 print("<li> ", insert)
                                 if debug == 0:
-                                        db.query(insert)
+                                        CNX = MYSQL_CONNECTOR()
+                                        CNX.DB_QUERY(insert)
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
         except:

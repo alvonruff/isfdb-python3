@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import cgi
 import sys
-import MySQLdb
 import traceback
 from isfdb import *
 from isfdblib import *
@@ -27,17 +26,18 @@ debug = 0
 
 
 def UpdateColumn(doc, tag, column, id):
+        CNX = MYSQL_CONNECTOR()
         if TagPresent(doc, tag):
                 value = GetElementValue(doc, tag)
                 if value:
                         value = XMLunescape(value)
-                        value = db.escape_string(value)
+                        value = CNX.DB_ESCAPE_STRING(value)
                         update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
                 else:
                         update = "update titles set %s=NULL where title_id=%s" % (column, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 
 if __name__ == '__main__':
@@ -54,6 +54,7 @@ if __name__ == '__main__':
         print("<hr>")
         print("<ul>")
 
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('TitleUpdate'):
@@ -83,26 +84,26 @@ if __name__ == '__main__':
                                         update = "update titles set title_seriesnum=NULL where title_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                         
                                 if len(series_list) >1:
                                         # The secondary series number is not necessarily an integer, e.g. "05" is allowed
-                                        update = "update titles set title_seriesnum_2='%s' where title_id=%d" % (db.escape_string(series_list[1]), int(Record))
+                                        update = "update titles set title_seriesnum_2='%s' where title_id=%d" % (CNX.DB_ESCAPE_STRING(series_list[1]), int(Record))
                                 else:
                                         update = "update titles set title_seriesnum_2=NULL where title_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                         else:
                                 update = "update titles set title_seriesnum=NULL where title_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 update = "update titles set title_seriesnum_2=NULL where title_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
 
                 ##########################################################
@@ -116,7 +117,7 @@ if __name__ == '__main__':
                                         update = "update titles set title_language='%d' where title_id=%s" % (int(lang_id), Record)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # Webpages
@@ -128,7 +129,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = "delete from webpages where title_id=%d" % int(Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         ##########################################################
                         # Insert the new webpages
@@ -136,9 +137,9 @@ if __name__ == '__main__':
                         webpages = doc.getElementsByTagName('Webpage')
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                                update = "insert into webpages(title_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
+                                update = "insert into webpages(title_id, url) values(%d, '%s')" % (int(Record), CNX.DB_ESCAPE_STRING(address))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # Transliterated Titles
@@ -150,7 +151,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = "delete from trans_titles where title_id=%d" % int(Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         ##########################################################
                         # Insert the new transliterated titles
@@ -159,9 +160,9 @@ if __name__ == '__main__':
                         for trans_title in trans_titles:
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_titles(title_id, trans_title_title)
-                                            values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
+                                            values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(title_value))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # NOTE
@@ -173,45 +174,43 @@ if __name__ == '__main__':
                                 # Check to see if this title already has a note
                                 #################################################
                                 query = "select note_id from titles where title_id=%s and note_id is not null and note_id<>'0';" % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
-                                        update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
+                                        update = "update notes set note_note='%s' where note_id=%d" % (CNX.DB_ESCAPE_STRING(value), note_id)
                                         update2 = "update notes set note_note='%s' where note_id=%d" % (value, note_id)
                                         print("<li> ", update2)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
                                 else:
-                                        insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
+                                        insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(value)
                                         insert2 = "insert into notes(note_note) values('%s');" % value
                                         print("<li> ", insert2)
                                         if debug == 0:
-                                                db.query(insert)
-                                        retval = db.insert_id()
+                                                CNX.DB_QUERY(insert)
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update titles set note_id='%d' where title_id=%s" % (retval, Record)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
                         else:
                                 #################################################
                                 # An empty note submission was made
                                 #################################################
                                 query = 'select note_id from titles where title_id=%s and note_id is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
                                         print("<li> ", delete)
                                         if debug == 0:
-                                                db.query(delete)
+                                                CNX.DB_QUERY(delete)
                                         update = "update titles set note_id=NULL where title_id=%s" % (Record)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # SYNOPSIS
@@ -220,46 +219,44 @@ if __name__ == '__main__':
                         value = GetElementValue(merge, 'Synopsis')
                         if value:
                                 query = 'select title_synopsis from titles where title_id=%s and title_synopsis is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
-                                        update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
+                                        update = "update notes set note_note='%s' where note_id=%d" % (CNX.DB_ESCAPE_STRING(value), note_id)
                                         update2 = "update notes set note_note='%s' where note_id=%d" % (value, note_id)
                                         print("<li> ", update2)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
                                 else:
-                                        insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
+                                        insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(value)
                                         insert2 = "insert into notes(note_note) values('%s');" % value
                                         print("<li> ", insert2)
                                         if debug == 0:
-                                                db.query(insert)
+                                                CNX.DB_QUERY(insert)
 
-                                        retval = db.insert_id()
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update titles set title_synopsis='%d' where title_id=%s" % (retval, Record)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
                         else:
                                 #################################################
                                 # An empty synopsis submission was made
                                 #################################################
                                 query = 'select title_synopsis from titles where title_id=%s and title_synopsis is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
                                         print("<li> ", delete)
                                         if debug == 0:
-                                               db.query(delete)
-                                               update = "update titles set title_synopsis=NULL where title_id=%s" % (Record)
-                                               print("<li> ", update)
+                                                CNX.DB_QUERY(delete)
+                                        update = "update titles set title_synopsis=NULL where title_id=%s" % (Record)
+                                        print("<li> ", update)
                                         if debug == 0:
-                                               db.query(update)
+                                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # SERIES
@@ -271,33 +268,31 @@ if __name__ == '__main__':
                                 # STEP 1 - Get the old series_id from the record
                                 ################################################
                                 query = 'select series_id from titles where title_id=%s and series_id is not null' % (Record)
-                                db.query(query)
-                                res = db.store_result()
+                                CNX.DB_QUERY(query)
                                 OldSeries = -1
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         OldSeries = record[0][0]
 
                                 ################################################
                                 # STEP 2 - Get the ID for the new series
                                 ################################################
-                                query = "select series_id from series where series_title='%s';" % (db.escape_string(value))
+                                query = "select series_id from series where series_title='%s';" % (CNX.DB_ESCAPE_STRING(value))
                                 print("<li> ", query)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         NewSeries = record[0][0]
                                 else:
-                                        query = "insert into series(series_title) values('%s');" % (db.escape_string(value))
+                                        query = "insert into series(series_title) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", query)
                                         if debug == 0:
                                                 try:
-                                                        db.query(query)
-                                                except Exception, e:
-                                                        print("db.query FAILED")
+                                                        CNX.DB_QUERY(query)
+                                                except Exception as e:
+                                                        print("CNX.DB_QUERY FAILED")
                                                         traceback.print_exc()
-                                        NewSeries = db.insert_id()
+                                        NewSeries = CNX.DB_INSERT_ID()
 
                                 ################################################
                                 # STEP 3 - Update the title record
@@ -305,22 +300,21 @@ if __name__ == '__main__':
                                 update = "update titles set series_id='%d' where title_id=%s" % (NewSeries, Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                                 ################################################
                                 # STEP 4 - Check to see if old series_id is still referenced
                                 ################################################
                                 #if OldSeries > -1:
                                 #        query = 'select COUNT(series_id) from titles where series_id=%d' % (int(OldSeries))
-                                #        db.query(query)
-                                #        res = db.store_result()
-                                #        record = res.fetch_row()
+                                #        CNX.DB_QUERY(query)
+                                #        record = CNX.DB_FETCHONE()
                                 #        if record[0][0] == 0:
                                 #                # STEP 5 - Delete old series if no longer referenced
                                 #                query = 'delete from series where series_id=%d' % (int(OldSeries))
                                 #                print "<li> ", query
                                 #                if debug == 0:
-                                #                        db.query(query)
+                                #                        CNX.DB_QUERY(query)
                         else:
                                 ################################################
                                 # Otherwise, wipe out the series_id and 
@@ -329,15 +323,15 @@ if __name__ == '__main__':
                                 update = "update titles set series_id=NULL where title_id=%s" % (Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 update = "update titles set title_seriesnum=NULL where title_id=%s" % (Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 update = "update titles set title_seriesnum_2=NULL where title_id=%s" % (Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # AUTHORS

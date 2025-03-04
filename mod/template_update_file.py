@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff 
+#     (C) COPYRIGHT 2022-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,18 +23,20 @@ reviewer      = 0
 
 def UpdateColumn(doc, tag, column, record_id):
         if TagPresent(doc, tag):
-                query = "select %s from templates where template_id = %d" % (column, record_id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                # Why is this code block here? The record value is not used
+                #query = "select %s from templates where template_id = %d" % (column, record_id)
+                #CNX = MYSQL_CONNECTOR()
+                #CNX.DB_QUERY(query)
+                #record = CNX.DB_FETCHMANY()
 
+                CNX = MYSQL_CONNECTOR()
                 value = GetElementValue(doc, tag)
                 if value:
-                        update = "update templates set %s = '%s' where template_id = %d" % (column, db.escape_string(value), record_id)
+                        update = "update templates set %s = '%s' where template_id = %d" % (column, CNX.DB_ESCAPE_STRING(value), record_id)
                 else:
                         update = "update templates set %s = NULL where template_id = %d" % (column, record_id)
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 if __name__ == '__main__':
 

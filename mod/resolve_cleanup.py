@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus 
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -33,5 +33,6 @@ if __name__ == '__main__':
                 update = 'delete from cleanup where cleanup_id=%d' % cleanup_id
         else:
                 update = 'update cleanup set resolved=1 where cleanup_id=%d' % cleanup_id
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
         ISFDBLocalRedirect('edit/%s' % return_location)

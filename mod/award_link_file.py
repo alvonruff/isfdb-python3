@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import cgi
 import sys
-import MySQLdb
 import string
 from isfdb import *
 from isfdblib import *
@@ -52,16 +51,17 @@ def DoSubmission(db, submission):
                 else:
                         DoError('No valid award record specified')
 
+                CNX = MYSQL_CONNECTOR()
                 update = "delete from title_awards where award_id='%d';" % award_id
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 if int(title_id):
                         update = "insert into title_awards(title_id, award_id) values(%d, %d);" % (title_id, award_id)
                         print("<li> ", update)
                         if debug == 0:
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 if debug == 0:

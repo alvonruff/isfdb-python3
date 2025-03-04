@@ -24,16 +24,17 @@ debug = 0
 
 def UpdateColumn(doc, tag, column, id):
         if TagPresent(doc, tag):
+                CNX = MYSQL_CONNECTOR()
                 value = GetElementValue(doc, tag)
                 if value:
                         value = XMLunescape(value)
-                        value = db.escape_string(value)
+                        value = CNX.DB_ESCAPE_STRING(value)
                         update = "update awards set %s='%s' where award_id=%s" % (column, value, id)
                 else:
                         update = "update awards set %s=NULL where award_id=%s" % (column, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 
 if __name__ == '__main__':
@@ -63,6 +64,8 @@ if __name__ == '__main__':
                 UpdateColumn(merge, 'AwardLevel',    'award_level', Record)
                 UpdateColumn(merge, 'AwardMovie',    'award_movie', Record)
 
+                CNX = MYSQL_CONNECTOR()
+
                 ##########################################################
                 # AUTHORS
                 ##########################################################
@@ -78,10 +81,10 @@ if __name__ == '__main__':
                                         austring += "+"
                                 austring += data
                                 counter += 1
-                        update = "update awards set award_author='%s' where award_id=%s" % (db.escape_string(austring), Record)
+                        update = "update awards set award_author='%s' where award_id=%s" % (CNX.DB_ESCAPE_STRING(austring), Record)
                         print("<li> ", update)
                         if debug == 0:
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 if TagPresent(merge, 'AwardNote'):
                         value = GetElementValue(merge, 'AwardNote')
@@ -90,39 +93,37 @@ if __name__ == '__main__':
                                 # Check to see if this award already has a note
                                 ############################################################
                                 query = "select award_note_id from awards where award_id=%d and award_note_id is not null and award_note_id<>'0';" % int(Record)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         print('<li> note_id:', note_id)
-                                        update = "update notes set note_note='%s' where note_id='%d'" % (db.escape_string(value), int(note_id))
+                                        update = "update notes set note_note='%s' where note_id='%d'" % (CNX.DB_ESCAPE_STRING(value), int(note_id))
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 else:
-                                        insert = "insert into notes(note_note) values('%s');" % (db.escape_string(value))
+                                        insert = "insert into notes(note_note) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", insert)
-                                        db.query(insert)
-                                        retval = db.insert_id()
+                                        CNX.DB_QUERY(insert)
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update awards set award_note_id='%d' where award_id=%d" % (retval, int(Record))
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
                                 ##############################################################
                                 # An empty note submission was made - delete the previous note
                                 ##############################################################
                                 query = "select award_note_id from awards where award_id=%d and award_note_id is not null and award_note_id<>'0';" % int(Record)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
                                         print("<li> ", delete)
-                                        db.query(delete)
+                                        CNX.DB_QUERY(delete)
                                         update = "update awards set award_note_id=NULL where award_id=%d" % int(Record)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)

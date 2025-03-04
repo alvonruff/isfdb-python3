@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import cgi
 import sys
-import MySQLdb
 import string
 from isfdb import *
 from isfdblib import *
@@ -25,9 +24,10 @@ from library import *
 
 def UpdateTitle(TitleRecord, column, value):
         if value:
-                update = "update titles set %s='%s' where title_id=%d" % (column, db.escape_string(value), int(TitleRecord))
+                CNX = MYSQL_CONNECTOR()
+                update = "update titles set %s='%s' where title_id=%d" % (column, CNX.DB_ESCAPE_STRING(value), int(TitleRecord))
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def doUnmerge(doc):
         # Perform the actual unmerge
@@ -55,6 +55,7 @@ def doUnmerge(doc):
                         unmergeList.append(record)
 
         unmergedTitles = []
+        CNX = MYSQL_CONNECTOR()
         for pub in pubs:
                 if pub[PUB_PUBID] not in unmergeList:
                         continue
@@ -63,9 +64,8 @@ def doUnmerge(doc):
                 #################################################
                 query = "select pubc_page from pub_content where title_id=%s and pub_id=%s" % (Record, pub[PUB_PUBID])
                 print("<li> ", query)
-                db.query(query)
-                pcresult = db.store_result()
-                pcrecord = pcresult.fetch_row()
+                CNX.DB_QUERY(query)
+                pcrecord = CNX.DB_FETCHONE()
                 try:
                         pagenum = pcrecord[0][0]
                 except:
@@ -76,7 +76,7 @@ def doUnmerge(doc):
                 #################################################
                 query = "delete from pub_content where title_id=%s and pub_id=%s" % (Record, pub[PUB_PUBID])
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 #################################################
                 # STEP 3 - Create a new title record
@@ -85,10 +85,10 @@ def doUnmerge(doc):
                         newTitle = title[TITLE_TITLE]
                 else:
                         newTitle = pub[PUB_TITLE]
-                query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (db.escape_string(newTitle), pub[PUB_YEAR], title[TITLE_TTYPE])
+                query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (CNX.DB_ESCAPE_STRING(newTitle), pub[PUB_YEAR], title[TITLE_TTYPE])
                 print("<li> ", query)
-                db.query(query)
-                TitleRecord = db.insert_id()
+                CNX.DB_QUERY(query)
+                TitleRecord = CNX.DB_INSERT_ID()
 
                 UpdateTitle(TitleRecord, 'title_storylen', title[TITLE_STORYLEN])
                 UpdateTitle(TitleRecord, 'title_content', title[TITLE_CONTENT])
@@ -102,7 +102,7 @@ def doUnmerge(doc):
                 if title[TITLE_LANGUAGE]:
                         query = "update titles set title_language=%d where title_id=%d" % (title[TITLE_LANGUAGE], TitleRecord)
                         print("<li> ", query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                 
                 # If this is a REVIEW and it was linked to its reviewed Title, then link the new Review record to the same reviewed Title
                 if title[TITLE_TTYPE] == 'REVIEW':
@@ -110,7 +110,7 @@ def doUnmerge(doc):
                         if reviewed_title_id:
                                 update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (int(reviewed_title_id), int(TitleRecord))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 #################################################
                 # STEP 4 - Add author entries to canonical_author
@@ -121,11 +121,11 @@ def doUnmerge(doc):
                         query += "select %d, author_id, ca_status from canonical_author " % (int(TitleRecord))
                         query += "where title_id = %d "  % (int(Record))
                         print("<li> ", query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                 else:
                         query = "insert into canonical_author(title_id, author_id, ca_status) select %d, author_id, 1 from pub_authors pa where pa.pub_id = %d" % (int(TitleRecord), int(pub[PUB_PUBID]))
                         print("<li> ", query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
         
                 #################################################
                 # STEP 5 - Add mapping to pub_content
@@ -135,7 +135,7 @@ def doUnmerge(doc):
                 else:
                         query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (pub[PUB_PUBID], int(TitleRecord), pagenum) 
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
                 print("<li> ##########################################################")
         return (merge, Record, unmergedTitles)
 

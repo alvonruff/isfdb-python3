@@ -54,10 +54,11 @@ if __name__ == '__main__':
         #####################################
         # Insert into the award types table
         #####################################
-        insert = "insert into award_types(award_type_name, award_type_by, award_type_for, award_type_short_name, award_type_poll, award_type_non_genre) values('%s', '%s', '%s', '%s', '%s', '%s')" % (db.escape_string(FullName), db.escape_string(AwardedBy), db.escape_string(AwardedFor), db.escape_string(ShortName), db.escape_string(Poll), db.escape_string(NonGenre))
+        CNX = MYSQL_CONNECTOR()
+        insert = "insert into award_types(award_type_name, award_type_by, award_type_for, award_type_short_name, award_type_poll, award_type_non_genre) values('%s', '%s', '%s', '%s', '%s', '%s')" % (CNX.DB_ESCAPE_STRING(FullName), CNX.DB_ESCAPE_STRING(AwardedBy), CNX.DB_ESCAPE_STRING(AwardedFor), CNX.DB_ESCAPE_STRING(ShortName), CNX.DB_ESCAPE_STRING(Poll), CNX.DB_ESCAPE_STRING(NonGenre))
         print("<li> ", insert)
-        db.query(insert)
-        award_type_id = int(db.insert_id())
+        CNX.DB_QUERY(insert)
+        award_type_id = int(CNX.DB_INSERT_ID())
 
         #####################################
         # NOTE
@@ -65,13 +66,13 @@ if __name__ == '__main__':
         note_id = ''
         note = GetElementValue(merge, 'Note')
         if note:
-                insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
+                insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(note)
                 print("<li> ", insert)
-                db.query(insert)
-                note_id = int(db.insert_id())
+                CNX.DB_QUERY(insert)
+                note_id = int(CNX.DB_INSERT_ID())
                 update = "update award_types set award_type_note_id = %d where award_type_id=%d" % (note_id, award_type_id)
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         ##########################################################
         # Insert the new webpages
@@ -82,9 +83,9 @@ if __name__ == '__main__':
                 webpages = doc.getElementsByTagName('Webpage')
                 for webpage in webpages:
                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                        update = "insert into webpages(award_type_id, url) values(%d, '%s')" % (award_type_id, db.escape_string(address))
+                        update = "insert into webpages(award_type_id, url) values(%d, '%s')" % (award_type_id, CNX.DB_ESCAPE_STRING(address))
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
         markIntegrated(db, submission, award_type_id)
 

@@ -30,14 +30,14 @@ if __name__ == '__main__':
 
         # Retrieve submission data
         query = "select * from submissions where sub_id=%d" % int(sub_id)
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS() == 0:
                 print('<h3>Specified submission ID does not exist</h3>')
                 PrintPostMod()
                 sys.exit(0)
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHONE()
         # If the submission is on hold, determine who the holding moderator is
         holder_id = record[0][SUB_HOLDID]
         if holder_id:
@@ -71,7 +71,7 @@ if __name__ == '__main__':
                 where sub_id=%d""" % (int(reviewerid), int(sub_id))
         print('<ul>')
         print('<li> ', update)
-        db.query(update)
+        CNX.DB_QUERY(update)
         print('</ul>')
         print('<p>')
         PrintSubmissionLinks(sub_id, reviewerid)

@@ -32,5 +32,6 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Submission is currently on hold by %s' % WikiLink(SQLgetUserName(hold_id)))
 
         update = "update submissions set sub_holdid=0 where sub_id=%d" % submission
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
         ISFDBLocalRedirect('mod/submission_review.cgi?%d' % submission)

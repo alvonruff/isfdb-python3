@@ -37,6 +37,7 @@ if __name__ == '__main__':
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
 
+        CNX = MYSQL_CONNECTOR()
         if doc.getElementsByTagName('AwardDelete'):
                 merge = doc.getElementsByTagName('AwardDelete')
                 Record = GetElementValue(merge, 'Record')
@@ -49,7 +50,7 @@ if __name__ == '__main__':
                 ##########################################################
                 query = "delete from title_awards where award_id=%d" % current.award_id
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 ##############################################################
                 # Delete note
@@ -57,14 +58,14 @@ if __name__ == '__main__':
                 if current.award_note_id:
                         delete = "delete from notes where note_id=%d" % int(current.award_note_id)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                 ##########################################################
                 # Delete the award itself
                 ##########################################################
                 query = "delete from awards where award_id=%d" % current.award_id
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)

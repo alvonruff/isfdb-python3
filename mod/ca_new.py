@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import cgi
 import sys
-import MySQLdb
 import string
 import random
 from isfdb import *
@@ -27,9 +26,9 @@ debug = 0
 
 def Unique(db, tag):
         query = "select pub_tag from pubs where pub_tag='%s'" % (tag)
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
                 return 0
         else:
                 return 1
@@ -88,36 +87,38 @@ def CreateTag(db, title, year):
 
 
 def UpdatePubColumn(doc, tag, column, id):
+        CNX = MYSQL_CONNECTOR()
         value = GetElementValue(doc, tag)
         if TagPresent(doc, tag):
                 value = XMLunescape(value)
-                value = db.escape_string(value)
+                value = CNX.DB_ESCAPE_STRING(value)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, value, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
         if tag == 'Tag':
                 title = GetElementValue(doc, 'Title')
                 title = XMLunescape(title)
-                title = db.escape_string(title)
+                title = CNX.DB_ESCAPE_STRING(title)
                 year = GetElementValue(doc, 'Year')
                 year = year[:4]
                 tag = CreateTag(db, title, year)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, tag, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 def UpdateTitleColumn(doc, tag, column, id):
+        CNX = MYSQL_CONNECTOR()
         value = GetElementValue(doc, tag)
         if TagPresent(doc, tag):
                 value = XMLunescape(value)
-                value = db.escape_string(value)
+                value = CNX.DB_ESCAPE_STRING(value)
                 if column == 'title_ttype' and value == 'CHAPBOOK':
                         update = "update titles set title_storylen=NULL where title_id=%s" % (id)
                         print("<li> ", update)
                         if debug == 0:
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                         update = "update titles set title_ttype='SHORTFICTION' where title_id=%s" % (id)
                 if column == 'title_ttype' and value == 'MAGAZINE':
                         update = "update titles set title_ttype='EDITOR' where title_id=%s" % (id)
@@ -127,18 +128,18 @@ def UpdateTitleColumn(doc, tag, column, id):
                         update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 def addPubAuthor(author, pub_id):
         ##############################################
         # STEP 1 - Get the author_id for this name,
         #          or else create one
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 author_id = insertAuthorCanonical(author)
@@ -150,21 +151,22 @@ def addPubAuthor(author, pub_id):
         insert = "insert into pub_authors(pub_id, author_id) values('%d', '%d');" % (int(pub_id), author_id)
         print("<li> ", insert)
         if debug == 0:
-                db.query(insert)
+                CNX.DB_QUERY(insert)
 
 def integrateCover(title, artists, date, pub_id, cover_id, referral_lang):
+        CNX = MYSQL_CONNECTOR()
         if int(cover_id) == 0:
                 ####################################################
                 # Handle new covers
                 ####################################################
                 if referral_lang:
-                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'COVERART', %d)" % (db.escape_string(title), db.escape_string(date), int(referral_lang))
+                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'COVERART', %d)" % (CNX.DB_ESCAPE_STRING(title), CNX.DB_ESCAPE_STRING(date), int(referral_lang))
                 else:
-                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'COVERART')" % (db.escape_string(title), db.escape_string(date))
+                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'COVERART')" % (CNX.DB_ESCAPE_STRING(title), CNX.DB_ESCAPE_STRING(date))
                 print("<li> ", query)
                 if debug == 0:
-                        db.query(query)
-                cover_id = db.insert_id()
+                        CNX.DB_QUERY(query)
+                cover_id = CNX.DB_INSERT_ID()
                 # Take care of the artists
                 artist_list = str.split(artists, "+")
                 for artist in artist_list:
@@ -174,10 +176,11 @@ def integrateCover(title, artists, date, pub_id, cover_id, referral_lang):
         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(cover_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
 def integrateTitle(title, authors, date, page, type, length, pub_id, title_id, referral_lang):
 
+        CNX = MYSQL_CONNECTOR()
         if int(title_id) == 0:
 
                 ####################################################
@@ -185,18 +188,18 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, title_id, r
                 ####################################################
                 if type == 'SHORTFICTION' and length:
                         if referral_lang:
-                                query = "insert into titles(title_title, title_copyright, title_ttype, title_storylen, title_language) values('%s', '%s', '%s', '%s', '%s');" % (db.escape_string(title), date, type, length, str(referral_lang))
+                                query = "insert into titles(title_title, title_copyright, title_ttype, title_storylen, title_language) values('%s', '%s', '%s', '%s', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, type, length, str(referral_lang))
                         else:
-                                query = "insert into titles(title_title, title_copyright, title_ttype, title_storylen) values('%s', '%s', '%s', '%s');" % (db.escape_string(title), date, type, length)
+                                query = "insert into titles(title_title, title_copyright, title_ttype, title_storylen) values('%s', '%s', '%s', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, type, length)
                 else:
                         if referral_lang:
-                                query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', '%s', '%s');" % (db.escape_string(title), date, type, str(referral_lang))
+                                query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', '%s', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, type, str(referral_lang))
                         else:
-                                query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (db.escape_string(title), date, type)
+                                query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, type)
                 print("<li> ", query)
                 if debug == 0:
-                        db.query(query)
-                title_id = db.insert_id()
+                        CNX.DB_QUERY(query)
+                title_id = CNX.DB_INSERT_ID()
 
                 ####################################################
                 # STEP 2 - Take care of the authors
@@ -211,27 +214,28 @@ def integrateTitle(title, authors, date, page, type, length, pub_id, title_id, r
         if page == '':
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
-                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
+                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), CNX.DB_ESCAPE_STRING(page))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
 
 def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, referral_lang):
 
+        CNX = MYSQL_CONNECTOR()
         if int(title_id) == 0:
 
                 ####################################################
                 # STEP 1 - Update the title table
                 ####################################################
                 if referral_lang:
-                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'REVIEW', '%s');" % (db.escape_string(title), date, str(referral_lang))
+                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'REVIEW', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, str(referral_lang))
                 else:
-                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'REVIEW');" % (db.escape_string(title), date)
+                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'REVIEW');" % (CNX.DB_ESCAPE_STRING(title), date)
                 print("<li> ", query)
                 if debug == 0:
-                        db.query(query)
-                title_id = db.insert_id()
+                        CNX.DB_QUERY(query)
+                title_id = CNX.DB_INSERT_ID()
 
                 ####################################################
                 # STEP 2 - Take care of the reviewers
@@ -256,7 +260,7 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, ref
                                 update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (parent, title_id)
                                 print("<li>", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 break
                 
         ####################################################
@@ -265,27 +269,28 @@ def integrateReview(title, authors, reviewers, date, page, pub_id, title_id, ref
         if page == '':
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
-                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
+                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), CNX.DB_ESCAPE_STRING(page))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
 
 def integrateInterview(title, interviewees, interviewers, date, page, pub_id, title_id, referral_lang):
 
+        CNX = MYSQL_CONNECTOR()
         if int(title_id) == 0:
 
                 ####################################################
                 # STEP 1 - Update the title table
                 ####################################################
                 if referral_lang:
-                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'INTERVIEW', '%s');" % (db.escape_string(title), date, str(referral_lang))
+                        query = "insert into titles(title_title, title_copyright, title_ttype, title_language) values('%s', '%s', 'INTERVIEW', '%s');" % (CNX.DB_ESCAPE_STRING(title), date, str(referral_lang))
                 else:
-                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'INTERVIEW');" % (db.escape_string(title), date)
+                        query = "insert into titles(title_title, title_copyright, title_ttype) values('%s', '%s', 'INTERVIEW');" % (CNX.DB_ESCAPE_STRING(title), date)
                 print("<li> ", query)
                 if debug == 0:
-                        db.query(query)
-                title_id = db.insert_id()
+                        CNX.DB_QUERY(query)
+                title_id = CNX.DB_INSERT_ID()
 
                 ####################################################
                 # STEP 2 - Take care of the interviewers
@@ -307,14 +312,15 @@ def integrateInterview(title, interviewees, interviewers, date, page, pub_id, ti
         if page == '':
                 query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(title_id))
         else:
-                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), db.escape_string(page))
+                query = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(title_id), CNX.DB_ESCAPE_STRING(page))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
 
 
 def DoSubmission(db, submission):
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('NewPub'):
@@ -339,8 +345,8 @@ def DoSubmission(db, submission):
                         query = "insert into pubs(pub_title) values('xxx');"
                         print("<li> ", query)
                         if debug == 0:
-                                db.query(query)
-                        Record = db.insert_id()
+                                CNX.DB_QUERY(query)
+                        Record = CNX.DB_INSERT_ID()
 
                         UpdatePubColumn(merge, 'Title',   'pub_title',      Record)
 
@@ -351,9 +357,9 @@ def DoSubmission(db, submission):
                                 for trans_title in trans_titles:
                                         title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                         update = """insert into trans_pubs(pub_id, trans_pub_title)
-                                                    values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
+                                                    values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(title_value))
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                         # Web Pages
                         value = GetElementValue(merge, 'Webpages')
@@ -361,9 +367,9 @@ def DoSubmission(db, submission):
                                 webpages = doc.getElementsByTagName('Webpage')
                                 for webpage in webpages:
                                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                                        update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
+                                        update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), CNX.DB_ESCAPE_STRING(address))
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                         UpdatePubColumn(merge, 'Tag',     'pub_tag',        Record)
                         UpdatePubColumn(merge, 'Year',    'pub_year',       Record)
@@ -399,25 +405,24 @@ def DoSubmission(db, submission):
                                 note = 'Data from author\'s website. %s' % (note)
                         if note:
                                 query = 'select note_id from pubs where pub_id=%s and note_id is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
-                                        update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(note), note_id)
+                                        update = "update notes set note_note='%s' where note_id=%d" % (CNX.DB_ESCAPE_STRING(note), note_id)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
                                 else:
-                                        insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
+                                        insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(note)
                                         print("<li> ", insert)
                                         if debug == 0:
-                                                db.query(insert)
-                                        retval = db.insert_id()
+                                                CNX.DB_QUERY(insert)
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update pubs set note_id='%d' where pub_id=%s" % (retval, Record)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
 
                         ##########################################################
                         # PUBLISHER
@@ -426,25 +431,24 @@ def DoSubmission(db, submission):
                         if value:
 
                                 # STEP 1 - Get the ID for the new publisher
-                                query = "select publisher_id from publishers where publisher_name='%s';" % (db.escape_string(value))
+                                query = "select publisher_id from publishers where publisher_name='%s';" % (CNX.DB_ESCAPE_STRING(value))
                                 print("<li> ", query)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         NewPublisher = record[0][0]
                                 else:
-                                        query = "insert into publishers(publisher_name) values('%s');" % (db.escape_string(value))
+                                        query = "insert into publishers(publisher_name) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
-                                        NewPublisher = db.insert_id()
+                                                CNX.DB_QUERY(query)
+                                        NewPublisher = CNX.DB_INSERT_ID()
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set publisher_id='%d' where pub_id=%s" % (NewPublisher, Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                         ##########################################################
                         # PUBLICATION SERIES
@@ -453,25 +457,24 @@ def DoSubmission(db, submission):
                         if value:
 
                                 # STEP 1 - Get the ID for the new publication series
-                                query = "select pub_series_id from pub_series where pub_series_name='%s';" % (db.escape_string(value))
+                                query = "select pub_series_id from pub_series where pub_series_name='%s';" % (CNX.DB_ESCAPE_STRING(value))
                                 print("<li> ", query)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         NewPubSeries = record[0][0]
                                 else:
-                                        query = "insert into pub_series(pub_series_name) values('%s');" % (db.escape_string(value))
+                                        query = "insert into pub_series(pub_series_name) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
-                                        NewPubSeries = db.insert_id()
+                                                CNX.DB_QUERY(query)
+                                        NewPubSeries = CNX.DB_INSERT_ID()
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set pub_series_id='%d' where pub_id=%s" % (NewPubSeries, Record)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         
                         ##########################################################
                         # PUBLICATION AUTHORS
@@ -492,8 +495,8 @@ def DoSubmission(db, submission):
                                 query = "insert into titles(title_title) values('xxx');"
                                 print("<li> ", query)
                                 if debug == 0:
-                                        db.query(query)
-                                TitleRecord = db.insert_id()
+                                        CNX.DB_QUERY(query)
+                                TitleRecord = CNX.DB_INSERT_ID()
                                 UpdateTitleColumn(merge, 'Title',   'title_title',     TitleRecord)
                                 UpdateTitleColumn(merge, 'Year',    'title_copyright', TitleRecord)
                                 UpdateTitleColumn(merge, 'PubType', 'title_ttype',     TitleRecord)
@@ -511,8 +514,8 @@ def DoSubmission(db, submission):
                         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(Record), int(TitleRecord))
                         print("<li> ", query)
                         if debug == 0:
-                                db.query(query)
-                        PubcRecord = db.insert_id()
+                                CNX.DB_QUERY(query)
+                        PubcRecord = CNX.DB_INSERT_ID()
 
                         ##########################################################
                         # EXTERNAL IDENTIFIERS
@@ -524,9 +527,9 @@ def DoSubmission(db, submission):
                                         id_value = GetChildValue(external_id_element, 'IDvalue')
                                         insert = """insert into identifiers(identifier_type_id, identifier_value,
                                                     pub_id) values(%d, '%s', %d)
-                                                    """ % (int(type_id), db.escape_string(id_value), Record)
+                                                    """ % (int(type_id), CNX.DB_ESCAPE_STRING(id_value), Record)
                                         print("<li> ", insert)
-                                        db.query(insert)
+                                        CNX.DB_QUERY(insert)
 
                 if doc.getElementsByTagName('Content'):
                         # If the language of the "referral" title was unknown when we started
@@ -574,10 +577,10 @@ def DoSubmission(db, submission):
                                                 if int(tRecord) != int(TitleRecord):
                                                         integrateTitle(title, authors, date, page, type, length, Record, tRecord, referral_lang)
                                                 elif page != '':
-                                                        query = "update pub_content set pubc_page='%s' where pubc_id=%d;" % (db.escape_string(page), PubcRecord)
+                                                        query = "update pub_content set pubc_page='%s' where pubc_id=%d;" % (CNX.DB_ESCAPE_STRING(page), PubcRecord)
                                                         print("<li> ", query)
                                                         if debug == 0:
-                                                                db.query(query)
+                                                                CNX.DB_QUERY(query)
                                 
                         ##########################################################
                         # Reviews

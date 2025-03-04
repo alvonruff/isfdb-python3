@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import string
 import sys
-import MySQLdb
 from isfdb import *
 from common import *
 from isfdblib import *
@@ -30,13 +29,13 @@ def dropCanonicalAuthors(db, DropId):
         # STEP 1 - Get the list of current authors
         ##############################################
         query = "select author_id from canonical_author where title_id='%d'" % (int(DropId))
-        db.query(query)
-        result = db.store_result()
-        author = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        author = CNX.DB_FETCHMANY()
         author_list = []
         while author:
                 author_list.append(author[0][0])
-                author = result.fetch_row()
+                author = CNX.DB_FETCHMANY()
 
         ##############################################
         # STEP 2 - Delete the author/title mapping
@@ -44,7 +43,7 @@ def dropCanonicalAuthors(db, DropId):
         delete = "delete from canonical_author where title_id='%d'" % (int(DropId))
         print("<li> ", delete)
         if debug == 0:
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
         ##############################################
         # STEP 2 - Delete the author/title mapping
@@ -54,9 +53,8 @@ def dropCanonicalAuthors(db, DropId):
                 for i in ['canonical_author', 'pub_authors']:
                         query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
                         print("<li> ", query)
-                        db.query(query)
-                        res = db.store_result()
-                        record = res.fetch_row()
+                        CNX.DB_QUERY(query)
+                        record = CNX.DB_FETCHONE()
                         if record[0][0]:
                                 found = 1
 
@@ -68,66 +66,68 @@ def dropPubTitles(db, KeepId, DropId):
         update = "update pub_content set title_id=%d where title_id=%d" % (int(KeepId), int(DropId))
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
 
 def deleteTitle(db, id):
         delete = "delete from titles where title_id='%d'" % (int(id))
         print("<li> ", delete)
+        CNX = MYSQL_CONNECTOR()
         if debug == 0:
-                db.query(delete)
+                CNX.DB_QUERY(delete)
         
         # Delete the dropped title's views counters - may enhance in the future
         delete = "delete from title_views where title_id=%d" % int(id)
         print("<li> ", delete)
         if debug == 0:
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
 def moveSeriesNumber(db, keep, drop):
         query = "select title_seriesnum from titles where title_id='%d'" % (int(drop))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         value = record[0][0]
         if value is not None:
-                update = "update titles set title_seriesnum='%s' where title_id='%d'" % (db.escape_string(str(value)), int(keep))
+                update = "update titles set title_seriesnum='%s' where title_id='%d'" % (CNX.DB_ESCAPE_STRING(str(value)), int(keep))
         else:
                 update = "update titles set title_seriesnum=NULL where title_id='%d'" % (int(keep))
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
         query = "select title_seriesnum_2 from titles where title_id='%d'" % (int(drop))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         value = record[0][0]
         if value is not None:
-                update = "update titles set title_seriesnum_2='%s' where title_id='%d'" % (db.escape_string(str(value)), int(keep))
+                update = "update titles set title_seriesnum_2='%s' where title_id='%d'" % (CNX.DB_ESCAPE_STRING(str(value)), int(keep))
         else:
                 update = "update titles set title_seriesnum_2=NULL where title_id='%d'" % (int(keep))
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def moveTitleColumn(db, column, keep, drop):
         query = "select %s from titles where title_id='%d'" % (column, int(drop))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         value = record[0][0]
         if value is not None:
-                update = "update titles set %s='%s' where title_id='%d'" % (column, db.escape_string(str(value)), int(keep))
+                update = "update titles set %s='%s' where title_id='%d'" % (column, CNX.DB_ESCAPE_STRING(str(value)), int(keep))
         else:
                 update = "update titles set %s=NULL where title_id='%d'" % (column, int(keep))
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def moveCanonicalAuthors(db, To, From):
         dropCanonicalAuthors(db, To)
         update = "update canonical_author set title_id=%d where title_id='%d'" % (int(To), int(From))
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
 
 def doColumn(db, KeepId, merge, label, column):
         id = GetElementValue(merge, label)
@@ -143,15 +143,15 @@ def retrieveNoteIds(field_name, KeepId, DropIds):
         drop_ids.append(int(KeepId))
         # Convert the list of IDs to a tuple and then to a MySQL-compatible IN clause
         drop_ids_string = str(tuple(drop_ids))
-        query = "select %s from titles where title_id in %s" % (field_name, db.escape_string(drop_ids_string))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select %s from titles where title_id in %s" % (field_name, CNX.DB_ESCAPE_STRING(drop_ids_string))
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 # Only append this Notes ID to the list if it is not NULL
                 if record[0][0] and (record[0][0] not in note_ids):
                         note_ids.append(record[0][0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         return note_ids
 
 def dropNotes(db, KeepId, drop_ids, field_name):
@@ -159,11 +159,11 @@ def dropNotes(db, KeepId, drop_ids, field_name):
         if not drop_ids:
                 return
         # Retrieve the note/synopsis ID that is used by the kept title record post-merge
-        query = "select %s from titles where title_id=%d" % (db.escape_string(field_name), int(KeepId))
+        query = "select %s from titles where title_id=%d" % (CNX.DB_ESCAPE_STRING(field_name), int(KeepId))
         print("<li> ", query)
-        db.query(query)
-        res = db.store_result()
-        record = res.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         keep_note_id = record[0][0]
 
         # If the kept title record has a note/synopsis ID, then remove that ID
@@ -180,9 +180,9 @@ def dropNotes(db, KeepId, drop_ids, field_name):
                         in_clause = str(drop_id)
                 else:
                         in_clause += ",%s" % str(drop_id)
-        update = "delete from notes where note_id in (%s)" % db.escape_string(in_clause)
+        update = "delete from notes where note_id in (%s)" % CNX.DB_ESCAPE_STRING(in_clause)
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
         
 ########################################################################
 
@@ -231,10 +231,11 @@ def TitleMerge(db, doc):
         dropNotes(db, KeepId, synopsis_ids, 'title_synopsis')
 
         kept_title = SQLloadTitle(KeepId)
+        CNX = MYSQL_CONNECTOR()
         if kept_title[TITLE_STORYLEN] and kept_title[TITLE_TTYPE] != 'SHORTFICTION':
                 update = "update titles set title_storylen = NULL where title_id = %d" % int(KeepId)
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         for index in range(len(RecordIds)):
                 dropCanonicalAuthors(db, RecordIds[index])
@@ -242,54 +243,52 @@ def TitleMerge(db, doc):
                 
                 # Find webpages for dropped title
                 query = "select webpage_id, url from webpages where title_id='%d'" % (int(RecordIds[index]))
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         webpage_id = record[0][0]
                         webpage_url = record[0][1]
-                        query2 = "select webpage_id from webpages where title_id='%d' and url='%s'" %  (int(KeepId), db.escape_string(webpage_url))
-                        db.query(query2)
-                        result2 = db.store_result()
-                        if result2.num_rows() > 0:
+                        query2 = "select webpage_id from webpages where title_id='%d' and url='%s'" %  (int(KeepId), CNX.DB_ESCAPE_STRING(webpage_url))
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        if CNX2.DB_NUMROWS() > 0:
                                 # Already exists, so delete the spare
                                 delete = "delete from webpages where webpage_id='%d'" % (int(webpage_id))
                                 print("<li> ", delete)
                                 if debug == 0:
-                                        db.query(delete)
+                                        CNX2.DB_QUERY(delete)
                         else:
                                 # Move webpage
                                 update = "update webpages set title_id='%d' where webpage_id='%d'" % (int(KeepId), int(webpage_id))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
-                        record = result.fetch_row()
+                                        CNX2.DB_QUERY(update)
+                        record = CNX.DB_FETCHMANY()
 
                 # Find transliterated titles for dropped title
                 query = "select trans_title_id, trans_title_title from trans_titles where title_id=%d" % (int(RecordIds[index]))
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         trans_title_id = record[0][0]
                         trans_title_title = record[0][1]
                         query2 = """select trans_title_id from trans_titles
-                                  where title_id=%d and trans_title_title='%s'""" %  (int(KeepId), db.escape_string(trans_title_title))
-                        db.query(query2)
-                        result2 = db.store_result()
-                        if result2.num_rows() > 0:
+                                  where title_id=%d and trans_title_title='%s'""" %  (int(KeepId), CNX.DB_ESCAPE_STRING(trans_title_title))
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query2)
+                        if CNX2.DB_NUMROWS() > 0:
                                 # Already exists, so delete the spare
                                 delete = "delete from trans_titles where trans_title_id=%d" % int(trans_title_id)
                                 print("<li> ", delete)
                                 if debug == 0:
-                                        db.query(delete)
+                                        CNX2.DB_QUERY(delete)
                         else:
                                 # Move webpage
                                 update = "update trans_titles set title_id=%d where trans_title_id=%d" % (int(KeepId), int(trans_title_id))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
-                        record = result.fetch_row()
+                                        CNX2.DB_QUERY(update)
+                        record = CNX.DB_FETCHMANY()
 
                 deleteTitle(db, RecordIds[index])
 
@@ -299,7 +298,7 @@ def TitleMerge(db, doc):
                 update = "update title_awards set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ######################################################
                 # Fixup any variant title records to point to the new title
@@ -307,7 +306,7 @@ def TitleMerge(db, doc):
                 update = "update titles set title_parent=%d where title_parent=%d" % (int(KeepId), int(RecordIds[index]))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ######################################################
                 # Fixup any vote records to point to the new title
@@ -315,7 +314,7 @@ def TitleMerge(db, doc):
                 update = "update votes set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ######################################################
                 # Fixup any tag records to point to the new title
@@ -323,7 +322,7 @@ def TitleMerge(db, doc):
                 update = "update tag_mapping set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
                 
                 # Delete any duplicate tags that may have been created due to the merge
                 SQLDeleteDuplicateTags(KeepId)
@@ -334,13 +333,13 @@ def TitleMerge(db, doc):
                 update = "update title_relationships set title_id=%d where title_id=%d" % (int(KeepId), int(RecordIds[index]))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 # When merging reviews, keep just one relationship record
                 update = "delete from title_relationships where review_id=%d" % int(RecordIds[index])
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)                
+                        CNX.DB_QUERY(update)                
 
         return KeepId
 

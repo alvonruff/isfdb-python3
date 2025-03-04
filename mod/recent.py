@@ -48,12 +48,12 @@ if __name__ == '__main__':
         else:
                 query = "select * from submissions use index (state_reviewed) where sub_state='%s' order by sub_reviewed desc limit 200;" % (status)
 
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows() == 0:
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS() == 0:
                 print('<h3>No submissions with the specified status present.</h3>')
         else:
-                ISFDBprintSubmissionTable(result, status)
+                ISFDBprintSubmissionTable(CNX, status)
                 print('<p> %s' % ISFDBLinkNoName('mod/recent.cgi','%d+%s' % (start+200, status), 'MORE', True))
 
         PrintPostMod(0)

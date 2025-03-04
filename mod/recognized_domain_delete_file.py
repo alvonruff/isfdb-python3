@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -44,9 +44,10 @@ if __name__ == '__main__':
 
         domain_id = int(GetElementValue(merge, 'Record'))
 
+        CNX = MYSQL_CONNECTOR()
         delete = "delete from recognized_domains where domain_id = %d" % domain_id
         print('<li> %s' % delete)
-        db.query(delete)
+        CNX.DB_QUERY(delete)
 
         markIntegrated(db, submission, domain_id)
 

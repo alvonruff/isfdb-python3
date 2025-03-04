@@ -52,7 +52,8 @@ if __name__ == '__main__':
         ##############################################################
         delete = "delete from webpages where award_cat_id=%d" % current.award_cat_id
         print("<li> ", delete)
-        db.query(delete)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(delete)
 
         ##############################################################
         # Delete note
@@ -60,14 +61,14 @@ if __name__ == '__main__':
         if current.award_cat_note_id:
                 delete = "delete from notes where note_id=%d" % current.award_cat_note_id
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
         ##############################################################
         # Delete award category record
         ##############################################################
         delete = "delete from award_cats where award_cat_id=%d" % current.award_cat_id
         print("<li> ", delete)
-        db.query(delete)
+        CNX.DB_QUERY(delete)
 
         markIntegrated(db, submission, current.award_cat_id)
 

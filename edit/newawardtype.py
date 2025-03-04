@@ -12,7 +12,6 @@
 
 import cgi
 import sys
-import MySQLdb
 from awardtypeClass import *
 from isfdblib import *
 from isfdblib_help import *

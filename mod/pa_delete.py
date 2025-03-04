@@ -37,7 +37,8 @@ def deleteAuthor(author_id, pub_id):
         ##############################################
         query = "delete from pub_authors where author_id=%d and pub_id=%d" % (author_id, pub_id)
         print("<li> ", query)
-        db.query(query)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
 
         ##############################################
         # STEP 2 - If the author still has an entry
@@ -46,9 +47,8 @@ def deleteAuthor(author_id, pub_id):
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
                 print("<li> ", query)
-                db.query(query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 if record[0][0]:
                         return
 
@@ -89,47 +89,45 @@ if __name__ == '__main__':
                 # Delete Any Associated Note
                 ##########################################################
                 query = 'select note_id from pubs where pub_id=%d and note_id is not null' % int(Record)
-                db.query(query)
-                res = db.store_result()
-                if res.num_rows():
-                        rec = res.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                if CNX.DB_NUMROWS():
+                        rec = CNX.DB_FETCHONE()
                         note_id = rec[0][0]
                         update = "delete from notes where note_id=%d" % (note_id)
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # Delete Any Stranded Authors
                 ##########################################################
                 query = """select a.author_id from authors a, pub_authors pa
                         where a.author_id=pa.author_id and pa.pub_id=%d""" % (int(Record))
-                db.query(query)
-                res = db.store_result()
-                author = res.fetch_row()
+                CNX.DB_QUERY(query)
+                author = CNX.DB_FETCHMANY()
                 while author:
                         deleteAuthor(int(author[0][0]), int(Record))
-                        author = res.fetch_row()
+                        author = CNX.DB_FETCHONE()
 
                 #########################################
                 # Find coverart records for this pub
                 #########################################
                 query = """select t.* from titles t, pub_content pc
                         where pc.pub_id=%d and pc.title_id=t.title_id""" % int(Record)
-                db.query(query)
-                res = db.store_result()
-                titlerec = res.fetch_row()
+                CNX.DB_QUERY(query)
+                titlerec = CNX.DB_FETCHMANY()
                 coverart_titles = []
                 while titlerec:
                         if titlerec[0][TITLE_TTYPE] == 'COVERART':
                                 coverart_titles.append(titlerec[0][TITLE_PUBID])
-                        titlerec = res.fetch_row()
+                        titlerec = CNX.DB_FETCHMANY()
 
                 ##########################################################
                 # Delete pub/title map entries for this pub
                 ##########################################################
                 query = "delete from pub_content where pub_id=%d" % (int(Record))
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete COVERART titles for this title. The "delete" method
                 # will check if any COVEART titles are used in another pub
@@ -144,30 +142,30 @@ if __name__ == '__main__':
                 ##########################################################
                 query = "delete from primary_verifications where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
                 query = "delete from verification where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete transliterated titles 
                 query = "delete from trans_pubs where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete Web Pages
                 query = "delete from webpages where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete external identifiers
                 query = "delete from identifiers where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete the pub itself
                 query = "delete from pubs where pub_id=%d" % int(Record)
                 print("<li> ", query)
-                db.query(query)
+                CNX.DB_QUERY(query)
 
                 # Delete Publication Series if there are no more pubs for it
                 if pub.pub_series_id:

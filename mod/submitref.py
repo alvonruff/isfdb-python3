@@ -14,7 +14,6 @@ from __future__ import print_function
 import cgi
 import string
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from SQLparsing import *
@@ -36,6 +35,7 @@ if __name__ == '__main__':
         form = IsfdbFieldStorage()
 
         print('<pre>')
+        CNX = MYSQL_CONNECTOR()
 
         index = 0
         skips = 0
@@ -76,22 +76,21 @@ if __name__ == '__main__':
                                 url_value = 0
 
                         query = "select * from reference where reference_id='%d'" % index
-                        db.query(query)
-                        result = db.store_result()
-                        if result.num_rows() > 0: 
-                                record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS() > 0: 
+                                record = CNX.DB_FETCHONE()
                                 if record[0][1] != label_value:
                                         update = "update reference set reference_label='%s' where reference_id='%d'" % (label_value, index)
                                         print(update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 if record[0][2] != fullname_value:
                                         update = "update reference set reference_fullname='%s' where reference_id='%d'" % (fullname_value, index)
                                         print(update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 if record[0][3] != pub_value:
                                         update = "update reference set pub_id='%s' where reference_id='%d'" % (pub_value, index)
                                         print(update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 if record[0][4] != url_value:
                                         try:
                                                 if url_value[0] != 'h':
@@ -100,11 +99,11 @@ if __name__ == '__main__':
                                                 url_value = ''
                                         update = "update reference set reference_url='%s' where reference_id='%d'" % (url_value, index)
                                         print(update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
                                 insert = "insert into reference(%s) values(%s)" % (fields, values)
                                 print(insert)
-                                db.query(insert)
+                                CNX.DB_QUERY(insert)
                 else:
                         skips += 1
                         if skips > 5:

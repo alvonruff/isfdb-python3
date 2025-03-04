@@ -29,18 +29,19 @@ def UpdateColumn(doc, tag, column, id):
                 # Get the old value
                 ###########################################
                 query = "select %s from award_types where award_type_id=%s" % (column, id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 from_value = record[0][0]
 
                 value = GetElementValue(doc, tag)
                 if value:
-                        update = "update award_types set %s='%s' where award_type_id=%s" % (column, db.escape_string(value), id)
+                        update = "update award_types set %s='%s' where award_type_id=%s" % (column, CNX.DB_ESCAPE_STRING(value), id)
                 else:
                         update = "update award_types set %s = NULL where award_type_id=%s" % (column, id)
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 
 if __name__ == '__main__':
@@ -85,6 +86,7 @@ if __name__ == '__main__':
 
         UpdateColumn(merge, 'NonGenre',   'award_type_non_genre',   current.award_type_id)
 
+        CNX = MYSQL_CONNECTOR()
         value = GetElementValue(merge, 'Webpages')
         if value:
                 ##########################################################
@@ -103,7 +105,7 @@ if __name__ == '__main__':
                 ##########################################################
                 delete = "delete from webpages where award_type_id=%s" % (current.award_type_id)
                 print("<li> ", delete)
-                db.query(delete)
+                CNX.DB_QUERY(delete)
 
                 ##########################################################
                 # Insert the new webpages
@@ -112,9 +114,9 @@ if __name__ == '__main__':
                 webpages = doc.getElementsByTagName('Webpage')
                 for webpage in webpages:
                         address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                        update = "insert into webpages(award_type_id, url) values(%s, '%s')" % (current.award_type_id, db.escape_string(address))
+                        update = "insert into webpages(award_type_id, url) values(%s, '%s')" % (current.award_type_id, CNX.DB_ESCAPE_STRING(address))
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                         # Construct the new list of webpages
                         if to_value == '':
@@ -129,38 +131,36 @@ if __name__ == '__main__':
                         # Check to see if this award type already has a note
                         ############################################################
                         query = "select award_type_note_id from award_types where award_type_id='%s' and award_type_note_id is not null and award_type_note_id<>'0';" % (current.award_type_id)
-                        db.query(query)
-                        res = db.store_result()
-                        if res.num_rows():
-                                rec = res.fetch_row()
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS():
+                                rec = CNX.DB_FETCHMANY()
                                 note_id = rec[0][0]
                                 print('<li> note_id:', note_id)
-                                update = "update notes set note_note='%s' where note_id='%d'" % (db.escape_string(value), int(note_id))
+                                update = "update notes set note_note='%s' where note_id='%d'" % (CNX.DB_ESCAPE_STRING(value), int(note_id))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                         else:
-                                insert = "insert into notes(note_note) values('%s');" % (db.escape_string(value))
-                                db.query(insert)
-                                retval = db.insert_id()
+                                insert = "insert into notes(note_note) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
+                                CNX.DB_QUERY(insert)
+                                retval = CNX.DB_INSERT_ID()
                                 update = "update award_types set award_type_note_id='%d' where award_type_id='%s'" % (retval, current.award_type_id)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                 else:
                         ##############################################################
                         # An empty note submission was made - delete the previous note
                         ##############################################################
                         query = "select award_type_note_id from award_types where award_type_id=%s and award_type_note_id is not null and award_type_note_id<>'0';" % (current.award_type_id)
-                        db.query(query)
-                        res = db.store_result()
-                        if res.num_rows():
-                                rec = res.fetch_row()
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS():
+                                rec = CNX.DB_FETCHMANY()
                                 note_id = rec[0][0]
                                 delete = "delete from notes where note_id=%d" % (note_id)
                                 print("<li> ", delete)
-                                db.query(delete)
+                                CNX.DB_QUERY(delete)
                                 update = "update award_types set award_type_note_id=NULL where award_type_id=%s" % (current.award_type_id)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
         markIntegrated(db, submission, current.award_type_id)
 

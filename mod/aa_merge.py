@@ -11,6 +11,8 @@ from __future__ import print_function
 #     Date: $Date: 2024-02-06 13:18:28 -0500 (Tue, 06 Feb 2024) $
 
 
+import string
+import sys
 from isfdb import *
 from common import *
 from isfdblib import *
@@ -22,24 +24,25 @@ from xml.dom import Node
 
 def moveAuthorColumn(db, column, keep, drop):
         query = "select %s from authors where author_id='%d'" % (column, int(drop))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         value = str(record[0][0])
         if value == 'None':
                 update = "update authors set %s=NULL where author_id='%d'" % (column, int(keep))
         else:
-                update = "update authors set %s='%s' where author_id='%d'" % (column, db.escape_string(value), int(keep))
+                update = "update authors set %s='%s' where author_id='%d'" % (column, CNX.DB_ESCAPE_STRING(value), int(keep))
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
 def MergeMultiple(keep_values, drop_values, table_name, author_column, value_column, KeepId):
+        CNX = MYSQL_CONNECTOR()
         for value in drop_values:
                 # If this value is not already associated with the author that we will keep,
                 # then insert it into the table for the kept author
                 if value not in keep_values:
-                        update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name, author_column, value_column, int(KeepId), db.escape_string(value))
-                        db.query(update)
+                        update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name, author_column, value_column, int(KeepId), CNX.DB_ESCAPE_STRING(value))
+                        CNX.DB_QUERY(update)
                         print("<li> ", update)
 
 ########################################################################
@@ -107,23 +110,23 @@ def AuthorMerge(db, recno, doc):
 
         update = "update canonical_author set author_id='%d' where author_id='%d'" % (int(KeepId), int(DropId))
         print("<li> ", update)
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
 
         update = "update pub_authors set author_id='%d' where author_id='%d'" % (int(KeepId), int(DropId))
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         # Re-point the deleted author's alternate names to the kept author ID
         update = "update pseudonyms set author_id = %d where author_id = %d" % (int(KeepId), int(DropId))
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         # Check if there are any references left to the dropped author
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, int(DropId))
-                db.query(query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 if record[0][0]:
                         return KeepId
 

@@ -80,11 +80,12 @@ if __name__ == '__main__':
                 #####################################
                 # Insert into the awards table
                 #####################################
-                insert = "insert into awards(award_title, award_author, award_year, award_level, award_movie, award_type_id, award_cat_id) values('%s', '%s', '%s', '%s', '%s', '%s', '%d')" % (db.escape_string(tistring), db.escape_string(austring), db.escape_string(AwardYear), db.escape_string(AwardLevel), db.escape_string(AwardMovie), int(AwardType), int(AwardCategory))
+                CNX = MYSQL_CONNECTOR()
+                insert = "insert into awards(award_title, award_author, award_year, award_level, award_movie, award_type_id, award_cat_id) values('%s', '%s', '%s', '%s', '%s', '%s', '%d')" % (CNX.DB_ESCAPE_STRING(tistring), CNX.DB_ESCAPE_STRING(austring), CNX.DB_ESCAPE_STRING(AwardYear), CNX.DB_ESCAPE_STRING(AwardLevel), CNX.DB_ESCAPE_STRING(AwardMovie), int(AwardType), int(AwardCategory))
                 print("<li> ", insert)
                 if debug == 0:
-                        db.query(insert)
-                award_id = db.insert_id()
+                        CNX.DB_QUERY(insert)
+                award_id = CNX.DB_INSERT_ID()
 
                 #####################################
                 # Insert a title mapping record
@@ -93,7 +94,7 @@ if __name__ == '__main__':
                         insert = "insert into title_awards(award_id, title_id) values(%d, %d)" % (int(award_id), int(Record))
                         print("<li> ", insert)
                         if debug == 0:
-                                db.query(insert)
+                                CNX.DB_QUERY(insert)
 
                 #####################################
                 # Insert into the Notes table
@@ -101,13 +102,13 @@ if __name__ == '__main__':
                 note_id = ''
                 note = GetElementValue(merge, 'AwardNote')
                 if note:
-                        insert = "insert into notes(note_note) values('%s');" % db.escape_string(note)
+                        insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(note)
                         print("<li> ", insert)
-                        db.query(insert)
-                        note_id = int(db.insert_id())
+                        CNX.DB_QUERY(insert)
+                        note_id = int(CNX.DB_INSERT_ID())
                         update = "update awards set award_note_id = %d where award_id=%d" % (note_id, award_id)
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
         if debug == 0:
                 markIntegrated(db, submission, award_id)

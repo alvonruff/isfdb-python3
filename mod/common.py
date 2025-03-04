@@ -11,12 +11,14 @@ from __future__ import print_function
 
 
 import sys
-import MySQLdb
 from isfdb import *
 from SQLparsing import *
 from library import *
 from login import *
-from urlparse import urlparse
+if PYTHONVER == 'python2':
+        from urlparse import urlparse
+else:
+        from urllib.parse import urlparse
 from isbn import ISBNValidFormat
 from xml.dom import minidom
 from xml.dom import Node
@@ -60,58 +62,63 @@ def PrintNextSubmissionLink(next_sub):
         if subtype in SUBMAP:
                 print(ISFDBLink('mod/submission_review.cgi', next_sub[SUB_ID], 'Next Submission', False, 'class="approval"'))
 
-        
+
 ########################################################################
 #                      T I T L E   F I E L D S
 ########################################################################
 def createNewTitle(title):
-        query = "insert into titles(title_title) values('%s');" % (db.escape_string(title))
+        CNX = MYSQL_CONNECTOR()
+        query = "insert into titles(title_title) values('%s');" % (CNX.DB_ESCAPE_STRING(title))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
-        Record = db.insert_id()
+                CNX.DB_QUERY(query)
+        Record = CNX.DB_INSERT_ID()
         return(Record)
 
 def setTitleName(record, title):
-        update = 'update titles set title_title="%s" where title_id=%d' % (db.escape_string(title), int(record))
+        CNX = MYSQL_CONNECTOR()
+        update = 'update titles set title_title="%s" where title_id=%d' % (CNX.DB_ESCAPE_STRING(title), int(record))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def setTitleDate(record, date):
-        update = 'update titles set title_copyright="%s" where title_id=%d' % (db.escape_string(date), int(record))
+        CNX = MYSQL_CONNECTOR()
+        update = 'update titles set title_copyright="%s" where title_id=%d' % (CNX.DB_ESCAPE_STRING(date), int(record))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def setTitleType(record, type):
-        update = 'update titles set title_ttype="%s" where title_id=%d' % (db.escape_string(type), int(record))
+        CNX = MYSQL_CONNECTOR()
+        update = 'update titles set title_ttype="%s" where title_id=%d' % (CNX.DB_ESCAPE_STRING(type), int(record))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def setTitleLength(record, length):
+        CNX = MYSQL_CONNECTOR()
         if not length:
                 update = 'update titles set title_storylen=NULL where title_id=%d' % int(record)
         else:
-                update = 'update titles set title_storylen="%s" where title_id=%d' % (db.escape_string(length), int(record))
+                update = 'update titles set title_storylen="%s" where title_id=%d' % (CNX.DB_ESCAPE_STRING(length), int(record))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def setTitlePage(record, page, pub_id):
+        CNX = MYSQL_CONNECTOR()
         query = "select * from pub_content where pub_id=%d and title_id=%d;" % (int(pub_id), int(record))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows() == 0:
-                update = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(record), db.escape_string(page))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS() == 0:
+                update = "insert into pub_content(pub_id, title_id, pubc_page) values(%d, %d, '%s');" % (int(pub_id), int(record), CNX.DB_ESCAPE_STRING(page))
         elif page == '':
                 update = "update pub_content set pubc_page=NULL where title_id=%d and pub_id=%d" % (int(record), int(pub_id))
         else:
-                update = "update pub_content set pubc_page='%s' where title_id=%d and pub_id=%d" % (db.escape_string(page), int(record), int(pub_id))
+                update = "update pub_content set pubc_page='%s' where title_id=%d and pub_id=%d" % (CNX.DB_ESCAPE_STRING(page), int(record), int(pub_id))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def setTitleLang(record, referral_lang):
         # Only update the language field if the language code is not None
@@ -120,7 +127,8 @@ def setTitleLang(record, referral_lang):
         update = 'update titles set title_language=%d where title_id=%d' % (int(referral_lang), int(record))
         print("<li>", update)
         if debug == 0:
-                db.query(update)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
 
 ########################################################################
 #                      T I T L E   A U T H O R
@@ -134,11 +142,11 @@ def addTitleAuthor(author, title_id, status):
         # STEP 1 - Get the author_id for this name,
         #          or else create one
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 author_id = insertAuthorCanonical(author)
@@ -156,7 +164,7 @@ def addTitleAuthor(author, title_id, status):
         insert = "insert into canonical_author(title_id, author_id, ca_status) values('%d', '%d', '%d');" % (int(title_id), author_id, ca_status)
         print("<li> ", insert)
         if debug == 0:
-                db.query(insert)
+                CNX.DB_QUERY(insert)
 
 def update_directory(lastname):
         lastname = str.replace(lastname, '.', '')
@@ -183,17 +191,16 @@ def update_directory(lastname):
                 query = 'select COUNT(author_lastname) from authors where author_lastname like "%s\'%%" order by author_lastname, author_canonical' % (section[0:1])
         else:
                 query = 'select COUNT(author_lastname) from authors where author_lastname like "%s%%" order by author_lastname, author_canonical' % (section[0:2])
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
 
         count = int(record[0][0])
         print("<li> count %d for section [%s]" % (count, section))
 
         query = "select directory_mask from directory where directory_index='%s'" % (section[0])
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         bitmap = record[0][0]
         print("<li> Old bitmap: %08x" % bitmap)
         bitmask = 1
@@ -206,17 +213,17 @@ def update_directory(lastname):
                         print("<li> New bitmap: %08x" % bitmap)
                         query = "update directory set directory_mask='%d' where directory_index='%s'" % (bitmap, section[0])
                         print("<li> ", query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                         return
                 else:
                         bitmask = bitmask<<1
 
 def deleteFromAuthorTable(author_id):
         query = "select author_lastname from authors where author_id='%d'" % int(author_id)
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_lastname = str(record[0][0])
                 print("<li>LASTNAME: [%s]" % author_lastname)
         else:
@@ -225,49 +232,49 @@ def deleteFromAuthorTable(author_id):
         query = "delete from authors where author_id='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete this author from the Pseudonym table where the author is the parent
         query = "delete from pseudonyms where author_id='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete this author from the Pseudonym table where the author is the alternate name
         query = "delete from pseudonyms where pseudonym='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete author's webpages
         query = "delete from webpages where author_id='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete author's emails
         query = "delete from emails where author_id='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete author's transliterated legal names
         query = "delete from trans_legal_names where author_id='%d'" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete author's transliterated canonical names
         query = "delete from trans_authors where author_id=%d" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         #Delete author's views
         query = "delete from author_views where author_id=%d" % (int(author_id))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         update_directory(author_lastname)
 
@@ -283,11 +290,11 @@ def deleteTitleAuthor(author, title_id, status):
         ##############################################
         # STEP 1 - Get the author_id for this name
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 return
@@ -299,7 +306,7 @@ def deleteTitleAuthor(author, title_id, status):
         query = "delete from canonical_author where author_id='%d' and title_id='%d' and ca_status='%d'" % (int(author_id), int(title_id), int(ca_status))
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         ##############################################
         # STEP 3 - If the author still has an entry
@@ -308,9 +315,8 @@ def deleteTitleAuthor(author, title_id, status):
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
                 print("<li> ", query)
-                db.query(query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 if record[0][0]:
                         return
 
@@ -355,11 +361,12 @@ def setInterviewees(Record, NewInterviewees):
 def insertAuthorCanonical(author):
 
         # STEP 1: Insert the author into the author table
-        insert = "insert into authors(author_canonical) values('%s');" % db.escape_string(author)
+        CNX = MYSQL_CONNECTOR()
+        insert = "insert into authors(author_canonical) values('%s');" % CNX.DB_ESCAPE_STRING(author)
         print("<li> ", insert)
         if debug == 0:
-                db.query(insert)
-        author_id = db.insert_id()
+                CNX.DB_QUERY(insert)
+        author_id = CNX.DB_INSERT_ID()
 
         # STEP 2: Make a first pass at calculating the author's lastname
         #
@@ -378,10 +385,10 @@ def insertAuthorCanonical(author):
         # Strip trailing comma
         if lastname[-1] == ',':
                 lastname = lastname[0:-1]
-        update = "update authors set author_lastname='%s' where author_id='%d'" %  (db.escape_string(lastname), author_id)
+        update = "update authors set author_lastname='%s' where author_id='%d'" %  (CNX.DB_ESCAPE_STRING(lastname), author_id)
         print("<li> ", update)
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         # STEP 3: Update the directory bitmap
         update_directory(lastname)
@@ -406,18 +413,19 @@ def setHistory(table, record, field, submission, submitter, orig, to):
         submitter  = int(submitter)
         reviewer   = int(reviewer)
 
+        CNX = MYSQL_CONNECTOR()
         if orig:
-                orig       = db.escape_string(orig)
+                orig       = CNX.DB_ESCAPE_STRING(orig)
         else:
                 orig = 'NULL'
         if to:
-                to         = db.escape_string(to)
+                to         = CNX.DB_ESCAPE_STRING(to)
         else:
                 to = 'NULL'
 
         insert = "insert into history(history_time, history_table, history_record, history_field, history_submission, history_submitter, history_reviewer, history_from, history_to) values(NOW(), %d, %d, %d, %d, %d, %d,'%s', '%s');" % (table, record, field, submission, submitter, reviewer, orig, to)
         if (debug == 0) and (doHistory == 1):
-                db.query(insert)
+                CNX.DB_QUERY(insert)
 
 def display_sources(submission_id):
         xml = SQLloadXML(submission_id)
@@ -525,6 +533,7 @@ class Queue:
                 self.submitter_ids = []
                 self.submitter_names = {}
                 self.wiki_edits = {}
+                self.CNX = MYSQL_CONNECTOR()
 
                 user_data = GetUserData()
                 self.reviewer = int(user_data[0])
@@ -547,27 +556,26 @@ class Queue:
 
         def retrieve_submissions(self):
                 from isfdblib import PrintPostMod
-                query = """select * from submissions where sub_state='%s'""" % db.escape_string(self.arg)
+                query = """select * from submissions where sub_state='%s'""" % self.CNX.DB_ESCAPE_STRING(self.arg)
                 if self.single_submitter_id:
                         query += " and sub_submitter = %d" % self.single_submitter_id
                 elif self.language_name:
-                        query += " and sub_type = %d and sub_data like '%%<Language>%s</Language>%%'" % (MOD_PUB_NEW, db.escape_string(self.language_name))
+                        query += " and sub_type = %d and sub_data like '%%<Language>%s</Language>%%'" % (MOD_PUB_NEW, self.CNX.DB_ESCAPE_STRING(self.language_name))
                 query += ' order by sub_reviewed, sub_id'
-                db.query(query)
-                self.result = db.store_result()
-                if self.result.num_rows() == 0:
+                self.CNX.DB_QUERY(query)
+                if self.CNX.DB_NUMROWS() == 0:
                         print('<h3>No submissions present</h3>')
                         PrintPostMod()
                         sys.exit(0)
 
         def parse_submissions(self):
-                record = self.result.fetch_row()
+                record = self.CNX.DB_FETCHMANY()
                 while record:
                         submission_id = int(record[0][SUB_ID])
                         submission = Submission(self, submission_id)
                         submission.parse(record[0])
                         self.submissions[submission_id] = submission
-                        record = self.result.fetch_row()
+                        record = self.CNX.DB_FETCHMANY()
 
         def build_user_and_sub_lists(self):
                 pub_edits = {}
@@ -595,14 +603,13 @@ class Queue:
                         query = """select distinct pub_id from primary_verifications
                                 where pub_id in (%s)
                                 and user_id = %d""" % (dict_to_in_clause(pub_edits), self.reviewer)
-                        db.query(query)
-                        result = db.store_result()
-                        record = result.fetch_row()
+                        self.CNX.DB_QUERY(query)
+                        record = self.CNX.DB_FETCHMANY()
                         while record:
                                 pub_id = record[0][0]
                                 for submission_id in pub_edits[pub_id]:
                                         self.changed_verified_pubs.append(submission_id)
-                                record = result.fetch_row()
+                                record = self.CNX.DB_FETCHMANY()
 
         def get_wiki_edit_counts(self):
                 edit_counts = SQLWikiEditCountsForIDs(self.submitter_ids)

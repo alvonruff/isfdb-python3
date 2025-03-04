@@ -22,9 +22,9 @@ if __name__ == '__main__':
         PrintNavBar()
 
         query = "select * from metadata"
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         isfdb_version = record[0][0]
         DbOnline = record[0][2]
         EditOnline = record[0][3]

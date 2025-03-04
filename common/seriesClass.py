@@ -14,7 +14,6 @@ import sys
 import re
 import os
 from SQLparsing import SQLgetNotes, SQLloadSeriesWebpages
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *

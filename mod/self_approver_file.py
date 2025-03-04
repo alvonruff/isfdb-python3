@@ -57,12 +57,13 @@ if __name__ == '__main__':
         print('<ul>')
 
         query = 'delete from self_approvers where user_id = %d' % user_id
-        db.query(query)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         print('<li>%s' % query)
         
         if self_approver:
                 query = 'insert into self_approvers(user_id) values(%d)' % user_id
-                db.query(query)
+                CNX.DB_QUERY(query)
                 print('<li>%s' % query)
 
         print('</ul>')

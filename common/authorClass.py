@@ -12,7 +12,6 @@ from __future__ import print_function
 import cgi
 import sys
 import os
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from library import *

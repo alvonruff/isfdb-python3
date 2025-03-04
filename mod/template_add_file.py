@@ -43,16 +43,17 @@ if __name__ == '__main__':
         template_url = GetElementValue(merge, 'TemplateURL')
         template_mouseover = GetElementValue(merge, 'TemplateMouseoverHelp')
 
+        CNX = MYSQL_CONNECTOR()
         insert = """insert into
                     templates(template_name, template_display, template_type, template_url, template_mouseover)
-                    values('%s', '%s', '%s', '%s', '%s')""" % (db.escape_string(template_name),
-                                                               db.escape_string(template_display),
-                                                               db.escape_string(template_type),
-                                                               db.escape_string(template_url),
-                                                               db.escape_string(template_mouseover))
+                    values('%s', '%s', '%s', '%s', '%s')""" % (CNX.DB_ESCAPE_STRING(template_name),
+                                                               CNX.DB_ESCAPE_STRING(template_display),
+                                                               CNX.DB_ESCAPE_STRING(template_type),
+                                                               CNX.DB_ESCAPE_STRING(template_url),
+                                                               CNX.DB_ESCAPE_STRING(template_mouseover))
         print('<li> ', insert)
-        db.query(insert)
-        new_record = db.insert_id()
+        CNX.DB_QUERY(insert)
+        new_record = CNX.DB_INSERT_ID()
 
         markIntegrated(db, submission, new_record)
 

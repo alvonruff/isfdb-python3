@@ -51,7 +51,8 @@ if __name__ == '__main__':
                                         sys.exit(0)
                                 insert = "delete from pseudonyms where pseudo_id = %d" % int(pseud_id)
                                 print('<li> ', insert)
-                                db.query(insert)
+                                CNX = MYSQL_CONNECTOR()
+                                CNX.DB_QUERY(insert)
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)
         except:

@@ -36,6 +36,7 @@ if __name__ == '__main__':
         print("<ul>")
 
         submitter = ''
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('TitleRemove'):
@@ -53,7 +54,7 @@ if __name__ == '__main__':
                                         query = "delete from pub_content where pubc_id = %d and pub_id = %d" % (record, pub_id)
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
+                                                CNX.DB_QUERY(query)
 
                 if doc.getElementsByTagName('TitleRecord'):
                         children = doc.getElementsByTagName('TitleRecord')
@@ -63,7 +64,7 @@ if __name__ == '__main__':
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
+                                                CNX.DB_QUERY(query)
 
                 if doc.getElementsByTagName('ReviewRecord'):
                         children = doc.getElementsByTagName('ReviewRecord')
@@ -74,7 +75,7 @@ if __name__ == '__main__':
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
+                                                CNX.DB_QUERY(query)
                                         
                 if doc.getElementsByTagName('InterviewRecord'):
                         children = doc.getElementsByTagName('InterviewRecord')
@@ -84,7 +85,7 @@ if __name__ == '__main__':
                                         query = "delete from pub_content where pubc_id = '%d' and pub_id = '%d'" % (record, pub_id)
                                         print("<li> ", query)
                                         if debug == 0:
-                                                db.query(query)
+                                                CNX.DB_QUERY(query)
 
         if debug == 0:
                 markIntegrated(db, submission, pub_id)

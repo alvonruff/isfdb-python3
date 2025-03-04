@@ -12,7 +12,6 @@
 
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 

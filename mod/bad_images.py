@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus , Al von Ruff
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -45,13 +45,13 @@ if __name__ == '__main__':
                 where pubs.pub_id=bad_images.pub_id
                 order by pubs.pub_title"""
 
-        db.query(query)
-        result = db.store_result()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        num = CNX.DB_NUMROWS()
 
         if num:
                 PrintTableHeaders()
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 1
                 count = 1
                 while record:
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                         url = record[0][1]
                         pub_title = record[0][2]
                         PrintPubRecord(count, pub_id, url, pub_title, bgcolor)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         count += 1
 

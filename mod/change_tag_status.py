@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,10 +39,11 @@ if __name__ == '__main__':
         except:
                 SESSION.DisplayError('Bad Argument')
 
+        CNX = MYSQL_CONNECTOR()
         update = 'update tags set tag_status=%d where tag_id=%d' % (numeric_status, tag_id)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         update = 'insert into tag_status_log (tag_id, user_id, new_status, timestamp) values(%d, %d, %d, NOW())' % (tag_id, int(user.id), numeric_status)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         ISFDBLocalRedirect('tag.cgi?%d' % tag_id)

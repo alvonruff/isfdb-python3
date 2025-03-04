@@ -158,14 +158,15 @@ def markIntegrated(db, sub_id, affected_record_id = None, pub_id = None):
                     set sub_state='I', sub_reviewer=%d, sub_reviewed=NOW(), sub_holdid=0
                     where sub_id=%d""" %  (int(reviewerid), int(sub_id))
         print('<li> ', update)
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
 
         # For submissions that created a new record or affected an existing record
         # of a supported type, update the "affected record ID" field in the submission record
         if affected_record_id:
                 update = "update submissions set affected_record_id=%d where sub_id=%d" %  (int(affected_record_id), int(sub_id))
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         # For changed publications, update the Changed Verified Pubs table and the user_status table
         if pub_id:
@@ -182,7 +183,7 @@ def markIntegrated(db, sub_id, affected_record_id = None, pub_id = None):
                         update = """insert into changed_verified_pubs(pub_id, sub_id, verifier_id, change_time)
                                values(%d, %d, %d, NOW())""" % (int(pub_id), int(sub_id), int(verifier_id))
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
                         SQLUpdate_last_changed_verified_pubs_DTS(verifier_id)
 
         print('</ul>')

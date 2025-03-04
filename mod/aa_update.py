@@ -13,7 +13,6 @@ from __future__ import print_function
 
 import cgi
 import sys
-import MySQLdb
 from isfdb import *
 from isfdblib import *
 from common import *
@@ -64,9 +63,9 @@ def UpdateColumn(doc, tag, column, id):
                 # Get the old value
                 ###########################################
                 query = "select %s from authors where author_id=%s" % (column, id)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 from_value = record[0][0]
                 # If there is a value on file, change it to a string
                 if from_value:
@@ -78,36 +77,36 @@ def UpdateColumn(doc, tag, column, id):
                 if tag == 'Language':
                         to_value = str(SQLGetLangIdByName(to_value))
                 if to_value:
-                        update = "update authors set %s='%s' where author_id=%s" % (column, db.escape_string(to_value), id)
+                        update = "update authors set %s='%s' where author_id=%s" % (column, CNX.DB_ESCAPE_STRING(to_value), id)
                         authorHistory(id, column, from_value, to_value)
                 else:
                         update = "update authors set %s = NULL where author_id=%s" % (column, id)
                         authorHistory(id, column, from_value, 'NULL')
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, history_column):
         ##########################################################
         # Construct the string of old values
         ##########################################################
         query = "select %s from %s where %s=%d" % (field_name, table_name, author_field, int(author_id))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         from_value = ''
         while record:
                 if from_value == '':
                         from_value += record[0][0]
                 else:
                         from_value += ","+record[0][0]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         ##########################################################
         # Delete the old records
         ##########################################################
         delete = "delete from %s where %s=%d" % (table_name, author_field, int(author_id))
         print("<li> ", delete)
-        db.query(delete)
+        CNX.DB_QUERY(delete)
 
         ##########################################################
         # Insert the new records
@@ -117,9 +116,9 @@ def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, hi
         for element in elements:
                 new_value = XMLunescape(element.firstChild.data.encode('iso-8859-1'))
                 update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name,
-                                                                      author_field, field_name, int(author_id), db.escape_string(new_value))
+                                                                      author_field, field_name, int(author_id), CNX.DB_ESCAPE_STRING(new_value))
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
                 # Construct the new list of values
                 if to_value == '':
@@ -144,6 +143,7 @@ if __name__ == '__main__':
         print("<hr>")
         print("<ul>")
 
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('AuthorUpdate'):
@@ -175,9 +175,8 @@ if __name__ == '__main__':
                 value = GetElementValue(merge, 'Familyname')
                 if value:
                         query = "select author_lastname from authors where author_id=%s" % (Record)
-                        db.query(query)
-                        result = db.store_result()
-                        record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        record = CNX.DB_FETCHONE()
                         oldlastname = record[0][0]
                         newlastname = GetElementValue(merge, 'Familyname')
                         UpdateColumn(merge, 'Familyname',   'author_lastname',   Record)

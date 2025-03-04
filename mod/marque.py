@@ -28,18 +28,18 @@ if __name__ == '__main__':
         # Calculate top 2 percent
         #################################
         query = 'select count(author_id) from authors'
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         total_authors = record[0][0]
         maxauthors = total_authors / 50
 
         update = 'update authors set author_marque = 0'
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         authors = []
         for author in SESSION.special_authors_to_ignore:
-                authors.append(db.escape_string(author))
+                authors.append(CNX.DB_ESCAPE_STRING(author))
         authors_to_ignore = list_to_in_clause(authors)
         query = """select author_id, author_views, author_canonical
                 from authors
@@ -47,16 +47,16 @@ if __name__ == '__main__':
                 and author_canonical NOT IN (%s)
                 order by author_views
                 desc limit %d""" % (authors_to_ignore, maxauthors)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         print('<ol>')
 
         while record:
                 print('<li>%d - %s' % (record[0][1], record[0][2]))
                 update = 'update authors set author_marque=1 where author_id=%d' % int(record[0][0])
-                db.query(update)
-                record = result.fetch_row()
+                CNX2 = MYSQL_CONNECTOR()
+                CNX2.DB_QUERY(update)
+                record = CNX.DB_FETCHMANY()
 
         print('</ol>')
         PrintPostMod(0)

@@ -49,16 +49,17 @@ def DoSubmission(db, submission):
                         PrintPostMod()
                         sys.exit(0)
 
+                CNX = MYSQL_CONNECTOR()
                 update = "delete from title_relationships where review_id='%d';" % (int(ChildRecord))
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
                 if int(ParentRecord):
                         update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (int(ParentRecord), int(ChildRecord))
                         print("<li> ", update)
                         if debug == 0:
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 if debug == 0:

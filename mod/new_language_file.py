@@ -44,11 +44,12 @@ if __name__ == '__main__':
         lang_name = GetElementValue(merge, 'LanguageName')
         lang_code = GetElementValue(merge, 'LanguageCode')
         latin_script = GetElementValue(merge, 'Latin')
-        insert = "insert into languages(lang_name, lang_code, latin_script) values('%s', '%s', '%s')" % (db.escape_string(lang_name),
-                                                                                                         db.escape_string(lang_code),
-                                                                                                         db.escape_string(latin_script))
+        CNX = MYSQL_CONNECTOR()
+        insert = "insert into languages(lang_name, lang_code, latin_script) values('%s', '%s', '%s')" % (CNX.DB_ESCAPE_STRING(lang_name),
+                                                                                                         CNX.DB_ESCAPE_STRING(lang_code),
+                                                                                                         CNX.DB_ESCAPE_STRING(latin_script))
         print('<li> ', insert)
-        db.query(insert)
+        CNX.DB_QUERY(insert)
 
         markIntegrated(db, submission)
 

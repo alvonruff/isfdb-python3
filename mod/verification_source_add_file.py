@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff 
+#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -41,13 +41,14 @@ if __name__ == '__main__':
         reference_fullname = GetElementValue(merge, 'SourceName')
         reference_url = GetElementValue(merge, 'SourceURL')
 
+        CNX = MYSQL_CONNECTOR()
         insert = """insert into reference(reference_label, reference_fullname, reference_url)
-                    values('%s', '%s', '%s')""" % (db.escape_string(reference_label),
-                                                   db.escape_string(reference_fullname),
-                                                   db.escape_string(reference_url))
+                    values('%s', '%s', '%s')""" % (CNX.DB_ESCAPE_STRING(reference_label),
+                                                   CNX.DB_ESCAPE_STRING(reference_fullname),
+                                                   CNX.DB_ESCAPE_STRING(reference_url))
         print('<li> ', insert)
-        db.query(insert)
-        new_record = db.insert_id()
+        CNX.DB_QUERY(insert)
+        new_record = CNX.DB_INSERT_ID()
 
         markIntegrated(db, submission, new_record)
 

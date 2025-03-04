@@ -23,9 +23,9 @@ if __name__ == '__main__':
         PrintNavBar()
         
         query = "select * from metadata"
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
 
         oldVersion = record[0][0]
         oldDbOnline = record[0][2]
@@ -39,9 +39,9 @@ if __name__ == '__main__':
         if 'VERSION' in form:
                 newVersion = XMLescape(form['VERSION'].value)
                 if newVersion != oldVersion:
-                        query = "update metadata set metadata_schemaversion='%s'" % db.escape_string(newVersion)
+                        query = "update metadata set metadata_schemaversion='%s'" % CNX.DB_ESCAPE_STRING(newVersion)
                         print(query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                         changes += 1
 
         if 'ONLINE' in form:
@@ -49,7 +49,7 @@ if __name__ == '__main__':
                 if newDbOnline != oldDbOnline:
                         query = "update metadata set metadata_dbstatus=%d" % newDbOnline
                         print(query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                         changes += 1
 
         if 'EDITING' in form:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
                 if newEditOnline != oldEditOnline:
                         query = "update metadata set metadata_editstatus=%d" % newEditOnline
                         print(query)
-                        db.query(query)
+                        CNX.DB_QUERY(query)
                         changes += 1
 
         print('%d changes made.' % changes)

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus 
+#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -26,5 +26,6 @@ if __name__ == '__main__':
                 SESSION.DisplayError('Only Moderators Can Resolve Bad URLs')
 
         update = 'delete from bad_images where pub_id=%d' % pub_id
-        db.query(update)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
         ISFDBLocalRedirect('mod/bad_images.cgi')

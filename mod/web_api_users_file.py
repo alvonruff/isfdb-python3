@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -53,12 +54,13 @@ if __name__ == '__main__':
         print('<ul>')
 
         query = 'delete from web_api_users where user_id = %d' % user_id
-        db.query(query)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         print('<li>%s' % query)
         
         if web_api_user:
                 query = 'insert into web_api_users(user_id) values(%d)' % user_id
-                db.query(query)
+                CNX.DB_QUERY(query)
                 print('<li>%s' % query)
 
         print('</ul>')

@@ -34,39 +34,38 @@ def doColumn(KeepId, merge, label, column):
         # Retrieve the current value of this field for the to-be-kept publisher;
         # it will be used later (currently for Notes only)
         query = "select %s from publishers where publisher_id=%d" % (column, int(KeepId))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         old_value = record[0][0]
         
         # Retrieve the current value for this field for the publisher whose data
         # the editor chose to use for this field
         query = "select %s from publishers where publisher_id=%d" % (column, int(selected_id))
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         new_value = record[0][0]
         
         # Update the to-be-kept publisher with the retrieved data
         if new_value:
-                update = "update publishers set %s='%s' where publisher_id=%d" % (column, db.escape_string(str(new_value)), int(KeepId))
+                update = "update publishers set %s='%s' where publisher_id=%d" % (column, CNX.DB_ESCAPE_STRING(str(new_value)), int(KeepId))
         else:
                 update = "update publishers set %s=NULL where publisher_id=%d" % (column, int(KeepId))
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
         if label == 'Note':
                 # Delete the Note record that was originally associated with the to-be-kept publisher (if exists)
                 if old_value:
                         update = "delete from notes where note_id=%d" % int(old_value)
                         print("<li> ", update)
-                        db.query(update)
+                        CNX.DB_QUERY(update)
                 
                 # Blank out the note ID in the to-be-dropped publisher record so that when
                 # it is deleted later on, the deletion process won't try to delete the Note record
                 update = "update publishers set %s=NULL where publisher_id=%d" % (column, int(selected_id))
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
 def PublisherMerge(doc, merge):
         KeepId = GetElementValue(merge, 'KeepId')
@@ -86,11 +85,12 @@ def PublisherMerge(doc, merge):
         for dropid in doc.getElementsByTagName('DropId'):
                 dropped_ids.append(int(dropid.firstChild.data))
 
+        CNX = MYSQL_CONNECTOR()
         for dropped_id in dropped_ids:
                 # Repoint all publications from this to-be-dropped publisher to the to-be-kept publisher
                 update = "update pubs set publisher_id=%d where publisher_id=%d" % (int(KeepId), dropped_id)
                 print("<li> ", update)
-                db.query(update)
+                CNX.DB_QUERY(update)
 
                 # Load the current data for the to-be-dropped publisher
                 drop_publisher = publishers(db)
@@ -101,8 +101,8 @@ def PublisherMerge(doc, merge):
                         # then insert it into the table for the to-be-kept publisher
                         if webpage not in keep_publisher.publisher_webpages:
                                 update = """insert into webpages(publisher_id, url)
-                                values(%d, '%s')""" % (int(KeepId), db.escape_string(webpage))
-                                db.query(update)
+                                values(%d, '%s')""" % (int(KeepId), CNX.DB_ESCAPE_STRING(webpage))
+                                CNX.DB_QUERY(update)
                                 print("<li> ", update)
 
                 for publisher_trans_name in drop_publisher.publisher_trans_names:
@@ -110,8 +110,8 @@ def PublisherMerge(doc, merge):
                         # then insert it into the table for the to-be-kept publisher
                         if publisher_trans_name not in keep_publisher.publisher_trans_names:
                                 update = """insert into trans_publisher(publisher_id, trans_publisher_name)
-                                values(%d, '%s')""" % (int(KeepId), db.escape_string(publisher_trans_name))
-                                db.query(update)
+                                values(%d, '%s')""" % (int(KeepId), CNX.DB_ESCAPE_STRING(publisher_trans_name))
+                                CNX.DB_QUERY(update)
                                 print("<li> ", update)
                 # Delete the to-be-dropped publisher
                 drop_publisher.delete()

@@ -29,12 +29,13 @@ pub_id = 0
 def UpdateColumn(doc, tag, column, id):
         value = GetElementValue(doc, tag)
         if TagPresent(doc, tag):
+                CNX = MYSQL_CONNECTOR()
                 value = XMLunescape(value)
-                value = db.escape_string(value)
+                value = CNX.DB_ESCAPE_STRING(value)
                 update = "update pubs set %s='%s' where pub_id=%s" % (column, value, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 def addAuthor(author, pub_id):
 
@@ -42,11 +43,11 @@ def addAuthor(author, pub_id):
         # STEP 1 - Get the author_id for this name,
         #          or else create one
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 author_id = insertAuthorCanonical(author)
@@ -58,17 +59,17 @@ def addAuthor(author, pub_id):
         insert = "insert into pub_authors(pub_id, author_id) values('%d', '%d');" % (int(pub_id), author_id)
         print("<li> ", insert)
         if debug == 0:
-                db.query(insert)
+                CNX.DB_QUERY(insert)
 
 def deleteAuthor(author, pub_id):
         ##############################################
         # STEP 1 - Get the author_id for this name
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 return
@@ -80,7 +81,7 @@ def deleteAuthor(author, pub_id):
         query = "delete from pub_authors where author_id='%s' and pub_id='%s'" % (author_id, pub_id)
         print("<li> ", query)
         if debug == 0:
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         ##############################################
         # STEP 3 - If the author still has an entry
@@ -89,9 +90,8 @@ def deleteAuthor(author, pub_id):
         for i in ['canonical_author', 'pub_authors']:
                 query = 'select COUNT(author_id) from %s where author_id=%d' % (i, author_id)
                 print("<li> ", query)
-                db.query(query)
-                res = db.store_result()
-                record = res.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 if record[0][0]:
                         return
 
@@ -106,8 +106,9 @@ def insertCover(title, artists, date, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d)" % (int(pub_id), int(record))
         print("<li>", update)
+        CNX = MYSQL_CONNECTOR()
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         if date:
                 setTitleDate(record, date)
@@ -139,8 +140,9 @@ def insertTitle(title, authors, date, page, type, length, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
         print("<li>", update)
+        CNX = MYSQL_CONNECTOR()
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         if date:
                 setTitleDate(record, date)
@@ -185,8 +187,9 @@ def insertReview(title, reviewees, reviewers, date, page, referral_lang):
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
         print("<li>", update)
+        CNX = MYSQL_CONNECTOR()
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         setTitleType(record, "REVIEW")
         if date:
@@ -214,7 +217,7 @@ def insertReview(title, reviewees, reviewers, date, page, referral_lang):
                         update = "insert into title_relationships(title_id, review_id) values(%d, %d);" % (parent, record)
                         print("<li>", update)
                         if debug == 0:
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                         return
 
 
@@ -245,8 +248,9 @@ def insertInterview(title, interviewees, interviewers, date, page, referral_lang
         record = createNewTitle(title)
         update = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(pub_id), int(record))
         print("<li>", update)
+        CNX = MYSQL_CONNECTOR()
         if debug == 0:
-                db.query(update)
+                CNX.DB_QUERY(update)
 
         setTitleType(record, "INTERVIEW")
         if date:
@@ -306,6 +310,7 @@ if __name__ == '__main__':
         print("<hr>")
         print("<ul>")
 
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('PubUpdate'):
@@ -336,7 +341,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = "delete from trans_pubs where pub_id=%d" % int(Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         ##########################################################
                         # Insert the new transliterated titles
@@ -345,9 +350,9 @@ if __name__ == '__main__':
                         for trans_title in trans_titles:
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_pubs(pub_id, trans_pub_title)
-                                            values(%d, '%s')""" % (int(Record), db.escape_string(title_value))
+                                            values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(title_value))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # EXTERNAL IDENTIFIERS
@@ -358,7 +363,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = "delete from identifiers where pub_id=%d" % int(Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
                         ##########################################################
                         # Insert the new external identifiers
                         ##########################################################
@@ -368,9 +373,9 @@ if __name__ == '__main__':
                                 id_value = XMLunescape(GetChildValue(external_id_element, 'IDvalue'))
                                 insert = """insert into identifiers(identifier_type_id, identifier_value,
                                             pub_id) values(%d, '%s', %d)
-                                            """ % (int(type_id), db.escape_string(id_value), int(Record))
+                                            """ % (int(type_id), CNX.DB_ESCAPE_STRING(id_value), int(Record))
                                 print("<li> ", insert)
-                                db.query(insert)
+                                CNX.DB_QUERY(insert)
 
                 ##########################################################
                 # NOTE
@@ -379,44 +384,42 @@ if __name__ == '__main__':
                         value = GetElementValue(merge, 'Note')
                         if value:
                                 query = 'select note_id from pubs where pub_id=%s and note_id is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
                                         ###########################################
                                         # Update the existing note
                                         ###########################################
-                                        rec = res.fetch_row()
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
-                                        update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
+                                        update = "update notes set note_note='%s' where note_id=%d" % (CNX.DB_ESCAPE_STRING(value), note_id)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 else:
                                         ###########################################
                                         # Add a new note
                                         ###########################################
-                                        insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
+                                        insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(value)
                                         print("<li> ", insert)
-                                        db.query(insert)
-                                        retval = db.insert_id()
+                                        CNX.DB_QUERY(insert)
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update pubs set note_id='%d' where pub_id=%s" % (retval, Record)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
                                 query = 'select note_id from pubs where pub_id=%s and note_id is not null;' % Record
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
                                         ###########################################
                                         # Delete the current note
                                         ###########################################
-                                        rec = res.fetch_row()
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         update = "delete from notes where note_id=%d" % (note_id)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                         update = "update pubs set note_id=NULL where pub_id=%s" % Record
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # PUBLISHER
@@ -426,31 +429,29 @@ if __name__ == '__main__':
                         if value:
                                 # STEP 1 - Get the old publisher_id from the record
                                 query = 'select publisher_id from pubs where pub_id=%s and publisher_id is not null' % (Record)
-                                db.query(query)
-                                res = db.store_result()
+                                CNX.DB_QUERY(query)
                                 OldPublisher = -1
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         OldPublisher = record[0][0]
 
                                 # STEP 2 - Get the ID for the new publisher
-                                query = "select publisher_id from publishers where publisher_name='%s';" % (db.escape_string(value))
+                                query = "select publisher_id from publishers where publisher_name='%s';" % (CNX.DB_ESCAPE_STRING(value))
                                 print("<li> ", query)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         NewPublisher = record[0][0]
                                 else:
-                                        query = "insert into publishers(publisher_name) values('%s');" % (db.escape_string(value))
+                                        query = "insert into publishers(publisher_name) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", query)
-                                        db.query(query)
-                                        NewPublisher = db.insert_id()
+                                        CNX.DB_QUERY(query)
+                                        NewPublisher = CNX.DB_INSERT_ID()
 
                                 # STEP 3 - Update the publication record
                                 update = "update pubs set publisher_id='%d' where pub_id=%s" % (NewPublisher, Record)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                                 # STEP 4 - Delete the old publisher if there are no other pubs referencing it
                                 if OldPublisher > -1:
@@ -461,17 +462,16 @@ if __name__ == '__main__':
                         else:
                                 # STEP 1 - Get the old publisher_id from the record
                                 query = 'select publisher_id from pubs where pub_id=%s and publisher_id is not null' % (Record)
-                                db.query(query)
-                                res = db.store_result()
+                                CNX.DB_QUERY(query)
                                 OldPublisher = -1
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         OldPublisher = record[0][0]
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set publisher_id=%s where pub_id=%s" % ('NULL', Record)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                                 # STEP 3 - Delete the old publisher if there are no other pubs referencing it
                                 if OldPublisher > -1:
@@ -487,31 +487,29 @@ if __name__ == '__main__':
                         if value:
                                 # STEP 1 - Get the old pub_series_id from the record
                                 query = 'select pub_series_id from pubs where pub_id=%s and pub_series_id is not null' % (Record)
-                                db.query(query)
-                                res = db.store_result()
+                                CNX.DB_QUERY(query)
                                 OldPubSeries = ''
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         OldPubSeries = record[0][0]
 
                                 # STEP 2 - Get the ID for the new publication series
-                                query = "select pub_series_id from pub_series where pub_series_name='%s';" % (db.escape_string(value))
+                                query = "select pub_series_id from pub_series where pub_series_name='%s';" % (CNX.DB_ESCAPE_STRING(value))
                                 print("<li> ", query)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         NewPubSeries = record[0][0]
                                 else:
-                                        query = "insert into pub_series(pub_series_name) values('%s');" % (db.escape_string(value))
+                                        query = "insert into pub_series(pub_series_name) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
                                         print("<li> ", query)
-                                        db.query(query)
-                                        NewPubSeries = db.insert_id()
+                                        CNX.DB_QUERY(query)
+                                        NewPubSeries = CNX.DB_INSERT_ID()
 
                                 # STEP 3 - Update the publication record
                                 update = "update pubs set pub_series_id='%d' where pub_id=%s" % (NewPubSeries, Record)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                                 # STEP 4 - Delete the old publication series if it's now empty
                                 if OldPubSeries:
@@ -521,17 +519,16 @@ if __name__ == '__main__':
                         else:
                                 # STEP 1 - Get the old pub_series_id from the record
                                 query = 'select pub_series_id from pubs where pub_id=%s and pub_series_id is not null' % (Record)
-                                db.query(query)
-                                res = db.store_result()
+                                CNX.DB_QUERY(query)
                                 OldPubSeries = ''
-                                if res.num_rows():
-                                        record = res.fetch_row()
+                                if CNX.DB_NUMROWS():
+                                        record = CNX.DB_FETCHONE()
                                         OldPubSeries = record[0][0]
 
                                 # STEP 2 - Update the publication record
                                 update = "update pubs set pub_series_id=%s where pub_id=%s" % ('NULL', Record)
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                                 # STEP 3 - Delete the old publication series if it's now empty
                                 if OldPubSeries:
@@ -549,7 +546,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = 'delete from webpages where pub_id=%d' % int(Record)
                         print('<li> ', delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         ##########################################################
                         # Insert the new webpages
@@ -557,9 +554,9 @@ if __name__ == '__main__':
                         webpages = doc.getElementsByTagName('Webpage')
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                                update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), db.escape_string(address))
+                                update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), CNX.DB_ESCAPE_STRING(address))
                                 print('<li> ', update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # AUTHORS
@@ -573,13 +570,13 @@ if __name__ == '__main__':
                                 NewAuthors.append(data)
 
                         query = "select authors.author_canonical from authors,pub_authors where authors.author_id=pub_authors.author_id and pub_authors.pub_id='%d';" % (int(Record))
-                        db.query(query)
-                        res = db.store_result()
-                        author = res.fetch_row()
+                        CNX2 = MYSQL_CONNECTOR()
+                        CNX2.DB_QUERY(query)
+                        author = CNX2.DB_FETCHMANY()
                         OldAuthors = []
                         while author:
                                 OldAuthors.append(author[0][0])
-                                author = res.fetch_row()
+                                author = CNX2.DB_FETCHMANY()
                         for author in OldAuthors:
                                 deleteAuthor(author, Record)
                         for author in NewAuthors:

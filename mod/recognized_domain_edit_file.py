@@ -28,17 +28,19 @@ def UpdateYesNoColumn(doc, tag, column, record_id):
                 else:
                         update = "update recognized_domains set %s = 0 where domain_id = %d" % (column, record_id)
                 print('<li> %s' % update)
-                db.query(update)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
 
 def UpdateColumn(doc, tag, column, record_id):
         if TagPresent(doc, tag):
                 value = GetElementValue(doc, tag)
                 if value:
-                        update = "update recognized_domains set %s = '%s' where domain_id = %d" % (column, db.escape_string(value), record_id)
+                        update = "update recognized_domains set %s = '%s' where domain_id = %d" % (column, CNX.DB_ESCAPE_STRING(value), record_id)
                 else:
                         update = "update recognized_domains set %s = NULL where domain_id = %d" % (column, record_id)
                 print('<li> %s' % update)
-                db.query(update)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
 
 if __name__ == '__main__':
 

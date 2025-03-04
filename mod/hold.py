@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2024   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,7 +39,8 @@ if __name__ == '__main__':
                         print('<h3>Submission is already on hold by %s</h3>' % WikiLink(holding_user))
                 else:
                         update = "update submissions set sub_holdid=%d where sub_id='%d';" % (int(reviewerid), int(submission))
-                        db.query(update)
+                        CNX = MYSQL_CONNECTOR()
+                        CNX.DB_QUERY(update)
                         print("<h3>Submission %d has been put on hold.</h3>" % int(submission))
 
         print(ISFDBLink('mod/submission_review.cgi', submission, 'Moderator View', False, 'class="approval" '))

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus 
+#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -49,16 +49,17 @@ if __name__ == '__main__':
         else:
                 explicit_link_required = 0
 
+        CNX = MYSQL_CONNECTOR()
         insert = """insert into recognized_domains(domain_name, site_name, site_url, linking_allowed, required_segment, explicit_link_required)
-                    values('%s', '%s', '%s', %d, '%s', %d)""" % (db.escape_string(domain_name),
-                                                                db.escape_string(site_name),
-                                                                db.escape_string(site_url),
+                    values('%s', '%s', '%s', %d, '%s', %d)""" % (CNX.DB_ESCAPE_STRING(domain_name),
+                                                                CNX.DB_ESCAPE_STRING(site_name),
+                                                                CNX.DB_ESCAPE_STRING(site_url),
                                                                 linking_allowed,
-                                                                db.escape_string(required_segment),
+                                                                CNX.DB_ESCAPE_STRING(required_segment),
                                                                 explicit_link_required)
         print('<li> %s' % insert)
-        db.query(insert)
-        new_record = db.insert_id()
+        CNX.DB_QUERY(insert)
+        new_record = CNX.DB_INSERT_ID()
 
         markIntegrated(db, submission, new_record)
 

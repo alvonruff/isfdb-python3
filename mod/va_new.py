@@ -21,23 +21,25 @@ from SQLparsing import *
 debug = 0
 
 def UpdateTitle(TitleRecord, column, value):
+        CNX = MYSQL_CONNECTOR()
         if not value:
                 update = "update titles set %s = NULL where title_id = %d" % (column, int(TitleRecord))
         else:
-                update = "update titles set %s = '%s' where title_id = %d" % (column, db.escape_string(value), int(TitleRecord))
+                update = "update titles set %s = '%s' where title_id = %d" % (column, CNX.DB_ESCAPE_STRING(value), int(TitleRecord))
         print("<li> ", update)
-        db.query(update)
+        CNX.DB_QUERY(update)
 
 
 def UpdateColumn(doc, tag, column, id):
         value = GetElementValue(doc, tag)
         if TagPresent(doc, tag):
+                CNX = MYSQL_CONNECTOR()
                 value = XMLunescape(value)
-                value = db.escape_string(value)
+                value = CNX.DB_ESCAPE_STRING(value)
                 update = "update titles set %s='%s' where title_id=%s" % (column, value, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 def addAuthor(author, title_id):
 
@@ -45,11 +47,11 @@ def addAuthor(author, title_id):
         # STEP 1 - Get the author_id for this name,
         #          or else create one
         ##############################################
-        query = "select author_id from authors where author_canonical='%s'" % (db.escape_string(author))
-        db.query(query)
-        result = db.store_result()
-        if result.num_rows():
-                record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        query = "select author_id from authors where author_canonical='%s'" % (CNX.DB_ESCAPE_STRING(author))
+        CNX.DB_QUERY(query)
+        if CNX.DB_NUMROWS():
+                record = CNX.DB_FETCHONE()
                 author_id = record[0][0]
         else:
                 author_id = insertAuthorCanonical(author)
@@ -61,7 +63,7 @@ def addAuthor(author, title_id):
         insert = "insert into canonical_author(title_id, author_id, ca_status) values('%d', '%d', 1);" % (int(title_id), author_id)
         print("<li> ", insert)
         if debug == 0:
-                db.query(insert)
+                CNX.DB_QUERY(insert)
 
 
 if __name__ == '__main__':
@@ -78,6 +80,7 @@ if __name__ == '__main__':
         print("<hr>")
         print("<ul>")
 
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('VariantTitle'):
@@ -87,8 +90,8 @@ if __name__ == '__main__':
                 query = "insert into titles(title_title) values('xxx');"
                 print("<li> ", query)
                 if debug == 0:
-                        db.query(query)
-                TitleRecord = db.insert_id()
+                        CNX.DB_QUERY(query)
+                TitleRecord = CNX.DB_INSERT_ID()
 
                 UpdateColumn(merge, 'Title',      'title_title',      TitleRecord)
 
@@ -99,9 +102,9 @@ if __name__ == '__main__':
                         for trans_title in trans_titles:
                                 title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_titles(title_id, trans_title_title)
-                                            values(%d, '%s')""" % (int(TitleRecord), db.escape_string(title_value))
+                                            values(%d, '%s')""" % (int(TitleRecord), CNX.DB_ESCAPE_STRING(title_value))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 UpdateColumn(merge, 'Year',       'title_copyright',  TitleRecord)
                 UpdateColumn(merge, 'Storylen',   'title_storylen',   TitleRecord)
@@ -131,7 +134,7 @@ if __name__ == '__main__':
                                         update = "update titles set title_language='%d' where title_id=%s" % (int(lang_id), TitleRecord)
                                         print("<li> ", update)
                                         if debug == 0:
-                                                db.query(update)
+                                                CNX.DB_QUERY(update)
 
                 ##########################################################
                 # NOTE
@@ -139,24 +142,23 @@ if __name__ == '__main__':
                 value = GetElementValue(merge, 'Note')
                 if value:
                         query = 'select note_id from titles where title_id=%s and note_id is not null;' % TitleRecord
-                        db.query(query)
-                        res = db.store_result()
-                        if res.num_rows():
-                                rec = res.fetch_row()
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS():
+                                rec = CNX.DB_FETCHONE()
                                 note_id = rec[0][0]
-                                update = "update notes set note_note='%s' where note_id=%d" % (db.escape_string(value), note_id)
+                                update = "update notes set note_note='%s' where note_id=%d" % (CNX.DB_ESCAPE_STRING(value), note_id)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
-                                insert = "insert into notes(note_note) values('%s');" % db.escape_string(value)
+                                insert = "insert into notes(note_note) values('%s');" % CNX.DB_ESCAPE_STRING(value)
                                 if debug == 0:
-                                        db.query(insert)
-                                retval = db.insert_id()
+                                        CNX.DB_QUERY(insert)
+                                retval = CNX.DB_INSERT_ID()
                                 update = "update titles set note_id='%d' where title_id=%s" % (retval, TitleRecord)
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 ##########################################################
                 # AUTHORS

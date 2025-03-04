@@ -24,11 +24,12 @@ def UpdateColumn(doc, tag, column, id):
         value = GetElementValue(doc, tag)
         if TagPresent(doc, tag):
                 value = XMLunescape(value)
-                value = db.escape_string(value)
+                CNX = MYSQL_CONNECTOR()
+                value = CNX.DB_ESCAPE_STRING(value)
                 update = "update series set %s='%s' where series_id=%s" % (column, value, id)
                 print("<li> ", update)
                 if debug == 0:
-                        db.query(update)
+                        CNX.DB_QUERY(update)
 
 
 
@@ -46,6 +47,7 @@ if __name__ == '__main__':
         print("<hr>")
         print("<ul>")
 
+        CNX = MYSQL_CONNECTOR()
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
         if doc.getElementsByTagName('SeriesUpdate'):
@@ -59,16 +61,16 @@ if __name__ == '__main__':
                         # Delete the old transliterated names
                         delete = "delete from trans_series where series_id=%d" % int(Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         # Insert the new transliterated names
                         trans_names = doc.getElementsByTagName('SeriesTransName')
                         for trans_name in trans_names:
                                 name = XMLunescape(trans_name.firstChild.data.encode('iso-8859-1'))
                                 update = """insert into trans_series(series_id, trans_series_name)
-                                            values(%d, '%s')""" % (int(Record), db.escape_string(name))
+                                            values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(name))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
 
                 parent = GetElementValue(merge, 'Parent')
                 #If the Parent element is present and the value is NULL, set the MySQL value to NULL
@@ -77,29 +79,28 @@ if __name__ == '__main__':
                                 update = "update series set series_parent=NULL where series_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                               db.query(update)
+                                               CNX.DB_QUERY(update)
                 if parent:
                         # STEP 1 - Look to see if parent exists
-                        query = "select series_id from series where series_title='%s'" % (db.escape_string(parent))
-                        db.query(query)
-                        res = db.store_result()
-                        if res.num_rows():
-                                record = res.fetch_row()
+                        query = "select series_id from series where series_title='%s'" % (CNX.DB_ESCAPE_STRING(parent))
+                        CNX.DB_QUERY(query)
+                        if CNX.DB_NUMROWS():
+                                record = CNX.DB_FETCHONE()
                                 series_id = record[0][0]
                                 update = "update series set series_parent='%d' where series_id=%d" % (series_id, int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
-                                query = "insert into series(series_title) values('%s');" % (db.escape_string(parent))
+                                query = "insert into series(series_title) values('%s');" % (CNX.DB_ESCAPE_STRING(parent))
                                 print("<li> ", query)
                                 if debug == 0:
-                                        db.query(query)
-                                series_id = db.insert_id()
+                                        CNX.DB_QUERY(query)
+                                series_id = CNX.DB_INSERT_ID()
                                 update = "update series set series_parent='%d' where series_id=%d" % (series_id, int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 parentposition = GetElementValue(merge, 'Parentposition')
                 #If the ParentPosition element is present and the value is NULL, set the MySQL value to NULL
@@ -108,12 +109,12 @@ if __name__ == '__main__':
                                 update = "update series set series_parent_position=NULL where series_id=%d" % (int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                               db.query(update)
+                                               CNX.DB_QUERY(update)
                         else:
                                 update = "update series set series_parent_position=%s where series_id=%d" % (int(parentposition), int(Record))
                                 print("<li> ", update)
                                 if debug == 0:
-                                               db.query(update)
+                                               CNX.DB_QUERY(update)
 
                 value = GetElementValue(merge, 'Webpages')
                 if value:
@@ -127,7 +128,7 @@ if __name__ == '__main__':
                         ##########################################################
                         delete = "delete from webpages where series_id=%s" % (Record)
                         print("<li> ", delete)
-                        db.query(delete)
+                        CNX.DB_QUERY(delete)
 
                         ##########################################################
                         # Insert the new webpages
@@ -135,9 +136,9 @@ if __name__ == '__main__':
                         webpages = doc.getElementsByTagName('Webpage')
                         for webpage in webpages:
                                 address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
-                                update = "insert into webpages(series_id, url) values(%s, '%s')" % (Record, db.escape_string(address))
+                                update = "insert into webpages(series_id, url) values(%s, '%s')" % (Record, CNX.DB_ESCAPE_STRING(address))
                                 print("<li> ", update)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                 if TagPresent(merge, 'Note'):
                         value = GetElementValue(merge, 'Note')
                         if value:
@@ -145,38 +146,36 @@ if __name__ == '__main__':
                                 # Check to see if this publication series already has a note
                                 ############################################################
                                 query = "select series_note_id from series where series_id='%s' and series_note_id is not null and series_note_id<>'0';" % (Record)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         print('<li> note_id:', note_id)
-                                        update = "update notes set note_note='%s' where note_id='%d'" % (db.escape_string(value), int(note_id))
+                                        update = "update notes set note_note='%s' where note_id='%d'" % (CNX.DB_ESCAPE_STRING(value), int(note_id))
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                                 else:
-                                        insert = "insert into notes(note_note) values('%s');" % (db.escape_string(value))
-                                        db.query(insert)
-                                        retval = db.insert_id()
+                                        insert = "insert into notes(note_note) values('%s');" % (CNX.DB_ESCAPE_STRING(value))
+                                        CNX.DB_QUERY(insert)
+                                        retval = CNX.DB_INSERT_ID()
                                         update = "update series set series_note_id='%d' where series_id='%s'" % (retval, Record)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
                         else:
                                 ##############################################################
                                 # An empty note submission was made - delete the previous note
                                 ##############################################################
                                 query = "select series_note_id from series where series_id=%s and series_note_id is not null and series_note_id<>'0';" % (Record)
-                                db.query(query)
-                                res = db.store_result()
-                                if res.num_rows():
-                                        rec = res.fetch_row()
+                                CNX.DB_QUERY(query)
+                                if CNX.DB_NUMROWS():
+                                        rec = CNX.DB_FETCHONE()
                                         note_id = rec[0][0]
                                         delete = "delete from notes where note_id=%d" % (note_id)
                                         print("<li> ", delete)
-                                        db.query(delete)
+                                        CNX.DB_QUERY(delete)
                                         update = "update series set series_note_id=NULL where series_id=%s" % (Record)
                                         print("<li> ", update)
-                                        db.query(update)
+                                        CNX.DB_QUERY(update)
 
                 submitter = GetElementValue(merge, 'Submitter')
                 markIntegrated(db, submission, Record)

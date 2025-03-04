@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2019-2025   Ahasuerus 
+#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -25,6 +25,7 @@ if __name__ == '__main__':
         if not user.moderator:
                 SESSION.DisplayError('Only Moderators Can Resolve SFE URLs')
 
-        update = "update sfe3_authors set resolved=1 where url='%s'" % db.escape_string(url)
-        db.query(update)
+        update = "update sfe3_authors set resolved=1 where url='%s'" % CNX.DB_ESCAPE_STRING(url)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(update)
         ISFDBLocalRedirect('edit/sfe3_authors.cgi')

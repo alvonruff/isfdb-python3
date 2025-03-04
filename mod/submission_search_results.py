@@ -62,14 +62,14 @@ if __name__ == '__main__':
                         order by sub_reviewed desc
                         limit %d, 200""" % (submitter_id, status_flag, start)
 
-                db.query(query)
-                result = db.store_result()
-                if result.num_rows() == 0:
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                if CNX.DB_NUMROWS() == 0:
                         print('<h3>No submissions present for the specified search criteria.</h3>')
                 else:
                         print('<h3>%s submissions created by user %s (%d - %d)</h3>' % (status, submitter_name, start+1, start+200))
-                        ISFDBprintSubmissionTable(result, status_flag)
-                        if result.num_rows() > 199:
+                        ISFDBprintSubmissionTable(CNX, status_flag)
+                        if CNX.DB_NUMROWS() > 199:
                                 print('<p> %s' % ISFDBLinkNoName('mod/submission_search_results.cgi',
                                                                  'submitter_name=%s&amp;start=%d&amp;status=%s' % (submitter_name, start+200, status),
                                                                  'Next page (%d - %d)' % (start+201, start+400), True))
