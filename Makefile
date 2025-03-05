@@ -39,6 +39,7 @@ clean:
 	cd css && $(MAKE) clean;
 	cd rest && $(MAKE) clean;
 	cd nightly && $(MAKE) clean;
+	rm -f .pythonver
 
 export:
 		/bin/bash export.sh
