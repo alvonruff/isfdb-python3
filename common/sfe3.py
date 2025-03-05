@@ -13,9 +13,14 @@ import os
 import sys
 import shutil
 import string
-import urllib2
 from library import *
 from SQLparsing import *
+
+if PYTHONVER == 'python2':
+        import urllib
+else:
+        import urllib.request
+        import urllib.error
 
 class Sfe3:
         def __init__(self):
@@ -102,7 +107,7 @@ class Sfe3:
                 for category in self.categories:
                         category_url = self.base_category_url + category
                         try:
-                                page_contents = urllib2.urlopen(category_url).read()
+                                page_contents = urllib.request.urlopen(category_url).read()
                         except:
                                 continue
                         fragments = page_contents.split(fragment_separator)

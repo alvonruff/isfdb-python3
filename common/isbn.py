@@ -1,3 +1,4 @@
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
@@ -11,14 +12,13 @@
 import string
 from SQLparsing import *
 
-
 ######################################################################
 # Format an ISBN with hyphen separators.  For information about the
 # ranges, see https://www.isbn-international.org/range_file_generation
 ######################################################################
 def convertISBN(isbn):
 
-        if not validISBN(isbn):
+        if validISBN(isbn) == 0:
                 return isbn
 
         stripped_isbn = isbn.replace('-','').replace(' ','')
@@ -33,7 +33,7 @@ def convertISBN(isbn):
         # the transition to ISBN-13s, they displayed the second hyphen after
         # the 4th digit even though the official rules said they should have
         # done it after the 5th digit. The exception below addresses this issue
-        # although some books published in 2006-2007 may have used 
+        # although some books published in 2006-2007 may have used
         # rules-compliant hypehnation.
         if len(stripped_isbn) == 10 and stripped_isbn[:5] in ('07653', '07656', '08123', '08125'):
                 prefix_length = 4
@@ -99,7 +99,7 @@ def isbnVariations(original):
 def ISBNValidFormat(isbn):
         # Returns 1 if the passed parameter follows the standard ISBN format, 0 otherwise
         # Note that only ISBN format is checked; checksum validation is not performed
-        isbn = str.replace(isbn, '-', '')
+        isbn = str.replace(str(isbn), '-', '')
         isbn = str.replace(isbn, ' ', '')
         if (len(isbn) != 10) and (len(isbn) != 13):
                 return 0
@@ -144,7 +144,7 @@ def validISBN13(isbn):
         sum1 = int(newISBN[0]) + int(newISBN[2]) + int(newISBN[4]) + int(newISBN[6]) + int(newISBN[8]) + int(newISBN[10])
         sum2 = int(newISBN[1]) + int(newISBN[3]) + int(newISBN[5]) + int(newISBN[7]) + int(newISBN[9]) + int(newISBN[11])
         checksum = sum1 + (sum2 * 3)
-        remainder = checksum - ((checksum/10)*10)
+        remainder = checksum - (int(checksum/10)*10)
         if remainder:
                 remainder = 10 - remainder
         newISBN = newISBN + str(remainder)
@@ -154,7 +154,7 @@ def validISBN13(isbn):
                 return 0
 
 def validISBN(isbn):
-        isbn = str.replace(isbn, '-', '')
+        isbn = str.replace(str(isbn), '-', '')
         isbn = str.replace(isbn, ' ', '')
         if len(isbn) != 10:
                 return validISBN13(isbn)

@@ -9,12 +9,40 @@ from __future__ import print_function
 #         Version: $Revision: 1205 $
 #         Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
 
-import cgitb; cgitb.enable()
+##############################################################################
+#  Pylint disable list. These checks are too gratuitous for our purposes
+##############################################################################
+# pylint: disable=C0103, C0209, C0116, W0311, R1705, C0301, R0902, C0413, R0903, C0413
+#
+# C0103 = Not using snake_case naming conventions
+# C0209 = Lack of f-string usage
+# C0116 = Lack of docstrings
+# W0311 = Lack of using 4 spaces for indention
+# R1705 = Unnecessary else after return
+# C0301 = Line too long (> 80 characters)
+# R0902 = Too many instance attributes
+# R0903 = Too few public methods
+# C0413 = Wrong import position
+
+##############################################################################
+#  Imports (Recommended to be top-level in Python3
+##############################################################################
+import cgitb
+cgitb.enable()
+
 import string
 import sys
 import os
 from localdefs import *
-import urllib
+
+if PYTHONVER == 'python2':
+        import urllib
+else:
+        import urllib.request
+        import urllib.parse
+        import urllib.error
+
+##############################################################################
 
 def PrintHTMLHeaders(title):
         from datetime import date
@@ -48,7 +76,7 @@ def PrintHTMLHeaders(title):
         #   May need to be re-worked if we implement workers
         policy += " worker-src 'none';"
         print("""Content-Security-Policy: %s""" % policy)
-    
+
         # Declare content type and end the http headers section with a \n
         print('Content-type: text/html; charset=%s\n' % UNICODE)
         # The DTD Web page for the HTML standard redirects to https, but the standard
@@ -74,7 +102,10 @@ def PrintHTMLHeaders(title):
         print('<img src="%s://%s/IsfdbBanner%d.jpg" alt="ISFDB banner">' % (PROTOCOL, HTMLHOST, banner_number))
         print('</span>')
         print('</a>')
-        print('<div id="statusbar">')
+        if (HTMLLOC == "www.isfdb2.org") or (HTMLLOC == "isfdb2.org"):
+                print('<div id="statusbar2">')
+        else:
+                print('<div id="statusbar">')
         print('<h2>%s</h2>' % ISFDBText(title))
 
 class _Db:
@@ -128,7 +159,7 @@ class _Currency:
                 self.yuan = '&#20803;'
                 self.zloty = 'z&#322;'
 
-class Session:
+class Session(object):
         def __init__(self):
                 self.cgi_dir = ''
                 self.cgi_script = ''
@@ -193,7 +224,7 @@ class Session:
                 self.ui = _Ui()
                 self.currency = _Currency()
                 self.db = _Db()
-    
+
         def ParseParameters(self):
                 cgi_path = os.environ.get('SCRIPT_NAME')
                 # CGI script name is in the last "/" chunk
@@ -212,6 +243,12 @@ class Session:
                                         parameter = parameter[:-1]
                                 self.parameters.append(parameter)
 
+                # Allow for command line invocation
+                if (cgi_path == None) and (self.query_string == None):
+                        num_args = len(sys.argv)
+                        for i in range(1, num_args, 1):
+                                self.parameters.append(sys.argv[i])
+
         def Parameter(self, param_number, param_type = 'str', default_value = None, allowed_values = []):
                 param_display_values = {0: 'First',
                         1: 'Second',
@@ -227,7 +264,7 @@ class Session:
                 if param_number not in param_display_values:
                         self.DisplayError('Invalid parameter. Only %d parameters are allowed.' % len(param_display_values))
                 param_order = param_display_values[param_number]
-        
+
                 try:
                         value = self.parameters[param_number]
                         if not value:
@@ -238,7 +275,7 @@ class Session:
                         value = default_value
                 if value == '':
                         self.DisplayError('%s parameter not specified' % param_order)
-        
+
                 if param_type == 'int':
                         try:
                                 value = int(value)
@@ -253,8 +290,11 @@ class Session:
                         value = str.replace(value, '_', ' ')
                         value = str.replace(value, '\\', '')
                         value = str.replace(value, '=', '')
-                        value = urllib.unquote(value).decode('utf-8').encode('iso-8859-1', 'xmlcharrefreplace')
-        
+                        if PYTHONVER == 'python2':
+                                value = urllib.unquote(value).decode('utf-8').encode('iso-8859-1', 'xmlcharrefreplace')
+                        else:
+                                pass
+
                 if allowed_values and value not in allowed_values:
                         output = '%s parameter must be one of the following values: ' % param_order
                         for count, allowed_value in enumerate(allowed_values):
@@ -723,5 +763,5 @@ SUBMISSION_DISPLAY = {
 
 SUBMISSION_TYPE_DISPLAY = {
         'MakePseudonym': 'Make Alternate Name',
-        'RemovePseud': 'Remove Alternate Name'    
+        'RemovePseud': 'Remove Alternate Name'
         }

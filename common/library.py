@@ -78,7 +78,7 @@ def ISFDBnormalizeAuthor(value):
         return ' '.join(str.split(value))
 
 def ISFDBnormalizeDate(date):
-        now = datetime.datetime.now()
+        now = datetime.now()
         # This function takes a date and normalizes it to be in the standard 'YYYY-MM-DD' format
         # For invalid dates, '0000-00-00' is returned
         date = str.replace(date, "'", '')
@@ -249,7 +249,10 @@ def ISFDBCompare2Dates(date1, date2):
 def GetElementValue(element, tag):
         document = element[0].getElementsByTagName(tag)
         try:
-                value = document[0].firstChild.data.encode('iso-8859-1')
+                if PYTHONVER == 'python2':
+                        value = document[0].firstChild.data.encode('iso-8859-1')
+                else:
+                        value = document[0].firstChild.data
         except:
                 value = ''
         return value
@@ -257,7 +260,10 @@ def GetElementValue(element, tag):
 def GetChildValue(doc, label):
         try:
                 tag = doc.getElementsByTagName(label)[0]
-                value = tag.firstChild.data.encode('iso-8859-1')
+                if PYTHONVER == 'python2':
+                        value = tag.firstChild.data.encode('iso-8859-1')
+                else:
+                        value = tag.firstChild.data
         except:
                 value = ''
         return value
@@ -870,7 +876,7 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
                         # Create a link only if a linking value was entered
                         if linking_value:
                                 # Replace the '%s' in the template link with a URL-escaped version of the linking value
-                                actual_link = template_link % urllib.quote(linking_value)
+                                actual_link = template_link % Portable_urllib_quote(linking_value)
                                 # If there is no template name, use the linking value as the display value
                                 if not template_name:
                                         display_value = linking_value
@@ -1567,8 +1573,9 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
                 (subjectLink, new_record) = getSubjectLink(record[0], doc2, subType)
                 submitter = GetElementValue(doc2, 'Submitter')
                 submitter = str.replace(submitter, ' ', '_')
-        except:
-                subjectLink = '<b>XML PARSE ERROR</b>'
+        except Exception as e:
+                e = traceback.format_exc()
+                subjectLink = '<b>XML PARSE ERROR: %s</b>' % e
                 submitter = SQLgetUserName(record[0][SUB_SUBMITTER])
         try:
                 if displayName:
@@ -1951,7 +1958,7 @@ def ISFDBCompareTwoTitles(title, target, mode):
                         match = 1
         else:
                 match = 1
-        
+
         return match
 
 def _similarTitles(string1, string2):
@@ -1992,6 +1999,34 @@ def _similarTitles(string1, string2):
                 return 1
         else:
                 return 0
+
+def debugUnicodeString(input, filename):
+        f = open(filename, "w")
+        f.write(input)
+        f.close()
+
+if PYTHONVER == 'python2':
+        import urllib
+        import urllib2
+        from urlparse import urlparse
+else:
+        import urllib.parse
+        import urllib.request
+        from urllib.parse import urlparse
+
+def Portable_urllib_quote(target):
+        if PYTHONVER == 'python2':
+                retval = urllib.quote(target)
+        else:
+                retval = urllib.parse.quote(target)
+        return(retval)
+
+def Portable_urllib_unquote(target):
+        if PYTHONVER == 'python2':
+                retval = urllib.unquote(target)
+        else:
+                retval = urllib.parse.unquote(target)
+        return(retval)
 
 def IsfdbFieldStorage():
         if PYTHONVER == 'python2':

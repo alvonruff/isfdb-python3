@@ -57,21 +57,15 @@ check_dirs:
 install: check_dirs
 	cp $(BASE_FILES) ../biblio
 	cp $(CLASS_FILES) ../biblio
-	cp localdefs.py ../biblio/local
 	cp $(BASE_FILES) ../edit
 	cp $(CLASS_FILES) ../edit
-	cp localdefs.py ../edit/local
 	cp $(BASE_FILES) ../mod
 	cp $(CLASS_FILES) ../mod
-	cp localdefs.py ../mod/local
 	cp $(BASE_FILES) ../rest
 	cp $(CLASS_FILES) ../rest
-	cp localdefs.py ../rest/local
 	cp $(BASE_FILES) ../nightly
 	cp $(CLASS_FILES) ../nightly
-	cp localdefs.py ../nightly/local
 	cp localdefs.py ../css
-	cp localdefs.py ../scripts
 	cp $(BASE_FILES) ../scripts
 
 clean:

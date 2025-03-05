@@ -13,10 +13,10 @@ from __future__ import print_function
 import os
 import string
 import time
-import md5
+import hashlib
 from localdefs import *
 from isfdb import *
-from Cookie import SimpleCookie
+from http.cookies import SimpleCookie
 from SQLparsing import *
 from library import ISFDBLink, ISFDBLinkNoName
 
@@ -92,7 +92,7 @@ def GetUserData():
                 if (name != '') and (token != persistent_token):
                         os.environ['HTTP_COOKIE'] = ''
                         return(0,0,0)
-        except Exception, e:
+        except Exception as e:
                 return(0,0,0)
 
         return(id, name, token)

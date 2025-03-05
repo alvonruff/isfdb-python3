@@ -13,6 +13,7 @@ import cgi
 import sys
 import re
 import os
+import traceback
 from isfdb import *
 from isfdblib import *
 from library import *
@@ -192,8 +193,9 @@ class titles:
                         # Check that the submitted Title ID is an integer
                         self.title_id = str(int(self.form['title_id'].value))
                         self.used_id = 1
-                except:
-                        self.error = 'Title ID must be a valid integer number'
+                except Exception as e:
+                        e = traceback.format_exc()
+                        self.error = 'Title ID must be a valid integer number. %s' % e
                         return
 
                 try:
@@ -201,8 +203,9 @@ class titles:
                         self.used_title = 1
                         if not self.title_title:
                                 raise
-                except:
-                        self.error = 'Title not specified'
+                except Exception as e:
+                        e = traceback.format_exc()
+                        self.error = 'Title not specified. %s' % e
                         return
 
                 for key in self.form:
@@ -280,8 +283,9 @@ class titles:
                         # Validate and normalize the date - change to 0000-00-00 if it's invalid
                         self.title_year = ISFDBnormalizeDate(self.title_year)
                         self.used_year = 1
-                except:
-                        self.error = 'Date not specified'
+                except Exception as e:
+                        e = traceback.format_exc()
+                        self.error = 'Date not specified. %s' % e
                         return
 
                 try:
@@ -293,8 +297,9 @@ class titles:
                                 raise
                         self.title_ttype = value
                         self.used_ttype = 1
-                except:
-                        self.error = 'Invalid Title Type'
+                except Exception as e:
+                        e = traceback.format_exc()
+                        self.error = 'Invalid Title Type. %s' % e
                         return
 
                 # Validate optional fields

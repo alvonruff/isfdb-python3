@@ -967,7 +967,6 @@ def _RetrievePubsQuery(query):
                         query += "and (pub_content.title_id=%d " % title
                 counter += 1
         # Display 0000 years last
-        #query += ") order by IF(pubs.pub_year = '0000-00-00', 1, 0), pubs.pub_year, pubs.pub_title, pubs.pub_id"
         query += ") order by IF(p.pub_year = '0000-00-00', 1, 0), p.pub_year, p.pub_title, p.pub_id"
 
         results = []
@@ -1093,12 +1092,18 @@ def _ASCIIDirectory(query):
         while record:
                 two_latin1_letters = record[0][0]
                 first_latin_letter = two_latin1_letters[0]
-                first_unicode_letter = first_latin_letter.decode('iso-8859-1')
+                if PYTHONVER == 'python2':
+                        first_unicode_letter = first_latin_letter.decode('iso-8859-1')
+                else:
+                        first_unicode_letter = first_latin_letter
                 first_normalized_letter = unicodedata.normalize('NFKD', first_unicode_letter).encode('ascii', 'ignore').decode('ascii', 'strict').lower()
                 second_normalized_letter = ' '
                 if len(two_latin1_letters) > 1:
                         second_latin_letter = two_latin1_letters[1]
-                        second_unicode_letter = second_latin_letter.decode('iso-8859-1')
+                        if PYTHONVER == 'python2':
+                                second_unicode_letter = second_latin_letter.decode('iso-8859-1')
+                        else:
+                                second_unicode_letter = second_latin_letter
                         second_normalized_letter = unicodedata.normalize('NFKD', second_unicode_letter).encode('ascii', 'ignore').decode('ascii', 'strict').lower()
                 two_normalized_letters = first_normalized_letter + second_normalized_letter
                 records_map[two_normalized_letters] = ''
@@ -3160,7 +3165,10 @@ def SQLGetPseudIdByAuthorAndPseud(parent,pseudonym):
 
 def SQLLoadWebSites(isbn, user_id = None, format = None):
         SQLlog("SQLLoadWebSites, isbn=%s, user_id=%s, format=%s" % (isbn, user_id, format))
-        from urlparse import urlparse
+        if PYTHONVER == 'python2':
+                from urlparse import urlparse
+        else:
+                from urllib.parse import urlparse
         from isbn import convertISBN, toISBN10, toISBN13
         newisbn = str.replace(str(isbn), '-', '')
         newisbn = str.replace(newisbn, ' ', '')

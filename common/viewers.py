@@ -782,7 +782,6 @@ class SubmissionFragment():
                         for record in similar_publishers:
                                 warning += '%s<br>' %ISFDBLink('publisher.cgi', record[0], record[1])
                         self._AddWarning(warning, 0)
-                        
 
         def _CheckOrphanPublisher(self):
                 from publisherClass import publishers
@@ -924,7 +923,10 @@ class SubmissionFragment():
                 self._CheckDuplicateURL()
                 
         def _CheckImageDomains(self):
-                from urlparse import urlparse
+                if PYTHONVER == 'python2':
+                        from urlparse import urlparse
+                else:
+                        from urllib.parse import urlparse
                 domains = SQLLoadRecognizedDomains()
                 valid_domain = 0
                 url_domain = urlparse(self.value).netloc
@@ -1331,7 +1333,10 @@ class SubmissionViewer():
                         self.updated[group_name] = 1
                         values_list = self.doc.getElementsByTagName(element_name)
                         for value in values_list:
-                                self.metadata[group_name].append(XMLunescape(value.firstChild.data.encode('iso-8859-1')))
+                                if PYTHONVER == 'python2':
+                                        self.metadata[group_name].append(XMLunescape(value.firstChild.data.encode('iso-8859-1')))
+                                else:
+                                        self.metadata[group_name].append(XMLunescape(value.firstChild.data))
                 else:
                         self.updated[group_name] = 0
 
@@ -1349,7 +1354,10 @@ class SubmissionViewer():
                         self.updated[element_name] = 1
                         for value in self.doc.getElementsByTagName(element_name):
                                 record = value.firstChild.data
-                                self.metadata[element_name].append(XMLunescape(record.encode('iso-8859-1')))
+                                if PYTHONVER == 'python2':
+                                        self.metadata[element_name].append(XMLunescape(record.encode('iso-8859-1')))
+                                else:
+                                        self.metadata[element_name].append(XMLunescape(record))
                 else:
                         self.updated[element_name] = 0
 
@@ -1651,7 +1659,7 @@ class SubmissionViewer():
                 elif ISFDBCompare2Dates(variant_date, parent_date) == 1:
                         warning = 'Proposed variant date before proposed parent date'
                 return warning
-        
+
         def NoTrTemplateWarning(self, parent_lang, variant_lang, parent_type, variant_type, variant_note):
                 if (parent_lang
                     and variant_lang != parent_lang
@@ -3506,7 +3514,7 @@ class SubmissionViewer():
                         self._DisplayTitleContentAdded()
                         self._DisplayReviewAdded()
                         self._DisplayInterviewAdded()
-                        
+
                 self._DisplayDateMismatches(pub_id)
 
                 self._DisplayVerifications(pub_id)

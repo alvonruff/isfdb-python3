@@ -9,15 +9,40 @@ from __future__ import print_function
 #     Version: $Revision: 1220 $
 #     Date: $Date: 2025-02-03 16:47:16 -0500 (Mon, 03 Feb 2025) $
 
+##############################################################################
+#  Pylint disable list. These checks are too gratuitous for our purposes
+##############################################################################
+# pylint: disable=bad-indentation
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-instance-attributes
+##############################################################################
+# Look at these later
+##############################################################################
+# pylint: disable=unused-wildcard-import
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+
 import cgi
 import sys
 import os
-import urllib
 from isfdb import *
 from library import *
 from xml.dom import minidom
 from xml.dom import Node
 from SQLparsing import *
+
+if PYTHONVER == 'python2':
+        import urllib
+else:
+        import urllib.request
+        import urllib.parse
+        import urllib.error
 
 class awardShared:
         def __init__(self):
@@ -41,7 +66,7 @@ class awardShared:
                         '98' : 'Early Submissions',
                         '99' : 'Nominations Below Cutoff',
                 }
-        
+
         def PrintOneAwardList(self, awards):
                 # Print all awards for one list of awards. The awards may be for one award type/year, one category or one category/year.
                 special_awards = self.SpecialAwards()
@@ -81,7 +106,7 @@ class awardShared:
                                 award_link = 'Nomination'
 
                 print(('<td>%s</td>' % award.BuildDisplayLevel(award_link, css_class)))
-                
+
                 print('<td>')
 
                 if award.award_title == 'untitled':
@@ -128,7 +153,7 @@ class awards(awardShared):
                 self.used_type_poll  = 0
                 self.used_note_id    = 0
                 self.used_note       = 0
-                
+
                 self.award_authors    = []
                 self.award_id         = ''
                 self.title_id         = ''
@@ -195,7 +220,7 @@ class awards(awardShared):
                                 self.award_type_poll = award_type[AWARD_TYPE_POLL]
                                 self.used_type_poll = 1
                         if award[AWARD_LEVEL]:
-                                self.award_level = award[AWARD_LEVEL]
+                                self.award_level = str(award[AWARD_LEVEL])
                                 self.used_level = 1
                                 self.award_displayed_level = ''
                                 if int(self.award_level) > 70:
@@ -244,7 +269,7 @@ class awards(awardShared):
                 if 'title_id' in self.form:
                         self.title_id = self.form['title_id'].value
                         self.used_title_id = 1
-                
+
                 if 'award_title' in self.form:
                         self.award_title = XMLescape(self.form['award_title'].value)
                         self.used_title = 1

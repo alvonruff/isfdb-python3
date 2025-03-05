@@ -9,13 +9,32 @@ from __future__ import print_function
 #     Version: $Revision: 943 $
 #     Date: $Date: 2022-06-29 19:59:53 -0400 (Wed, 29 Jun 2022) $
 
+##############################################################################
+#  Pylint disable list. These checks are too gratuitous for our purposes
+##############################################################################
+# pylint: disable=bad-indentation
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-instance-attributes
+##############################################################################
+# Look at these later
+##############################################################################
+# pylint: disable=unused-wildcard-import
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+
 import cgi
 import sys
 import re
-from isfdb import *
-from library import *
 from xml.dom import minidom
 from xml.dom import Node
+from isfdb import *
+from library import *
 from awardClass import awardShared
 
 
