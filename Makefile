@@ -15,9 +15,10 @@ PYTHON2 = /usr/bin/python
 PYTHON3 = /usr/bin/python3
 
 install:
+	mv common/localdefs.py common/localdefs2.py
 	cp $(INSTALL)/localdefs.py common
 	cd common && $(MAKE) install;
-	rm -f common/localdefs.py
+	mv common/localdefs2.py common/localdefs.py
 	cd biblio && $(MAKE) LOCAL;
 	cd biblio && $(MAKE) install;
 	cd edit   && $(MAKE) LOCAL;
@@ -44,16 +45,18 @@ export:
 
 python2:
 	echo $(PYTHON2) > .pythonver
+	mv common/localdefs.py common/localdefs2.py
 	cp $(INSTALL)/localdefs.py common
 	cd common && python setver.py 2;
 	cp common/localdefs.py $(INSTALL)
-	rm -f common/localdefs.py
+	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python2"
 
 python3:
 	echo $(PYTHON3) > .pythonver
+	mv common/localdefs.py common/localdefs2.py
 	cp $(INSTALL)/localdefs.py common
 	cd common && python setver.py 3;
 	cp common/localdefs.py $(INSTALL)
-	rm -f common/localdefs.py
+	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python3"
