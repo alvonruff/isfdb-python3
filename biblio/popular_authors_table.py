@@ -42,7 +42,7 @@ if __name__ == '__main__':
         print('<h3>Highest Ranked %s Since 1950 by Decade:</h3>' % author_type)
         # Set the end decade to the decade of the current year
         endyear = localtime()[0]
-        enddecade = endyear/10
+        enddecade = int(endyear/10)
         print('<ul>')
         for decade in range(195, enddecade+1):
                 print('<li>%s' % ISFDBLinkNoName('popular_authors.cgi', '%d+decade+%d0' % (report_type, decade), '%d0s' % decade))

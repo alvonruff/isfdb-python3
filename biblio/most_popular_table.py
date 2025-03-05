@@ -48,7 +48,7 @@ if __name__ == '__main__':
         # Get the current year based on system time
         current_year = localtime()[0]
         # Determine the current decade - Python division returns integers by default
-        current_decade = current_year/10*10
+        current_decade = int(current_year/10)*10
         bgcolor = 0
         # Display all decades since 1950 in reverse chronological order
         for decade in range(current_decade, 1940, -10):

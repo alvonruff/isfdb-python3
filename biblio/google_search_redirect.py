@@ -38,7 +38,7 @@ class GoogleSearch:
 
                 try:
                         self.search_value = form['SEARCH_VALUE'].value
-                        self.search_value = urllib.quote(str.strip(self.search_value))
+                        self.search_value = Portable_urllib_quote(str.strip(self.search_value))
                 except:
                         SESSION.DisplayError('No search value specified')
 

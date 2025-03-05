@@ -26,7 +26,7 @@ def printSeries(seriesData, seriesTitles, seriesTree, parentAuthors,
                 variantTitles, variantSerials, parentsWithPubs,
                 variantAuthors, translit_titles, translit_authors, ser, user):
         output = '<li>'
-        if ser.series_parentposition > 0:
+        if ser.series_parentposition and (int(ser.series_parentposition) > 0):
                 output += '%s ' % ser.series_parentposition
         output += ISFDBLink('pe.cgi', ser.series_id, ser.series_name)
         print(output)

@@ -68,7 +68,10 @@ def PrintNewPubs(userid):
 
 def convertTitleYear(title):
         try:
-                yearstr = ISFDBconvertYear(title[TITLE_YEAR][:4])
+                if isinstance(title[TITLE_YEAR], datetime):
+                        yearstr = ISFDBconvertYear(title[TITLE_YEAR].year)
+                else:
+                        yearstr = ISFDBconvertYear(str(title[TITLE_YEAR])[:4])
         except:
                 yearstr = ISFDBconvertYear('0000')
         return yearstr
@@ -167,7 +170,10 @@ def buildCoreTitleLine(title, original_language, translit_titles):
                 output += '[%s] ' % LANGUAGES[title[TITLE_LANGUAGE]]
 
         # Build the year string, which is somewhat different from other pages' year/date strings
-        year = title[TITLE_YEAR][:4]
+        if isinstance(title[TITLE_YEAR], datetime):
+                year = title[TITLE_YEAR].year
+        else:
+                year = title[TITLE_YEAR][:4]
         # Convert special years to strings.  Anything unconverted and in
         # the future is given an alternate-format label.
         cnvyear = convertTitleYear(title)
@@ -285,14 +291,17 @@ def displayVariantTitle(title, origTitle, variant_type, parent_authors,
                 output += '[%s] ' % LANGUAGES[title[TITLE_LANGUAGE]]
         
         try:
-                year = title[TITLE_YEAR][:4]
+                if isinstance(title[TITLE_YEAR], datetime):
+                        year = title[TITLE_YEAR].year
+                else:
+                        year = str(title[TITLE_YEAR])[:4]
         except:
                 year = '0000'
 
         # Convert special years to strings.  Anything unconverted and in
         # the future is given an alternate-format label.
         cnvyear = convertTitleYear(title)
-        if cnvyear == year and title[TITLE_YEAR] > ISFDBDate():
+        if cnvyear == year and str(title[TITLE_YEAR]) > str(ISFDBDate()):
                 output += '[<b>forthcoming: %s</b>]' % ISFDBconvertForthcoming(title[TITLE_YEAR])
         else:
                 output += '(<b>%s</b>)' % cnvyear
@@ -846,7 +855,10 @@ def BuildDisplayedURL(webpage):
         if '|' in webpage:
                 linked_page = webpage.split('|')[1]
                 webpage = webpage.split('|')[0]
-        from urlparse import urlparse
+        if PYTHONVER == 'python2':
+                from urlparse import urlparse
+        else:
+                from urllib.parse import urlparse
         parsed_url = urlparse(webpage)
         # Extract the "domain:port" part of the URL
         netloc = parsed_url[1].lower()
@@ -1476,7 +1488,7 @@ def PrintAnnualGrid(starting_decade, link, year_parameter, display_decade, decad
         # Get the current year based on system time
         current_year = localtime()[0]
         # Determine the current decade - Python division returns integers by default
-        current_decade = current_year/10*10
+        current_decade = int(current_year/10)*10
         bgcolor = 0
         # Display all decades since the starting decade in reverse chronological order
         for decade in range(current_decade, starting_decade-10, -10):

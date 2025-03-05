@@ -100,7 +100,10 @@ if __name__ == '__main__':
                 print('<td>%d</td>' % score)
                 # Display the year of the title unless we are displaying the data for just one year
                 if span != 'year':
-                        display_year = unicode(year)
+                        if PYTHONVER == 'python2':
+                                display_year = unicode(year)
+                        else:
+                                display_year = str(year)
                         if display_year == '0':
                                 display_year = '0000'
                         print('<td>%s</td>' % ISFDBconvertYear(display_year))

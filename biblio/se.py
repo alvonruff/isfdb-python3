@@ -15,6 +15,7 @@ import cgi
 import sys
 import string
 import os
+import traceback
 from isfdb import *
 from SQLparsing import *
 from common import *
@@ -100,7 +101,7 @@ def PrintMagazineResults(results, arg):
 
         bgcolor = 1
         counter = 0
-        for title in sorted(results.keys(), key=lambda x: x.lower()):
+        for title in sorted(list(results.keys()), key=lambda x: x.lower()):
                 for series_id in results[title]:
                         parent_id = results[title][series_id][0]
                         series_title = results[title][series_id][1]
@@ -249,7 +250,7 @@ if __name__ == '__main__':
 
         form = IsfdbFieldStorage()
         try:
-                mode = form['mode'].value
+                mode = form.getvalue('mode')
                 if mode not in ('exact', 'contains'):
                         raise
         except:
@@ -269,10 +270,12 @@ if __name__ == '__main__':
                         arg = str.strip(arg)
                 if not arg:
                         raise
-        except:
+        except Exception as e:
+                e = traceback.format_exc()
                 PrintHeader("ISFDB Search Error")
                 PrintNavbar('search', '', 0, 'se.cgi', '')
                 print("<h2>No search value specified</h2>")
+                print('Error: ', e)
                 PrintTrailer('search', '', 0)
                 sys.exit(0)
 

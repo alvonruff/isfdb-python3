@@ -140,7 +140,11 @@ class SeriesGrid:
                 print('<tr align=center class="table%d">' % (self.bgcolor+1))
                 print('<th class="year">%s</th>' % ISFDBconvertYear(year))
                 for month in self.list_months:
-                        if unicode(month) not in self.arr[year]:
+                        if PYTHONVER == 'python2':
+                                display_month = unicode(month)
+                        else:
+                                display_month = str(month)
+                        if display_month not in self.arr[year]:
                                 print('<td>-</td>')
                                 continue
                         # Create a nested table

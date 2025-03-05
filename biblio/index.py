@@ -47,10 +47,9 @@ def displayNotices():
                 print('moving charsets to unicode, and UI redesign. This server may be unstable, and <b>data entered here will be lost</b>.')
                 print('<p>')
                 print('<br><b>Last Database Sync:</b> 5 February 2024')
-                print('<br><b>Source Revision:</b> running isfdb-python3 latest')
-                print('<br><b>Current Project:</b> Python3 Conversion. Currently running python2 pending connector, urllib, datetime, and unicode changes.')
-                print('This system may switch unexpectedly between python2 and python3')
-                print('<br><b>Current Python version:</b> %s' % PYTHONVER)
+                print('<br><b>Source Revision:</b> r1026 (+ isfdb2 differentiation)')
+                print('<br><b>Current Project:</b> Python3 Conversion. Biblio and Edit scripts are all working. Mod scripts are in progress. All else is broken.')
+                print('This system oftens switches between python2 and python3. Current Python version: %s' % PYTHONVER)
         else:
                 print('This is a private server instance of the ISFDB.')
 

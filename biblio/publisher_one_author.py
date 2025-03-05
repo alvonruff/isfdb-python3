@@ -47,7 +47,7 @@ if __name__ == '__main__':
         for pub in pubs:
                 pub_date = pub[PUB_YEAR]
                 year = int(pub_date[:4])
-                decade = year/10
+                decade = int(year/10)
                 years[year] = years.get(year, 0) + 1
                 decades[decade] = decades.get(decade, 0) + 1
 

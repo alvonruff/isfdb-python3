@@ -306,7 +306,7 @@ if __name__ == '__main__':
                         param += '\n|Artist1=%s\n|Artist2=%s' % (cover_artists[0][1], cover_artists[1][1])
                         param += '\n|Artist3=%s' % cover_artists[2][1]
                 param += '\n|Source=Scanned by [[User:' + username + ']]'
-                param = urllib.quote("{{%s}}" % param)
+                param = Portable_urllib_quote("{{%s}}" % param)
                 upload = 'wpDestFile=%s.jpg&amp;wpUploadDescription=%s' % (tag, param)
                 print("<li>")
                 if not pub.pub_image:
@@ -345,5 +345,3 @@ if __name__ == '__main__':
                         print(ISFDBLink('edit/verify.cgi', pub.pub_id, 'Add Verifications'))
 
         PrintTrailer('publication', 0, 0)
-
-

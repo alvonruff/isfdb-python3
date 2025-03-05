@@ -65,7 +65,6 @@ if __name__ == '__main__':
                 hash2.update(newstr)
 
                 submitted_password = hash2.hexdigest()
-                #real_password = str.split(str(record[0][1]), "'")[3]
                 real_password = record[0][1]
 
                 if submitted_password != real_password:
@@ -74,8 +73,10 @@ if __name__ == '__main__':
                 import binascii
                 import base64
                 try:
-                    from backports.pbkdf2 import pbkdf2_hmac
-                    #from hashlib import pbkdf2_hmac
+                        if PYTHONVER == 'python2':
+                                from backports.pbkdf2 import pbkdf2_hmac
+                        else:
+                                from hashlib import pbkdf2_hmac
                 except:
                         doError('PBKDF2 Import FAILED')
 

@@ -119,7 +119,7 @@ if __name__ == '__main__':
                         print('</tr>')
 
                 if (year != 0) and (year < 2100):
-                        decade = 10*(int(year)/10)
+                        decade = 10*(int(year/10))
                         if decade < low_decade:
                                 low_decade = decade
                         if decade > hi_decade:

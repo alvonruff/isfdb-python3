@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
         pub_ids = {}
         try:
-                for key in form.keys():
+                for key in list(form.keys()):
                         # Retrieve and save all pub IDs
                         if key.startswith('pub'):
                                 key_value = int(key.split('pub')[1])
@@ -42,7 +42,7 @@ if __name__ == '__main__':
                 DoError('Invalid Publication ID specified')
 
         # If the user selected fewer than 2 pubs, display an error message and abort
-        if len(pub_ids.keys()) < 2:
+        if len(list(pub_ids.keys())) < 2:
                 DoError('You must select at least 2 publications to compare')
 
         pubs = []

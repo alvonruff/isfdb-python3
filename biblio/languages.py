@@ -16,21 +16,22 @@ from common import PrintHeader, PrintNavbar, PrintTrailer
 from library import ISFDBTable, ISFDBText
 from SQLparsing import SQLLoadFullLanguages
 
-PrintHeader('ISFDB-Supported Languages')
-PrintNavbar('languages', 0, 0, 'languages.cgi', 0)
+if __name__ == '__main__':
+        PrintHeader('ISFDB-Supported Languages')
+        PrintNavbar('languages', 0, 0, 'languages.cgi', 0)
 
-print('<h4>ISFDB supports the following subset of <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2-recognized</a> languages</h4>')
+        print('<h4>ISFDB supports the following subset of <a href="https://www.loc.gov/standards/iso639-2/php/code_list.php">ISO 639-2-recognized</a> languages</h4>')
 
-table = ISFDBTable()
-table.headers.extend(['Name', 'ISO 639-2 Code', 'Supports Latin-Derived Script'])
-table.row_align = 'left'
-languages = SQLLoadFullLanguages()
-for language in languages:
-        if language[LANGUAGE_LATIN_SCRIPT] == 'No':
-                script = 'No'
-        else:
-                script = 'Yes'
-        table.rows.append((ISFDBText(language[LANGUAGE_NAME]), ISFDBText(language[LANGUAGE_CODE]), ISFDBText(script)), )
-table.PrintTable()
+        table = ISFDBTable()
+        table.headers.extend(['Name', 'ISO 639-2 Code', 'Supports Latin-Derived Script'])
+        table.row_align = 'left'
+        languages = SQLLoadFullLanguages()
+        for language in languages:
+                if language[LANGUAGE_LATIN_SCRIPT] == 'No':
+                        script = 'No'
+                else:
+                        script = 'Yes'
+                table.rows.append((ISFDBText(language[LANGUAGE_NAME]), ISFDBText(language[LANGUAGE_CODE]), ISFDBText(script)), )
+        table.PrintTable()
 
-PrintTrailer('languages', 0, 0)
+        PrintTrailer('languages', 0, 0)

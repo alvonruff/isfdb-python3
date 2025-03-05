@@ -429,7 +429,7 @@ class Bibliography:
                 return 0
 
         def printSeriesType(self, series_type):
-                if series_type not in self.series_priority.values():
+                if series_type not in list(self.series_priority.values()):
                         return
                 series_type_list = []
                 for series_id in self.series_priority:
