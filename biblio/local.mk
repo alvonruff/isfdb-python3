@@ -13,6 +13,7 @@ include .TARGETS
 include ../INSTALLDIRS
 
 INSTALL = $(INSTALL_CGI)
+VERSION = $(shell cat ../.pythonver)
 
 MYLIBS	= advSearchClass.py \
 	  biblio.py \
@@ -48,7 +49,7 @@ all:	$(TARGETS)
 	cp $(LIBS) local
 
 local/%.cgi:	%.py
-		python install.py $* local /usr/bin/python
+		python install.py $* local $(VERSION)
 
 install:	all
 		rm -f $(INSTALL)/*.pyc

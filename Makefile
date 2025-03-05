@@ -11,9 +11,13 @@
 include INSTALLDIRS
 
 INSTALL = $(INSTALL_CGI)
+PYTHON2 = /usr/bin/python
+PYTHON3 = /usr/bin/python3
 
 install:
+	cp $(INSTALL)/localdefs.py common
 	cd common && $(MAKE) install;
+	rm -f common/localdefs.py
 	cd biblio && $(MAKE) LOCAL;
 	cd biblio && $(MAKE) install;
 	cd edit   && $(MAKE) LOCAL;
@@ -25,17 +29,6 @@ install:
 	cd css    && $(MAKE) install;
 	cd rest   && $(MAKE) LOCAL;
 	cd rest   && $(MAKE) install;
-
-# make update will install all of the files, but will preserve
-# the contents of the installed localdefs.py, without private
-# content showing up in the local repo by accident
-
-update:
-	cp common/localdefs.py .
-	cp $(INSTALL)/localdefs.py common
-	make install
-	cp localdefs.py common
-	rm -f localdefs.py
 
 clean:
 	cd common && $(MAKE) clean;
@@ -49,3 +42,18 @@ clean:
 export:
 		/bin/bash export.sh
 
+python2:
+	echo $(PYTHON2) > .pythonver
+	cp $(INSTALL)/localdefs.py common
+	cd common && python setver.py 2;
+	cp common/localdefs.py $(INSTALL)
+	rm -f common/localdefs.py
+	echo "Now using Python2"
+
+python3:
+	echo $(PYTHON3) > .pythonver
+	cp $(INSTALL)/localdefs.py common
+	cd common && python setver.py 3;
+	cp common/localdefs.py $(INSTALL)
+	rm -f common/localdefs.py
+	echo "Now using Python3"

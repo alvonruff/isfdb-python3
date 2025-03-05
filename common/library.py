@@ -1680,7 +1680,7 @@ def EscapeParams(params):
                 import urllib.request, urllib.parse, urllib.error
         param_string = ''
         for param in params:
-                param_string += '&amp;%s=%s' % (urllib.quote(param[0]), urllib.quote(param[1]))
+                param_string += '&amp;%s=%s' % (Portable_urllib_quote(param[0]), Portable_urllib_quote(param[1]))
         return param_string
 
 def printRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):

@@ -13,6 +13,7 @@ include .TARGETS
 include ../INSTALLDIRS
 
 INSTALL = $(INSTALL_CGI)/edit
+VERSION = $(shell cat ../.pythonver)
 
 MYLIBS	= cleanup_lib.py \
 	  isfdblib.py \
@@ -45,7 +46,7 @@ all:	$(TARGETS)
 	cp $(LIBS) local
 
 local/%.cgi:	%.py
-		python install.py $* local /usr/bin/python
+		python install.py $* local $(VERSION)
 
 check_dirs:
 		if test -d $(INSTALL); \

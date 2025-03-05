@@ -13,6 +13,7 @@ include .TARGETS
 include ../INSTALLDIRS
 
 INSTALL = $(INSTALL_HTML)/nightly
+VERSION = $(shell cat ../.pythonver)
 
 MYLIBS	= awards.py \
 	  containers_cleanup.py \
@@ -59,7 +60,7 @@ all:	$(TARGETS)
 	cp $(LIBS) local
 
 local/%.py:	%.py
-		python install_nightly.py $* local /usr/bin/python
+		python install_nightly.py $* local $(VERSION)
 
 local/%.jpg:	%.jpg
 		cp $*.jpg local
