@@ -1,5 +1,4 @@
 #!_PYTHONLOC
-from __future__ import print_function
 #
 #     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED

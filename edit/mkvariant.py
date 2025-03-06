@@ -1,4 +1,5 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
 #     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
@@ -64,7 +65,7 @@ if __name__ == '__main__':
         print('<form id="data" METHOD="POST" ACTION="/cgi-bin/edit/submitmkvar1.cgi">')
         print('<table border="0">')
         print('<tbody>')
-        if title.title_parent > 0:
+        if title.title_parent:
                 printfield("Parent #", "Parent", help, title.title_parent)
         else:
                 printfield("Parent #", "Parent", help)

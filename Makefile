@@ -50,6 +50,9 @@ python2:
 	cp $(INSTALL)/localdefs.py common
 	cd common && python setver.py 2;
 	cp common/localdefs.py $(INSTALL)
+	cp common/localdefs.py $(INSTALL)/edit
+	cp common/localdefs.py $(INSTALL)/mod
+	cp common/localdefs.py $(INSTALL)/rest
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python2"
 
@@ -59,5 +62,8 @@ python3:
 	cp $(INSTALL)/localdefs.py common
 	cd common && python setver.py 3;
 	cp common/localdefs.py $(INSTALL)
+	cp common/localdefs.py $(INSTALL)/edit
+	cp common/localdefs.py $(INSTALL)/mod
+	cp common/localdefs.py $(INSTALL)/rest
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python3"

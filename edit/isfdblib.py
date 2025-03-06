@@ -19,6 +19,7 @@ from library import *
 from navbar import *
 from SQLparsing import *
 
+editDEBUG = 1
 
 def displayError(message, title = '', cgi_script = '', record_id = 0):
         if title:
@@ -175,7 +176,7 @@ def PrintNavBar(executable, arg):
         onlineVersion = SQLgetSchemaVersion()
         if onlineVersion != SCHEMA_VER:
                 print("<h3>Warning: database schema mismatch (%s vs %s)</h3>" % (onlineVersion, SCHEMA_VER))
-        if username == 0:
+        if (username == 0) and (editDEBUG == 0):
                 print('<h2>Login required to edit</h2>')
                 print("""Note that you have to %s and the ISFDB wiki separately.
                         Your database user name is the same as your Wiki user name.
@@ -225,6 +226,12 @@ def PrintPostSearch(executable=0, records=0, subsequent=0, printed=0, mergeform=
         if printed == 100:
                 print('<hr>')
                 print(ISFDBLink('edit/%s.cgi' % executable, subsequent, '[Records: %s]' % records))
+
+        if len(SESSION.SQLlog) > 0:
+                print('<div class="VerificationBox">')
+                print('<h2>Debug SQL Log:</h2>')
+                SQLoutputLog()
+                print("</div>")
 
         print('</div>')
         print('<div id="bottom">')
@@ -333,8 +340,9 @@ class Submission:
                 import viewers
                 update = """insert into submissions(sub_state, sub_type, sub_data, sub_time, sub_submitter)
                             values('N', %d, '%s', NOW(), %d)""" % (self.type, update_string, int(self.user.id))
-                db.query(update)
-                submission_id = db.insert_id()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
+                submission_id = CNX.DB_INSERT_ID()
 
                 # If the user is a moderator or a self-approver and there is no override preference,
                 # redirect to the review/approval page
@@ -391,13 +399,14 @@ class Submission:
                         update = 1
 
                 if update:
+                        CNX = MYSQL_CONNECTOR()
                         if multi:
                                 update_string = "    <%ss>\n" % (tag)
                                 for field in newField:
-                                        update_string += "      <%s>%s</%s>\n" % (tag, db.escape_string(field), tag)
+                                        update_string += "      <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(field), tag)
                                 update_string += "    </%ss>\n" % (tag)
                         else:
-                                update_string = "    <%s>%s</%s>\n" % (tag, db.escape_string(newField), tag)
+                                update_string = "    <%s>%s</%s>\n" % (tag, CNX.DB_ESCAPE_STRING(newField), tag)
 
                         changes = 1
                 return (changes, update_string)
@@ -418,3 +427,7 @@ def compare_lists(newField, oldField):
                 if XMLunescape(subvalue) not in oldField:
                         return 1
         return 0
+
+def debugSubmission():
+        PrintPreSearch("Submission Debug")
+        PrintNavBar(0, 0)
