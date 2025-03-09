@@ -331,10 +331,10 @@ def nonLatiTitlesWithLatinChars():
                 where t.title_language = l.lang_id
                 and l.latin_script = 'No'
                 and t.title_title regexp'[[:alpha:]]'"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         cleanup_ids = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 title_id = record[0][0]
                 lang_name = record[0][1]
@@ -345,7 +345,7 @@ def nonLatiTitlesWithLatinChars():
                 if report_id not in cleanup_ids:
                         cleanup_ids[report_id] = []
                 cleanup_ids[report_id].append(title_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         for report_id in sorted(cleanup_ids):
                 standardReportFromList(cleanup_ids[report_id], report_id)
@@ -366,13 +366,13 @@ def pubsWithNonLatin():
                where p.pub_title regexp '&#'
                and not exists
                (select 1 from trans_pubs tp where p.pub_id = tp.pub_id)"""
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         pub_ids = []
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_ids.append(record[0][0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         if not pub_ids:
                 return
         pub_ids_clause = list_to_in_clause(pub_ids)
@@ -383,9 +383,8 @@ def pubsWithNonLatin():
                and p.pub_id = pc.pub_id
                and pc.title_id = t.title_id
                and t.title_language = l.lang_id""" % pub_ids_clause
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         cleanup_ids = {}
         while record:
                 pub_id = record[0][0]
@@ -397,7 +396,7 @@ def pubsWithNonLatin():
                 if report_id not in cleanup_ids:
                         cleanup_ids[report_id] = []
                 cleanup_ids[report_id].append(pub_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         
         for report_id in sorted(cleanup_ids):
                 standardReportFromList(cleanup_ids[report_id], report_id)

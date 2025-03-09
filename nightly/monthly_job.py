@@ -17,5 +17,6 @@ from shared_cleanup_lib import *
 if __name__ == '__main__':
         # Delete unresolved records for the duplicate authors report from the cleanup table
         query = 'delete from cleanup where resolved IS NULL and report_type = 9999'
-        db.query(query)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         dup_authors()

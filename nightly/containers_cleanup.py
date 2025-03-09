@@ -86,29 +86,28 @@ def emptyContainers(report_id, container_types):
                         and pc.title_id=t.title_id
                         and (t.title_ttype in ('NOVEL', 'SHORTFICTION', 'POEM', 'SERIAL'))
                 )) as xx""" % container_types
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         containers = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_id = record[0][0]
                 pub_month = record[0][1]
                 containers[pub_id] = pub_month
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Remove previously resolved/ignored records from the dictionary of IDs
         query = "select record_id from cleanup where report_type=%d and resolved=1" % int(report_id)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 resolved_id = record[0][0]
                 if resolved_id in containers:
                         del containers[resolved_id]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Insert the new pub IDs and their months into the cleanup table
         for record_id in containers:
                 update = "insert into cleanup (record_id, report_type, record_id_2) values(%d, %d, %d)" % (int(record_id), int(report_id), int(containers[record_id]))
-                db.query(update)
+                CNX.DB_QUERY(update)
         elapsed.print_elapsed(report_id, len(containers))

@@ -238,20 +238,21 @@ def suspect_data():
                 where p.note_id = n.note_id
                 and n.note_note like '%{{Incomplete}}%'
                 """
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         containers = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_id = record[0][0]
                 pub_month = record[0][1]
                 containers[pub_id] = pub_month
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         # Insert the new pub IDs and their months into the cleanup table
         for pub_id in containers:
                 update = "insert into cleanup (record_id, report_type, record_id_2) values(%d, 277, %d)" % (int(pub_id), int(containers[pub_id]))
-                db.query(update)
-        elapsed.print_elapsed(277, result.num_rows())
+                CNX2 = MYSQL_CONNECTOR()
+                CNX2.DB_QUERY(update)
+        elapsed.print_elapsed(277, CNX.DB_NUMROWS())
 
         #   Report 290: Suspected Ineligible Reviewed NONFICTION Titles (first 1000)
         query = """select distinct t1.title_id

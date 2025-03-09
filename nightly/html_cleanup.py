@@ -29,15 +29,15 @@ def html_cleanup():
         #   Report 208-216: Records with unsupported HTML in Notes
         query = "select note_id from notes where "
         query += ui.badHtmlClause('notes', 'note_note')
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        num = CNX.DB_NUMROWS()
         note_list = []
         while record:
                 note_id = record[0][0]
                 note_list.append(note_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         in_clause = list_to_in_clause(note_list)
         record_types = (('pubs', 'note_id', 'pub_id', 208),
                     ('titles', 'note_id', 'title_id', 209),

@@ -74,14 +74,14 @@ def links_in_notes():
         query = """select p.pub_id, n.note_note from notes n, pubs p
                 where p.note_id = n.note_id and n.note_note regexp
                 '<a href=\"https:\/\/www.worldcat.org\/oclc\/[[:digit:]]{1,11}"\>[[:digit:]]{1,11}\<\/a>'"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         pubs = []
         while record:
                 pub_id = int(record[0][0])
                 note_note = record[0][1]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
                 two_numbers = note_note.lower().split('/oclc/')[1].split('</a>')[0]
                 number_list = two_numbers.split('">')
                 if number_list[0] != number_list[1]:
@@ -137,9 +137,8 @@ def links_in_notes():
 
         #   Report 296: Stonecreek's EditPub submissions with 'first printing' in notes
         query = """select user_id from mw_user where user_name='Stonecreek'"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
         user_id = record[0][0]
 
         query = """select affected_record_id from submissions
@@ -149,15 +148,14 @@ def links_in_notes():
                 and sub_data not like "%%assumed first printing%%"
                 and affected_record_id is not null
                 and sub_type = 4""" % user_id
-        db.query(query)
-        result = db.store_result()
-        count = result.num_rows()
+        CNX.DB_QUERY(query)
+        count = CNX.DB_NUMROWS()
         pubs = []
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pub_id = record[0][0]
                 pubs.append(pub_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         in_clause = list_to_in_clause(pubs)
         if in_clause:

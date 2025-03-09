@@ -106,22 +106,22 @@ def nightly_cleanup():
         #   Report 10: Pseudonyms with Canonical Titles
         # First retrieve all pseudonyms on file
         query = 'select distinct(pseudonym) from pseudonyms'
-        db.query(query)
-        result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
         pseudos = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 pseudo_id = record[0][0]
                 # Retrieve the number of canonical titles for this pseudonym
                 query2 = 'select count(t.title_id) from canonical_author c, titles t where c.author_id=%s \
                         and c.ca_status=1 and c.title_id=t.title_id and t.title_parent=0' % pseudo_id
-                db.query(query2)
-                result2 = db.store_result()
-                record2 = result2.fetch_row()
+                CNX2 = MYSQL_CONNECTOR()
+                CNX2.DB_QUERY(query2)
+                record2 = CNX2.DB_FETCHONE()
                 # If there are canonical titles for this pseudonym, then add it to the list of "problem pseudonyms"
                 if record2[0][0] != 0:
                         pseudos[unicode(pseudo_id)] = record2[0][0]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         if pseudos:
                 # Build a pseudo-query to be passed to standardReport()
@@ -282,9 +282,8 @@ def nightly_cleanup():
                                             and p1.publisher_name = substr(p2.publisher_name,1,length(p2.publisher_name)-%d)
                                             and substr(p2.publisher_name,length(p2.publisher_name)-%d, 999) = '%s'
                                             """ % (len(full_suffix), len(full_suffix)-1, full_suffix)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 publisher_id1 = int(record[0][0])
                 publisher_id2 = int(record[0][1])
@@ -292,15 +291,15 @@ def nightly_cleanup():
                         and ((record_id=%d and record_id_2=%d)
                         or (record_id=%d and record_id_2=%d))
                         """ % (publisher_id1, publisher_id2, publisher_id2, publisher_id1)
-                db.query(query2)
-                result2 = db.store_result()
+                CNX2 = MYSQL_CONNECTOR()
+                CNX2.DB_QUERY(query2)
                 # Only add to the cleanup table if this publisher pair isn't in "cleanup"
-                if not result2.num_rows():
+                if not CNX2.DB_NUMROWS():
                         update = """insert into cleanup (record_id, report_type, record_id_2)
                         values(%d, 44, %d)""" % (publisher_id1, publisher_id2)
-                        db.query(update)
-                record = result.fetch_row()
-        elapsed.print_elapsed(44, result.num_rows())
+                        CNX2.DB_QUERY(update)
+                record = CNX.DB_FETCHMANY()
+        elapsed.print_elapsed(44, CNX.DB_NUMROWS())
 
         #   Report 45: Variant Title Type Mismatches
         query = """select v.title_id from titles v, titles p
@@ -407,13 +406,12 @@ def nightly_cleanup():
         # column can only store integers
         query = """select record_id from cleanup where
                 report_type=51 and resolved IS NOT NULL"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
         resolved_ids = []
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 resolved_ids.append(str(record[0][0]))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         resolved_string = "','".join(resolved_ids)
 
         query = """select pub_isbn 
@@ -426,13 +424,12 @@ def nightly_cleanup():
                 having count(distinct(REPLACE(pub_title,'-',''))) > 1 
                 AND INSTR(MIN(pub_title), MAX(pub_title)) = 0 
                 AND INSTR(MAX(pub_title), MIN(pub_title)) = 0""" % resolved_string
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
         isbns = []
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 isbns.append(str(record[0][0]))
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Only run the report if there are matching ISBNs; if the 'isbns; list is empty,
         # then running this report would display thousands of pubs with empty ISBN values
@@ -497,8 +494,7 @@ def nightly_cleanup():
         #   Report 82: Invalid Record URLs in Notes
         query = """select note_id, note_note from notes
                 where note_note like '%isfdb.org%'"""
-        db.query(query)
-        result = db.store_result()
+        CNX.DB_QUERY(query)
         problems = []
         notes = {}
         pub_tag_notes = {}
@@ -519,7 +515,7 @@ def nightly_cleanup():
         for script in scripts:
                 notes[script] = {}
         pub_tag_notes[script] = {}
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         while record:
                 note_id = record[0][0]
                 note_body = record[0][1].lower()
@@ -570,7 +566,7 @@ def nightly_cleanup():
                                 pub_tag_notes[record_id] = []
                         pub_tag_notes[record_id].append(note_id)
                         
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         
         for script in notes:
                 if notes[script]:
@@ -582,13 +578,12 @@ def nightly_cleanup():
                         table_name = scripts[script][0]
                         field_name = scripts[script][1]
                         query = """select %s from %s where %s in (%s)""" % (field_name, table_name, field_name, in_clause)
-                        db.query(query)
-                        result = db.store_result()
-                        record = result.fetch_row()
+                        CNX.DB_QUERY(query)
+                        record = CNX.DB_FETCHMANY()
                         while record:
                                 existing_id = str(record[0][0])
                                 del notes[script][existing_id]
-                                record = result.fetch_row()
+                                record = CNX.DB_FETCHMANY()
                         for record_id in notes[script]:
                                 for note_id in notes[script][record_id]:
                                         if note_id not in problems:
@@ -601,13 +596,12 @@ def nightly_cleanup():
                                 in_clause += ", "
                         in_clause += "'%s'" % str(record_id)
                 query = """select pub_tag from pubs where pub_tag in (%s)""" % in_clause
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         existing_tag = record[0][0].lower()
                         del pub_tag_notes[existing_tag]
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 for record_id in pub_tag_notes:
                         for note_id in pub_tag_notes[record_id]:
                                 if note_id not in problems:
@@ -1089,7 +1083,7 @@ def nightly_cleanup():
         replace_string = "REPLACE(lower(note_note), '{{break', '')"
         for template in SQLLoadAllTemplates():
                 query += "REPLACE("
-                replace_string += ", '{{%s', '')" % db.escape_string(template.lower())
+                replace_string += ", '{{%s', '')" % CNX.DB_ESCAPE_STRING(template.lower())
         query += "%s like '%%{{%%'" % replace_string
         standardReport(query, 274)
 

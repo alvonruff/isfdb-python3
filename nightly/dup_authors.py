@@ -20,21 +20,21 @@ def dup_authors():
                 author_similarity(letter, 9999)
 
 def author_similarity(letter, report_type):
+        CNX = MYSQL_CONNECTOR()
         # Retrieve all authors whose names start with the specified letter
         query = """select author_id, author_canonical
             from authors a where a.author_canonical like '%s%%'
             and not exists(select 1 from pseudonyms p
-            where a.author_id=p.pseudonym)""" % db.escape_string(letter)
+            where a.author_id=p.pseudonym)""" % CNX.DB_ESCAPE_STRING(letter)
 
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         names = {}
         while record:
                 author_id = record[0][0]
                 name = record[0][1]
                 names[author_id] = name
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Note on alternative string similarity algorithms as they apply to the ISFDB author table:
         #   Damerau-Levenshtein is the lowest, relative cost 13
@@ -63,14 +63,13 @@ def author_similarity(letter, report_type):
                                         and ((record_id=%d and record_id_2=%d)
                                         or (record_id=%d and record_id_2=%d))
                                         and resolved=1""" % (int(report_type), author_id1, author_id2, author_id2, author_id1)
-                                db.query(query)
-                                result = db.store_result()
+                                CNX.DB_QUERY(query)
                                 # Only add to the cleanup table if this record pair hasn't been "resolved"
-                                if result.num_rows():
+                                if CNX.DB_NUMROWS():
                                         continue
                                 update = """insert into cleanup (record_id, report_type, record_id_2)
                                 values(%d, %d, %d)""" % (author_id1, int(report_type), author_id2)
-                                db.query(update)
+                                CNX.DB_QUERY(update)
                 processed.append(author_id1)
 
 def hamming_distance(name1, name2):

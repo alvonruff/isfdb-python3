@@ -16,10 +16,11 @@ def front_page_pubs():
         pubs = SQLGetNextMonthPubs(10)
 
         delete = "delete from front_page_pubs"
-        db.query(delete)
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(delete)
         insert = "insert into front_page_pubs (pub_id) VALUES"
         for pub in pubs:
                 insert += '(%d),' % pub[PUB_PUBID]
         insert = '%s' % insert[:-1]
-        db.query(insert)
+        CNX.DB_QUERY(insert)
         

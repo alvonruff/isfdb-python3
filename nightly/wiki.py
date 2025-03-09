@@ -180,38 +180,37 @@ def wiki_stranded(report_number, namespace, table_name, linking_field):
         #         with the Wiki page name used as the key and the Wiki page ID used as the value
         query = """select mw_page.page_id, REPLACE(mw_page.page_title,'_',' ')
                    from mw_page where mw_page.page_namespace=%d""" % int(namespace)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 return
 
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         wiki_pages = {}
         while record:
                 page_id = record[0][0]
                 page_name = record[0][1]
                 wiki_pages[page_name] = page_id
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Step 2: Find all database records that match the Wiki pages in this namespace
         #         and delete them from the dictionary
         in_clause = ''
         for page_name in wiki_pages:
-                escaped_name = db.escape_string(page_name)
+                escaped_name = CNX.DB_ESCAPE_STRING(page_name)
                 if not in_clause:
                         in_clause = "'%s'" % escaped_name
                 else:
                         in_clause += ",'%s'" % escaped_name
 
         query = """select %s from %s where %s in (%s)""" % (linking_field, table_name, linking_field, in_clause)
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 page_name = record[0][0]
                 if page_name in wiki_pages:
                         del wiki_pages[page_name]
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Step 3: Create a query that will put Wiki page IDs in the cleanup table
         page_ids = []
@@ -229,17 +228,17 @@ def wiki_report(report_number, namespace, record_id_field, linking_field, table_
                 where mw.page_namespace=%d
                 and mw.page_title=REPLACE(%s.%s,' ','_')
                 """ % (table_name, record_id_field, table_name, int(namespace), table_name, linking_field)
-        db.query(query)
-        result = db.store_result()
-        if not result.num_rows():
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        if not CNX.DB_NUMROWS():
                 return
         
-        record = result.fetch_row()
+        record = CNX.DB_FETCHMANY()
         records = []
         while record:
                 record_id = record[0][0]
                 records.append(record_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         # Step 2:
         query = """select distinct %s from webpages
@@ -249,14 +248,13 @@ def wiki_report(report_number, namespace, record_id_field, linking_field, table_
 
         # Step 3:
         #  Retrieve records and delete them from the record ID list built in Step 1
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 record_id = record[0][0]
                 if record_id in records:
                         records.remove(record_id)
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         if not records:
                 return

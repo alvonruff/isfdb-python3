@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2018-2022   Ahasuerus
+#     (C) COPYRIGHT 2018-2025   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -33,14 +33,14 @@ class awardTitles():
 
         def loadPollAwardTypes(self):
                 query = "select award_type_id, award_type_poll from award_types where award_type_poll='Yes'"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         award_type_id = record[0][0]
                         award_type_poll = record[0][1]
                         self.poll_awards.append(award_type_id)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def loadRepeatingAwardTypes(self):
                 """Load repeating award types."""
@@ -58,9 +58,9 @@ class awardTitles():
                            from titles t, title_awards as ta, awards as a
                            where ta.award_id = a.award_id
                            and ta.title_id = t.title_id"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         title_id = record[0][0]
                         if title_id not in self.titles:
@@ -73,7 +73,7 @@ class awardTitles():
                         self.awards[award_id]['title_id'] = title_id
                         self.awards[award_id]['level'] = int(record[0][5])
                         self.awards[award_id]['award_type'] = int(record[0][6])
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def loadParents(self):
                 """Load parent titles without awards/nominations."""
@@ -88,16 +88,16 @@ class awardTitles():
                 # Retrieve the parent titles from the database
                 query = """select title_id, title_parent, YEAR(title_copyright), title_ttype
                            from titles where title_id in (%s)""" % list_to_in_clause(parent_ids)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         title_id = record[0][0]
                         self.titles[title_id] = {}
                         self.titles[title_id]['parent'] = record[0][1]
                         self.titles[title_id]['year'] = record[0][2]
                         self.titles[title_id]['type'] = record[0][3]
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
         def calculateScores(self):
                 """Calculate the award scores for title IDs with awards/nominations.
@@ -148,7 +148,8 @@ class awardTitles():
 
         def fileAllScores(self):
                 """File title-specific award scores into the database."""
-                db.query("truncate award_titles_report")
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY("truncate award_titles_report")
                 values = []
                 for title_id in self.titles:
                         # Skip variant titles without a score

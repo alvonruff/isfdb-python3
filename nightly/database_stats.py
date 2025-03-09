@@ -35,10 +35,11 @@ class Output():
 
         def file(self, report_id, report_param):
                 delete = 'delete from reports where report_id = %d and report_param = %d' % (report_id, report_param)
-                db.query(delete)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(delete)
                 insert = """insert into reports (report_id, report_param, report_data)
-                        VALUES(%d, %d, "%s")""" % (report_id, report_param, db.escape_string(self.data))
-                db.query(insert)
+                        VALUES(%d, %d, "%s")""" % (report_id, report_param, CNX.DB_ESCAPE_STRING(self.data))
+                CNX.DB_QUERY(insert)
 
         def report(self, method_name):
                 method = getattr(self, method_name)
@@ -116,9 +117,9 @@ class Output():
                         and sub_reviewer != 0
                         group by sub_reviewer
                         order by total desc"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 color = 0
                 while record:
@@ -136,7 +137,7 @@ class Output():
                         self.append('<td>%s</td>' % last_user_activity)
                         self.append('</tr>')
                         color = color ^ 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append('</table><p>')
                 self.file(1, 0)
 
@@ -153,15 +154,15 @@ class Output():
                         where exists(select 1 from pubs where pubs.pub_id = pv.pub_id)
                         and pv.user_id = u.user_id
                         group by pv.user_id"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         count = record[0][0]
                         user = record[0][1]
                         total[user] = total.get(user, 0) + count
                         primary[user] = primary.get(user, 0) + count
-                        record = result.fetch_row() 
+                        record = CNX.DB_FETCHMANY() 
 
                 # Secondary verifications
                 query = """select distinct r.reference_label, count(v.user_id), u.user_name
@@ -171,9 +172,8 @@ class Output():
                         and v.user_id=u.user_id
                         and v.reference_id=r.reference_id
                         group by v.user_id, v.reference_id"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         source = record[0][0]
                         count = record[0][1]
@@ -187,7 +187,7 @@ class Output():
                                 headers[source] = 0
                         total[user] = total.get(user, 0) + count
                         secondary[user] = secondary.get(user, 0) + count
-                        record = result.fetch_row() 
+                        record = CNX.DB_FETCHMANY() 
 
                 self.start('<table cellpadding="1" class="publications">')
                 self.append('<tr class="generic_table_header">')
@@ -222,7 +222,8 @@ class Output():
                         self.append('</tr>')
                         color = color ^ 1
 
-                        record = result.fetch_row()
+                        # This is unused
+                        #record = CNX.DB_FETCHMANY()
                 self.append('</table>')
                 self.file(2, 0)
 
@@ -253,9 +254,9 @@ class Output():
                 self.append('<th>Last User Activity</th>')
                 self.append('</tr>')
 
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 color = 0
                 while record:
@@ -277,15 +278,15 @@ class Output():
                         self.append('<td>%s</td>' % last_user_activity)
                         self.append('</tr>')
                         color = color ^ 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append('</table><p>')
                 self.file(3, sub_type)
 
         def summaryLine(self, field, table, display):
-                query = "select count(%s) from %s" % (db.escape_string(field), db.escape_string(table))
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                query = "select count(%s) from %s" % (CNX.DB_ESCAPE_STRING(field), CNX.DB_ESCAPE_STRING(table))
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 self.append("<li><b>%s:</b> %d" % (display, record[0][0]))
                 self.last_count = float(record[0][0])
 
@@ -297,18 +298,17 @@ class Output():
 
                 self.append("<ul>")
                 query = "select distinct pub_ctype, count(pub_ctype) from pubs group by pub_ctype order by CAST(pub_ctype as CHAR)"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         self.append("<li>%s: %d" % (record[0][0], record[0][1]))
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append("</ul>")
 
                 query = "select count(distinct pub_id) from primary_verifications"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 self.append("<li><b>Verified Publications:</b> %d (%2.2f%%)" % (record[0][0], (100.0 * float(record[0][0]))/self.last_count))
 
                 self.summaryLine('publisher_id', 'publishers', ISFDBLink('directory.cgi', 'publisher', 'Publishers'))
@@ -317,23 +317,20 @@ class Output():
 
                 self.append("<ul>")
                 query = "select distinct title_ttype, count(title_ttype) from titles group by title_ttype order by CAST(title_ttype as CHAR)"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         self.append("<li>%s: %d" % (record[0][0], record[0][1]))
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append("</ul>")
                 query = "select count(distinct title_id) from votes"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 self.append("<li><b>Titles with Votes:</b> %d (%2.2f%%)" % (record[0][0], (100.0 * float(record[0][0]))/self.last_count))
                 
                 query = "select count(distinct title_id) from tag_mapping"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 self.append("<li><b>Titles with Tags:</b> %d (%2.2f%%)" % (record[0][0], (100.0 * float(record[0][0]))/self.last_count))
 
                 self.summaryLine('series_id', 'series', 'Series')
@@ -346,18 +343,16 @@ class Output():
                         from awards AS aw, award_types AS at
                         where aw.award_type_id = at.award_type_id
                         group by at.award_type_name"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         self.append("<li>%s: %d" % (record[0][0], record[0][1]))
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append("</ul>")
 
                 query = """select count(*) from identifiers"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHONE()
                 self.append('<li><b><a href="%s://%s/index.php/Template:PublicationFields:ExternalIDs">External Identifiers</a>:</b> %d' % (PROTOCOL, WIKILOC, int(record[0][0])))
 
                 self.append("<ul>")
@@ -366,12 +361,11 @@ class Output():
                         where i.identifier_type_id = it.identifier_type_id
                         group by it.identifier_type_id
                         order by it.identifier_type_name"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         self.append("<li>%s: %d" % (record[0][0], int(record[0][1])))
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append("</ul>")
                             
                 self.append("</ul>")
@@ -435,9 +429,9 @@ class Output():
                                      group by YEAR(pub_year)
                                      order by YEAR(pub_year)""" % (startyear-1, endyear+1)
                 
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         year = record[0][0]
                         count = record[0][1]
@@ -448,7 +442,7 @@ class Output():
                                         results.append(tuple)
                         tuple = (year-startyear, count)
                         results.append(tuple)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         # Save the last year that we had data for
                         lastyear = year
 
@@ -467,9 +461,8 @@ class Output():
                                 where YEAR(pub_year)>%d and YEAR(pub_year)<%d
                                 group by YEAR(pub_year)
                                 order by YEAR(pub_year)""" % (startyear-1, endyear+1)
-                    db.query(query)
-                    result = db.store_result()
-                    record = result.fetch_row()
+                    CNX.DB_QUERY(query)
+                    record = CNX.DB_FETCHMANY()
                     while record:
                         total_count = record[0][1]
                         year = record[0][0]
@@ -484,7 +477,7 @@ class Output():
                         # Replace this year's tuple in the list with the percent-based data
                         results[index] = newtuple
                         # Get the next year's data
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         # Save the last year that we had data for
                         lastyear = year
                 
@@ -538,13 +531,13 @@ class Output():
                                 and v.FIRST-v.DOB < %d
                                 group by v.FIRST-v.DOB
                                 order by v.FIRST-v.DOB""" % (title_type, min_age, max_age)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                     age = record[0][0]
                     count = record[0][1]
-                    record = result.fetch_row()
+                    record = CNX.DB_FETCHMANY()
                     if age is None:
                             continue
                     if age < startage or age > endage:
@@ -603,16 +596,16 @@ class Output():
                         group by substring(title_copyright,1,4)
                         order by substring(title_copyright,1,4)""" % (title_type, startyear-1, endyear+1)
 
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 results = []
                 while record:
                         year = record[0][0]
                         percent = record[0][3]
                         data_tuple = (int(year)-startyear, int(round(float(percent))))
                         results.append(data_tuple)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 return results
 
         def titlesByTypeByYear(self):
@@ -629,9 +622,9 @@ class Output():
                         and title_ttype in ('ANTHOLOGY', 'NOVEL', 'COLLECTION', 'CHAPBOOK', 'OMNIBUS')
                         and title_parent=0
                         group by YEAR(title_copyright), title_ttype""" % (startyear-1, endyear+1)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 total = AutoVivification()
                 bytype = AutoVivification()
                 while record:
@@ -644,7 +637,7 @@ class Output():
                     if not bytype[title_type][year]:
                             bytype[title_type][year] = 0
                     bytype[title_type][year] += count
-                    record = result.fetch_row()
+                    record = CNX.DB_FETCHMANY()
 
                 # Add any missing years
                 for title_type in bytype.keys():
@@ -719,9 +712,9 @@ class Output():
                            and pub_ptype != 'unknown'
                            and pub_ctype %s
                            group by pub_ptype, YEAR(pub_year)""" % (startyear-1, endyear+1, pub_types)
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 total = AutoVivification()
                 bytype = AutoVivification()
                 while record:
@@ -736,7 +729,7 @@ class Output():
                     if not bytype[pub_type][year]:
                             bytype[pub_type][year] = 0
                     bytype[pub_type][year] += count
-                    record = result.fetch_row()
+                    record = CNX.DB_FETCHMANY()
 
                 # Add any missing years
                 for pub_type in bytype.keys():
@@ -769,7 +762,8 @@ class Output():
 
         def authorsByDebutDate(self):
                 delete = "delete from authors_by_debut_date"
-                db.query(delete)
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(delete)
                 query = """insert into authors_by_debut_date (debut_year, author_id, title_count)
                         select MIN(date_format(t.title_copyright,'%Y')) debut,
                         a.author_id, count(t.title_id) NumTitles
@@ -783,7 +777,7 @@ class Output():
                         and a.author_canonical not in ('Anonymous', 'unknown', 'uncredited')
                         GROUP BY ca.author_id
                         HAVING NumTitles > 5"""
-                db.query(query)
+                CNX.DB_QUERY(query)
 
         def submissionsByYear(self):
                 # Set the start year to 2007
@@ -799,9 +793,9 @@ class Output():
                         where YEAR(sub_time) > 2006
                         group by YEAR(sub_time)
                         order by YEAR(sub_time)"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 results_dict = {}
                 results_dict['black'] = []
                 minimum = 0
@@ -813,7 +807,7 @@ class Output():
                         years_dict[year] = int(count)
                         if count > maximum:
                                 maximum = count
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 # If there is no data, don't create the report
                 if not maximum:
                         return
@@ -851,9 +845,9 @@ class Output():
                         group by t.title_id
                         having COUNT(v.rating)>5
                         order by AVG(v.rating) desc limit 500""" % ttype
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 self.append('<table class="generic_table">')
                 self.append('<tr class="generic_table_header">')
@@ -879,7 +873,7 @@ class Output():
                         self.append(LIBbuildRecordList('author', authors))
                         self.append('</td>')
                         self.append('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         counter += 1
                         color = color ^ 1
                 self.append('</table>')
@@ -891,9 +885,9 @@ class Output():
                            where a.author_id = av.author_id
                            order by av.views desc
                            limit 500"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 self.start('<table class="seriesgrid">')
                 self.append('<tr>')
@@ -910,16 +904,16 @@ class Output():
                         self.append(ISFDBLink('ea.cgi', record[0][1], record[0][2]))
                         self.append('</td>')
                         self.append('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         rank += 1
                 self.append('</table>')
                 self.file(13, 0)
 
         def authorDisplay(self, query, headers, report_id, note = None):
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 self.start('')
                 if note:
@@ -939,7 +933,7 @@ class Output():
                         self.append(ISFDBLink('ea.cgi', record[0][3], record[0][1]))
                         self.append('</td>')
                         self.append('</tr>')
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                 self.append('</table>')
                 self.file(report_id, 0)
@@ -959,15 +953,15 @@ class Output():
                 self.append('<th>Year</th>')
                 self.append('<th>Authors</th>')
                 self.append('</tr>')
+                CNX = MYSQL_CONNECTOR()
                 query = """select tv.views, tv.title_id, t.title_title, t.title_copyright
                            from titles t, title_views tv
                            where t.title_ttype='%s'
                            and t.title_id = tv.title_id
                            order by tv.views desc
-                           limit 500""" % (db.escape_string(title_type))
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                           limit 500""" % (CNX.DB_ESCAPE_STRING(title_type))
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 bgcolor = 0
                 rank = 1
                 while record:
@@ -987,7 +981,7 @@ class Output():
                         self.append('</tr>')
                         bgcolor = bgcolor ^ 1
                         rank += 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append('</table>')
                 self.file(report_id, 0)
 
@@ -1045,9 +1039,9 @@ class Output():
 
         def authorsByLanguage(self):
                 query = "select author_language, count(*) cnt from authors group by author_language"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 rows = []
                 total = 0
                 while record:
@@ -1062,7 +1056,7 @@ class Output():
                         total += record[0][1]
                         row = (lang_count, language)
                         rows.append(row)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
                 self.start('<h4>Total authors: %d</h4>' % total)
                 self.append('<p>')
@@ -1087,9 +1081,9 @@ class Output():
 
         def titlesByLanguage(self):
                 query = "select title_language, count(*) cnt from titles group by title_language"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 rows = []
                 total = 0
                 while record:
@@ -1104,7 +1098,7 @@ class Output():
                         total += record[0][1]
                         row = (lang_count, language)
                         rows.append(row)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
                 self.start('<h4>Total titles: %d</h4>' % total)
                 self.append('<p>')
@@ -1138,9 +1132,9 @@ class Output():
                 self.append('</tr>')
 
                 query = "select distinct user_id,count(user_id) as xx from tag_mapping group by user_id order by xx desc"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 color = 0
                 while record:
@@ -1159,7 +1153,7 @@ class Output():
                         self.append('<td>%s</td>' % SQLLastUserActivity(user_id))
                         self.append('</tr>')
                         color = color ^ 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append('</table>')
                 self.file(22, 0)
 
@@ -1174,9 +1168,9 @@ class Output():
                 self.append('</tr>')
 
                 query = "select distinct user_id,count(user_id) as xx from votes group by user_id order by xx desc"
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 color = 0
                 while record:
@@ -1195,7 +1189,7 @@ class Output():
                         self.append('<td>%s</td>' % SQLLastUserActivity(user_id))
                         self.append('</tr>')
                         color = color ^ 1
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 self.append('</table>')
                 self.file(23, 0)
 
@@ -1214,9 +1208,9 @@ class Output():
                         order by tv.views desc
                         limit 50"""
 
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 self.append('<table>')
                 self.append('<tr>')
@@ -1248,7 +1242,7 @@ class Output():
                         line += '<td>%s</td>' % record[0][3]
                         line += '</tr>'
                         self.append(line)
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                         bgcolor ^= 1
                         title_count += 1
 
@@ -1266,9 +1260,9 @@ class Output():
                 query = """select t.title_id,t.title_parent,YEAR(t.title_copyright)
                            from title_relationships as r, titles as t
                            where r.title_id=t.title_id"""
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
                 while record:
                         title_id = record[0][0]
                         parent_id = record[0][1]
@@ -1281,15 +1275,14 @@ class Output():
                         # Increment the count of reviews for this title ID
                         counts[title_id] = counts.get(title_id, 0) +1
                         years[title_id] = year
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
                 # Convert the list of parent IDs to a string in the SQL IN clause format
                 parents_string = ','.join(parents)
 
                 # Retrieve dates of parent titles
-                query = "select title_id, YEAR(title_copyright) from titles where title_id in (%s)" % (db.escape_string(parents_string))
-                db.query(query)
-                result = db.store_result()
-                record = result.fetch_row()
+                query = "select title_id, YEAR(title_copyright) from titles where title_id in (%s)" % (CNX.DB_ESCAPE_STRING(parents_string))
+                CNX.DB_QUERY(query)
+                record = CNX.DB_FETCHMANY()
 
                 while record:
                         title_id = record[0][0]
@@ -1297,9 +1290,9 @@ class Output():
                         # If the parent's year is less than the variant's, use the parent's year
                         if (years[title_id] == 0) or (year < years[title_id]):
                                 years[title_id] = year
-                        record = result.fetch_row()
+                        record = CNX.DB_FETCHMANY()
 
-                db.query("truncate most_reviewed")
+                CNX.DB_QUERY("truncate most_reviewed")
                 values = []
                 for title_id in counts:
                         reviews = counts[title_id]
@@ -1357,3 +1350,4 @@ def database_stats():
         output.report("topVoters")
         output.report("topForthcoming")
         output.report("mostReviewed")
+        print("SUCCESS")
