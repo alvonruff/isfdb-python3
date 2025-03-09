@@ -348,7 +348,10 @@ if __name__ == '__main__':
                         ##########################################################
                         trans_titles = doc.getElementsByTagName('TransTitle')
                         for trans_title in trans_titles:
-                                title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        title_value = XMLunescape(trans_title.firstChild.data)
                                 update = """insert into trans_pubs(pub_id, trans_pub_title)
                                             values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(title_value))
                                 print("<li> ", update)
@@ -553,7 +556,10 @@ if __name__ == '__main__':
                         ##########################################################
                         webpages = doc.getElementsByTagName('Webpage')
                         for webpage in webpages:
-                                address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        address = XMLunescape(webpage.firstChild.data)
                                 update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), CNX.DB_ESCAPE_STRING(address))
                                 print('<li> ', update)
                                 CNX.DB_QUERY(update)
@@ -566,7 +572,10 @@ if __name__ == '__main__':
                 if value:
                         authors = doc.getElementsByTagName('Author')
                         for author in authors:
-                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        data = XMLunescape(author.firstChild.data)
                                 NewAuthors.append(data)
 
                         query = "select authors.author_canonical from authors,pub_authors where authors.author_id=pub_authors.author_id and pub_authors.pub_id='%d';" % (int(Record))

@@ -84,7 +84,10 @@ if __name__ == '__main__':
                         ##########################################################
                         trans_names = doc.getElementsByTagName('PubSeriesTransName')
                         for trans_name in trans_names:
-                                name = XMLunescape(trans_name.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        name = XMLunescape(trans_name.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        name = XMLunescape(trans_name.firstChild.data)
                                 update = """insert into trans_pub_series(pub_series_id, trans_pub_series_name)
                                             values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(name))
                                 print("<li> ", update)
@@ -104,7 +107,10 @@ if __name__ == '__main__':
                         ##########################################################
                         webpages = doc.getElementsByTagName('Webpage')
                         for webpage in webpages:
-                                address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        address = XMLunescape(webpage.firstChild.data)
                                 update = "insert into webpages(pub_series_id, url) values(%s, '%s')" % (Record, CNX.DB_ESCAPE_STRING(address))
                                 print("<li> ", update)
                                 CNX.DB_QUERY(update)

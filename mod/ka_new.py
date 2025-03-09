@@ -147,7 +147,10 @@ def DoSubmission(db, submission):
                         if value:
                                 trans_titles = doc.getElementsByTagName('TransTitle')
                                 for trans_title in trans_titles:
-                                        title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                title_value = XMLunescape(trans_title.firstChild.data)
                                         update = """insert into trans_titles(title_id, trans_title_title)
                                                     values(%d, '%s')""" % (int(ParentRecord), CNX.DB_ESCAPE_STRING(title_value))
                                         print("<li> ", update)
@@ -258,7 +261,10 @@ def DoSubmission(db, submission):
                         if value:
                                 web_pages = doc.getElementsByTagName('Webpage')
                                 for web_page in web_pages:
-                                        url = XMLunescape(web_page.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                url = XMLunescape(web_page.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                url = XMLunescape(web_page.firstChild.data)
                                         update = """insert into webpages(title_id, url)
                                                     values(%d, '%s')""" % (int(ParentRecord), CNX.DB_ESCAPE_STRING(url))
                                         print("<li> ", update)
@@ -278,7 +284,10 @@ def DoSubmission(db, submission):
                         if value:
                                 authors = doc.getElementsByTagName('Author')
                                 for author in authors:
-                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                data = XMLunescape(author.firstChild.data)
                                         addTitleAuthor(data, ParentRecord, 'CANONICAL')
 
                 if TagPresent(merge, 'Note'):

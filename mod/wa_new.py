@@ -70,7 +70,10 @@ if __name__ == '__main__':
                         if value:
                                 authors = doc.getElementsByTagName('AwardAuthor')
                                 for author in authors:
-                                        data = author.firstChild.data.encode('iso-8859-1')
+                                        if PYTHONVER == 'python2':
+                                                data = author.firstChild.data.encode('iso-8859-1')
+                                        else:
+                                                data = author.firstChild.data
                                         if counter:
                                                 austring +=  "+"
                                         austring += data 

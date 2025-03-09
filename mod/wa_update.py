@@ -76,7 +76,10 @@ if __name__ == '__main__':
                         austring = ""
                         authors = doc.getElementsByTagName('AwardAuthor')
                         for author in authors:
-                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        data = XMLunescape(author.firstChild.data)
                                 if counter:
                                         austring += "+"
                                 austring += data

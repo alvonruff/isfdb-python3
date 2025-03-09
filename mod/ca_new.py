@@ -355,7 +355,10 @@ def DoSubmission(db, submission):
                         if value:
                                 trans_titles = doc.getElementsByTagName('TransTitle')
                                 for trans_title in trans_titles:
-                                        title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                title_value = XMLunescape(trans_title.firstChild.data)
                                         update = """insert into trans_pubs(pub_id, trans_pub_title)
                                                     values(%d, '%s')""" % (int(Record), CNX.DB_ESCAPE_STRING(title_value))
                                         print("<li> ", update)
@@ -366,7 +369,10 @@ def DoSubmission(db, submission):
                         if value:
                                 webpages = doc.getElementsByTagName('Webpage')
                                 for webpage in webpages:
-                                        address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                address = XMLunescape(webpage.firstChild.data)
                                         update = "insert into webpages(pub_id, url) values(%d, '%s')" % (int(Record), CNX.DB_ESCAPE_STRING(address))
                                         print("<li> ", update)
                                         CNX.DB_QUERY(update)
@@ -483,7 +489,10 @@ def DoSubmission(db, submission):
                         if value:
                                 authors = doc.getElementsByTagName('Author')
                                 for author in authors:
-                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                        if PYTHONVER == 'python2':
+                                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                        else:
+                                                data = XMLunescape(author.firstChild.data)
                                         addPubAuthor(data, Record)
 
                         if TagPresent(merge, 'Parent'):
@@ -508,7 +517,10 @@ def DoSubmission(db, submission):
                                 if value:
                                         authors = doc.getElementsByTagName('Author')
                                         for author in authors:
-                                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                                if PYTHONVER == 'python2':
+                                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                                else:
+                                                        data = XMLunescape(author.firstChild.data)
                                                 addTitleAuthor(data, TitleRecord, 'CANONICAL')
 
                         query = "insert into pub_content(pub_id, title_id) values(%d, %d);" % (int(Record), int(TitleRecord))

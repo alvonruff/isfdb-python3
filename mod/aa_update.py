@@ -114,7 +114,10 @@ def UpdateMultiple(author_id, field_name, table_name, author_field, tag_name, hi
         to_value = ''
         elements = doc.getElementsByTagName(tag_name)
         for element in elements:
-                new_value = XMLunescape(element.firstChild.data.encode('iso-8859-1'))
+                if PYTHONVER == 'python2':
+                        new_value = XMLunescape(element.firstChild.data.encode('iso-8859-1'))
+                else:
+                        new_value = XMLunescape(element.firstChild.data)
                 update = "insert into %s(%s, %s) values(%d, '%s')" % (table_name,
                                                                       author_field, field_name, int(author_id), CNX.DB_ESCAPE_STRING(new_value))
                 print("<li> ", update)

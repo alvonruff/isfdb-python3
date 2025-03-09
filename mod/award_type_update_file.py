@@ -113,7 +113,10 @@ if __name__ == '__main__':
                 to_value = ''
                 webpages = doc.getElementsByTagName('Webpage')
                 for webpage in webpages:
-                        address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                        if PYTHONVER == 'python2':
+                                address = XMLunescape(webpage.firstChild.data.encode('iso-8859-1'))
+                        else:
+                                address = XMLunescape(webpage.firstChild.data)
                         update = "insert into webpages(award_type_id, url) values(%s, '%s')" % (current.award_type_id, CNX.DB_ESCAPE_STRING(address))
                         print("<li> ", update)
                         CNX.DB_QUERY(update)

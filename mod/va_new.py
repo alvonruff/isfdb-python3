@@ -100,7 +100,10 @@ if __name__ == '__main__':
                 if value:
                         trans_titles = doc.getElementsByTagName('TransTitle')
                         for trans_title in trans_titles:
-                                title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        title_value = XMLunescape(trans_title.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        title_value = XMLunescape(trans_title.firstChild.data)
                                 update = """insert into trans_titles(title_id, trans_title_title)
                                             values(%d, '%s')""" % (int(TitleRecord), CNX.DB_ESCAPE_STRING(title_value))
                                 print("<li> ", update)
@@ -167,7 +170,10 @@ if __name__ == '__main__':
                 if value:
                         authors = doc.getElementsByTagName('Author')
                         for author in authors:
-                                data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                if PYTHONVER == 'python2':
+                                        data = XMLunescape(author.firstChild.data.encode('iso-8859-1'))
+                                else:
+                                        data = XMLunescape(author.firstChild.data)
                                 addAuthor(data, TitleRecord)
 
                 submitter = GetElementValue(merge, 'Submitter')

@@ -48,8 +48,9 @@ def displayNotices():
                 print('<p>')
                 print('<br><b>Last Database Sync:</b> 5 February 2024')
                 print('<br><b>Source Revision:</b> r1026 (+ isfdb2 differentiation)')
-                print('<br><b>Current Project:</b> Python3 Conversion. Biblio and Edit scripts are all working. Mod scripts are in progress. All else is broken.')
-                print('This system oftens switches between python2 and python3. Current Python version: %s' % PYTHONVER)
+                print('<br><b>Current Project:</b> Python3 Conversion. Biblio/Edit/Mod work under Python2. Biblio/Edit work under Python3. All else is suspect.')
+                print('This system oftens switches between python2 and python3.')
+                print('<br><b>Current Python version:</b> %s' % PYTHONVER)
         else:
                 print('This is a private server instance of the ISFDB.')
 
