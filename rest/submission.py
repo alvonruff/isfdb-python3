@@ -73,10 +73,10 @@ class Submission:
                 key = self.get_element_value('LicenseKey')
                 if key == '':
                         self.send_error('No LicenseKey Field.', 403)
-                query = "select * from license_keys where user_id=%d and license_key='%s'" % (self.submitter_id, db.escape_string(key))
-                db.query(query)
-                result = db.store_result()
-                if result.num_rows() == 0:
+                CNX = MYSQL_CONNECTOR()
+                query = "select * from license_keys where user_id=%d and license_key='%s'" % (self.submitter_id, CNX.DB_ESCAPE_STRING(key))
+                CNX.DB_QUERY(query)
+                if CNX.DB_NUMROWS() == 0:
                         self.send_error('Invalid License Key.', 403)
 
         def get_holder(self):
@@ -120,17 +120,18 @@ class Submission:
                         self.send_error('XML parsing failed', 400)
 
         def file_submission(self):
+                CNX = MYSQL_CONNECTOR()
                 for sub_type in SUBMAP:
                         merge = self.doc.getElementsByTagName(SUBMAP[sub_type][1])
                         if merge:
                                 if self.holder_id:
                                         submission = """insert into submissions(sub_state, sub_type, sub_data, sub_time, sub_submitter, sub_holdid)
-                                                        values('N', %d, '%s', NOW(), %d, %d)""" % (sub_type, db.escape_string(self.XMLdata), self.submitter_id, self.holder_id)
+                                                        values('N', %d, '%s', NOW(), %d, %d)""" % (sub_type, CNX.DB_ESCAPE_STRING(self.XMLdata), self.submitter_id, self.holder_id)
                                 else:
                                         submission = """insert into submissions(sub_state, sub_type, sub_data, sub_time, sub_submitter)
-                                                        values('N', %d, '%s', NOW(), %d)""" % (sub_type, db.escape_string(self.XMLdata), self.submitter_id)
-                                db.query(submission)
-                                self.submission_id = db.insert_id()
+                                                        values('N', %d, '%s', NOW(), %d)""" % (sub_type, CNX.DB_ESCAPE_STRING(self.XMLdata), self.submitter_id)
+                                CNX.DB_QUERY(submission)
+                                self.submission_id = CNX.DB_INSERT_ID()
                                 self.send_success()
                 self.send_error('Unknown Submission Type.', 422)
 
