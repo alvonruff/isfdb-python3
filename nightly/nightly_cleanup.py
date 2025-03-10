@@ -120,7 +120,10 @@ def nightly_cleanup():
                 record2 = CNX2.DB_FETCHONE()
                 # If there are canonical titles for this pseudonym, then add it to the list of "problem pseudonyms"
                 if record2[0][0] != 0:
-                        pseudos[unicode(pseudo_id)] = record2[0][0]
+                        if PYTHONVER == 'python2':
+                                pseudos[unicode(pseudo_id)] = record2[0][0]
+                        else:
+                                pseudos[str(pseudo_id)] = record2[0][0]
                 record = CNX.DB_FETCHMANY()
 
         if pseudos:

@@ -107,7 +107,11 @@ class Sfe3:
                 for category in self.categories:
                         category_url = self.base_category_url + category
                         try:
-                                page_contents = urllib.request.urlopen(category_url).read()
+                                if PYTHONVER == 'python2':
+                                        page_contents = urllib.request.urlopen(category_url).read()
+                                else:
+                                        data = urllib.request.urlopen(category_url).read()
+                                        page_contents = data.decode('utf-8')
                         except:
                                 continue
                         fragments = page_contents.split(fragment_separator)

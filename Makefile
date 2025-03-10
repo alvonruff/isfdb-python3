@@ -53,6 +53,7 @@ python2:
 	cp common/localdefs.py $(INSTALL)/edit
 	cp common/localdefs.py $(INSTALL)/mod
 	cp common/localdefs.py $(INSTALL)/rest
+	cp common/localdefs.py $(INSTALL)/nightly
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python2"
 
@@ -65,5 +66,6 @@ python3:
 	cp common/localdefs.py $(INSTALL)/edit
 	cp common/localdefs.py $(INSTALL)/mod
 	cp common/localdefs.py $(INSTALL)/rest
+	cp common/localdefs.py $(INSTALL)/nightly
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python3"

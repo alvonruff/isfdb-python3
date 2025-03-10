@@ -46,7 +46,7 @@ def displayNotices():
                 print('of projects that could be running here include updating LAMP stack components, moving to Python3, mobile support,')
                 print('moving charsets to unicode, and UI redesign. This server may be unstable, and <b>data entered here will be lost</b>.')
                 print('<p>')
-                print('<br><b>Last Database Sync:</b> 5 February 2024')
+                print('<br><b>Last Database Sync:</b> 9 March 2024')
                 print('<br><b>Source Revision:</b> r1026 (+ isfdb2 differentiation)')
                 print('<br><b>Current Project:</b> Python3 Conversion. Biblio/Edit/Mod work under Python2. Biblio/Edit work under Python3. All else is suspect.')
                 print('This system oftens switches between python2 and python3.')
@@ -61,17 +61,7 @@ def displayLinks():
                 ))
         return
 
-if __name__ == '__main__':
-
-        PrintHeader('The Internet Speculative Fiction Database')
-        PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
-
-        displayNotices()
-
-        # Authors who were born and died on this day
-        calendar_day = CalendarDay()
-        calendar_day.padded_day = ISFDBDate()
-        calendar_day.print_authors_section()
+def displayForthcoming():
         # Forthcoming Books
         displayLinks()
         print('<div class="divider">')
@@ -136,5 +126,20 @@ if __name__ == '__main__':
         print('</table>')
         print('</div>')
         displayLinks()
+
+def displayAuthors():
+        # Authors who were born and died on this day
+        calendar_day = CalendarDay()
+        calendar_day.padded_day = ISFDBDate()
+        calendar_day.print_authors_section()
+
+if __name__ == '__main__':
+
+        PrintHeader('The Internet Speculative Fiction Database')
+        PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
+
+        displayNotices()
+        displayAuthors()
+        displayForthcoming()
 
         PrintTrailer('frontpage', 0, 0)

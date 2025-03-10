@@ -30,11 +30,10 @@ from __future__ import print_function
 
 import re
 from xml.dom import minidom
-from xml.dom import Node
 from isfdb import *
 from isfdblib import *
 from library import *
-
+from login import User
 
 class authors:
         def __init__(self, db):
@@ -70,6 +69,7 @@ class authors:
 
                 self.error = ''
                 self.author_id = 0
+                self.form = 0
 
         def load(self, author_id):
                 record = SQLloadAuthorData(author_id)

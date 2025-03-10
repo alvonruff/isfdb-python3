@@ -838,7 +838,7 @@ class Output():
                         ttype = 'SHORTFICTION'
 
                 self.start('')
-                query = """select t.title_id, t.title_title, t.title_copyright, AVG(v.rating)
+                query = """select t.title_id, t.title_title, DATE_FORMAT(t.title_copyright, '%%Y-%%m-%%d') as year, AVG(v.rating)
                         from titles t, votes v
                         where t.title_id = v.title_id
                         and t.title_ttype = '%s'
