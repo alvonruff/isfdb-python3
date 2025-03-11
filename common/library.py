@@ -494,7 +494,10 @@ def ISFDBLink(script, record_id, displayed_value, brackets=False, argument='', t
         return link
 
 def ISFDBText(text, escape_quotes = False):
-        from cgi import escape
+        if PYTHONVER == 'python2':
+                from cgi import escape
+        else:
+                from html import escape
         text = escape('%s' % text, escape_quotes)
         if UNICODE != "utf-8":
                 text = text.replace("&amp;#","&#")

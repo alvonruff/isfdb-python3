@@ -139,7 +139,7 @@ if __name__ == '__main__':
         PrintNavbar('frontpage', 0, 0, 'index.cgi', 0)
 
         displayNotices()
-        displayAuthors()
         displayForthcoming()
+        displayAuthors()
 
         PrintTrailer('frontpage', 0, 0)

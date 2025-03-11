@@ -1858,7 +1858,7 @@ def SQLTitleAwards(title_id):
         return _StandardQuery(query)
 
 def SQLloadAwards(award_id):
-        SQLlog("SQLloadAwards, award_id=%s" % (award_id))
+        SQLlog("SQLloadAwards, award_id=%s" % str(award_id))
         CNX = MYSQL_CONNECTOR()
         query = "select %s from awards where award_id='%d'" % (CNX_AWARDS_STAR, award_id)
         CNX.DB_QUERY(query)
