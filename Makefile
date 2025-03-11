@@ -39,6 +39,7 @@ clean:
 	cd css && $(MAKE) clean;
 	cd rest && $(MAKE) clean;
 	cd nightly && $(MAKE) clean;
+	cd tests && $(MAKE) clean;
 	rm -f .pythonver
 
 export:
@@ -54,6 +55,7 @@ python2:
 	cp common/localdefs.py $(INSTALL)/mod
 	cp common/localdefs.py $(INSTALL)/rest
 	cp common/localdefs.py $(INSTALL)/nightly
+	cp common/localdefs.py $(INSTALL)/tests
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python2"
 
@@ -67,5 +69,6 @@ python3:
 	cp common/localdefs.py $(INSTALL)/mod
 	cp common/localdefs.py $(INSTALL)/rest
 	cp common/localdefs.py $(INSTALL)/nightly
+	cp common/localdefs.py $(INSTALL)/tests
 	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python3"

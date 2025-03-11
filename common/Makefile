@@ -67,6 +67,8 @@ install: check_dirs
 	cp $(CLASS_FILES) ../nightly
 	cp localdefs.py ../css
 	cp $(BASE_FILES) ../scripts
+	cp $(BASE_FILES) ../tests
+	cp $(CLASS_FILES) ../tests
 
 clean:
 	cd ../biblio && rm -rf $(BASE_FILES) $(CLASS_FILES) local

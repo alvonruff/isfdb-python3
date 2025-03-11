@@ -1,0 +1,10 @@
+
+* These are formal tests, predominately focused on files in /common.
+* Before execution, you need to copy the production version of localdefs.py here, typically from /var/www/cgi-bin
+* A particular test can be run:
+
+        python3 TEST_authorClass.py
+
+* All of the tests can be run with:
+
+        make run
