@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2021   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2025    Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -10,12 +10,24 @@
 #     Date: $Date: 2021-08-28 11:04:26 -0400 (Sat, 28 Aug 2021) $
 
 
-#from isfdb import *
 from SQLparsing import *
 from authorClass import authors
 from xml.dom import minidom
 from xml.dom import Node
 import unittest
+
+#####################################################################################
+# Test for authorClass.py. This indirectly tests the following SQLparsing methods:
+#
+# SQLLoadAllLanguages
+# SQLloadAuthorData
+# SQLloadEmails
+# SQLloadTransAuthorNames
+# SQLloadTransLegalNames
+# SQLloadWebpages
+# SQLUpdateQueries
+#
+#####################################################################################
 
 def TryPrint(label, value):
         try:
