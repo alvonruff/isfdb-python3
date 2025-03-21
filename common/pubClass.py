@@ -9,24 +9,46 @@ from __future__ import print_function
 #     Version: $Revision: 1197 $
 #     Date: $Date: 2024-11-23 17:33:18 -0500 (Sat, 23 Nov 2024) $
 
-import cgi
+##############################################################################
+#  Pylint disable list. These checks are too gratuitous for our purposes
+##############################################################################
+# pylint: disable=bad-indentation
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-locals
+# pylint: disable=too-many-nested-blocks
+# pylint: disable=too-many-public-methods
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-lines
+##############################################################################
+# Look at these later
+##############################################################################
+# pylint: disable=unused-wildcard-import
+# pylint: disable=wildcard-import
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+# pylint: disable=bare-except
+# pylint: disable=misplaced-bare-raise
+
 import sys
 import re
-import os
-import time
 from SQLparsing import *
 from isfdb import *
 from isfdblib import *
 from library import *
-from xml.dom import minidom
-from xml.dom import Node
 
 
 def lastRecord(form, field,counter):
         # Determine if the current field is the last field of its type
         # (title, review or interview) in the submitted form
-        for next in range(counter, counter+30):
-                key = field + str(next+1)
+        for item in range(counter, counter+30):
+                key = field + str(item+1)
                 if key in form:
                         return 0
         return 1
@@ -47,15 +69,16 @@ class titleEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, id):
-                if int(id) > 0:
-                        self.id = int(id)
+        def setID(self, pubId):
+                if int(pubId) > 0:
+                        self.id = int(pubId)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
-        def setType(self, type):
-                self.type = XMLescape(type)
+        def setType(self, pubType):
+                self.type = XMLescape(pubType)
         def setLength(self, length):
-                if length == None:
+                # XXX Comparison 'length == None' should be 'length is None' (singleton-comparison)
+                if length is None:
                         length = ''
                 self.length = XMLescape(length)
         def setAuthors(self, authors):
@@ -154,9 +177,9 @@ class reviewEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, id):
-                if int(id) > 0:
-                        self.id = int(id)
+        def setID(self, pubId):
+                if int(pubId) > 0:
+                        self.id = int(pubId)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
         def setBookAuthors(self, authors):
@@ -244,9 +267,9 @@ class interviewEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, id):
-                if int(id) > 0:
-                        self.id = int(id)
+        def setID(self, pubId):
+                if int(pubId) > 0:
+                        self.id = int(pubId)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
         def setInterviewees(self, authors):
@@ -344,7 +367,7 @@ class pubs:
                 self.pub_authors    = []
                 self.num_artists    = 0
                 self.pub_artists    = []
-                self.pub_id         = ''
+                self.pub_id         = 0
                 self.pub_title      = ''
                 self.pub_trans_titles = []
                 self.pub_tag        = ''
@@ -356,7 +379,7 @@ class pubs:
                 self.pub_catalog    = ''
                 self.pub_image      = ''
                 self.pub_price      = ''
-                self.pub_publisher_id = ''
+                self.pub_publisher_id = 0
                 self.pub_publisher  = ''
                 self.pub_series     = ''
                 self.pub_series_id  = ''
@@ -381,33 +404,34 @@ class pubs:
                 self.reference_title_count = 0
                 self.identifiers    = {}
                 self.body   = ''
+                self.form   = ''
 
-        def pushTitle(self, titleEntry):
+        def pushTitle(self, pubTitleEntry):
                 if self.titles == '':
-                        self.titles = titleEntry
+                        self.titles = pubTitleEntry
                 else:
                         tmp = self.titles
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = titleEntry
+                        tmp.next = pubTitleEntry
 
-        def pushReview(self, reviewEntry):
+        def pushReview(self, pubReviewEntry):
                 if self.reviews == '':
-                        self.reviews = reviewEntry
+                        self.reviews = pubReviewEntry
                 else:
                         tmp = self.reviews
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = reviewEntry
+                        tmp.next = pubReviewEntry
 
-        def pushInterview(self, interviewEntry):
+        def pushInterview(self, pubInterviewEntry):
                 if self.interviews == '':
-                        self.interviews = interviewEntry
+                        self.interviews = pubInterviewEntry
                 else:
                         tmp = self.interviews
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = interviewEntry
+                        tmp.next = pubInterviewEntry
 
         def xmlCoverArt(self, clone):
                 retval = ''
@@ -529,10 +553,10 @@ class pubs:
                         counter += 1
                 return retval
 
-        def load(self, id):
-                if id == 0:
+        def load(self, pubId):
+                if pubId == 0:
                         return
-                query = "select %s from pubs where pub_id=%d" % (CNX_PUBS_STAR, int(id))
+                query = "select %s from pubs where pub_id=%d" % (CNX_PUBS_STAR, int(pubId))
                 CNX = MYSQL_CONNECTOR()
                 CNX.DB_QUERY(query)
                 SQLlog("pubClass::load: %s" % query)
@@ -590,7 +614,6 @@ class pubs:
                                         break
 
                         titles = SQLloadTitlesXBT(record[0][PUB_PUBID])
-                        results = []
                         for title in titles:
                                 if title[TITLE_TTYPE] == 'COVERART':
                                         artists = SQLTitleAuthors(title[TITLE_PUBID])
@@ -721,12 +744,16 @@ class pubs:
 
 
         # cgi2obj converts input from an html form into a pubs class object.
-        def cgi2obj(self, reference_title = 'explicit'):
+        def cgi2obj(self, reference_title = 'explicit', form=0):
+                if form:
+                        self.form = form
+                else:
+                        self.form = IsfdbFieldStorage()
+
                 sys.stderr = sys.stdout
-                self.form = IsfdbFieldStorage()
                 if 'pub_id' in self.form:
                         try:
-                                self.pub_id = str(int(self.form['pub_id'].value))
+                                self.pub_id = int(self.form['pub_id'].value)
                         except:
                                 self.error = "Publication ID must be an integer number"
                                 return
@@ -1119,7 +1146,7 @@ class pubs:
                         if ISFDBDifferentAuthorLists(self.cover_artists[cover_id], old_artists):
                                 self.cover_changed[cover_id] = 1
                                 self.cover_changed_artists[cover_id] = 1
-                
+
 
                 ###################################
                 # REGULAR TITLE CONTENT
@@ -1276,7 +1303,7 @@ class pubs:
                                 self.error = 'Multiple CHAPBOOK titles are not allowed'
                                 return
 
-                        # Check that the reference title was entered if it is an EditPub and 
+                        # Check that the reference title was entered if it is an EditPub and
                         # was NOT entered if it is another type of submission
                         # Currently disabled pending more debugging
 ##                        if self.reference_title_count:
@@ -1297,7 +1324,7 @@ class pubs:
                         if self.pub_ctype not in ('MAGAZINE', 'FANZINE') and title_types.get('EDITOR', 0):
                                 self.error = 'Only MAGAZINE and FANZINE publications can contain EDITOR titles'
                                 return
-                        
+
                         if self.pub_ctype != 'CHAPBOOK' and title_types.get('CHAPBOOK', 0):
                                 self.error = 'Only CHAPBOOK publications can contain CHAPBOOK titles'
                                 return
@@ -1518,7 +1545,7 @@ class pubs:
                                 else:
                                         counter += 1
                                         continue
-                        
+
                         #############################
                         # PAGE
                         #############################
@@ -1755,21 +1782,21 @@ class pubs:
                 print('<th>Date</th>')
                 print('</tr>')
 
-        def printExternalIDs(self, format = 'list'):
+        def printExternalIDs(self, pubFormat = 'list'):
                 if not self.identifiers:
-                        if format == 'list':
+                        if pubFormat == 'list':
                                 # If this is an empty table cell, display a hyphen
                                 print('-')
                         return
                 formatted_ids = self.formatExternalIDs()
-                if format == 'list':
+                if pubFormat == 'list':
                         print('  <ul class="noindent">')
                 for formatted_id in formatted_ids:
-                        if format == 'list':
+                        if pubFormat == 'list':
                                 print('<li>',formatted_id)
                         else:
                                 print(formatted_id,'<br>')
-                if format == 'list':
+                if pubFormat == 'list':
                         print('  </ul>')
 
         def formatExternalIDs(self):
@@ -1780,6 +1807,7 @@ class pubs:
                         formatted_line = FormatExternalIDType(type_name, types)
                         for id_value in self.identifiers[type_name]:
                                 type_id = self.identifiers[type_name][id_value][0]
+                                # XXX - Unused variable 'type_full_name' (unused-variable)
                                 type_full_name = self.identifiers[type_name][id_value][1]
                                 formatted_id = FormatExternalIDSite(sites, type_id, id_value)
                                 formatted_line += ' %s' % formatted_id
@@ -1854,7 +1882,7 @@ class pubs:
 
                 if title[TITLE_NON_GENRE] == 'Yes':
                         output += " %s non-genre" % SESSION.ui.bullet
-                
+
                 if title[TITLE_GRAPHIC] == 'Yes':
                         output += " %s graphic format" % SESSION.ui.bullet
 
@@ -1946,7 +1974,7 @@ class pubs:
                                 variant_lang = title[TITLE_LANGUAGE]
                                 title_type = title[TITLE_TTYPE]
                                 parent_type = parent_title[TITLE_TTYPE]
-                                
+
                                 # If the two language codes are different and the variant is not interior art
                                 # and not cover art, it's a translation
                                 if (parent_lang and variant_lang and parent_lang != variant_lang
@@ -1969,7 +1997,7 @@ class pubs:
                                         interior_cover_vt = 1
                                 else:
                                         interior_cover_vt = 0
-                                
+
                                 # Do not display the variant title for SERIALs if:
                                 #   the VT is NOT a translation
                                 #   and the parent title is a Novel or Shortfiction
@@ -1978,7 +2006,7 @@ class pubs:
                                         position = title[TITLE_TITLE].find(' (')
                                         if position > 0 and parent_title[TITLE_TITLE] == title[TITLE_TITLE][:position]:
                                                 display_parent = 0
-                                
+
                                 #  Display the parent title only if the titles are different
                                 #    or if they have different language codes
                                 #    or it's an INTERIORART/COVERART variant

@@ -175,25 +175,25 @@ class authors:
                         # These entries are lists, which require subtags
                         ##################################################
                         if self.used_emails:
-                                container += "  <AuthorEmails>\n" 
+                                container += "  <AuthorEmails>\n"
                                 for email in self.author_emails:
                                         container += "    <AuthorEmail>%s</AuthorEmail>\n" % (email)
                                 container += "  </AuthorEmails>\n"
 
                         if self.used_webpages:
-                                container += "  <AuthorWebpages>\n" 
+                                container += "  <AuthorWebpages>\n"
                                 for webpage in self.author_webpages:
                                         container += "    <AuthorWebpage>%s</AuthorWebpage>\n" % (webpage)
                                 container += "  </AuthorWebpages>\n"
 
                         if self.used_trans_names:
-                                container += "  <AuthorTransNames>\n" 
+                                container += "  <AuthorTransNames>\n"
                                 for transname in self.author_trans_names:
                                         container += "    <AuthorTransName>%s</AuthorTransName>\n" % (transname)
                                 container += "  </AuthorTransNames>\n"
 
                         if self.used_trans_legal_names:
-                                container += "  <AuthorTransLegalNames>\n" 
+                                container += "  <AuthorTransLegalNames>\n"
                                 for transname in self.author_trans_legal_names:
                                         container += "    <AuthorTransLegalName>%s</AuthorTransLegalName>\n" % (transname)
                                 container += "  </AuthorTransLegalNames>\n"
@@ -292,8 +292,11 @@ class authors:
                                 value = XMLunescape(transname.firstChild.data)
                                 self.author_trans_legal_names.append(value)
 
-        def cgi2obj(self):
-                self.form = IsfdbFieldStorage()
+        def cgi2obj(self, form=0):
+                if form:
+                        self.form = form
+                else:
+                        self.form = IsfdbFieldStorage()
                 try:
                         self.author_id = str(int(self.form['author_id'].value))
                         self.used_id = 1

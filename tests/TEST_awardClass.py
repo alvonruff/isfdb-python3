@@ -21,16 +21,10 @@ import unittest
 #
 # SQLGetAwardCatById
 # SQLGetAwardTypeById
-# SQLgetNotes
 # SQLLoadAllLanguages
-# SQLLoadAllTemplates
-# SQLloadAwardCatWebpages
 # SQLloadAwards
-# SQLloadAwardsForCat
-# SQLloadAwardsForCatYear
-# SQLloadAwardTypeWebpages
-# SQLloadTitleFromAward
 # SQLloadTitle
+# SQLloadTitleFromAward
 # SQLloadTransAuthorNames
 # SQLloadTransTitles
 # SQLTitleBriefAuthorRecords
@@ -93,6 +87,12 @@ def printAwardRecordTypes(award):
         TryPrint("AWARD NOTE       =", str(type(award.award_note)))
         TryPrint("SPECIAL AWARDS   =", str(type(award.special_awards)))
         TryPrint("AUTHORS          =", str(type(award.award_authors)))
+
+class TestStorage(dict):
+        def __init__(self, s=None):
+                self.value = s
+        def getvalue(self, theKey):
+                return self[theKey]
 
 class MyTestCase(unittest.TestCase):
 
@@ -176,6 +176,70 @@ class MyTestCase(unittest.TestCase):
                 award = awards(db)
                 award.load(7602)
                 award.PrintAwardAuthors()
+
+        def test_010_cgi2obj(self):
+                print("TEST: awardClass::cgi2obj")
+                print("==============================================")
+
+                # Test 1 - Missing Year
+                award = awards(db)
+                form = {
+                    'award_id': TestStorage(7602),
+                }
+                award.cgi2obj(form)
+                self.assertEqual(award.error, "Missing YEAR value")
+
+                # Test 2 - Missing Award Type ID
+                award = awards(db)
+                form = {
+                    'award_year': TestStorage('1984'),
+                }
+                award.cgi2obj(form)
+                self.assertEqual(award.error, "Missing Award Type ID")
+
+                # Test 3 - Missing Award Category ID
+                award = awards(db)
+                form = {
+                    'award_year': TestStorage('1984'),
+                    'award_type_id': TestStorage(23),
+                }
+                award.cgi2obj(form)
+                self.assertEqual(award.error, "Missing Award Category ID")
+
+                # Test 3 - Missing Award Category ID
+                award = awards(db)
+                form = {
+                    'award_id': TestStorage(7602),
+                    'title_id': TestStorage(186614),
+                    'award_title': TestStorage("They'd Rather Be Right"),
+                    'award_year': TestStorage('1955'),
+                    'award_type_id': TestStorage(23),
+                    'award_cat_id': TestStorage(261),
+                    'award_movie': TestStorage('tt1234567'),
+                    'award_note': TestStorage('This is a test note'),
+                    'LEVEL': TestStorage('WIN'),
+                }
+                award.cgi2obj(form)
+                printAwardRecord(award)
+
+                self.assertEqual(INT_TYPE, str(type(award.award_id)))
+                self.assertEqual(INT_TYPE, str(type(award.title_id)))
+                self.assertEqual(STR_TYPE, str(type(award.award_title)))
+                self.assertEqual(STR_TYPE, str(type(award.award_year)))
+                self.assertEqual(INT_TYPE, str(type(award.award_cat_id)))
+                self.assertEqual(STR_TYPE, str(type(award.award_cat_name)))
+                self.assertEqual(STR_TYPE, str(type(award.award_level)))
+                self.assertEqual(STR_TYPE, str(type(award.award_displayed_level)))
+                self.assertEqual(STR_TYPE, str(type(award.award_movie)))
+                self.assertEqual(STR_TYPE, str(type(award.award_type_name)))
+                self.assertEqual(STR_TYPE, str(type(award.award_type_short_name)))
+                self.assertEqual(INT_TYPE, str(type(award.award_type_id)))
+                self.assertEqual(STR_TYPE, str(type(award.award_type_poll)))
+                self.assertEqual(STR_TYPE, str(type(award.award_note_id)))
+                self.assertEqual(STR_TYPE, str(type(award.award_note)))
+                self.assertEqual(DICT_TYPE, str(type(award.special_awards)))
+                self.assertEqual(LIST_TYPE, str(type(award.award_authors)))
+
 
         def test_100_dumpLog(self):
                 print(".")

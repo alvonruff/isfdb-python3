@@ -61,6 +61,67 @@ def displayLinks():
                 ))
         return
 
+def ConvertMonth(integer_month):
+        full_month_map = {
+        1  : 'January',
+        2  : 'February',
+        3  : 'March',
+        4  : 'April',
+        5  : 'May',
+        6  : 'June',
+        7  : 'July',
+        8  : 'August',
+        9  : 'September',
+        10 : 'October',
+        11 : 'November',
+        12 : 'December',
+        }
+        return full_month_map[integer_month]
+
+def doDates(captions):
+        print('<tr>')
+        for caption in captions:
+                if caption != '':
+                        print('<td>')
+                        print('<span class="covermainpage">')
+                        capmonth = ConvertMonth(int(caption[PUB_YEAR][5:7]))
+                        label = '%s %s' % (capmonth, caption[PUB_YEAR][8:10])
+                        outstr = ISFDBLink("pl.cgi", caption[PUB_PUBID], "%s" % label)
+                        print(outstr)
+                        #print label
+                        print('</span>')
+                        print('</td>')
+        print('</tr>')
+
+def ConvertFormat(format):
+        format_map = {
+        'pb'  : 'Mass Market Paperback',
+        'tp'  : 'Trade Paperback',
+        'hc'  : 'Hardcover',
+        'ebook'  : 'E-book',
+        'digest'  : 'Digest',
+        'digital audio download'  : 'Digital Audio',
+        }
+        return format_map[format]
+
+def doPubTypes(captions):
+        print('<tr>')
+        for caption in captions:
+                if caption != '':
+                        print('<td>')
+                        print('<span class="covermainpage">')
+                        try:
+                                format = ConvertFormat(caption[PUB_PTYPE])
+                        except:
+                                format = caption[PUB_PTYPE]
+                        label = '(%s)' % (format)
+                        #outstr = ISFDBLink("pl.cgi", caption[PUB_PUBID], "%s" % label)
+                        #print outstr
+                        print(label)
+                        print('</span>')
+                        print('</td>')
+        print('</tr>')
+
 def displayForthcoming():
         # Forthcoming Books
         displayLinks()
@@ -69,60 +130,50 @@ def displayForthcoming():
         print('</div>')
 
         print('<div id="Intro">')
-        print('<table>')
+        print('<table class="mainpage">')
 
-        leftcolumn = 1
         # Retrieve publication list from front_page_pubs which is built by the nightly job
         pubs = SQLGetFrontPagePubs(1)
         # If the nightly job hasn't run recently, retrieve publication list directly from the database
         if len(pubs) < SESSION.front_page_pubs:
                 pubs = SQLGetNextMonthPubs()
+
+        booksPrinted    = 0
+        columnNumber    = 1
+        maxColumns      = 5
+        maxRows         = 4
+        maxBooks        = maxColumns * maxRows
+
+        titles = []
+        captions = ['', '', '', '', '', '', '']
+        CaptionIndex = 0
+
         for pub in pubs:
-                if leftcolumn:
-                        print('<tr>')
 
                 image_source = ISFDBHostCorrection(pub[PUB_IMAGE])
                 image_source = image_source.split("|")[0]
                 alt_name = 'Book Image'
-                print('<td><img src="%s" class="covermainpage" alt="%s"></td>' % (image_source, alt_name))
-                outstr = pub[PUB_YEAR][5:7] +'/'+ pub[PUB_YEAR][8:10] + ' - '
-                outstr += ISFDBLink('pl.cgi', pub[PUB_PUBID], pub[PUB_TITLE], False, 'class="forthcoming"') + " ("
-                if pub[PUB_PUBLISHER]:
-                        publisher = SQLGetPublisher(pub[PUB_PUBLISHER])
-                        outstr += ISFDBLink('publisher.cgi', publisher[PUBLISHER_ID], publisher[PUBLISHER_NAME])
+                captions[CaptionIndex] = pub
+                CaptionIndex += 1
 
-                if pub[PUB_ISBN]:
-                        outstr += ", " + convertISBN(pub[PUB_ISBN])
+                if columnNumber == 1:
+                        print('<tr>')
+                print('<td class="forthbook"><img src="%s" class="covermainpage" alt="%s"></td>' % (image_source, alt_name))
+                booksPrinted += 1
 
-                if pub[PUB_PRICE]:
-                        outstr += ", " + ISFDBPrice(pub[PUB_PRICE], 'left')
-
-                if pub[PUB_PAGES]:
-                        outstr += ", %spp" % pub[PUB_PAGES]
-
-                if pub[PUB_PTYPE]:
-                        outstr += ", " + ISFDBPubFormat(pub[PUB_PTYPE], 'left')
-
-                if pub[PUB_CTYPE]:
-                                outstr += ', %s' % pub[PUB_CTYPE].lower()
-                outstr += ') by '
-
-                print('<td>%s' % outstr)
-                authors = SQLPubBriefAuthorRecords(pub[PUB_PUBID])
-                displayAuthorList(authors)
-                print('</td>')
-                if leftcolumn:
-                        leftcolumn = 0
-                else:
+                if columnNumber == maxColumns:
+                        columnNumber = 1
                         print('</tr>')
-                        leftcolumn = 1
+                        doDates(captions)
+                        doPubTypes(captions)
+                        captions = ['', '', '', '', '', '', '']
+                        CaptionIndex = 0
+                else:
+                        columnNumber += 1
 
-        if leftcolumn == 0:
-                print('</tr>')
-                print('<tr>')
-                print('<td></td>')
-                print('<td></td>')
-                print('</tr>')
+                if booksPrinted >= maxBooks:
+                        break
+
         print('</table>')
         print('</div>')
         displayLinks()

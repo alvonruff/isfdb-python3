@@ -9,7 +9,25 @@ from __future__ import print_function
 #     Version: $Revision: 796 $
 #     Date: $Date: 2021-11-02 19:08:22 -0400 (Tue, 02 Nov 2021) $
 
-import cgi
+##############################################################################
+#  Pylint disable list. These checks are too gratuitous for our purposes
+##############################################################################
+# pylint: disable=bad-indentation
+# pylint: disable=line-too-long
+# pylint: disable=invalid-name
+# pylint: disable=consider-using-f-string
+# pylint: disable=too-many-statements
+# pylint: disable=too-many-return-statements
+# pylint: disable=too-many-branches
+# pylint: disable=too-many-instance-attributes
+##############################################################################
+# Look at these later
+##############################################################################
+# pylint: disable=unused-wildcard-import
+# pylint: disable=missing-function-docstring
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-class-docstring
+
 from SQLparsing import SQLGetAwardTypeById, SQLgetNotes, SQLloadAwardTypeWebpages
 from awardClass import awardShared
 from isfdb import *
@@ -30,14 +48,14 @@ class award_type(awardShared):
                 self.used_webpages = 0
                 self.used_non_genre = 0
 
-                self.award_type_id = ''
+                self.award_type_id = 0
+                self.award_type_note_id = 0
                 self.award_type_code = ''
                 self.award_type_by = ''
                 self.award_type_for = ''
                 self.award_type_name = ''
                 self.award_type_short_name = ''
                 self.award_type_poll = ''
-                self.award_type_note_id = ''
                 self.award_type_note = ''
                 self.award_type_webpages = []
                 self.award_type_non_genre = ''
@@ -95,8 +113,12 @@ class award_type(awardShared):
                 if self.award_type_webpages:
                         self.used_webpages = 1
 
-        def cgi2obj(self):
-                self.form = IsfdbFieldStorage()
+        def cgi2obj(self, form=0):
+                if form:
+                        self.form = form
+                else:
+                        self.form = IsfdbFieldStorage()
+
                 if 'award_type_id' in self.form:
                         self.award_type_id = int(self.form['award_type_id'].value)
                         self.used_id = 1
@@ -136,7 +158,7 @@ class award_type(awardShared):
                         if value:
                                 self.award_type_by = value
                                 self.used_by = 1
-                
+
                 if 'award_type_for' in self.form:
                         value = XMLescape(self.form['award_type_for'].value)
                         if value:
@@ -236,7 +258,7 @@ class award_type(awardShared):
                                 print('</tr>')
                         print('</table>')
                         print('</div>')
-                
+
                 empty_categories = SQLGetEmptyAwardCategories(self.award_type_id)
                 if empty_categories:
                         print('<div class="generic_centered_div">')

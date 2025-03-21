@@ -76,6 +76,12 @@ def printAwardCatRecordTypes(awardcat):
         TryPrint("NOTE    E       =", str(type(awardcat.award_cat_note)))
         TryPrint("WEBPAGES        =", str(type(awardcat.award_cat_webpages)))
 
+class TestStorage(dict):
+        def __init__(self, s=None):
+                self.value = s
+        def getvalue(self, theKey):
+                return self[theKey]
+
 class MyTestCase(unittest.TestCase):
 
         def test_001_load(self):
@@ -87,14 +93,12 @@ class MyTestCase(unittest.TestCase):
                 if debug:
                         printAwardCatRecord(cat)
                         printAwardCatRecordTypes(cat)
-                        #cat.PrintAwardCatYear(2023)
-                        #printAwardCatRecordTypes(author)
 
                 self.assertEqual(INT_TYPE, str(type(cat.award_cat_id)))
-                self.assertEqual(STR_TYPE, str(type(cat.award_cat_name)))
                 self.assertEqual(INT_TYPE, str(type(cat.award_cat_type_id)))
                 self.assertEqual(INT_TYPE, str(type(cat.award_cat_order)))
-                self.assertEqual(STR_TYPE, str(type(cat.award_cat_note_id)))
+                self.assertEqual(INT_TYPE, str(type(cat.award_cat_note_id)))
+                self.assertEqual(STR_TYPE, str(type(cat.award_cat_name)))
                 self.assertEqual(STR_TYPE, str(type(cat.award_cat_note)))
                 self.assertEqual(LIST_TYPE, str(type(cat.award_cat_webpages)))
 
@@ -130,6 +134,43 @@ class MyTestCase(unittest.TestCase):
                 cat.award_cat_id = 261
                 cat.load()
                 cat.PrintAwardCatPageHeader()
+
+        def test_006_cgi2obj(self):
+                print("TEST: awardcatClass::cgi2obj")
+
+                # Test 1 - Missing author ID
+                form = {
+                    'award_cat_id': TestStorage("261"),
+                }
+                cat = award_cat()
+                cat.cgi2obj(form)
+                self.assertEqual(cat.error, "Valid award type is required for award categories")
+
+                # Test 2 - Bad category name
+                form = {
+                    'award_cat_id': TestStorage("261"),
+                    'award_cat_type_id': TestStorage("23"),
+                }
+                cat = award_cat()
+                cat.cgi2obj(form)
+                self.assertEqual(cat.error, "Award category name is required")
+
+                # Test 3 - Valid CGI
+                form = {
+                    'award_cat_id': TestStorage("261"),
+                    'award_cat_type_id': TestStorage("23"),
+                    'award_cat_name': TestStorage("Best Novel"),
+                }
+                cat = award_cat()
+                cat.cgi2obj(form)
+
+                self.assertEqual(INT_TYPE, str(type(cat.award_cat_id)))
+                self.assertEqual(INT_TYPE, str(type(cat.award_cat_type_id)))
+                self.assertEqual(INT_TYPE, str(type(cat.award_cat_order)))
+                self.assertEqual(INT_TYPE, str(type(cat.award_cat_note_id)))
+                self.assertEqual(STR_TYPE, str(type(cat.award_cat_name)))
+                self.assertEqual(STR_TYPE, str(type(cat.award_cat_note)))
+                self.assertEqual(LIST_TYPE, str(type(cat.award_cat_webpages)))
 
         def test_100_dumpLog(self):
                 print(".")

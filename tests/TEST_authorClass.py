@@ -19,6 +19,8 @@ import unittest
 #####################################################################################
 # Test for authorClass.py. This indirectly tests the following SQLparsing methods:
 #
+# SQLgetAuthorData
+# SQLisUserModerator
 # SQLLoadAllLanguages
 # SQLloadAuthorData
 # SQLloadEmails
@@ -87,6 +89,12 @@ def printAuthorRecordTypes(author):
         TryPrint("EMAILS          =", str(type(author.author_emails)))
         TryPrint("WEBPAGES        =", str(type(author.author_webpages)))
 
+class TestStorage(dict):
+        def __init__(self, s=None):
+                self.value = s
+        def getvalue(self, theKey):
+                return self[theKey]
+
 class MyTestCase(unittest.TestCase):
 
         def test_001_load(self):
@@ -98,6 +106,7 @@ class MyTestCase(unittest.TestCase):
                         printAuthorRecord(author)
                         printAuthorRecordTypes(author)
 
+                self.assertEqual(author.error, '')
                 self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
                 self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
                 self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
@@ -291,6 +300,139 @@ class MyTestCase(unittest.TestCase):
                 self.assertEqual(STR_TYPE, str(type(author.author_note)))
                 self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
                 self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
+                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
+                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
+
+        def test_006_cgi2obj(self):
+                print("TEST: authorClass::cgi2obj")
+
+                # Test 1 - Missing author ID
+                form = {
+                    'author_canonical': TestStorage("Dan Simmons"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Author ID not specified")
+
+                # Test 2 - Missing canonical name
+                form = {
+                    'author_id': TestStorage(170),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Canonical name is required")
+
+                # Test 3 - Incorrect author ID
+                form = {
+                    'author_id': TestStorage(17),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Canonical name 'Dan Simmons' already exists, duplicates are not allowed")
+
+                # Test 4 - Bad characters
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan+Simmons"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Plus signs are currently not allowed in canonical names")
+
+                # Test 5 - No Lastname
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Directory Entry is required")
+
+                # Test 6 - Bad URL
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                    'author_lastname': TestStorage("Simmons"),
+                    'author_image': TestStorage("httttp://stuff.com"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Author image error:  URLs must start with http or https")
+
+                # Test 7 - Missing Language
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                    'author_lastname': TestStorage("Simmons"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Language is required")
+
+                # Test 8 - Bad email
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                    'author_language': TestStorage("English"),
+                    'author_lastname': TestStorage("Simmons"),
+                    'author_emails': TestStorage("simmons.com"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Invalid email address")
+
+                # Test 9 - Bad webpage
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                    'author_language': TestStorage("English"),
+                    'author_lastname': TestStorage("Simmons"),
+                    'author_webpages': TestStorage("httttp://stuff.com"),
+                }
+                author = authors(db)
+                author.cgi2obj(form)
+                self.assertEqual(author.error, "Author Web page error:  URLs must start with http or https")
+
+                # Test 10 - Valid Entry
+                form = {
+                    'author_id': TestStorage(170),
+                    'author_canonical': TestStorage("Dan Simmons"),
+                    'author_lastname': TestStorage("Simmons"),
+                    'author_language': TestStorage("English"),
+                    'author_trans_names': TestStorage("Bogus"),
+                    'author_legalname': TestStorage("Bogus Entry"),
+                    'trans_legal_names': TestStorage("Dude Entry"),
+                    'author_birthplace': TestStorage("Georgetown, Texas, USA"),
+                    'author_birthdate': TestStorage("1948-09-04"),
+                    'author_deathdate': TestStorage("2025-01-01"),
+                    'author_emails': TestStorage("bogus@gmail.com"),
+                    'author_webpages': TestStorage("http://stuff.com"),
+                    'author_image': TestStorage("http://stuff.com/image.jpg"),
+                }
+
+                author = authors(db)
+                author.cgi2obj(form)
+                if author.error != '':
+                        print("ERROR:", author.error)
+
+                if debug:
+                        printAuthorRecord(author)
+                        printAuthorRecordTypes(author)
+
+                self.assertEqual(author.error, '')
+                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
+                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
+                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
+                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
+                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
+                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
+                self.assertEqual(STR_TYPE, str(type(author.author_image)))
+                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
+                self.assertEqual(STR_TYPE, str(type(author.author_language)))
+                self.assertEqual(STR_TYPE, str(type(author.author_note)))
+                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
+                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
                 self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
                 self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
 

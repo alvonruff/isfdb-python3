@@ -104,6 +104,16 @@ div#statusbar {
    margin-right: 10px; 
    text-align: center; 
 }
+div#statusbar2 {
+   background: #F00;
+   color: #fff;
+   padding-top: 2px;
+   padding-bottom: 2px;
+   margin-bottom: 10px;
+   margin-left: 10px;
+   margin-right: 10px;
+   text-align: center;
+}
 
 /* main navigation bar on left side */
 div#nav {
@@ -1066,7 +1076,23 @@ img.coversmall {
 
 /* cover display on the front page */
 img.covermainpage {
-   width: 90px;
+   width: 175px;
+   padding-top: 25px;
+   padding-left: 10px;
+   padding-right: 10px;
+   padding-bottom: 5px;
+}
+span.covermainpage {
+   width: 175px;
+   padding-right: 10px;
+   padding-left: 10px;
+   text-align: center;
+   font-style: italic;
+   font-weight: bold;
+}
+table.mainpage td {
+   text-align: center;
+   color: #000;
 }
 
 /* links to detailed forcoming books on the main page */

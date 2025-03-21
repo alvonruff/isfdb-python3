@@ -19,6 +19,8 @@ run:
 	$(PYTHON) TEST_authorClass.py > LOG
 	$(PYTHON) TEST_awardcatClass.py >> LOG
 	$(PYTHON) TEST_awardClass.py >> LOG
+	$(PYTHON) TEST_awardtypeClass.py >> LOG
+	$(PYTHON) TEST_pubClass.py >> LOG
 
 clean:
 	make -f local.mk clean

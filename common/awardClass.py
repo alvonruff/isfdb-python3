@@ -28,21 +28,9 @@ from __future__ import print_function
 # pylint: disable=missing-module-docstring
 # pylint: disable=missing-class-docstring
 
-import cgi
-import sys
-import os
 from isfdb import *
 from library import *
-from xml.dom import minidom
-from xml.dom import Node
 from SQLparsing import *
-
-if PYTHONVER == 'python2':
-        import urllib
-else:
-        import urllib.request
-        import urllib.parse
-        import urllib.error
 
 class awardShared:
         def __init__(self):
@@ -67,12 +55,12 @@ class awardShared:
                         '99' : 'Nominations Below Cutoff',
                 }
 
-        def PrintOneAwardList(self, awards):
+        def PrintOneAwardList(self, awardList):
                 # Print all awards for one list of awards. The awards may be for one award type/year, one category or one category/year.
                 special_awards = self.SpecialAwards()
                 last_level = 1
                 for level in range(1,100):
-                        for award in awards:
+                        for award in awardList:
                                 if int(award[AWARD_LEVEL]) == level:
                                         # Skip any records whose level is over 70 and is not a recognized "special" level
                                         if level > 70 and str(level) not in special_awards:
@@ -87,7 +75,6 @@ class awardShared:
                                         last_level = level
 
         def PrintOneAward(self, record):
-                from awardClass import awards
                 award = awards(db)
                 award.load(record[AWARD_ID])
 
@@ -185,16 +172,17 @@ class awards(awardShared):
                         counter += 1
                 return retval
 
-        def load(self, id):
-                self.loadCommon(id, 0)
+        def load(self, awardId):
+                self.loadCommon(awardId, 0)
 
-        def loadXML(self, id):
-                self.loadCommon(id, 1)
+        def loadXML(self, awardId):
+                # This does the same thing as load()
+                self.loadCommon(awardId, 1)
 
-        def loadCommon(self, id, doXML):
-                if id == 0:
+        def loadCommon(self, awardId, doXML):
+                if awardId == 0:
                         return
-                award = SQLloadAwards(id)
+                award = SQLloadAwards(awardId)
                 if award:
                         award = award[0]
                         if award[AWARD_ID]:
@@ -259,8 +247,11 @@ class awards(awardShared):
                         self.error = 'Award record not found'
                         return
 
-        def cgi2obj(self):
-                self.form = IsfdbFieldStorage()
+        def cgi2obj(self, form=0):
+                if form:
+                        self.form = form
+                else:
+                        self.form = IsfdbFieldStorage()
                 if 'award_id' in self.form:
                         self.award_id = self.form['award_id'].value
                         self.used_id = 1
@@ -480,7 +471,7 @@ class awards(awardShared):
                         print(ISFDBLink("title.cgi", self.title_id, title_data[TITLE_TITLE]))
                 else:
                         print('%s (<i>no ISFDB title record</i>)' % ISFDBText(self.award_title))
-                
+
                 #Retrieve this user's data
                 user = User()
                 user.load()
@@ -515,7 +506,7 @@ class awards(awardShared):
                         print('<li>')
                         print(FormatNote(self.award_note, 'Note', 'short', self.award_id, 'Award'))
                 print('</ul>')
-                
+
         def PrintAwardAuthors(self):
                 counter = 0
                 # If the award is title-based, then display that title's authors
