@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 873 $
-#     Date: $Date: 2022-03-10 21:47:35 -0500 (Thu, 10 Mar 2022) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
 from isfdb import *
 import datetime
@@ -40,7 +40,7 @@ class CalendarMenu:
                         print('</tr>')
                 print('</table>')
                 PrintTrailer('calendar_menu', 0, 0)
-        
+
         def print_month(self):
                 print('<table class="calendar_row">')
                 self.print_month_header()
@@ -86,6 +86,9 @@ class CalendarDay:
         def __init__(self):
                 self.month = 0
                 self.day = 0
+                self.padded_day = ''
+                self.authors = ''
+                self.author = ''
 
         def display(self):
                 self.parse_parameters()

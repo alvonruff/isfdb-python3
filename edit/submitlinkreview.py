@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2008-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2008-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended titlelication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
         
 import cgi

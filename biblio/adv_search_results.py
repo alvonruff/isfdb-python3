@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 930 $
-#     Date: $Date: 2022-06-08 15:54:08 -0400 (Wed, 08 Jun 2022) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
 import cgi
 import sys
@@ -30,13 +30,16 @@ class AdvancedSearchResults(AdvancedSearch):
                 self.id_field = ''
                 self.joins = set()
                 self.num = 0
+                self.print_results = ''
                 self.query = ''
                 self.records = []
                 self.search_type = ''
                 self.selection_criteria = set()
+                self.SQLterm = ''
                 self.sort = ''
                 self.sort_name = ''
                 self.start = 0
+                self.table = ''
                 self.term_list = []
                 self.terms = ''
                 self.wildcards = '%*_'
@@ -45,7 +48,7 @@ class AdvancedSearchResults(AdvancedSearch):
                 user.load()
                 user.load_moderator_flag()
                 self.user = user
-                
+
                 self.define_criteria()
 
         def results(self):
@@ -161,7 +164,7 @@ class AdvancedSearchResults(AdvancedSearch):
         def validate_conjunction(self):
                 if self.conjunction not in ('AND', 'OR'):
                         self.display_error('Only AND and OR conjunction values are allowed')
-                
+
         def validate_sort(self):
                 for sort_tuple in self.sort_values[self.search_type]:
                         if sort_tuple[0] == self.sort:
@@ -219,7 +222,6 @@ class AdvancedSearchResults(AdvancedSearch):
                 term = normalizeInput(term)
                 if not term:
                         return
-                raw_entry = term
                 entry = self.format_entry(term)
                 self.validate_term(use, entry)
 
@@ -292,7 +294,7 @@ class AdvancedSearchResults(AdvancedSearch):
 
         def validate_term(self, field, value):
                 self.validate_empty_term(value)
-                
+
                 if field in ('month', 'pub_month'):
                         (year, month, error) = validateMonth(value)
                         if error:
@@ -875,9 +877,9 @@ class tableInfo:
                         self.hints = hints
 
         def __cmp__(self, ti):
-                if (self.tname == ti.tname):
+                if self.tname == ti.tname:
                         return 0
-                if (self.tname < ti.tiname):
+                if self.tname < ti.tiname:
                         return -1
                 return 1
 

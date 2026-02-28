@@ -1,33 +1,16 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1220 $
-#     Date: $Date: 2025-02-03 16:47:16 -0500 (Mon, 03 Feb 2025) $
+#     Version: $Revision: 1270 $
+#     Date: $Date: 2026-02-27 06:57:58 -0500 (Fri, 27 Feb 2026) $
 
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=bad-indentation
-# pylint: disable=line-too-long
-# pylint: disable=invalid-name
-# pylint: disable=consider-using-f-string
-# pylint: disable=too-many-statements
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
-##############################################################################
-# Look at these later
-##############################################################################
-# pylint: disable=unused-wildcard-import
-# pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
-
+import cgi
+from xml.dom import minidom
 from isfdb import *
 from library import *
 from SQLparsing import *
@@ -55,12 +38,12 @@ class awardShared:
                         '99' : 'Nominations Below Cutoff',
                 }
 
-        def PrintOneAwardList(self, awardList):
+        def PrintOneAwardList(self, awards):
                 # Print all awards for one list of awards. The awards may be for one award type/year, one category or one category/year.
                 special_awards = self.SpecialAwards()
                 last_level = 1
                 for level in range(1,100):
-                        for award in awardList:
+                        for award in awards:
                                 if int(award[AWARD_LEVEL]) == level:
                                         # Skip any records whose level is over 70 and is not a recognized "special" level
                                         if level > 70 and str(level) not in special_awards:
@@ -158,6 +141,7 @@ class awards(awardShared):
                 self.award_note_id    = ''
                 self.award_note       = ''
                 self.special_awards   = self.SpecialAwards()
+                self.form             = ''
 
                 self.error = ''
 
@@ -172,17 +156,16 @@ class awards(awardShared):
                         counter += 1
                 return retval
 
-        def load(self, awardId):
-                self.loadCommon(awardId, 0)
+        def load(self, localId):
+                self.loadCommon(localId, 0)
 
-        def loadXML(self, awardId):
-                # This does the same thing as load()
-                self.loadCommon(awardId, 1)
+        def loadXML(self, localId):
+                self.loadCommon(localId, 1)
 
-        def loadCommon(self, awardId, doXML):
-                if awardId == 0:
+        def loadCommon(self, localId, doXML):
+                if localId == 0:
                         return
-                award = SQLloadAwards(awardId)
+                award = SQLloadAwards(localId)
                 if award:
                         award = award[0]
                         if award[AWARD_ID]:
@@ -243,15 +226,12 @@ class awards(awardShared):
                                         self.used_note = 1
 
                 else:
-                        print("ERROR: award record not found: ", id)
+                        print("ERROR: award record not found: ", localId)
                         self.error = 'Award record not found'
                         return
 
-        def cgi2obj(self, form=0):
-                if form:
-                        self.form = form
-                else:
-                        self.form = IsfdbFieldStorage()
+        def cgi2obj(self):
+                self.form = IsfdbFieldStorage()
                 if 'award_id' in self.form:
                         self.award_id = self.form['award_id'].value
                         self.used_id = 1
@@ -322,13 +302,14 @@ class awards(awardShared):
                                 if 'award_level' in self.form:
                                         try:
                                                 self.award_level = self.form['award_level'].value
-                                                self.used_level = 1
-                                                # Check that the entered value is between 1 and 70
-                                                if int(self.award_level) > 70 or int(self.award_level) < 1:
-                                                        raise
-                                        except:
+                                                level_int = int(self.award_level)
+                                        except (KeyError, ValueError):
                                                 self.error = "Award level must be an integer number between 1 and 70"
                                                 return
+                                        if level_int > 70 or level_int < 1:
+                                                self.error = "Award level must be an integer number between 1 and 70"
+                                                return
+                                        self.used_level = 1
                                 else:
                                         self.error = "Missing award level value"
                                         return
@@ -336,13 +317,13 @@ class awards(awardShared):
                                 if 'award_special' in self.form:
                                         try:
                                                 self.award_level = self.form['award_special'].value
-                                                self.used_level = 1
-                                                # Check that the entered value is a recognized "special" value
-                                                if self.award_level not in self.special_awards:
-                                                        raise
-                                        except:
+                                        except KeyError:
                                                 self.error = "Only displayed special award levels are supported"
                                                 return
+                                        if self.award_level not in self.special_awards:
+                                                self.error = "Only displayed special award levels are supported"
+                                                return
+                                        self.used_level = 1
                                 else:
                                         self.error = "Missing special award level value"
                                         return
@@ -458,7 +439,7 @@ class awards(awardShared):
                                         print(' (variant of %s)' % ISFDBLink('title.cgi', parent[TITLE_PUBID], parent[TITLE_TITLE]))
                 else:
                         if self.award_title and (self.award_title != "untitled"):
-                                print(self.award_title)
+                                print(ISFDBText(self.award_title))
 
         def PrintAwardSummary(self):
                 from login import User

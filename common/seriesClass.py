@@ -1,24 +1,19 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1212 $
-#     Date: $Date: 2025-01-22 16:00:18 -0500 (Wed, 22 Jan 2025) $
+#     Version: $Revision: 1272 $
+#     Date: $Date: 2026-02-28 15:53:11 -0500 (Sat, 28 Feb 2026) $
 
-import cgi
-import sys
 import re
-import os
 from SQLparsing import SQLgetNotes, SQLloadSeriesWebpages
 from isfdb import *
 from isfdblib import *
 from library import *
-from xml.dom import minidom
-from xml.dom import Node
 
 
 class series:
@@ -105,24 +100,25 @@ class series:
                 try:
                         self.series_id = str(int(self.form['series_id'].value))
                         self.used_id = 1
-                except:
+                except (KeyError, ValueError):
                         self.error = "Series ID must be a valid integer number"
                         return
-                
+
                 try:
                         self.series_name = XMLescape(self.form['series_name'].value)
-                        self.used_name = 1
-                        if not self.series_name:
-                                raise
-                        # Unescape the series name to ensure that the lookup finds it in the database
-                        current_series = SQLGetSeriesByName(XMLunescape(self.series_name))
-                        if current_series:
-                                if int(self.series_id) != int(current_series[SERIES_PUBID]):
-                                        self.error = "Series '%s' already exists" % current_series[SERIES_NAME]
-                                        return
-                except:
+                except KeyError:
                         self.error = "Series name is required"
                         return
+                if not self.series_name:
+                        self.error = "Series name is required"
+                        return
+                self.used_name = 1
+                # Unescape the series name to ensure that the lookup finds it in the database
+                current_series = SQLGetSeriesByName(XMLunescape(self.series_name))
+                if current_series:
+                        if int(self.series_id) != int(current_series[SERIES_PUBID]):
+                                self.error = "Series '%s' already exists" % current_series[SERIES_NAME]
+                                return
 
                 for key in self.form:
                         if 'trans_series_names' in key:
@@ -142,12 +138,12 @@ class series:
                                 if XMLunescape(self.series_parent) == current_parent[SERIES_NAME]:
                                         self.error = 'Parent series name cannot be the same as the series name'
                                         return
-                
+
                 if 'series_type' in self.form:
                         self.series_type = XMLescape(self.form['series_type'].value)
                         if self.series_type:
                                 self.used_type = 1
-                
+
                 if 'series_parentposition' in self.form:
                         self.series_parentposition = XMLescape(self.form['series_parentposition'].value)
                         if self.series_parentposition:
@@ -156,13 +152,12 @@ class series:
                                 if not re.match(r'^[1-9]{1}[0-9]{0,8}$', self.series_parentposition):
                                         self.error = "Series Parent Position must be an integer greater than 0 and contain 1-9 digits"
                                         return
-                
+
                 if 'series_note' in self.form:
                         self.series_note = XMLescape(self.form['series_note'].value)
                         if self.series_note:
                                 self.used_note = 1
 
-                counter = 1
                 for key in self.form:
                         if key[:15] == 'series_webpages':
                                 value = XMLescape(self.form[key].value)
@@ -198,7 +193,7 @@ class series:
                 if self.series_note:
                         print('<li>')
                         print(FormatNote(self.series_note, 'Note', 'short', self.series_id, 'Series'))
-                
+
                 if tags_type == 'brief':
                         self.PrintSeriesTagsBrief(seriesTags)
                 else:
@@ -278,10 +273,9 @@ class series:
                 (variantTitles, variantSerials) = buildVariants(seriesTitlesList, variants, user)
                 # Retrieve all user tags for this series
                 seriesTags = SQLgetTitleListTags(title_string, user.id)
-                
+
                 # Build a list of parent title IDs that have pubs associated DIRECTLY with them
-                parent_string = dict_to_in_clause(variantTitles, variantSerials)
-                parentsWithPubs = SQLTitlesWithPubs(parent_string)
+                parentsWithPubs = SQLTitlesWithPubs(list(variantTitles) + list(variantSerials))
 
                 # Load all variants' (including serials') authors
                 variantAuthors = buildVTAuthors(variantTitles, variantSerials)
@@ -300,7 +294,7 @@ class series:
                 seriesData[self.series_id] = self
                 seriesTree[self.series_id] = SQLFindSeriesChildren(self.series_id)
                 for child_id in seriesTree[self.series_id]:
-                        series1 = series(db)
+                        series1 = series(self.db)
                         # Do a barebones load of the child series to improve performance
                         series1.load(child_id, 0)
                         series1.BuildSeriesTree(seriesData, seriesTree)

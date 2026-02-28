@@ -5,8 +5,8 @@
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1210 $
-#     Date: $Date: 2025-01-19 13:09:53 -0500 (Sun, 19 Jan 2025) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
 def reportsDict():
@@ -449,5 +449,5 @@ def reportsDict():
         weeklies.extend(transliterations)
 
         monthlies = (9999, )
-        
+
         return (reports, sections, non_moderator, tuple(weeklies), monthlies)

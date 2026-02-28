@@ -1,22 +1,26 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2014-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 901 $
-#     Date: $Date: 2022-04-04 15:24:03 -0400 (Mon, 04 Apr 2022) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from SQLparsing import *
 from biblio import *
 from common import PrintAllAuthors
 from library import ISFDBconvertYear
 import operator
-
 
 if __name__ == '__main__':
 

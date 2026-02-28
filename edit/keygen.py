@@ -1,15 +1,21 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2008-2026   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1003 $
-#     Date: $Date: 2022-09-15 14:36:33 -0400 (Thu, 15 Sep 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 import random
 from isfdb import *

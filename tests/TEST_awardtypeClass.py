@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2025    Al von Ruff
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,242 +10,129 @@
 #     Version: $Revision: 717 $
 #     Date: $Date: 2021-08-28 11:04:26 -0400 (Sat, 28 Aug 2021) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from SQLparsing import *
-from awardtypeClass import award_type
-from xml.dom import minidom
-from xml.dom import Node
+from awardtypeClass import *
 import unittest
 
-#####################################################################################
-# Test for awardtypeClass.py. This indirectly tests the following SQLparsing methods:
 #
-# SQLgetAuthorData
-# SQLGetAwardCatBreakdown
-# SQLGetAwardCatById
-# SQLGetAwardTypeByCode
-# SQLGetAwardTypeById
-# SQLGetAwardTypeByName
-# SQLGetAwardTypeByShortName
-# SQLGetAwardYears
-# SQLGetEmptyAwardCategories
-# SQLgetNotes
-# SQLLoadAllLanguages
-# SQLLoadAllTemplates
-# SQLloadAwards
-# SQLloadAwardsForYearType
-# SQLloadAwardTypeWebpages
-# SQLloadTitleFromAward
-# SQLloadTitle
-# SQLloadTransAuthorNames
-# SQLloadTransTitles
-# SQLTitleBriefAuthorRecords
-# SQLUpdateQueries
+# This test suite was create to provide some coverage for the Python2 to
+# Python3 upgrade. The purpose is to drive the interpreter through the
+# main code line to help find any required API changes or deprecations.
 #
-#####################################################################################
+# These tests are not intended to exhaustively test all of a
+# function's operational requirements.
+#
 
-def TryPrint(label, value):
-        try:
-                print("%s %s" % (label, value))
-        except:
-                pass
+##############################################################
+# UNTESTED Methods
+##############################################################
+# cgi2obj               - requires input from cgi
+# display_table_grid    - prints to stdout
+# display_categories    - prints to stdout
+# display_awards_for_year - prints to stdout
 
-INT_TYPE  = "<class 'int'>"
-STR_TYPE  = "<class 'str'>"
-DICT_TYPE = "<class 'dict'>"
-NONE_TYPE = "<class 'NoneType'>"
-LIST_TYPE = "<class 'list'>"
-TUPLE_TYPE = "<class 'tuple'>"
-
-debug = 1
-
-def printAwardTypeRecord(awardtype):
-        print("-------------------------------------------------")
-        TryPrint("ID              =", awardtype.award_type_id)
-        TryPrint("CODE            =", awardtype.award_type_code)
-        TryPrint("BY              =", awardtype.award_type_by)
-        TryPrint("NAME            =", awardtype.award_type_name)
-        TryPrint("SHORT NAME      =", awardtype.award_type_short_name)
-        TryPrint("POLL            =", awardtype.award_type_poll)
-        TryPrint("NOTE ID         =", awardtype.award_type_note_id)
-        TryPrint("NOTE            =", awardtype.award_type_note)
-        TryPrint("NON GENRE       =", awardtype.award_type_non_genre)
-        # Lists
-        print("WEBPAGES:")
-        for webpage in awardtype.award_type_webpages:
-                TryPrint("  WEBPAGE         =", webpage)
-        print("-------------------------------------------------")
-
-def printAwardTypeRecordTypes(awardtype):
-        TryPrint("ID              =", str(type(awardtype.award_type_id)))
-        TryPrint("CODE            =", str(type(awardtype.award_type_code)))
-        TryPrint("BY              =", str(type(awardtype.award_type_by)))
-        TryPrint("NAME            =", str(type(awardtype.award_type_name)))
-        TryPrint("SHORT NAME      =", str(type(awardtype.award_type_short_name)))
-        TryPrint("POLL            =", str(type(awardtype.award_type_poll)))
-        TryPrint("NOTE ID         =", str(type(awardtype.award_type_note_id)))
-        TryPrint("NOTE            =", str(type(awardtype.award_type_note)))
-        TryPrint("NON GENRE       =", str(type(awardtype.award_type_non_genre)))
-        TryPrint("WEBPAGE         =", str(type(awardtype.award_type_webpages)))
-
-class TestStorage(dict):
-        def __init__(self, s=None):
-                self.value = s
-        def getvalue(self, theKey):
-                return self[theKey]
+def printClass(at):
+        print("used_id             =", at.used_id)
+        print("used_code           =", at.used_code)
+        print("used_by             =", at.used_by)
+        print("used_for            =", at.used_for)
+        print("used_name           =", at.used_name)
+        print("used_short_name     =", at.used_short_name)
+        print("used_note           =", at.used_note)
+        print("used_note_id        =", at.used_note_id)
+        print("used_poll           =", at.used_poll)
+        print("used_webpages       =", at.used_webpages)
+        print("used_non_genre      =", at.used_non_genre)
+        print("award_type_id       =", at.award_type_id)
+        print("award_type_code     =", at.award_type_code)
+        print("award_type_by       =", at.award_type_by)
+        print("award_type_for      =", at.award_type_for)
+        print("award_type_name     =", at.award_type_name)
+        print("award_type_short_name =", at.award_type_short_name)
+        print("award_type_poll     =", at.award_type_poll)
+        print("award_type_note_id  =", at.award_type_note_id)
+        print("award_type_note     =", at.award_type_note)
+        print("award_type_webpages =", at.award_type_webpages)
+        print("award_type_non_genre =", at.award_type_non_genre)
+        print("error               =", at.error)
 
 class MyTestCase(unittest.TestCase):
 
-        def test_001_load(self):
-                print("TEST: awardtypeClass::load")
-                atype = award_type()
-                atype.award_type_code = 'Hu'
-                atype.load()
-                print("ERROR: ", atype.error)
+        def test_01_load_by_id(self):
+                print("\nTEST: award_type.load - by id")
+                at = award_type()
+                at.award_type_id = 9    # BSFA
+                at.load()
+                print_values = 1
+                if print_values:
+                        printClass(at)
+                else:
+                        self.assertEqual(1, at.used_id, "Bad used_id")
+                        self.assertEqual(1, at.used_code, "Bad used_code")
+                        self.assertEqual(1, at.used_name, "Bad used_name")
+                        self.assertEqual(1, at.used_short_name, "Bad used_short_name")
+                        self.assertEqual('', at.error, "Unexpected error")
+                        print("  Received name:", at.award_type_name)
+                        self.assertEqual('British Science Fiction Association Award', at.award_type_name, "Bad award_type_name")
+                        print("  Received short name:", at.award_type_short_name)
+                        self.assertEqual('BSFA', at.award_type_short_name, "Bad award_type_short_name")
 
-                if debug:
-                        printAwardTypeRecord(atype)
-                        printAwardTypeRecordTypes(atype)
+        def test_02_load_by_code(self):
+                print("\nTEST: award_type.load - by code")
+                at = award_type()
+                at.award_type_code = 'BSFA'
+                at.load()
+                print_values = 1
+                if print_values:
+                        printClass(at)
+                else:
+                        self.assertEqual(1, at.used_id, "Bad used_id")
+                        self.assertEqual(1, at.used_code, "Bad used_code")
+                        self.assertEqual(1, at.used_name, "Bad used_name")
+                        self.assertEqual('', at.error, "Unexpected error")
+                        print("  Received name:", at.award_type_name)
+                        self.assertEqual('British Science Fiction Association Award', at.award_type_name, "Bad award_type_name")
 
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_code)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_by)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_short_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_poll)))
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_note_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_note)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_non_genre)))
-                self.assertEqual(LIST_TYPE, str(type(atype.award_type_webpages)))
+        def test_03_load_no_args(self):
+                print("\nTEST: award_type.load - no args")
+                # load() sets an error when neither award_type_id nor award_type_code is set
+                at = award_type()
+                at.load()
+                print("  Received error:", at.error)
+                expected = 'Award type not specified'
+                self.assertEqual(expected, at.error, "Bad error message")
+                self.assertEqual(0, at.used_id, "Bad used_id")
+                self.assertEqual(0, at.used_name, "Bad used_name")
 
-        def test_002_load(self):
-                print("TEST: awardtypeClass::load")
-                atype = award_type()
-                atype.award_type_id = 23
-                atype.load()
-                print("ERROR: ", atype.error)
+        def test_04_load_id_not_found(self):
+                print("\nTEST: award_type.load - id not found")
+                at = award_type()
+                at.award_type_id = 999999    # Non-existent award type ID
+                at.load()
+                print("  Received error:", at.error)
+                expected = 'Award type not found: 999999'
+                self.assertEqual(expected, at.error, "Bad error message")
 
-                if debug:
-                        printAwardTypeRecord(atype)
-                        printAwardTypeRecordTypes(atype)
+        def test_05_load_code_not_found(self):
+                print("\nTEST: award_type.load - code not found")
+                at = award_type()
+                at.award_type_code = 'XXXXXXXXXX'    # Non-existent award type code
+                at.load()
+                print("  Received error:", at.error)
+                expected = 'Award type not found: XXXXXXXXXX'
+                self.assertEqual(expected, at.error, "Bad error message")
 
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_code)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_by)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_short_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_poll)))
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_note_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_note)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_non_genre)))
-                self.assertEqual(LIST_TYPE, str(type(atype.award_type_webpages)))
-
-        def test_003_load(self):
-                print("TEST: awardtypeClass::load")
-                atype = award_type()
-                atype.load()
-                self.assertEqual(atype.error, "Award type not specified")
-
-        def test_004_DisplayCategories(self):
-                print("TEST: awardtypeClass::DisplayCategories")
-                atype = award_type()
-                atype.award_type_id = 23
-                atype.load()
-                atype.display_categories()
-
-        def test_005_DisplayAwardsForYear(self):
-                print("TEST: awardtypeClass::DisplayAwardsForYear")
-                atype = award_type()
-                atype.award_type_id = 23
-                atype.load()
-                atype.display_awards_for_year(2022)
-
-        def test_006_cgi2obj(self):
-                print("TEST: awardtypeClass::cgi2obj")
-
-                # Test 1 - Award Type Name
-                form = {
-                    'award_year': TestStorage('0000-00-00'),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-                self.assertEqual(atype.error, "Full name is required for Award types")
-
-                # Test 2 - Award Full Name
-                form = {
-                    'award_type_name': TestStorage('Hugo Award'),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-                self.assertEqual(atype.error, "Award type with full name 'Hugo Award' already exists")
-
-                # Test 3 - Award Short Name
-                form = {
-                    'award_type_name': TestStorage('Bogus Award'),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-                self.assertEqual(atype.error, "Short name is required for Award types")
-
-                # Test 4 - Award Short Name
-                form = {
-                    'award_type_name': TestStorage('Bogus Award'),
-                    'award_type_short_name': TestStorage('Hugo'),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-                self.assertEqual(atype.error, "Award type with short name 'Hugo' already exists")
-
-                # Test 5 - Bad Webpage
-                form = {
-                    'award_type_id': TestStorage(23),
-                    'award_type_name': TestStorage('Bogus Award'),
-                    'award_type_short_name': TestStorage('Bogus'),
-                    'award_type_by': TestStorage('Bogus'),
-                    'award_type_for': TestStorage('Bogus'),
-                    'award_type_poll': TestStorage('Bogus'),
-                    'award_type_note': TestStorage('Bogus'),
-                    'award_type_non_genre': TestStorage('Bogus'),
-                    'award_type_webpages': TestStorage("amazon.com"),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-                self.assertEqual(atype.error, " URLs must start with http or https")
-
-                # Test 6 - Success
-                form = {
-                    'award_type_id': TestStorage(23),
-                    'award_type_name': TestStorage('Bogus Award'),
-                    'award_type_short_name': TestStorage('Bogus'),
-                    'award_type_by': TestStorage('Bogus'),
-                    'award_type_for': TestStorage('Bogus'),
-                    'award_type_poll': TestStorage('Bogus'),
-                    'award_type_note': TestStorage('Bogus'),
-                    'award_type_non_genre': TestStorage('Bogus'),
-                    'award_type_webpages': TestStorage("http://amazon.com"),
-                }
-                atype = award_type()
-                atype.cgi2obj(form)
-
-                if debug:
-                        printAwardTypeRecord(atype)
-                        printAwardTypeRecordTypes(atype)
-
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_code)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_by)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_short_name)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_poll)))
-                self.assertEqual(INT_TYPE, str(type(atype.award_type_note_id)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_note)))
-                self.assertEqual(STR_TYPE, str(type(atype.award_type_non_genre)))
-                self.assertEqual(LIST_TYPE, str(type(atype.award_type_webpages)))
-
-        def test_100_dumpLog(self):
+        def test_dumpLog(self):
                 print(".")
                 print("SQL Log")
                 SQLoutputLog()
+
 
 if __name__ == '__main__':
         unittest.main()

@@ -1,16 +1,21 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1192 $
-#     Date: $Date: 2024-08-28 16:16:18 -0400 (Wed, 28 Aug 2024) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 import os
-import sys
 import shutil
 import string
 from library import *
@@ -72,7 +77,7 @@ class Sfe3:
                 CNX.DB_QUERY(query)
                 record = CNX.DB_FETCHONE()
                 return record[0][0]
-        
+
         def load_resolved_and_unresolved_URLs(self):
                 query = "select url, author_name, resolved from sfe3_authors"
                 CNX = MYSQL_CONNECTOR()
@@ -110,8 +115,7 @@ class Sfe3:
                                 if PYTHONVER == 'python2':
                                         page_contents = urllib.request.urlopen(category_url).read()
                                 else:
-                                        data = urllib.request.urlopen(category_url).read()
-                                        page_contents = data.decode('utf-8')
+                                        page_contents = urllib.request.urlopen(category_url).read().decode('utf-8')
                         except:
                                 continue
                         fragments = page_contents.split(fragment_separator)
@@ -179,7 +183,7 @@ class Sfe3:
                 self.user.load_moderator_flag()
 
         def print_header(self):
-                print("""<h3>This cleanup report lists all  
+                print("""<h3>This cleanup report lists all
                         <a href="%s://sf-encyclopedia.com/category/everyone">SFE author/editor/etc articles</a>
                         without a matching author URL in the ISFDB database. Note that some SFE authors may not
                         be eligible on the ISFDB side, e.g. if their only SF works are comics.
@@ -234,8 +238,8 @@ class Sfe3:
                         last_name = name_fragments[0]
                         isfdb_author_name = ' '.join(name_fragments[1:])
                         space_fragments = isfdb_author_name.split(' ')
-                        
-                        # Add periods to initials without a trailing period 
+
+                        # Add periods to initials without a trailing period
                         new_space_fragments = []
                         for space_fragment in space_fragments:
                                 if len(space_fragment) == 1 or space_fragment in ('Dr', 'Mr', 'Mrs'):

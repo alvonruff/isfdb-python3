@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2025    Al von Ruff
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,437 +10,175 @@
 #     Version: $Revision: 717 $
 #     Date: $Date: 2021-08-28 11:04:26 -0400 (Sat, 28 Aug 2021) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
-from SQLparsing import *
-from authorClass import authors
 from xml.dom import minidom
-from xml.dom import Node
+from SQLparsing import *
+from authorClass import *
 import unittest
 
-#####################################################################################
-# Test for authorClass.py. This indirectly tests the following SQLparsing methods:
 #
-# SQLgetAuthorData
-# SQLisUserModerator
-# SQLLoadAllLanguages
-# SQLloadAuthorData
-# SQLloadEmails
-# SQLloadTransAuthorNames
-# SQLloadTransLegalNames
-# SQLloadWebpages
-# SQLUpdateQueries
+# This test suite was create to provide some coverage for the Python2 to
+# Python3 upgrade. The purpose is to drive the interpreter through the
+# main code line to help find any required API changes or deprecations.
 #
-#####################################################################################
+# These tests are not intended to exhaustively test all of a
+# function's operational requirements.
+#
 
-def TryPrint(label, value):
-        try:
-                print("%s %s" % (label, value))
-        except:
-                pass
+##############################################################
+# UNTESTED Methods
+##############################################################
+# cgi2obj       - requires input from cgi
 
-INT_TYPE  = "<class 'int'>"
-STR_TYPE  = "<class 'str'>"
-DICT_TYPE = "<class 'dict'>"
-NONE_TYPE = "<class 'NoneType'>"
-LIST_TYPE = "<class 'list'>"
-TUPLE_TYPE = "<class 'tuple'>"
-
-debug = 0
-
-def printAuthorRecord(author):
-        print("-------------------------------------------------")
-        TryPrint("CANONICAL       =", author.author_canonical)
-        TryPrint("LEGALNAME       =", author.author_legalname)
-        TryPrint("BIRTHPLACE      =", author.author_birthplace)
-        TryPrint("BIRTHDATE       =", author.author_birthdate)
-        TryPrint("DEATHDATE       =", author.author_deathdate)
-        TryPrint("LEGALNAME       =", author.author_legalname)
-        TryPrint("IMAGE           =", author.author_image)
-        TryPrint("LASTNAME        =", author.author_lastname)
-        TryPrint("LANGUAGE        =", author.author_language)
-        TryPrint("NOTE_ID         =", author.author_note)
-        # Lists
-        print("TRANS NAMES:")
-        for transname in author.author_trans_names:
-                TryPrint("  TRANS NAME      =", transname)
-        print("TRANS LEGAL NAMES:")
-        for transname in author.author_trans_legal_names:
-                TryPrint("  TRANS LEGAL NAME=", transname)
-        print("EMAILS:")
-        for email in author.author_emails:
-                TryPrint("  EMAIL           =", email)
-        print("WEBPAGES:")
-        for webpage in author.author_webpages:
-                TryPrint("  WEBPAGE         =", webpage)
-        print("-------------------------------------------------")
-
-def printAuthorRecordTypes(author):
-        TryPrint("CANONICAL       =", str(type(author.author_canonical)))
-        TryPrint("LEGALNAME       =", str(type(author.author_legalname)))
-        TryPrint("BIRTHPLACE      =", str(type(author.author_birthplace)))
-        TryPrint("BIRTHDATE       =", str(type(author.author_birthdate)))
-        TryPrint("DEATHDATE       =", str(type(author.author_deathdate)))
-        TryPrint("LEGALNAME       =", str(type(author.author_legalname)))
-        TryPrint("IMAGE           =", str(type(author.author_image)))
-        TryPrint("LASTNAME        =", str(type(author.author_lastname)))
-        TryPrint("LANGUAGE        =", str(type(author.author_language)))
-        TryPrint("NOTE_ID         =", str(type(author.author_note)))
-        TryPrint("TRANSNAMES      =", str(type(author.author_trans_names)))
-        TryPrint("TRANSLEGALNAMES =", str(type(author.author_trans_legal_names)))
-        TryPrint("EMAILS          =", str(type(author.author_emails)))
-        TryPrint("WEBPAGES        =", str(type(author.author_webpages)))
-
-class TestStorage(dict):
-        def __init__(self, s=None):
-                self.value = s
-        def getvalue(self, theKey):
-                return self[theKey]
+def printClass(auth):
+        print("DB                        =", auth.db)
+        print("used_id                   =", auth.used_id)
+        print("used_canonical            =", auth.used_canonical)
+        print("used_trans_names          =", auth.used_trans_names)
+        print("used_legalname            =", auth.used_legalname)
+        print("used_lastname             =", auth.used_lastname)
+        print("used_trans_legal_names    =", auth.used_trans_legal_names)
+        print("used_birthplace           =", auth.used_birthplace)
+        print("used_birthdate            =", auth.used_birthdate)
+        print("used_deathdate            =", auth.used_deathdate)
+        print("used_emails               =", auth.used_emails)
+        print("used_webpages             =", auth.used_webpages)
+        print("used_image                =", auth.used_image)
+        print("used_language             =", auth.used_language)
+        print("used_note                 =", auth.used_note)
+        print("author_canonical          =", auth.author_canonical)
+        print("author_trans_names        =", auth.author_trans_names)
+        print("author_legalname          =", auth.author_legalname)
+        print("author_lastname           =", auth.author_lastname)
+        print("author_trans_legal_names  =", auth.author_trans_legal_names)
+        print("author_birthplace         =", auth.author_birthplace)
+        print("author_birthdate          =", auth.author_birthdate)
+        print("author_deathdate          =", auth.author_deathdate)
+        print("author_emails             =", auth.author_emails)
+        print("author_webpages           =", auth.author_webpages)
+        print("author_image              =", auth.author_image)
+        print("author_language           =", auth.author_language)
+        print("author_note               =", auth.author_note)
+        print("error                     =", auth.error)
 
 class MyTestCase(unittest.TestCase):
 
-        def test_001_load(self):
-                print("TEST: authorClass::load")
-                author = authors(db)
-                author.load(159)
+        def test_01_load(self):
+                print("\nTEST: authors.load")
+                auth = authors(db)
+                auth.load(70)    # Stephen King
+                print_values = 0
+                if print_values:
+                        printClass(auth)
+                else:
+                        self.assertEqual(1, auth.used_id, "Bad used_id")
+                        self.assertEqual(1, auth.used_canonical, "Bad used_canonical")
+                        self.assertEqual(1, auth.used_lastname, "Bad used_lastname")
+                        self.assertEqual(1, auth.used_birthdate, "Bad used_birthdate")
+                        self.assertEqual(1, auth.used_language, "Bad used_language")
 
-                if debug:
-                        printAuthorRecord(author)
-                        printAuthorRecordTypes(author)
+                        print("  Received canonical name:", auth.author_canonical)
+                        self.assertEqual('Stephen King', auth.author_canonical, "Bad canonical name")
 
-                self.assertEqual(author.error, '')
-                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_image)))
-                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_language)))
-                self.assertEqual(STR_TYPE, str(type(author.author_note)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
+                        print("  Received lastname:", auth.author_lastname)
+                        self.assertEqual('King', auth.author_lastname, "Bad lastname")
 
-        def test_002_obj2xml(self):
-                print("TEST: authorClass::obj2xml")
-                author = authors(db)
-                author.load(159)
+                        print("  Received birthdate:", auth.author_birthdate)
+                        self.assertEqual('1947-09-21', auth.author_birthdate, "Bad birthdate")
 
-                # Convert to XML
-                xml = author.obj2xml()
-                if debug:
-                        print(xml)
+                        print("  Received language:", auth.author_language)
+                        self.assertEqual('English', auth.author_language, "Bad language")
 
-                try:
-                        doc = minidom.parseString(xml)
-                except:
-                        print("XML Parse FAILED")
+                        print("  Received error:", auth.error)
+                        self.assertEqual('', auth.error, "Unexpected error")
 
-                tag = doc.getElementsByTagName('AuthorId')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, '159')
+        def test_02_load_not_found(self):
+                print("\nTEST: authors.load - author not found")
+                auth = authors(db)
+                auth.load(0)    # Non-existent author ID
+                print("  Received error:", auth.error)
+                expected = 'Author record not found'
+                self.assertEqual(expected, auth.error, "Bad error message")
 
-                tag = doc.getElementsByTagName('AuthorCanonical')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'Jules Verne')
+        def test_03_obj2xml(self):
+                print("\nTEST: authors.obj2xml")
+                auth = authors(db)
+                auth.load(70)    # Stephen King
+                xml = auth.obj2xml()
+                print("  Received XML:\n", xml)
+                self.assertIn('<UpdateAuthor>', xml, "Missing UpdateAuthor tag")
+                self.assertIn('<AuthorId>70</AuthorId>', xml, "Missing AuthorId tag")
+                self.assertIn('<AuthorCanonical>Stephen King</AuthorCanonical>', xml, "Missing AuthorCanonical tag")
+                self.assertIn('<AuthorLastname>King</AuthorLastname>', xml, "Missing AuthorLastname tag")
+                self.assertIn('</UpdateAuthor>', xml, "Missing closing UpdateAuthor tag")
 
-                tag = doc.getElementsByTagName('AuthorLegalname')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'Verne, Jules Gabriel')
+        def test_04_obj2xml_no_id(self):
+                print("\nTEST: authors.obj2xml - no id set")
+                auth = authors(db)
+                # Do not call load() - used_id remains 0
+                xml = auth.obj2xml()
+                print("  Received XML:", repr(xml))
+                expected = ""
+                self.assertEqual(expected, xml, "Expected empty string when no ID set")
 
-                tag = doc.getElementsByTagName('AuthorLastname')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'Verne')
+        def test_05_xml2obj(self):
+                print("\nTEST: authors.xml2obj")
+                auth = authors(db)
+                xml = """<?xml version="1.0" encoding="UTF-8"?>
+                         <UpdateAuthor>
+                             <AuthorCanonical>Test Author</AuthorCanonical>
+                             <AuthorLastname>Author</AuthorLastname>
+                             <AuthorLegalname>Test Legal Author</AuthorLegalname>
+                             <AuthorBirthplace>Springfield</AuthorBirthplace>
+                             <AuthorBirthdate>1970-01-01</AuthorBirthdate>
+                             <AuthorDeathdate>2020-06-15</AuthorDeathdate>
+                             <AuthorImage>http://www.example.com/image.jpg</AuthorImage>
+                             <AuthorLanguage>English</AuthorLanguage>
+                         </UpdateAuthor>"""
+                auth.xml2obj(xml)
 
-                tag = doc.getElementsByTagName('AuthorBirthplace')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'Nantes, Loire-Inférieure, France')
+                print("  Received canonical name:", auth.author_canonical)
+                self.assertEqual('Test Author', auth.author_canonical, "Bad canonical name")
+                self.assertEqual(1, auth.used_canonical, "Bad used_canonical flag")
 
-                tag = doc.getElementsByTagName('AuthorBirthdate')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, '1828-02-08')
+                print("  Received lastname:", auth.author_lastname)
+                self.assertEqual('Author', auth.author_lastname, "Bad lastname")
+                self.assertEqual(1, auth.used_lastname, "Bad used_lastname flag")
 
-                tag = doc.getElementsByTagName('AuthorDeathdate')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, '1905-03-24')
+                print("  Received legalname:", auth.author_legalname)
+                self.assertEqual('Test Legal Author', auth.author_legalname, "Bad legalname")
+                self.assertEqual(1, auth.used_legalname, "Bad used_legalname flag")
 
-                tag = doc.getElementsByTagName('AuthorLanguage')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'French')
+                print("  Received birthplace:", auth.author_birthplace)
+                self.assertEqual('Springfield', auth.author_birthplace, "Bad birthplace")
+                self.assertEqual(1, auth.used_birthplace, "Bad used_birthplace flag")
 
-                tag = doc.getElementsByTagName('AuthorImage')
-                value = tag[0].firstChild.data
-                self.assertEqual(value, 'http://www.isfdb.org/wiki/images/b/b6/Jules_Verne.jpg')
+                print("  Received birthdate:", auth.author_birthdate)
+                self.assertEqual('1970-01-01', auth.author_birthdate, "Bad birthdate")
+                self.assertEqual(1, auth.used_birthdate, "Bad used_birthdate flag")
 
-                try:
-                        elements = doc.getElementsByTagName('AuthorWebpage')
-                        for element in elements:
-                                value = element.firstChild.data
-                                if debug:
-                                        print("AuthorWebage:", value)
-                except:
-                        self.assertEqual(' ', 'AuthorWebpage')
+                print("  Received deathdate:", auth.author_deathdate)
+                self.assertEqual('2020-06-15', auth.author_deathdate, "Bad deathdate")
+                self.assertEqual(1, auth.used_deathdate, "Bad used_deathdate flag")
 
-                try:
-                        elements = doc.getElementsByTagName('AuthorEmail')
-                        for element in elements:
-                                value = element.firstChild.data
-                                if debug:
-                                        print("AuthorEmail:", value)
-                except:
-                        self.assertEqual(' ', 'AuthorEmail')
+                print("  Received image:", auth.author_image)
+                self.assertEqual('http://www.example.com/image.jpg', auth.author_image, "Bad image")
+                self.assertEqual(1, auth.used_image, "Bad used_image flag")
 
+                print("  Received language:", auth.author_language)
+                self.assertEqual('English', auth.author_language, "Bad language")
+                self.assertEqual(1, auth.used_language, "Bad used_language flag")
 
-        def test_003_xml2obj_webpages(self):
-                print("TEST: authorClass::xml2obj")
-                author = authors(db)
-                author.load(159)
-
-                # Convert to XML
-                xml = author.obj2xml()
-                if debug:
-                        print(xml)
-
-                try:
-                        doc = minidom.parseString(xml)
-                except:
-                        print("XML Parse FAILED")
-
-                # Convert XML to OBJ
-                author.xml2obj(xml)
-
-                if debug:
-                        printAuthorRecord(author)
-                        printAuthorRecordTypes(author)
-
-                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_image)))
-                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_language)))
-                self.assertEqual(STR_TYPE, str(type(author.author_note)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
-
-        def test_004_xml2obj_translegal(self):
-                print("TEST: authorClass::xml2obj")
-                author = authors(db)
-                author.load(166136)
-
-                # Convert to XML
-                xml = author.obj2xml()
-                if debug:
-                        print(xml)
-
-                try:
-                        doc = minidom.parseString(xml)
-                except:
-                        print("XML Parse FAILED")
-
-                # Convert XML to OBJ
-                author.xml2obj(xml)
-
-                if debug:
-                        printAuthorRecord(author)
-                        printAuthorRecordTypes(author)
-
-                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_image)))
-                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_language)))
-                self.assertEqual(STR_TYPE, str(type(author.author_note)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
-
-        def test_005_xml2obj_email(self):
-                print("TEST: authorClass::xml2obj")
-                author = authors(db)
-                author.load(2200)
-
-                # Convert to XML
-                xml = author.obj2xml()
-                if debug:
-                        print(xml)
-
-                try:
-                        doc = minidom.parseString(xml)
-                except:
-                        print("XML Parse FAILED")
-
-                # Convert XML to OBJ
-                author.xml2obj(xml)
-
-                if debug:
-                        printAuthorRecord(author)
-                        printAuthorRecordTypes(author)
-
-                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_image)))
-                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_language)))
-                self.assertEqual(STR_TYPE, str(type(author.author_note)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
-
-        def test_006_cgi2obj(self):
-                print("TEST: authorClass::cgi2obj")
-
-                # Test 1 - Missing author ID
-                form = {
-                    'author_canonical': TestStorage("Dan Simmons"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Author ID not specified")
-
-                # Test 2 - Missing canonical name
-                form = {
-                    'author_id': TestStorage(170),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Canonical name is required")
-
-                # Test 3 - Incorrect author ID
-                form = {
-                    'author_id': TestStorage(17),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Canonical name 'Dan Simmons' already exists, duplicates are not allowed")
-
-                # Test 4 - Bad characters
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan+Simmons"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Plus signs are currently not allowed in canonical names")
-
-                # Test 5 - No Lastname
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Directory Entry is required")
-
-                # Test 6 - Bad URL
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                    'author_lastname': TestStorage("Simmons"),
-                    'author_image': TestStorage("httttp://stuff.com"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Author image error:  URLs must start with http or https")
-
-                # Test 7 - Missing Language
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                    'author_lastname': TestStorage("Simmons"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Language is required")
-
-                # Test 8 - Bad email
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                    'author_language': TestStorage("English"),
-                    'author_lastname': TestStorage("Simmons"),
-                    'author_emails': TestStorage("simmons.com"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Invalid email address")
-
-                # Test 9 - Bad webpage
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                    'author_language': TestStorage("English"),
-                    'author_lastname': TestStorage("Simmons"),
-                    'author_webpages': TestStorage("httttp://stuff.com"),
-                }
-                author = authors(db)
-                author.cgi2obj(form)
-                self.assertEqual(author.error, "Author Web page error:  URLs must start with http or https")
-
-                # Test 10 - Valid Entry
-                form = {
-                    'author_id': TestStorage(170),
-                    'author_canonical': TestStorage("Dan Simmons"),
-                    'author_lastname': TestStorage("Simmons"),
-                    'author_language': TestStorage("English"),
-                    'author_trans_names': TestStorage("Bogus"),
-                    'author_legalname': TestStorage("Bogus Entry"),
-                    'trans_legal_names': TestStorage("Dude Entry"),
-                    'author_birthplace': TestStorage("Georgetown, Texas, USA"),
-                    'author_birthdate': TestStorage("1948-09-04"),
-                    'author_deathdate': TestStorage("2025-01-01"),
-                    'author_emails': TestStorage("bogus@gmail.com"),
-                    'author_webpages': TestStorage("http://stuff.com"),
-                    'author_image': TestStorage("http://stuff.com/image.jpg"),
-                }
-
-                author = authors(db)
-                author.cgi2obj(form)
-                if author.error != '':
-                        print("ERROR:", author.error)
-
-                if debug:
-                        printAuthorRecord(author)
-                        printAuthorRecordTypes(author)
-
-                self.assertEqual(author.error, '')
-                self.assertEqual(STR_TYPE, str(type(author.author_canonical)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthplace)))
-                self.assertEqual(STR_TYPE, str(type(author.author_birthdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_deathdate)))
-                self.assertEqual(STR_TYPE, str(type(author.author_legalname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_image)))
-                self.assertEqual(STR_TYPE, str(type(author.author_lastname)))
-                self.assertEqual(STR_TYPE, str(type(author.author_language)))
-                self.assertEqual(STR_TYPE, str(type(author.author_note)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_trans_legal_names)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_emails)))
-                self.assertEqual(LIST_TYPE, str(type(author.author_webpages)))
-
-        def test_100_dumpLog(self):
+        def test_dumpLog(self):
                 print(".")
                 print("SQL Log")
                 SQLoutputLog()
+
 
 if __name__ == '__main__':
         unittest.main()

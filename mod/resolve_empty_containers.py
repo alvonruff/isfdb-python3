@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2021-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -14,7 +14,6 @@ from SQLparsing import *
 from library import ISFDBLocalRedirect
 from login import User
 
-        
 if __name__ == '__main__':
 
         user = User()
@@ -33,4 +32,3 @@ if __name__ == '__main__':
         CNX = MYSQL_CONNECTOR()
         CNX.DB_QUERY(update)
         ISFDBLocalRedirect('edit/%s' % return_location)
-        

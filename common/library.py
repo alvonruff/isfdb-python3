@@ -1,14 +1,21 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2007-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1205 $
-#     Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
+#     Version: $Revision: 1269 $
+#     Date: $Date: 2026-02-26 14:26:55 -0500 (Thu, 26 Feb 2026) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
+
+import re
 import string
 import traceback
 import cgi
@@ -129,7 +136,7 @@ def ISFDBnormalizeDate(date):
                                         maxday = 29
                         if day > maxday:
                                 return '0000-00-00'
-        except:
+        except ValueError:
                 return '0000-00-00'
 
         return date
@@ -180,11 +187,11 @@ def ISFDBconvertDate(theDate, precise = 0):
                                 try:
                                         strmonth = ISFDBmonthmap[int(month)]
                                         datestr = "%s %s" % (strmonth, theDate[:4])
-                                except:
+                                except (ValueError, KeyError):
                                         datestr = theDate[:4]
                         else:
                                 datestr = theDate[:4]
-        except:
+        except (AttributeError, TypeError):
                 datestr = ''
         return datestr
 
@@ -253,7 +260,7 @@ def GetElementValue(element, tag):
                         value = document[0].firstChild.data.encode('iso-8859-1')
                 else:
                         value = document[0].firstChild.data
-        except:
+        except (IndexError, AttributeError):
                 value = ''
         return value
 
@@ -264,7 +271,7 @@ def GetChildValue(doc, label):
                         value = tag.firstChild.data.encode('iso-8859-1')
                 else:
                         value = tag.firstChild.data
-        except:
+        except (IndexError, AttributeError):
                 value = ''
         return value
 
@@ -302,10 +309,10 @@ def XMLunescape2(input):
 def TagPresent(element, tag):
         try:
                 document = element.getElementsByTagName(tag)[0]
-        except:
+        except (IndexError, AttributeError):
                 try:
                         document = element[0].getElementsByTagName(tag)
-                except:
+                except (IndexError, AttributeError, TypeError):
                         return 0
         if document:
                 return 1
@@ -332,7 +339,7 @@ def normalizeInput(retval):
                 # Remove all other control characters
                 else:
                         replace_dict[chr(char)] = ''
-        
+
         # Replace double spaces with single spaces
         replace_dict['  '] = ' '
         # Replace ". . ." with "..."
@@ -364,11 +371,11 @@ def replaceDict(retval, replace_dict):
                 while key in retval:
                         retval = retval.replace(key, replace_dict[key])
         return retval
-       
+
 
 ###################################################
 # This function converts input, typically from
-# an editing form, into a format that can be 
+# an editing form, into a format that can be
 # utilized in an XML structure.
 ###################################################
 
@@ -446,7 +453,7 @@ def ISFDBFormatImage(value, pub_id = '', css_class = 'tallscan'):
                         wikilink = value.split(WIKILOC)[1].split('/')[-1]
                         wikilink = '%s://%s/index.php/Image:%s' % (PROTOCOL, WIKILOC, wikilink)
                         display_value += '<br><a href="%s" target="_blank">ISFDB Wiki page for this image</a>' % wikilink
-                except:
+                except IndexError:
                         pass
         return display_value
 
@@ -496,15 +503,16 @@ def ISFDBLink(script, record_id, displayed_value, brackets=False, argument='', t
 def ISFDBText(text, escape_quotes = False):
         if PYTHONVER == 'python2':
                 from cgi import escape
+                text = escape('%s' % text, escape_quotes)
         else:
                 from html import escape
-        text = escape('%s' % text, escape_quotes)
+                text = escape('%s' % text, escape_quotes)
         if UNICODE != "utf-8":
                 text = text.replace("&amp;#","&#")
         return text
 
 def ISFDBPubFormat(format_code, position = 'right'):
-        formats = {'pb': """Paperback. Typically 7" by 4.25" (18 cm by 11 cm) or smaller, 
+        formats = {'pb': """Paperback. Typically 7" by 4.25" (18 cm by 11 cm) or smaller,
                             though trimming errors can cause them to sometimes be slightly
                             (less than 1/4 extra inch) taller or wider/deeper.""",
                    'tp': """Trade paperback. Any softcover book which is at least 7.25"
@@ -551,7 +559,7 @@ def ISFDBPubFormat(format_code, position = 'right'):
         while "\n" in mouseover_text:
                 mouseover_text = mouseover_text.replace("\n", " ")
         mouseover_text = normalizeInput(mouseover_text)
-       
+
         if mouseover_text:
                 display_value = ISFDBMouseover((mouseover_text,), format_code, '', SESSION.ui.question_mark, position)
         else:
@@ -593,6 +601,7 @@ def ISFDBPrice(price, location = 'right'):
                    'nkr ': 'Norwegian krone (crown). ISO code: NOK',
                    'NT$': 'Taiwan dollar. ISO code: TWD. Unofficial abbreviation NTD for "New Taiwan Dollar"',
                    'NZ$': 'New Zealand dollar. ISO code: NZD',
+                   'P$': 'Portuguese escudo. ISO code: PTE',
                    SESSION.currency.peso: 'Philippine peso. ISO code: PHP',
                    'Pta ': 'Spanish peseta. ISO code: ESP',
                    SESSION.currency.pound: 'UK pound. ISO code: GBP',
@@ -659,7 +668,7 @@ class ISFDBTable():
                         colspan = 1
                         try:
                                 colspan = self.headers_colspan[count]
-                        except:
+                        except IndexError:
                                 pass
                         print('<th colspan="%d">%s</th>' % (colspan, header))
 
@@ -727,7 +736,7 @@ def ConvertPageNumber(page):
         # Re-check the page number now that it may have been repaced with the "sort" value
         if not page:
                 return (1, 0, '')
-        
+
         # If the first and last characters are square brackets, remove them
         if page[0] == '[' and page[-1] == ']':
                 page = page[1:-1]
@@ -773,7 +782,7 @@ def ConvertPageNumber(page):
         try:
                 integer_part = int(integer_part)
                 return (4, integer_part, decimal_part)
-        except:
+        except ValueError:
                 # If the supposed integer part is not an integer, check if it's a roman numeral
                 integer_part = roman2int(integer_part)
                 if integer_part:
@@ -822,7 +831,6 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
                 import urllib
         else:
                 import urllib.request, urllib.parse, urllib.error
-        import re
         note = ISFDBHostCorrection(note, 'all')
         if display_mode == 'short' and '{{BREAK}}' in note:
                 note = note[:note.index('{{BREAK}}')]
@@ -894,10 +902,10 @@ def FormatNote(note, note_type = '', display_mode = 'short', record_id = 0, reco
                                 if template_description:
                                         full_value = '<abbr class="template" title="%s">%s</abbr>' % (template_description, full_value)
                                 note += full_value
-                                        
+
                         # Add the rest of the original text to the body of the note
                         note += '}}'.join(fragment_pieces[1:])
-        
+
         retval = note
 
         # Remove all '<!--isfdb specific-->' strings which were used for magazine links in the past
@@ -1282,7 +1290,11 @@ def ISFDBUnicodeTranslation():
                    }
         return replace
 
+_VALID_FIELD_NAME = re.compile(r'^[a-zA-Z_][a-zA-Z0-9_]*(\.[a-zA-Z_][a-zA-Z0-9_]*)?$')
+
 def ISFDBBadUnicodePatternMatch(field_name):
+        if not _VALID_FIELD_NAME.match(field_name):
+                raise ValueError('Invalid field name: %s' % field_name)
         unicode_map = ISFDBUnicodeTranslation()
         # Assumes unicode_map will have at least one entry
         pattern_match = ''
@@ -1293,6 +1305,8 @@ def ISFDBBadUnicodePatternMatch(field_name):
         return pattern_match
 
 def suspectUnicodePatternMatch(field_name):
+        if not _VALID_FIELD_NAME.match(field_name):
+                raise ValueError('Invalid field name: %s' % field_name)
         unicode_map = ('&#699;', '&#700;')
         pattern_match = ''
         for key in unicode_map:
@@ -1414,7 +1428,7 @@ def WikiExists():
                 return 0
 
 def WikiLink(user_name):
-        return '<a href="%s://%s/index.php/User_Talk:%s">%s</a>' % (PROTOCOL, WIKILOC, user_name, user_name)
+        return '<a href="%s://%s/index.php/User_Talk:%s">%s</a>' % (PROTOCOL, WIKILOC, Portable_urllib_quote(user_name), ISFDBText(user_name))
 
 def ISFDBWikiTemplate(template):
         return '%s://%s/index.php?title=Template:%s' % (PROTOCOL, WIKILOC, template)
@@ -1443,7 +1457,7 @@ def popularNonLatinLanguages(types):
         elif types == 'series':
                 position = 3
         else:
-                raise
+                raise ValueError('Unknown type: %s' % types)
         results = []
         for language in languages:
                 report_ids = languages[language]
@@ -1480,7 +1494,7 @@ def transliteratedReports(types):
         elif types == 'authors':
                 position = 2
         else:
-                raise
+                raise ValueError('Unknown type: %s' % types)
         results = []
         for language in languages:
                 report_ids = languages[language]
@@ -1507,10 +1521,31 @@ def ISFDBprintTime():
 def ISFDBdaysFromToday(future_date):
         if future_date == '8888-00-00' or future_date == '0000-00-00':
                 return 0
-        today_date = datetime.today()
+
+        # Here's the old code:
+        #
+        #   today_date = datetime.today()
+        #   normalized_future_date = datetime.strptime(future_date, "%Y-%m-%d")
+        #
+        # Problem is that this is always 1 day off. The future_date is a string in
+        # YYYY-MM-DD format. The strptime call converts it to datetime format, but with
+        # HH:MM:SS zeroed out: 2026-01-05 00:00:00
+        #
+        # But today_date has a full timestamp, for instance: 2026-01-04 16:00:00
+        # When days_from_today is calculated, with the times above, the delta between
+        # the dates is 8 hours, which is less than 24 hours, which returns a difference
+        # of zero days. There is actually no time today which would result in 
+        # tomorrow's date generating a delta of 1 day. Hence it always returned a
+        # value that was one day off.
+
+        # Get today's date in YYYY-MM-DD format (as a string)
+        full_date = datetime.now()
+        current_date = str(full_date.date())
         try:
+                # Convert both today and future_date into datetimes
+                today_date = datetime.strptime(current_date, "%Y-%m-%d")
                 normalized_future_date = datetime.strptime(future_date, "%Y-%m-%d")
-        except:
+        except ValueError:
                 return 0 # Invalid date format
         days_from_today = normalized_future_date - today_date
         return days_from_today.days
@@ -1547,7 +1582,7 @@ def ISFDBprintSubmissionTable(CNX, status):
         if status == 'R' and SQLisUserModerator(userid):
                 unreject = 1
                 print('<th>Unreject?</th>')
-        
+
         print('</tr>')
         record = CNX.DB_FETCHMANY()
         color = 0
@@ -1569,6 +1604,7 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
 
         print('<td><a href="%s:/%s/view_submission.cgi?%s">%s</a></td>' % (PROTOCOL, HTFAKE, subId, subId))
 
+        displayName = 'Unable to determine'
         try:
                 doc = minidom.parseString(XMLunescape2(record[0][SUB_DATA]))
                 doc2 = doc.getElementsByTagName(subTypeName)
@@ -1580,11 +1616,6 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
                 e = traceback.format_exc()
                 subjectLink = '<b>XML PARSE ERROR: %s</b>' % e
                 submitter = SQLgetUserName(record[0][SUB_SUBMITTER])
-        try:
-                if displayName:
-                        pass
-        except:
-                displayName = 'Unable to determine'
 
         print('<td>%s</td>' % displayName)
 
@@ -1615,7 +1646,7 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
 
         if status == 'R':
                 if record[0][SUB_REASON]:
-                        print('<td>%s</td>' % record[0][SUB_REASON])
+                        print('<td>%s</td>' % ISFDBText(record[0][SUB_REASON]))
                 else:
                         print('<td>&nbsp;</td>')
         elif status == 'N':
@@ -1628,13 +1659,10 @@ def ISFDBprintSubmissionRecord(record, eccolor, status, unreject):
 def ISFDBSubmissionDoc(sub_data, xml_tag):
         try:
                 doc = minidom.parseString(XMLunescape2(sub_data))
-        except:
+        except Exception:
                 SESSION.DisplayError('Submission contains invalid XML and cannot be displayed')
-
-        try:
-                doc2 = doc.getElementsByTagName(xml_tag)
-        except:
-                SESSION.DisplayError('Submission contains invalid XML and cannot be displayed')
+                return None
+        doc2 = doc.getElementsByTagName(xml_tag)
         return doc2
 
 def ISFDBSubmissionDisplayType(display_tag, xml_tag, sub_type):
@@ -1668,7 +1696,7 @@ def getSubjectLink(record, doc2, subType):
         subjectLink=subject[:40]
         # This value is None for data deletion submissions since there is no record left to link to
         displayPage = SUBMAP[subType][2]
-        if recordNum and displayPage: 
+        if recordNum and displayPage:
                 subjectLink='<a href="%s:/%s/%s?%s">%s</a>' % (PROTOCOL, HTFAKE, displayPage, recordNum, subjectLink)
         return (subjectLink, new_record)
 
@@ -1677,13 +1705,15 @@ def AdvSearchLink(params):
         return link
 
 def EscapeParams(params):
+        param_string = ''
         if PYTHONVER == "python2":
                 import urllib
+                for param in params:
+                        param_string += '&amp;%s=%s' % (urllib.quote(param[0]), urllib.quote(param[1]))
         elif PYTHONVER == "python3":
                 import urllib.request, urllib.parse, urllib.error
-        param_string = ''
-        for param in params:
-                param_string += '&amp;%s=%s' % (Portable_urllib_quote(param[0]), Portable_urllib_quote(param[1]))
+                for param in params:
+                        param_string += '&amp;%s=%s' % (urllib.parse.quote(param[0]), urllib.parse.quote(param[1]))
         return param_string
 
 def printRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):

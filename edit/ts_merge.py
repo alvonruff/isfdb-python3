@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1121 $
-#     Date: $Date: 2023-05-18 16:31:48 -0400 (Thu, 18 May 2023) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
 
 from isfdb import *
@@ -28,7 +28,6 @@ class Form:
                 self.targetID = 1000000000
 
         def get_form_data(self):
-
                 self.form_data = IsfdbFieldStorage()
 
         def parse_form_data(self):

@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 677 $
-#     Date: $Date: 2021-07-05 18:24:28 -0400 (Mon, 05 Jul 2021) $
+#     Version: $Revision: 1260 $
+#     Date: $Date: 2026-02-18 08:27:14 -0500 (Wed, 18 Feb 2026) $
 
 
 from isfdb import *
@@ -107,7 +107,7 @@ if __name__ == '__main__':
                 author = CNX.DB_FETCHMANY()
                 while author:
                         deleteAuthor(int(author[0][0]), int(Record))
-                        author = CNX.DB_FETCHONE()
+                        author = CNX.DB_FETCHMANY()
 
                 #########################################
                 # Find coverart records for this pub

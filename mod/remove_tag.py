@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus 
+#     (C) COPYRIGHT 2020-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,7 +16,7 @@ from SQLparsing import SQLgetTitleByTagId, SQLDeleteTagMapping
 from library import ISFDBLocalRedirect
 from login import User
 
-        
+
 if __name__ == '__main__':
 
         user = User()
@@ -33,5 +33,5 @@ if __name__ == '__main__':
                 SESSION.DisplayError("Specified Tag ID doesn't exist")
 
         SQLDeleteTagMapping(tagmap_id)
-        
+
         ISFDBLocalRedirect('mod/tag_breakdown.cgi?%d' % int(title_id))

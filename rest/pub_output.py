@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 901 $
-#     Date: $Date: 2022-04-04 15:24:03 -0400 (Mon, 04 Apr 2022) $
+#     Version: $Revision: 1249 $
+#     Date: $Date: 2026-02-09 15:01:59 -0500 (Mon, 09 Feb 2026) $
 
 import sys
 import string

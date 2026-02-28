@@ -1,15 +1,20 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Bill Longley, Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 910 $
-#     Date: $Date: 2022-05-01 13:28:59 -0400 (Sun, 01 May 2022) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from isfdb import *
 from isfdblib import *

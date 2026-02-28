@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2012-2025 Bill Longley, Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2012-2026 Bill Longley, Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 946 $
-#     Date: $Date: 2022-07-04 12:24:21 -0400 (Mon, 04 Jul 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
 
 from cleanup_lib import reportsDict

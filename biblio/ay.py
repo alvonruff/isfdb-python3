@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 642 $
-#     Date: $Date: 2021-06-17 15:23:22 -0400 (Thu, 17 Jun 2021) $
+#     Version: $Revision: 1246 $
+#     Date: $Date: 2026-02-09 07:23:57 -0500 (Mon, 09 Feb 2026) $
 
 
 import sys
@@ -35,7 +35,7 @@ if __name__ == '__main__':
                 composite_value = SESSION.Parameter(0, 'str')
                 try:
                         year = int(composite_value[2:])
-                except:
+                except Exception as e:
                         SESSION.DisplayError('Invalid Award Year')
                 award_Type.award_type_code = composite_value[:2]
                 award_Type.load()
@@ -50,4 +50,3 @@ if __name__ == '__main__':
         award_Type.display_awards_for_year(year)
         print('<p>')
         PrintTrailer('award', 0, 0)
-

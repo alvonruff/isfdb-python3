@@ -1,13 +1,19 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2007-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
+#     (C) COPYRIGHT 2007-2026   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1216 $
-#     Date: $Date: 2025-01-25 12:15:47 -0500 (Sat, 25 Jan 2025) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from xml.dom import minidom
 from xml.dom import Node
@@ -249,7 +255,7 @@ class SubmissionTable():
                                 self.headers.extend(['Differences'])
                                 self.display_diffs = 1
                                 break
-                
+
                 for count, header in enumerate(self.headers):
                         colspan = 1
                         try:
@@ -489,7 +495,7 @@ class SubmissionRow():
                 self.left_cell = SubmissionCell(self)
                 self.left_cell.BuildMultiCellFromValues(self.left_values)
                 self.cells.append(self.left_cell)
-                
+
                 self.right_cell = SubmissionCell(self)
                 self.right_cell.BuildMultiCellFromValues(self.right_values)
                 self.cells.append(self.right_cell)
@@ -498,14 +504,14 @@ class SubmissionRow():
                 self.left_cell = SubmissionCell(self)
                 self.left_cell.BuildMultiCellFromValues(self.left_values)
                 self.cells.append(self.left_cell)
-                
+
                 self.right_cell = SubmissionCell(self)
                 self.right_cell.BuildMetadataMultiCell()
                 self.cells.append(self.right_cell)
 
                 self._SetBackground()
                 self._MultiDiffs()
-                
+
         def BuildAuthorRowFromNames(self):
                 self.type = 'author'
 
@@ -533,7 +539,7 @@ class SubmissionRow():
 
         def BuildCoverRowFromIDs(self, variant_id, parent_id):
                 self.type = 'cover'
-                
+
                 self.left_cell = SubmissionCell(self)
                 self.left_cell.BuildCoverCellForTitle(variant_id)
                 self.cells.append(self.left_cell)
@@ -561,7 +567,7 @@ class SubmissionRow():
                 self.right_cell = SubmissionCell(self)
                 self.right_cell.BuildMetadataCell()
                 self.cells.append(self.right_cell)
-                
+
                 self._SetBackground()
                 self._MismatchWarnings()
                 self._NoteDiffs()
@@ -679,7 +685,7 @@ class SubmissionCell():
                 fragment = SubmissionFragment(self)
                 fragment.GetAttributeValue(value)
                 self.fragments.append(fragment)
-                
+
         def BuildMetadataMultiCell(self):
                 for value in self.row.table.submission.metadata[self.row.group_name]:
                         fragment = SubmissionFragment(self)
@@ -692,7 +698,7 @@ class SubmissionCell():
                         fragment = SubmissionFragment(self)
                         fragment.GetAttributeValueForMulti(value)
                         self.fragments.append(fragment)
-                
+
         def BuildAuthorCellFromNames(self, names):
                 for name in names:
                         fragment = SubmissionFragment(self)
@@ -858,7 +864,7 @@ class SubmissionFragment():
                         self.link = 'pe.cgi'
                         self.value = series_data[SERIES_NAME]
                         self.id = series_data[SERIES_PUBID]
-                        
+
         def _CheckSeries(self):
                 if not self.value:
                         return
@@ -921,7 +927,7 @@ class SubmissionFragment():
                 self._CheckAmazonImages()
                 self._CheckISFDBWikiImages()
                 self._CheckDuplicateURL()
-                
+
         def _CheckImageDomains(self):
                 if PYTHONVER == 'python2':
                         from urlparse import urlparse
@@ -1998,7 +2004,7 @@ class SubmissionViewer():
                 theReview.load(review_id)
                 if theReview.error:
                         self._InvalidSubmission(theReview.error)
-                
+
                 reviewedTitle = titles(db)
                 reviewedTitle.load(title_id)
                 if reviewedTitle.error:
@@ -2194,7 +2200,7 @@ class SubmissionViewer():
 
                 if not removalList:
                         return
-                
+
                 print('<h2>%s</h2>' % header)
                 table = SubmissionTable(self)
                 table.headers.extend(['Keep', 'Remove'])
@@ -2231,7 +2237,7 @@ class SubmissionViewer():
                         if title[TITLE_TTYPE] in ('COVERART', 'REVIEW', 'INTERVIEW'):
                                 return (None, None)
                         authors = SQLTitleBriefAuthorRecords(title[TITLE_PUBID])
-                
+
                 if title_type == "REVIEW":
                         if title[TITLE_TTYPE] != 'REVIEW':
                                 return (None, None)
@@ -2432,7 +2438,7 @@ class SubmissionViewer():
                                 verifiers = SQLPrimaryVerifiers(pub[PUB_PUBID])
                                 for verifier in verifiers:
                                         print('%s<br>' % WikiLink(verifier[1]))
-                                print('</td>')                                
+                                print('</td>')
                         elif verificationstatus == 2:
                                 print('<td>Secondary</td>')
                                 print('<td></td>')
@@ -2600,7 +2606,7 @@ class SubmissionViewer():
                 print('<tr>')
                 print('<td class="label"><b>Column</b></td>')
                 print('<td class="label"><b>KeepId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', KeepId, KeepId, True))
-        
+
                 index = 1
                 while RecordIds[index]:
                         print('<td class="label"><b>DropId %s</b></td>' % ISFDBLinkNoName('publisher.cgi', RecordIds[index], RecordIds[index], True))
@@ -2623,7 +2629,7 @@ class SubmissionViewer():
                         self._PrintPublisherMerge(label, KeepId, Records, RecordIds)
 
                 print('</table>')
-                
+
         def _PrintPublisherMerge(self, Label, KeepId, Records, RecordIds):
                 print('<tr>')
                 print('<td class="label"><b>%s</b></td>' % Label)
@@ -2695,29 +2701,29 @@ class SubmissionViewer():
                         print('</table>')
                         self._InvalidSubmission('One of the authors no longer exists')
 
-                self._PrintAuthorMergeSingle('Canonical', KeepId, keep.used_canonical, drop.used_canonical, 
+                self._PrintAuthorMergeSingle('Canonical', KeepId, keep.used_canonical, drop.used_canonical,
                         keep.author_canonical, drop.author_canonical)
                 self._PrintAuthorMergeMultiple('Transliterated Names', keep.author_trans_names, drop.author_trans_names)
-                self._PrintAuthorMergeSingle('Legalname', KeepId, keep.used_legalname, drop.used_legalname, 
+                self._PrintAuthorMergeSingle('Legalname', KeepId, keep.used_legalname, drop.used_legalname,
                         keep.author_legalname, drop.author_legalname)
                 self._PrintAuthorMergeMultiple('Transliterated Legal Names', keep.author_trans_legal_names, drop.author_trans_legal_names)
-                self._PrintAuthorMergeSingle('Familyname', KeepId, keep.used_lastname, drop.used_lastname, 
+                self._PrintAuthorMergeSingle('Familyname', KeepId, keep.used_lastname, drop.used_lastname,
                         keep.author_lastname, drop.author_lastname)
-                self._PrintAuthorMergeSingle('Birthplace', KeepId, keep.used_birthplace, drop.used_birthplace, 
+                self._PrintAuthorMergeSingle('Birthplace', KeepId, keep.used_birthplace, drop.used_birthplace,
                         keep.author_birthplace, drop.author_birthplace)
-                self._PrintAuthorMergeSingle('Birthdate', KeepId, keep.used_birthdate, drop.used_birthdate, 
+                self._PrintAuthorMergeSingle('Birthdate', KeepId, keep.used_birthdate, drop.used_birthdate,
                         keep.author_birthdate, drop.author_birthdate)
-                self._PrintAuthorMergeSingle('Deathdate', KeepId, keep.used_deathdate, drop.used_deathdate, 
+                self._PrintAuthorMergeSingle('Deathdate', KeepId, keep.used_deathdate, drop.used_deathdate,
                         keep.author_deathdate, drop.author_deathdate)
 
                 self._PrintAuthorMergeMultiple('Emails', keep.author_emails, drop.author_emails)
                 self._PrintAuthorMergeMultiple('Web Pages', keep.author_webpages, drop.author_webpages)
-                
-                self._PrintAuthorMergeSingle('Image', KeepId, keep.used_image, drop.used_image, 
+
+                self._PrintAuthorMergeSingle('Image', KeepId, keep.used_image, drop.used_image,
                         keep.author_image, drop.author_image)
-                self._PrintAuthorMergeSingle('Language', KeepId, keep.used_language, drop.used_language, 
+                self._PrintAuthorMergeSingle('Language', KeepId, keep.used_language, drop.used_language,
                         keep.author_language, drop.author_language)
-                self._PrintAuthorMergeSingle('Note', KeepId, keep.used_note, drop.used_note, 
+                self._PrintAuthorMergeSingle('Note', KeepId, keep.used_note, drop.used_note,
                         keep.author_note, drop.author_note)
 
                 print('</table>')
@@ -2866,6 +2872,8 @@ class SubmissionViewer():
                 print('</table>')
 
                 self._DisplayPendingTitleMerges(KeepId, Records)
+                self._DisplayPendingTitleEdits(KeepId, Records)
+                self._DisplayPendingTitleChangesInPubEdits(KeepId, Records)
 
         def _DisplayPendingTitleMerges(self, KeepId, Records):
                 pending_merges = SQLPendingTitleMerges(self.sub_id, KeepId, Records)
@@ -2875,6 +2883,32 @@ class SubmissionViewer():
                         print('<ul>')
                         for pending_merge_id in pending_merges:
                                 print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_merge_id, pending_merge_id)))
+                        print('</ul>')
+                        print('</div><p>')
+
+        def _DisplayPendingTitleEdits(self, KeepId, Records):
+                title_ids = Records.keys()
+                title_ids.append(KeepId)
+                pending_edits = SQLPendingTitleEdits(self.sub_id, title_ids)
+                if pending_edits:
+                        print('<p><div id="PendingTitleEditsWarning">')
+                        print('<b>WARNING:</b> The following Title Update pending submissions aim to edit one or more titles in this submission:')
+                        print('<ul>')
+                        for pending_edit_id in pending_edits:
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_edit_id, pending_edit_id)))
+                        print('</ul>')
+                        print('</div><p>')
+
+        def _DisplayPendingTitleChangesInPubEdits(self, KeepId, Records):
+                title_ids = Records.keys()
+                title_ids.append(KeepId)
+                pending_edits = SQLPendingTitleChangesInPubEdits(self.sub_id, title_ids)
+                if pending_edits:
+                        print('<p><div id="PendingTitleEditsInPubEditsWarning">')
+                        print('<b>WARNING:</b> The following Edit Publication pending submissions aim to edit one or more titles in this submission:')
+                        print('<ul>')
+                        for pending_edit_id in pending_edits:
+                                print(('<li>%s' % ISFDBLinkNoName('view_submission.cgi', pending_edit_id, pending_edit_id)))
                         print('</ul>')
                         print('</div><p>')
 
@@ -3029,7 +3063,7 @@ class SubmissionViewer():
                 self.GetMetadataMulti('Webpages', 'Webpage')
                 self.GetMetadataMulti('PubWebpages', 'PubWebpage')
                 parent_id = self.metadata['Parent']
-                
+
                 # Save the submitted publication Title/Author data
                 # to be used in the Publication display section below
                 self.SetMetaData('PubTitle', self.metadata['Title'])
@@ -3243,7 +3277,7 @@ class SubmissionViewer():
                         self.SetMetaData('TitleDate', title_data[TITLE_YEAR])
                         cloned_pub_id = self.metadata['ClonedPubID']
                         if cloned_pub_id:
-                                print("""Cloning Publication ID %s. New pub will be automerged with title 
+                                print("""Cloning Publication ID %s. New pub will be automerged with title
                                 """ % ISFDBLinkNoName('pl.cgi', cloned_pub_id, cloned_pub_id))
                         else:
                                 print("""Cloning Publication. New pub will be automerged with title """)
@@ -3475,7 +3509,7 @@ class SubmissionViewer():
                                                 self._DisplayTitleContentChanged(child, record, current)
                                 if needTitle == 0:
                                         print('</table>')
-                                
+
                         ##########################################################
                         # Modified Reviews
                         ##########################################################
@@ -3795,13 +3829,13 @@ class SubmissionViewer():
                 source = self.metadata['Source']
                 if source:
                         print('<h3>Source used:</h3>')
-                        if source == 'Primary': 
+                        if source == 'Primary':
                                 print('Data from an owned primary source (will be auto-verified)')
-                        elif source == 'Transient': 
+                        elif source == 'Transient':
                                 print('Data from a transient primary source (will be auto-verified)')
-                        elif source == 'PublisherWebsite': 
+                        elif source == 'PublisherWebsite':
                                 print('Data from publisher\'s website (Note will be updated accordingly)')
-                        elif source == 'AuthorWebsite': 
+                        elif source == 'AuthorWebsite':
                                 print('Data from author\'s website (Note will be updated accordingly)')
                         elif source == 'Other':
                                 print('Data from another source (details should be provided in the submitted Note)')
@@ -3978,7 +4012,7 @@ class SubmissionViewer():
                                 if display_warning:
                                         self._AddRowWarning('%s is a new author' % name)
                                 name = ISFDBText(name)
-                        
+
                         if displayed_names == '':
                                 displayed_names = name
                         else:

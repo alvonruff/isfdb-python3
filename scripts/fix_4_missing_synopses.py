@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2019-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -15,17 +15,9 @@ import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
+debug = 0
 
 def list_to_in_clause(id_list):
         in_clause = ''
@@ -40,11 +32,10 @@ def list_to_in_clause(id_list):
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
-
-    update = """update titles set title_synopsis=NULL
+        update = """update titles set title_synopsis=NULL
                 where title_id in (85496,87408,119072,1670052)"""
-    print(update)
-    db.query(update)
-    print("Title records updated")
+        print(update)
+        if debug == 0:
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
+        print("Title records updated")

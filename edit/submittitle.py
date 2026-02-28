@@ -1,17 +1,14 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended titlelication of such source code.
 #
-#     Version: $Revision: 1099 $
-#     Date: $Date: 2023-02-07 18:29:53 -0500 (Tue, 07 Feb 2023) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
-        
-import cgi
-import sys
 from isfdb import *
 from isfdblib import *
 from titleClass import *
@@ -19,7 +16,7 @@ from SQLparsing import *
 from login import *
 from library import *
 from navbar import *
-        
+
 def EvalField(Label, NewUsed, OldUsed, newField, oldField, multi):
         update = 0
 
@@ -32,13 +29,13 @@ def EvalField(Label, NewUsed, OldUsed, newField, oldField, multi):
                 else:
                         if newField != XMLescape(oldField):
                                 update = 1
-                        
+
         ######################################################################
         # If a field is being used, but wasn't before, update it
         #####################################################################
         elif NewUsed and (OldUsed == 0):
                 update = 1
-                
+
         ######################################################################
         # If a field is not being used, but it was before, update it
         #####################################################################
@@ -60,7 +57,7 @@ def EvalField(Label, NewUsed, OldUsed, newField, oldField, multi):
         else:
                 return("", 0)
 
-        
+
 if __name__ == '__main__':
 
         submission = Submission()
@@ -75,7 +72,7 @@ if __name__ == '__main__':
 
         if not submission.user.id:
                 submission.error('', new.title_id)
-        
+
         old = titles(db)
         old.loadXML(int(new.title_id))
 
@@ -91,7 +88,7 @@ if __name__ == '__main__':
         CNX = MYSQL_CONNECTOR()
         update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.title_title)))
-        
+
         (val, changed) = EvalField('Title', new.used_title, old.used_title, new.title_title, old.title_title,0)
         update_string += val
         changes += changed
@@ -189,5 +186,5 @@ if __name__ == '__main__':
                 update_string += "  </TitleUpdate>\n"
 
         update_string += "</IsfdbSubmission>\n"
-        
+
         submission.file(update_string)

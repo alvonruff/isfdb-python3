@@ -1,31 +1,23 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2016-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 418 $
-#     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
+#     Version: $Revision: 1264 $
+#     Date: $Date: 2026-02-21 11:58:41 -0500 (Sat, 21 Feb 2026) $
 
 
 import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
+debug = 0
 
 def list_to_in_clause(id_list):
         in_clause = ''
@@ -40,14 +32,12 @@ def list_to_in_clause(id_list):
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
-
     query = "select title_id from titles where title_language is null"
-    db.query(query)
-    result = db.store_result()
-    record = result.fetch_row()
-    num = result.num_rows()
+
+    CNX = MYSQL_CONNECTOR()
+    CNX.DB_QUERY(query)
+    record = CNX.DB_FETCHMANY()
+    num = CNX.DB_NUMROWS()
     count = 0
     update_count = 0
     while record:
@@ -62,15 +52,18 @@ if __name__ == '__main__':
                         and pc2.title_id = t.title_id
                         and t.title_language is not null
                         and t.title_language !=''""" % (int(title_id))
-            db.query(query2)
-            result2 = db.store_result()
-            record2 = result2.fetch_row()
-            num2 = result2.num_rows()
+            CNX2 = MYSQL_CONNECTOR()
+            CNX2.DB_QUERY(query2)
+            record2 = CNX2.DB_FETCHMANY()
+            num2 = CNX2.DB_NUMROWS()
             if num2 == 1:
                 language = record2[0][0]
                 update_count += 1
                 update = "update titles set title_language=%d where title_id=%d" % (int(language), int(title_id))
-                db.query(update)
-            record = result.fetch_row()
+                if debug == 0:
+                        CNX2.DB_QUERY(update)
+                else:
+                        print(update)
+            record = CNX.DB_FETCHMANY()
 
     print("Count of updated titles: ",update_count)

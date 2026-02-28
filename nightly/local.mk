@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2013-2023   Ahasuerus
+#     (C) COPYRIGHT 2013-2026   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1139 $
-#     Date: $Date: 2023-07-12 18:51:22 -0400 (Wed, 12 Jul 2023) $
+#     Version: $Revision: 1256 $
+#     Date: $Date: 2026-02-11 08:03:50 -0500 (Wed, 11 Feb 2026) $
 
 
 include .TARGETS

@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2021-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -16,14 +16,13 @@ from library import GetElementValue, ISFDBLink, XMLunescape2, TagPresent
 from isfdblib import PrintPreMod, PrintNavBar, PrintPostMod, NotApprovable, markIntegrated
 from xml.dom import minidom
 
-# These declarations are not needed
-# submission    = 0
-# submitter     = 0
-# reviewer      = 0
+
+submission    = 0
+submitter     = 0
+reviewer      = 0
 
 def UpdateColumn(doc, tag, column, record_id):
         if TagPresent(doc, tag):
-
                 # Why is this block here? record is not used
                 #query = "select %s from reference where reference_id = %d" % (column, record_id)
                 #CNX = MYSQL_CONNECTOR()

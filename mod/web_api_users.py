@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -20,7 +20,7 @@ class WebAPIUsers:
         def __init__(self):
                 self.user = User()
                 self.user.load()
-        
+
         def display_current_web_api_users(self):
                 PrintPreMod('Manage Web API Users')
                 PrintNavBar()
@@ -49,7 +49,7 @@ class WebAPIUsers:
                 print('</form>')
                 print('<p>')
 
-        
+
 if __name__ == '__main__':
         web_api_users = WebAPIUsers()
         web_api_users.display_current_web_api_users()

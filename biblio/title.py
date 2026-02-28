@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley, Uzume, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Bill Longley, Uzume, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1004 $
-#     Date: $Date: 2022-09-16 07:43:01 -0400 (Fri, 16 Sep 2022) $
+#     Version: $Revision: 1272 $
+#     Date: $Date: 2026-02-28 15:53:11 -0500 (Sat, 28 Feb 2026) $
 
 
 from SQLparsing import *
@@ -461,7 +461,7 @@ if __name__ == '__main__':
                         print('</form>')
                 else:
                         print('%s ' % ISFDBLink('edit/edittags.cgi', title[TITLE_PUBID], 'Add Tags', False, 'class="inverted bold"'))
-                print('</div>')
+        print('</div>')
 
         ########################################
         # STEP 3 - Get any variants

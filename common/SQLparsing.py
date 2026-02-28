@@ -1,33 +1,24 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus, Bill Longley, Dirk Stoecker and Lokal_Profil
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Ahasuerus, Bill Longley, Dirk Stoecker and Lokal_Profil
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1215 $
-#     Date: $Date: 2025-01-23 16:05:36 -0500 (Thu, 23 Jan 2025) $
-
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=C0103, C0209, C0116, W0311, R1705, C0301, R0902, C0413, R0903, C0413
-#
-# C0103 = Not using snake_case naming conventions
-# C0209 = Lack of f-string usage
-# C0116 = Lack of docstrings
-# W0311 = Lack of using 4 spaces for indention
-# R1705 = Unnecessary else after return
-# C0301 = Line too long (> 80 characters)
-# R0902 = Too many instance attributes
-# R0903 = Too few public methods
-# C0413 = Wrong import position
+#     Version: $Revision: 1268 $
+#     Date: $Date: 2026-02-25 16:55:22 -0500 (Wed, 25 Feb 2026) $
 
 ##############################################################################
 #  Imports (Recommended to be top-level in Python3
 ##############################################################################
 import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
+
+import os
 import string
 import traceback
 from isfdb import *
@@ -36,6 +27,7 @@ from datetime import datetime
 
 db_python2  = 2
 db_python3  = 3
+
 if PYTHONVER == "python2":
         db_connector = db_python2
         import MySQLdb
@@ -45,14 +37,15 @@ elif PYTHONVER == "python3":
 
 ##############################################################################
 
-def _Date_or_None(s):
-        return s
+if PYTHONVER == "python2":
+        def _Date_or_None(s):
+                return s
 
-def _IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = _Date_or_None
-        return IsfdbConv
+        def _IsfdbConvSetup():
+                import MySQLdb.converters
+                IsfdbConv = MySQLdb.converters.conversions
+                IsfdbConv[10] = _Date_or_None
+                return IsfdbConv
 
 ############################################################################
 # This class abstracts the APIs for the two different MYSQL connectors
@@ -140,7 +133,10 @@ class MYSQL_CONNECTOR():
                         print("Unsupported Connector")
                         return 0
 
-SQLlogging = 1
+if GLOBAL_DEBUG:
+        SQLlogging = 1
+else:
+        SQLlogging = 0
 
 def SQLlog(arg):
         if SQLlogging > 0:
@@ -365,8 +361,23 @@ def SQLgetBriefActualFromPseudo(au_id):
                 record = CNX.DB_FETCHMANY()
         return authors
 
+# Whitelist of valid (table, id_field, name_field) combinations for
+# SQLGetDisambiguatedRecords. Identifiers are never safe to escape;
+# they must be validated against known-good values instead.
+_DISAMBIGUATED_RECORD_TYPES = {
+        'publishers': ('publisher_id', 'publisher_name'),
+        'pub_series': ('pub_series_id', 'pub_series_name'),
+        'series':     ('series_id',     'series_title'),
+}
+
 def SQLGetDisambiguatedRecords(record_id, name, table, id_field, name_field):
-        SQLlog("SQLGetSimilarRecords, record_id=%s, name=%s, table=%s, id_field=%s, name_field=%s" % (record_id, name, table, id_field, name_field))
+        SQLlog("SQLGetDisambiguatedRecords, record_id=%s, name=%s, table=%s, id_field=%s, name_field=%s" % (record_id, name, table, id_field, name_field))
+        # Validate identifiers against the whitelist. All current call sites
+        # pass string literals, so a mismatch indicates a programming error.
+        valid = _DISAMBIGUATED_RECORD_TYPES.get(table)
+        if not valid or (id_field, name_field) != valid:
+                SQLlog("SQLGetDisambiguatedRecords: rejected unknown identifiers: table=%s id_field=%s name_field=%s" % (table, id_field, name_field))
+                return []
         # For new records not in the database, use record ID 0
         if not record_id:
                 record_id = 0
@@ -377,9 +388,6 @@ def SQLGetDisambiguatedRecords(record_id, name, table, id_field, name_field):
         name = name.strip()
         CNX = MYSQL_CONNECTOR()
         exact_name = CNX.DB_ESCAPE_STRING(name.replace('_','\_'))
-        table = CNX.DB_ESCAPE_STRING(table)
-        id_field = CNX.DB_ESCAPE_STRING(id_field)
-        name_field = CNX.DB_ESCAPE_STRING(name_field)
         query = """select * from %s
                    where (%s = '%s' or %s like '%s (%%)')
                    and %s != %d
@@ -429,37 +437,27 @@ def SQLgetPseudoFromActual(au_id):
 
 def SQLupdateAuthorViews(author_id):
         SQLlog("SQLupdateAuthorViews, author_id=%s" % author_id)
-        query = "select views, annual_views from author_views where author_id=%d" % author_id
+        # INSERT ... ON DUPLICATE KEY UPDATE is atomic: no SELECT needed and
+        # no risk of lost increments under concurrent requests. Requires
+        # author_id to be a PRIMARY KEY or UNIQUE KEY in author_views.
+        query = """insert into author_views (author_id, views, annual_views)
+                   values(%d, 1, 1)
+                   on duplicate key update
+                   views = views + 1, annual_views = annual_views + 1""" % int(author_id)
         CNX = MYSQL_CONNECTOR()
         CNX.DB_QUERY(query)
-        view_data = CNX.DB_FETCHONE()
-        if view_data:
-                total_views = view_data[0][0]
-                annual_views = view_data[0][1]
-                update = """update author_views set views = %d, annual_views = %d
-                            where author_id=%d""" % (total_views+1, annual_views+1, author_id)
-        else:
-                update = """insert into author_views (author_id, views, annual_views)
-                            values(%d, 1, 1)""" % author_id
-        CNX = MYSQL_CONNECTOR()
-        CNX.DB_QUERY(update)
 
 def SQLupdateTitleViews(title_id):
         SQLlog("SQLupdateTitleViews, title_id=%s" % title_id)
-        query = "select views, annual_views from title_views where title_id=%d" % title_id
+        # INSERT ... ON DUPLICATE KEY UPDATE is atomic: no SELECT needed and
+        # no risk of lost increments under concurrent requests. Requires
+        # title_id to be a PRIMARY KEY or UNIQUE KEY in title_views.
+        query = """insert into title_views (title_id, views, annual_views)
+                   values(%d, 1, 1)
+                   on duplicate key update
+                   views = views + 1, annual_views = annual_views + 1""" % int(title_id)
         CNX = MYSQL_CONNECTOR()
         CNX.DB_QUERY(query)
-        view_data = CNX.DB_FETCHONE()
-        if view_data:
-                total_views = view_data[0][0]
-                annual_views = view_data[0][1]
-                update = """update title_views set views = %d, annual_views = %d
-                            where title_id=%d""" % (total_views+1, annual_views+1, title_id)
-        else:
-                update = """insert into title_views (title_id, views, annual_views)
-                            values(%d, 1, 1)""" % title_id
-        CNX = MYSQL_CONNECTOR()
-        CNX.DB_QUERY(update)
 
 def SQLgetSeriesData(author_id):
         SQLlog("SQLgetSeriesData, author_id=%s" % author_id)
@@ -1858,7 +1856,7 @@ def SQLTitleAwards(title_id):
         return _StandardQuery(query)
 
 def SQLloadAwards(award_id):
-        SQLlog("SQLloadAwards, award_id=%s" % str(award_id))
+        SQLlog("SQLloadAwards, award_id=%s" % (award_id))
         CNX = MYSQL_CONNECTOR()
         query = "select %s from awards where award_id='%d'" % (CNX_AWARDS_STAR, award_id)
         CNX.DB_QUERY(query)
@@ -2298,11 +2296,12 @@ def SQLgetPubTitle(pubId):
         else:
                 return ('')
 
-def SQLTitlesWithPubs(title_list):
-        SQLlog("SQLTitlesWithPubs, title_list=%s" % (title_list))
-        if not title_list:
+def SQLTitlesWithPubs(title_ids):
+        SQLlog("SQLTitlesWithPubs, title_ids=%s" % (title_ids))
+        if not title_ids:
                 return []
-        query = "select title_id from pub_content where title_id in (%s)" % title_list
+        in_clause = ", ".join(str(int(tid)) for tid in title_ids)
+        query = "select title_id from pub_content where title_id in (%s)" % in_clause
         CNX = MYSQL_CONNECTOR()
         CNX.DB_QUERY(query)
         title = CNX.DB_FETCHMANY()
@@ -2705,6 +2704,44 @@ def SQLPendingTitleMerges(sub_id, kept_title_id, dropped_title_ids):
                 query += """or sub_data like '%%<DropId>%d</DropId>%%'""" % dropped_title_id
         query += ')'
         return _OneField(query)
+
+#############################################################################
+# XXX These routine are new and need testing
+#############################################################################
+
+def SQLPendingTitleEdits(sub_id, title_ids):
+        query = """select sub_id from submissions
+                where sub_state = 'N'
+                and sub_id != %d
+                and sub_type = %d
+                and (""" % (sub_id, MOD_TITLE_UPDATE)
+        first = 1
+        for title_id in title_ids:
+                if not first:
+                        query += ' or '
+                query += """sub_data like '%%<Record>%d</Record>%%'""" % title_id
+                first = 0
+        query += ')'
+        return _OneField(query)
+
+def SQLPendingTitleChangesInPubEdits(sub_id, title_ids):
+        query = """select sub_id from submissions
+                where sub_state = 'N'
+                and sub_id != %d
+                and sub_type = %d
+                and (""" % (sub_id, MOD_PUB_UPDATE)
+        first = 1
+        for title_id in title_ids:
+                if not first:
+                        query += ' or '
+                query += """sub_data like '%%<ContentTitle>%%<Record>%d</Record>%%'""" % title_id
+                first = 0
+        query += ')'
+        return _OneField(query)
+
+#############################################################################
+# XXX These routine are new and need testing
+#############################################################################
 
 def SQLloadNextSelfApproverSubmission(sub_id, reviewer_id):
         query = """select * from submissions s
@@ -3971,6 +4008,8 @@ def SQLFindSimilarPublishers(publisher_id, publisher_name):
                         publisher_seed = publisher_seed[:-len(suffix)]
 
         query = """select distinct publisher_id, publisher_name from publishers where """
+
+        CNX = MYSQL_CONNECTOR()
         if publisher_id:
                 query += "publisher_id != %d and " % int(publisher_id)
         subquery = "TRIM(LEADING 'the' FROM replace(replace(lower(publisher_name), ' ',''), ',',''))"
@@ -3982,6 +4021,17 @@ def SQLFindSimilarPublishers(publisher_id, publisher_name):
         for excluded in exclusions:
                 query += " and lower(publisher_name) != '%s'" % CNX.DB_ESCAPE_STRING(excluded)
         return _StandardQuery(query)
+
+def SQLGetDbaseTime():
+        # Get the update time from a table least likely to have been updated.
+        # This is really here to track when the database was updated at isfdb2.org
+        SQLlog("SQLGetDbaseTime")
+        query = "select UPDATE_TIME from information_schema.tables where TABLE_SCHEMA = 'isfdb' and TABLE_NAME = 'self_approvers'"
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHONE()
+        retvalue = record[0][0]
+        return retvalue
 
 #################################################################
 # This section is executed when the file is imported by another

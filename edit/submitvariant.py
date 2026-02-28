@@ -1,37 +1,35 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended titlelication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
-        
-import cgi
-import sys
+
 from isfdb import *
 from isfdblib import *
 from titleClass import *
 from SQLparsing import *
 from login import *
 from library import *
-        
+
 def DoField(Label, NewUsed, NewValue):
         if Label == 'Synopsis':
                 CheckValue = XMLunescape(NewValue)
         else:
                 CheckValue = NewValue
-        CNX = MYSQL_CONNECTOR()
         if NewUsed:
+                CNX = MYSQL_CONNECTOR()
                 retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:
                 return("", 0)
 
-        
+
 if __name__ == '__main__':
 
         submission = Submission()
@@ -46,20 +44,20 @@ if __name__ == '__main__':
 
         if not submission.user.id:
                 submission.error("", new.title_id)
-        
+
         parent_data = SQLloadTitle(new.title_id)
         if parent_data[TITLE_PARENT]:
                 submission.error('Parent title is currently a variant of another title. Variants of variants are not allowed')
 
-        CNX = MYSQL_CONNECTOR()
         titlename = SQLgetTitle(new.title_id)
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <VariantTitle>\n"
         update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(titlename)))
         update_string += "    <Parent>%d</Parent>\n" % (int(new.title_id))
-        
+
         (val, changed) = DoField('Title', new.used_title, new.title_title)
         update_string += val
 

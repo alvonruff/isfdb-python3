@@ -1,15 +1,15 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
-        
+
 import cgi
 import sys
 from isfdb import *
@@ -18,7 +18,7 @@ from library import *
 from SQLparsing import *
 from authorClass import *
 from navbar import *
-        
+
 def CheckAuthField(newUsed, oldUsed, newField, oldField, tag, multi):
         update = 0
         changes = 0
@@ -67,7 +67,7 @@ if __name__ == '__main__':
         submission.header = 'Author Change Submission'
         submission.cgi_script = 'editauth'
         submission.type = MOD_AUTHOR_UPDATE
-        
+
         new = authors(db)
         new.cgi2obj()
         if new.error:
@@ -75,19 +75,19 @@ if __name__ == '__main__':
 
         if not submission.user.id:
                 submission.error('', new.author_id)
-        
+
         old = authors(db)
         old.load(int(new.author_id))
-        
-        CNX = MYSQL_CONNECTOR()
+
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AuthorUpdate>\n"
         update_string += "    <Submitter>%s</Submitter>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(submission.user.name)))
         update_string += "    <Record>%d</Record>\n" % (int(new.author_id))
         update_string += "    <Subject>%s</Subject>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(old.author_canonical)))
-        
+
         (changes, update) = CheckAuthField(new.used_canonical, old.used_canonical, new.author_canonical, old.author_canonical, 'Canonical', 0)
         if changes:
                 update_string += update
@@ -137,7 +137,7 @@ if __name__ == '__main__':
 
         if 'mod_note' in new.form:
                 update_string += "    <ModNote>%s</ModNote>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['mod_note'].value)))
-        
+
         update_string += "  </AuthorUpdate>\n"
         update_string += "</IsfdbSubmission>\n"
 

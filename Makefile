@@ -1,24 +1,18 @@
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 12 $
-#     Date: $Date: 2017-10-30 18:32:28 -0400 (Mon, 30 Oct 2017) $
+#     Version: $Revision: 1265 $
+#     Date: $Date: 2026-02-25 07:25:05 -0500 (Wed, 25 Feb 2026) $
 
-include INSTALLDIRS
-
-INSTALL = $(INSTALL_CGI)
 PYTHON2 = /usr/bin/python
 PYTHON3 = /usr/bin/python3
 
 install:
-	mv common/localdefs.py common/localdefs2.py
-	cp $(INSTALL)/localdefs.py common
 	cd common && $(MAKE) install;
-	mv common/localdefs2.py common/localdefs.py
 	cd biblio && $(MAKE) LOCAL;
 	cd biblio && $(MAKE) install;
 	cd edit   && $(MAKE) LOCAL;
@@ -38,37 +32,28 @@ clean:
 	cd mod && $(MAKE) clean;
 	cd css && $(MAKE) clean;
 	cd rest && $(MAKE) clean;
-	cd nightly && $(MAKE) clean;
 	cd tests && $(MAKE) clean;
-	rm -f .pythonver
 
 export:
-		/bin/bash export.sh
+	/bin/bash export.sh
+
+#
+#   Use: "make python2" to switch to python2
+#   Use: "make python3" to switch to python3
+#
+#   Switching the python major version requires:
+#
+#         "make clean"
+#         "make -B install"
+#
+#   after the switch to rebuild the cgi files
+#
 
 python2:
 	echo $(PYTHON2) > .pythonver
-	mv common/localdefs.py common/localdefs2.py
-	cp $(INSTALL)/localdefs.py common
-	cd common && python setver.py 2;
-	cp common/localdefs.py $(INSTALL)
-	cp common/localdefs.py $(INSTALL)/edit
-	cp common/localdefs.py $(INSTALL)/mod
-	cp common/localdefs.py $(INSTALL)/rest
-	cp common/localdefs.py $(INSTALL)/nightly
-	cp common/localdefs.py $(INSTALL)/tests
-	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python2"
 
 python3:
 	echo $(PYTHON3) > .pythonver
-	mv common/localdefs.py common/localdefs2.py
-	cp $(INSTALL)/localdefs.py common
-	cd common && python setver.py 3;
-	cp common/localdefs.py $(INSTALL)
-	cp common/localdefs.py $(INSTALL)/edit
-	cp common/localdefs.py $(INSTALL)/mod
-	cp common/localdefs.py $(INSTALL)/rest
-	cp common/localdefs.py $(INSTALL)/nightly
-	cp common/localdefs.py $(INSTALL)/tests
-	mv common/localdefs2.py common/localdefs.py
 	echo "Now using Python3"
+

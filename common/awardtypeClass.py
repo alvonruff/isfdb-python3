@@ -1,32 +1,13 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2013-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 796 $
-#     Date: $Date: 2021-11-02 19:08:22 -0400 (Tue, 02 Nov 2021) $
-
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=bad-indentation
-# pylint: disable=line-too-long
-# pylint: disable=invalid-name
-# pylint: disable=consider-using-f-string
-# pylint: disable=too-many-statements
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
-##############################################################################
-# Look at these later
-##############################################################################
-# pylint: disable=unused-wildcard-import
-# pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
+#     Version: $Revision: 1271 $
+#     Date: $Date: 2026-02-27 16:20:27 -0500 (Fri, 27 Feb 2026) $
 
 from SQLparsing import SQLGetAwardTypeById, SQLgetNotes, SQLloadAwardTypeWebpages
 from awardClass import awardShared
@@ -48,19 +29,20 @@ class award_type(awardShared):
                 self.used_webpages = 0
                 self.used_non_genre = 0
 
-                self.award_type_id = 0
-                self.award_type_note_id = 0
+                self.award_type_id = ''
                 self.award_type_code = ''
                 self.award_type_by = ''
                 self.award_type_for = ''
                 self.award_type_name = ''
                 self.award_type_short_name = ''
                 self.award_type_poll = ''
+                self.award_type_note_id = ''
                 self.award_type_note = ''
                 self.award_type_webpages = []
                 self.award_type_non_genre = ''
 
                 self.error = ''
+                self.form = ''
 
         def load(self):
                 if not self.award_type_id and not self.award_type_code:
@@ -113,45 +95,43 @@ class award_type(awardShared):
                 if self.award_type_webpages:
                         self.used_webpages = 1
 
-        def cgi2obj(self, form=0):
-                if form:
-                        self.form = form
-                else:
-                        self.form = IsfdbFieldStorage()
-
+        def cgi2obj(self):
+                self.form = IsfdbFieldStorage()
                 if 'award_type_id' in self.form:
                         self.award_type_id = int(self.form['award_type_id'].value)
                         self.used_id = 1
 
                 try:
                         self.award_type_name = XMLescape(self.form['award_type_name'].value)
-                        self.used_name = 1
-                        if not self.award_type_name:
-                                raise
-                        # Unescape the award type name to ensure that the lookup finds it in the database
-                        current_award_type = SQLGetAwardTypeByName(XMLunescape(self.award_type_name))
-                        if current_award_type:
-                                if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
-                                        self.error = "Award type with full name '%s' already exists" % current_award_type[AWARD_TYPE_NAME]
-                                        return
-                except:
+                except KeyError:
                         self.error = "Full name is required for Award types"
                         return
+                if not self.award_type_name:
+                        self.error = "Full name is required for Award types"
+                        return
+                self.used_name = 1
+                # Unescape the award type name to ensure that the lookup finds it in the database
+                current_award_type = SQLGetAwardTypeByName(XMLunescape(self.award_type_name))
+                if current_award_type:
+                        if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
+                                self.error = "Award type with full name '%s' already exists" % current_award_type[AWARD_TYPE_NAME]
+                                return
 
                 try:
                         self.award_type_short_name = XMLescape(self.form['award_type_short_name'].value)
-                        self.used_short_name = 1
-                        if not self.award_type_short_name:
-                                raise
-                        # Unescape the award type name to ensure that the lookup finds it in the database
-                        current_award_type = SQLGetAwardTypeByShortName(XMLunescape(self.award_type_short_name))
-                        if current_award_type:
-                                if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
-                                        self.error = "Award type with short name '%s' already exists" % current_award_type[AWARD_TYPE_SHORT_NAME]
-                                        return
-                except:
+                except KeyError:
                         self.error = "Short name is required for Award types"
                         return
+                if not self.award_type_short_name:
+                        self.error = "Short name is required for Award types"
+                        return
+                self.used_short_name = 1
+                # Unescape the award type name to ensure that the lookup finds it in the database
+                current_award_type = SQLGetAwardTypeByShortName(XMLunescape(self.award_type_short_name))
+                if current_award_type:
+                        if self.award_type_id != int(current_award_type[AWARD_TYPE_ID]):
+                                self.error = "Award type with short name '%s' already exists" % current_award_type[AWARD_TYPE_SHORT_NAME]
+                                return
 
                 if 'award_type_by' in self.form:
                         value = XMLescape(self.form['award_type_by'].value)

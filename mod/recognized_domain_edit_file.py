@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -34,12 +35,12 @@ def UpdateYesNoColumn(doc, tag, column, record_id):
 def UpdateColumn(doc, tag, column, record_id):
         if TagPresent(doc, tag):
                 value = GetElementValue(doc, tag)
+                CNX = MYSQL_CONNECTOR()
                 if value:
                         update = "update recognized_domains set %s = '%s' where domain_id = %d" % (column, CNX.DB_ESCAPE_STRING(value), record_id)
                 else:
                         update = "update recognized_domains set %s = NULL where domain_id = %d" % (column, record_id)
                 print('<li> %s' % update)
-                CNX = MYSQL_CONNECTOR()
                 CNX.DB_QUERY(update)
 
 if __name__ == '__main__':

@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2013-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
         
 import cgi
@@ -46,8 +46,8 @@ def CheckAwardTypeField(newUsed, oldUsed, newField, oldField, tag, multi):
                 newField = ""
                 update = 1
 
-        CNX = MYSQL_CONNECTOR()
         if update:
+                CNX = MYSQL_CONNECTOR()
                 if multi:
                         update_string = "    <%ss>\n" % (tag)
                         for field in newField:
@@ -79,8 +79,8 @@ if __name__ == '__main__':
         old.award_type_id = new.award_type_id
         old.load()
         
-        CNX = MYSQL_CONNECTOR()
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <AwardTypeUpdate>\n"

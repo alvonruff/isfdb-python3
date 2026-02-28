@@ -1,41 +1,20 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2013-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 943 $
-#     Date: $Date: 2022-06-29 19:59:53 -0400 (Wed, 29 Jun 2022) $
+#     Version: $Revision: 1271 $
+#     Date: $Date: 2026-02-27 16:20:27 -0500 (Fri, 27 Feb 2026) $
 
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=bad-indentation
-# pylint: disable=line-too-long
-# pylint: disable=invalid-name
-# pylint: disable=consider-using-f-string
-# pylint: disable=too-many-statements
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
-##############################################################################
-# Look at these later
-##############################################################################
-# pylint: disable=unused-wildcard-import
-# pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
-
-import sys
+import cgi
 import re
 from isfdb import *
 from library import *
+from xml.dom import minidom
 from awardClass import awardShared
-from awardtypeClass import award_type
-from common import PrintWebPages
-from login import User
 
 
 class award_cat(awardShared):
@@ -48,82 +27,80 @@ class award_cat(awardShared):
                 self.used_note_id = 0
                 self.used_webpages = 0
 
-                self.award_cat_id = 0
-                self.award_cat_type_id = 0
-                self.award_cat_order = 0
-                self.award_cat_note_id = 0
+                self.award_cat_id = ''
                 self.award_cat_name = ''
+                self.award_cat_type_id = ''
+                self.award_cat_order = ''
+                self.award_cat_note_id = ''
                 self.award_cat_note = ''
                 self.award_cat_webpages = []
 
                 self.error = ''
-                self.form = 0
+                self.form = ''
 
         def load(self):
                 if not self.award_cat_id:
                         return
-                awardCat = SQLGetAwardCatById(self.award_cat_id)
-                if not awardCat:
+                award_cat = SQLGetAwardCatById(self.award_cat_id)
+                if not award_cat:
                         self.error = "Award Category doesn't exist"
                         return
-                if awardCat[AWARD_CAT_ID]:
-                        self.award_cat_id = awardCat[AWARD_CAT_ID]
+                if award_cat[AWARD_CAT_ID]:
+                        self.award_cat_id = award_cat[AWARD_CAT_ID]
                         self.used_cat_id = 1
-                if awardCat[AWARD_CAT_NAME]:
-                        self.award_cat_name = awardCat[AWARD_CAT_NAME]
+                if award_cat[AWARD_CAT_NAME]:
+                        self.award_cat_name = award_cat[AWARD_CAT_NAME]
                         self.used_cat_name = 1
-                if awardCat[AWARD_CAT_TYPE_ID]:
-                        self.award_cat_type_id = awardCat[AWARD_CAT_TYPE_ID]
+                if award_cat[AWARD_CAT_TYPE_ID]:
+                        self.award_cat_type_id = award_cat[AWARD_CAT_TYPE_ID]
                         self.used_cat_type_id = 1
-                if awardCat[AWARD_CAT_ORDER]:
-                        self.award_cat_order = awardCat[AWARD_CAT_ORDER]
+                if award_cat[AWARD_CAT_ORDER]:
+                        self.award_cat_order = award_cat[AWARD_CAT_ORDER]
                         self.used_cat_order = 1
-                if awardCat[AWARD_CAT_NOTE]:
-                        note = SQLgetNotes(awardCat[AWARD_CAT_NOTE])
+                if award_cat[AWARD_CAT_NOTE]:
+                        note = SQLgetNotes(award_cat[AWARD_CAT_NOTE])
                         if note:
-                                self.award_cat_note_id = awardCat[AWARD_CAT_NOTE]
+                                self.award_cat_note_id = award_cat[AWARD_CAT_NOTE]
                                 self.used_note_id = 1
                                 self.award_cat_note = note
                                 self.used_note = 1
 
-                self.award_cat_webpages = SQLloadAwardCatWebpages(awardCat[AWARD_CAT_ID])
+                self.award_cat_webpages = SQLloadAwardCatWebpages(award_cat[AWARD_CAT_ID])
                 if self.award_cat_webpages:
                         self.used_webpages = 1
 
-        def cgi2obj(self, form=0):
-                if form:
-                        self.form = form
-                else:
-                        self.form = IsfdbFieldStorage()
-                sys.stderr = sys.stdout
+        def cgi2obj(self):
+                self.form = IsfdbFieldStorage()
                 if 'award_cat_id' in self.form:
                         self.award_cat_id = int(self.form['award_cat_id'].value)
                         self.used_cat_id = 1
 
                 try:
                         self.award_cat_type_id = int(self.form['award_cat_type_id'].value)
-                        self.used_cat_type_id = 1
-                        awardType = SQLGetAwardTypeById(self.award_cat_type_id)
-                        if not awardType:
-                                raise
-                except:
+                except (KeyError, ValueError):
                         self.error = 'Valid award type is required for award categories'
                         return
+                award_type = SQLGetAwardTypeById(self.award_cat_type_id)
+                if not award_type:
+                        self.error = 'Valid award type is required for award categories'
+                        return
+                self.used_cat_type_id = 1
 
                 try:
                         self.award_cat_name = XMLescape(self.form['award_cat_name'].value)
-                        self.used_cat_name = 1
-                        if not self.award_cat_name:
-                                raise
-                        # Unescape the award category name to ensure that the lookup finds it in the database
-                        current_award_cat = SQLGetAwardCatByName(XMLunescape(self.award_cat_name), self.award_cat_type_id)
-                        if current_award_cat:
-                                if (self.award_cat_type_id == int(current_award_cat[AWARD_CAT_TYPE_ID])) and (self.award_cat_id != int(current_award_cat[AWARD_CAT_ID])):
-                                        self.error = "Entered award category name is aready associated with category '%s' for this award type" % current_award_cat[AWARD_CAT_NAME]
-                                        return
-                except:
+                except KeyError:
                         self.error = 'Award category name is required'
                         return
+                if not self.award_cat_name:
+                        self.error = 'Award category name is required'
+                        return
+                self.used_cat_name = 1
+                # Unescape the award category name to ensure that the lookup finds it in the database
+                current_award_cat = SQLGetAwardCatByName(XMLunescape(self.award_cat_name), self.award_cat_type_id)
+                if current_award_cat:
+                        if (self.award_cat_type_id == int(current_award_cat[AWARD_CAT_TYPE_ID])) and (self.award_cat_id != int(current_award_cat[AWARD_CAT_ID])):
+                                self.error = "Entered award category name is already associated with category '%s' for this award type" % current_award_cat[AWARD_CAT_NAME]
+                                return
 
                 if 'award_cat_order' in self.form:
                         self.award_cat_order = XMLescape(self.form['award_cat_order'].value)
@@ -194,6 +171,9 @@ class award_cat(awardShared):
                 self.PrintAwardCatTable(years)
 
         def PrintAwardCatPageHeader(self):
+                from awardtypeClass import award_type
+                from common import PrintWebPages
+                from login import User
                 awardType = award_type()
                 awardType.award_type_id = self.award_cat_type_id
                 awardType.load()

@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1072 $
-#     Date: $Date: 2023-01-06 17:45:15 -0500 (Fri, 06 Jan 2023) $
+#     Version: $Revision: 1254 $
+#     Date: $Date: 2026-02-11 06:41:04 -0500 (Wed, 11 Feb 2026) $
 
 
 from isfdb import *
@@ -190,7 +190,7 @@ if __name__ == '__main__':
 
         ##################################################
         # Check to see if the titles are ever in the
-        # same publications 
+        # same publications
         ##################################################
         target = 0
         while target < MaxRecords:
@@ -214,10 +214,10 @@ if __name__ == '__main__':
         Compare2("title_title", list)
 
         ##################################################
-        # title_trans_titles          
-        ##################################################          
-        trans_titles_list = []          
-        recno = 0          
+        # title_trans_titles
+        ##################################################
+        trans_titles_list = []
+        recno = 0
         while recno < MaxRecords:
                 for trans_title in Records[recno].title_trans_titles:
                         if trans_title not in trans_titles_list:

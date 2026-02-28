@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1203 $
-#     Date: $Date: 2024-12-23 09:46:14 -0500 (Mon, 23 Dec 2024) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
 import cgi
 import sys
@@ -19,9 +19,14 @@ from SQLparsing import *
 from library import *
 from isbn import *
 from login import User
+from awardClass import awardShared
 
 class AdvancedSearch:
         def __init__ (self):
+                self.selector_id = ''
+                self.search_type = ''
+                self.number = 0
+
                 self.user = User()
                 self.user.load()
                 self.define_criteria()
@@ -274,7 +279,6 @@ class AdvancedSearch:
                 self.print_one_invisible_drop_down('SecondaryVerSources', labels)
 
         def print_invisible_award_levels(self):
-                from awardClass import awardShared
                 print('<select NAME="AwardLevels" id="AwardLevels" class="nodisplay">')
                 # First display regular award levels in the 1-70 range
                 for award_level in range(1,71):

@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2022   Al von Ruff, Ahasuerus and Dirk Stoeker
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Dirk Stoeker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1052 $
-#     Date: $Date: 2022-11-20 09:21:04 -0500 (Sun, 20 Nov 2022) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
 from isfdb import *

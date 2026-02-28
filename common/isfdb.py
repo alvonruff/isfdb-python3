@@ -1,39 +1,30 @@
 from __future__ import print_function
 #
-#         (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#         (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #           ALL RIGHTS RESERVED
 #
 #         The copyright notice above does not evidence any actual or
 #         intended publication of such source code.
 #
-#         Version: $Revision: 1205 $
-#         Date: $Date: 2025-01-08 21:12:51 -0500 (Wed, 08 Jan 2025) $
-
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=C0103, C0209, C0116, W0311, R1705, C0301, R0902, C0413, R0903, C0413
-#
-# C0103 = Not using snake_case naming conventions
-# C0209 = Lack of f-string usage
-# C0116 = Lack of docstrings
-# W0311 = Lack of using 4 spaces for indention
-# R1705 = Unnecessary else after return
-# C0301 = Line too long (> 80 characters)
-# R0902 = Too many instance attributes
-# R0903 = Too few public methods
-# C0413 = Wrong import position
+#         Version: $Revision: 1270 $
+#         Date: $Date: 2026-02-27 06:57:58 -0500 (Fri, 27 Feb 2026) $
 
 ##############################################################################
 #  Imports (Recommended to be top-level in Python3
 ##############################################################################
-import cgitb
-cgitb.enable()
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 import string
-import sys
 import os
 from localdefs import *
+
+import cgitb
+if GLOBAL_DEBUG:
+        cgitb.enable()
 
 if PYTHONVER == 'python2':
         import urllib
@@ -103,7 +94,7 @@ def PrintHTMLHeaders(title):
         print('</span>')
         print('</a>')
         if (HTMLLOC == "www.isfdb2.org") or (HTMLLOC == "isfdb2.org"):
-                print('<div id="statusbar2">')
+                print('<div id="statusbar">')
         else:
                 print('<div id="statusbar">')
         print('<h2>%s</h2>' % ISFDBText(title))
@@ -249,7 +240,7 @@ class Session(object):
                         for i in range(1, num_args, 1):
                                 self.parameters.append(sys.argv[i])
 
-        def Parameter(self, param_number, param_type = 'str', default_value = None, allowed_values = []):
+        def Parameter(self, param_number, param_type = 'str', default_value = None, allowed_values = None):
                 param_display_values = {0: 'First',
                         1: 'Second',
                         2: 'Third',
@@ -266,10 +257,8 @@ class Session(object):
                 param_order = param_display_values[param_number]
 
                 try:
-                        value = self.parameters[param_number]
-                        if not value:
-                                raise
-                except:
+                        value = self.parameters[param_number] or ''
+                except IndexError:
                         value = ''
                 if not value and default_value is not None:
                         value = default_value
@@ -279,9 +268,9 @@ class Session(object):
                 if param_type == 'int':
                         try:
                                 value = int(value)
-                                if value < 0:
-                                        raise
-                        except:
+                        except (ValueError, TypeError):
+                                self.DisplayError('%s parameter must be a valid integer number' % param_order)
+                        if value < 0:
                                 self.DisplayError('%s parameter must be a valid integer number' % param_order)
                 elif param_type == 'unescape':
                         value = str.replace(value, '%20', ' ')
@@ -318,35 +307,38 @@ class Session(object):
 
         def _DisplayBiblioError(self, message):
                 from common import PrintHeader, PrintNavbar, PrintTrailer
+                from library import ISFDBText
                 if self.frame:
                         PrintHeader('Error')
                         try:
-                                record_id = int(self.parameter[0])
-                        except:
+                                record_id = int(self.parameters[0])
+                        except (IndexError, ValueError, TypeError):
                                 record_id = 0
                         PrintNavbar(self.cgi_script, record_id, 0, '%s.cgi' % self.cgi_script, 0)
-                print("""<h3>%s</h3>""" % message)
+                print("""<h3>%s</h3>""" % ISFDBText(message))
                 PrintTrailer(self.cgi_script, record_id, 0)
 
         def _DisplayEditError(self, message):
                 from isfdblib import PrintPreSearch, PrintNavBar, PrintPostSearch
+                from library import ISFDBText
                 if self.frame:
                         PrintPreSearch('Error')
                         PrintNavBar('%s/%s' % (self.cgi_dir, self.cgi_script), 0)
-                print("""<h3>%s</h3>""" % message)
+                print("""<h3>%s</h3>""" % ISFDBText(message))
                 PrintPostSearch(0, 0, 0, 0, 0, 0)
 
         def _DisplayModError(self, message):
                 from isfdblib import PrintPreMod, PrintNavBar, PrintPostMod
+                from library import ISFDBText
                 if self.frame:
                         PrintPreMod('Error')
                         PrintNavBar()
-                print("""<h3>%s</h3>""" % message)
+                print("""<h3>%s</h3>""" % ISFDBText(message))
                 PrintPostMod(0)
 
 SCHEMA_VER = '0.02'
 ENGINE     = '<b>ISFDB Engine</b> - Version 4.00 (2006-04-24)'
-COPYRIGHT  = 'Copyright &copy; 1995-2025 Al von Ruff and the ISFDB team'
+COPYRIGHT  = 'Copyright &copy; 1995-2026 Al von Ruff and the ISFDB team'
 # NONCE should be uncommented if and when we need it to create CSP nonces
 # import uuid
 # NONCE = uuid.uuid4().hex

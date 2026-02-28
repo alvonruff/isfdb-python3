@@ -1,78 +1,73 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus, Al von Ruff
-#       ALL RIGHTS RESERVED
+#         (C) COPYRIGHT 2014-2026   Ahasuerus, Al von Ruff
+#           ALL RIGHTS RESERVED
 #
-#     The copyright notice above does not evidence any actual or
-#     intended publication of such source code.
+#         The copyright notice above does not evidence any actual or
+#         intended publication of such source code.
 #
-#     Version: $Revision: 418 $
-#     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
+#         Version: $Revision: 1264 $
+#         Date: $Date: 2026-02-21 11:58:41 -0500 (Sat, 21 Feb 2026) $
 
 
 import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
+debug = 0
 
 def convertEllipses(title):
-    # First convert ". . . ." to "...."
-    while ". . . ." in title:
-        title = title.replace(". . . .", "....")
-    # Then convert ". . ." to "..."
-    while ". . ." in title:
-        title = title.replace(". . .", "...")
-    print(title)
-    return title
+        # First convert ". . . ." to "...."
+        while ". . . ." in title:
+                title = title.replace(". . . .", "....")
+        # Then convert ". . ." to "..."
+        while ". . ." in title:
+                title = title.replace(". . .", "...")
+        print(title)
+        return title
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
+        # Retrieve all titles with ". . ."
+        query = "select title_id, title_title from titles where title_title like '%. . .%'"
 
-    # Retrieve all titles with ". . ."
-    query = "select title_id, title_title from titles where title_title like '%. . .%'"
-    db.query(query)
-    result = db.store_result()
-    record = result.fetch_row()
-    titles = []
-    while record:
-        titles.append(record[0])
-        record = result.fetch_row()
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        titles = []
+        while record:
+                titles.append(record[0])
+                record = CNX.DB_FETCHMANY()
 
-    for title in titles:
-        title_id = int(title[0])
-        title_title = title[1]
-        new_title = convertEllipses(title_title)
-        update = "update titles set title_title='%s' where title_id=%d" % (db.escape_string(new_title), title_id)
-        db.query(update)
+        for title in titles:
+                title_id = int(title[0])
+                title_title = title[1]
+                new_title = convertEllipses(title_title)
+                update = "update titles set title_title='%s' where title_id=%d" % (CNX.DB_ESCAPE_STRING(new_title), title_id)
+                if debug == 0:
+                        CNX.DB_QUERY(update)
+                else:
+                        print(update)
 
-    # Retrieve all publication records with ". . ."
-    query = "select pub_id, pub_title from pubs where pub_title like '%. . .%'"
-    db.query(query)
-    result = db.store_result()
-    record = result.fetch_row()
-    titles = []
-    while record:
-        titles.append(record[0])
-        record = result.fetch_row()
+        # Retrieve all publication records with ". . ."
+        query = "select pub_id, pub_title from pubs where pub_title like '%. . .%'"
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        titles = []
+        while record:
+                titles.append(record[0])
+                record = CNX.DB_FETCHMANY()
 
-    for title in titles:
-        title_id = int(title[0])
-        title_title = title[1]
-        new_title = convertEllipses(title_title)
-        update = "update pubs set pub_title='%s' where pub_id=%d" % (db.escape_string(new_title), title_id)
-        db.query(update)
+        for title in titles:
+                title_id = int(title[0])
+                title_title = title[1]
+                new_title = convertEllipses(title_title)
+                update = "update pubs set pub_title='%s' where pub_id=%d" % (CNX.DB_ESCAPE_STRING(new_title), title_id)
+                if debug == 0:
+                        CNX.DB_QUERY(update)
+                else:
+                        print(update)
 

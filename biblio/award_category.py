@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 640 $
-#     Date: $Date: 2021-06-16 21:10:34 -0400 (Wed, 16 Jun 2021) $
+#     Version: $Revision: 1238 $
+#     Date: $Date: 2026-02-06 05:59:25 -0500 (Fri, 06 Feb 2026) $
 
 
 from SQLparsing import *

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -8,6 +8,12 @@
 #
 #     Version: $Revision: 844 $
 #     Date: $Date: 2022-02-15 16:06:20 -0500 (Tue, 15 Feb 2022) $
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from SQLparsing import *
 from library import *
@@ -46,7 +52,7 @@ def nightly_cleanup():
                   or pca.author_id = 6677 or vca.author_id = 6677) \
                 )"
         standardReport(query, 2)
-        
+
         #   Report 5: Notes with an odd number of angle brackets
         query = "select note_id, LENGTH(note_note) - LENGTH(REPLACE(note_note, '<', '')) openquote, \
                 LENGTH(note_note) - LENGTH(REPLACE(note_note, '>', '')) closequote \
@@ -210,22 +216,22 @@ def nightly_cleanup():
         #   Report 33: Publication Authors that are not the Title Author
         query = """select distinct p.pub_id
                 from pub_authors pa, pubs p, pub_content pc, titles t, authors a
-                where pa.pub_id = p.pub_id 
-                and pa.author_id = a.author_id 
-                and pc.title_id = t.title_id 
-                and pc.pub_id = p.pub_id 
+                where pa.pub_id = p.pub_id
+                and pa.author_id = a.author_id
+                and pc.title_id = t.title_id
+                and pc.pub_id = p.pub_id
                 and p.pub_ctype in ('ANTHOLOGY','NOVEL','COLLECTION','NONFICTION','OMNIBUS','CHAPBOOK')
-                and t.title_ttype in ('ANTHOLOGY','NOVEL','COLLECTION','OMNIBUS','NONFICTION','CHAPBOOK') 
-                and t.title_ttype = p.pub_ctype 
+                and t.title_ttype in ('ANTHOLOGY','NOVEL','COLLECTION','OMNIBUS','NONFICTION','CHAPBOOK')
+                and t.title_ttype = p.pub_ctype
                 and not exists (select 1 from canonical_author ca
                 where ca.title_id = t.title_id and pa.author_id = ca.author_id)
                 UNION
                 select distinct p.pub_id
                 from pub_authors pa, pubs p, pub_content pc, titles t, authors a
-                where pa.pub_id = p.pub_id 
-                and pa.author_id = a.author_id 
-                and pc.title_id = t.title_id 
-                and pc.pub_id = p.pub_id 
+                where pa.pub_id = p.pub_id
+                and pa.author_id = a.author_id
+                and pc.title_id = t.title_id
+                and pc.pub_id = p.pub_id
                 and p.pub_ctype in ('FANZINE','MAGAZINE')
                 and t.title_ttype = 'EDITOR'
                 and t.title_language != 26
@@ -269,7 +275,7 @@ def nightly_cleanup():
                 select distinct p1.publisher_id, p2.publisher_id
                 from publishers p1, publishers p2 where
                 p1.publisher_id != p2.publisher_id
-                and p1.publisher_name != p2.publisher_name 
+                and p1.publisher_name != p2.publisher_name
                 and substr(p2.publisher_name,1,4) = 'The '
                 and p1.publisher_name=substr(p2.publisher_name,5,999)"""
 
@@ -417,15 +423,15 @@ def nightly_cleanup():
                 record = CNX.DB_FETCHMANY()
         resolved_string = "','".join(resolved_ids)
 
-        query = """select pub_isbn 
-                from pubs 
-                where pub_isbn IS NOT NULL 
-                and pub_isbn != '' 
-                and pub_ctype != 'MAGAZINE' 
+        query = """select pub_isbn
+                from pubs
+                where pub_isbn IS NOT NULL
+                and pub_isbn != ''
+                and pub_ctype != 'MAGAZINE'
                 and pub_id not in ('%s')
-                group by pub_isbn 
-                having count(distinct(REPLACE(pub_title,'-',''))) > 1 
-                AND INSTR(MIN(pub_title), MAX(pub_title)) = 0 
+                group by pub_isbn
+                having count(distinct(REPLACE(pub_title,'-',''))) > 1
+                AND INSTR(MIN(pub_title), MAX(pub_title)) = 0
                 AND INSTR(MAX(pub_title), MIN(pub_title)) = 0""" % resolved_string
         CNX.DB_QUERY(query)
         isbns = []
@@ -568,9 +574,9 @@ def nightly_cleanup():
                         if record_id not in pub_tag_notes:
                                 pub_tag_notes[record_id] = []
                         pub_tag_notes[record_id].append(note_id)
-                        
+
                 record = CNX.DB_FETCHMANY()
-        
+
         for script in notes:
                 if notes[script]:
                         in_clause = ''
@@ -629,7 +635,7 @@ def nightly_cleanup():
         #   Report 86: Primary-verified pubs with "unknown" format
         query = """select distinct p.pub_id
                 from pubs p, primary_verifications pv
-                where p.pub_id = pv.pub_id 
+                where p.pub_id = pv.pub_id
                 and p.pub_ptype = 'unknown'"""
         standardReport(query, 86)
 
@@ -1177,17 +1183,17 @@ def nightly_cleanup():
         standardReport(query, 297)
 
         #   Report 298: Title-Based Awards with a Different Stored Author Name
-        query = """select a.award_id, a.award_author from awards a 
-                where exists(select 1 from title_awards ta1 where ta1.award_id = a.award_id) 
-                and not exists( 
-                select 1 from title_awards ta2, titles t, canonical_author ca, authors au 
-                where ta2.award_id = a.award_id 
-                and ta2.title_id = t.title_id 
-                and t.title_id = ca.title_id 
-                and ca.ca_status = 1 
-                and ca.author_id = au.author_id 
-                and ( 
-                (au.author_canonical = a.award_author) 
+        query = """select a.award_id, a.award_author from awards a
+                where exists(select 1 from title_awards ta1 where ta1.award_id = a.award_id)
+                and not exists(
+                select 1 from title_awards ta2, titles t, canonical_author ca, authors au
+                where ta2.award_id = a.award_id
+                and ta2.title_id = t.title_id
+                and t.title_id = ca.title_id
+                and ca.ca_status = 1
+                and ca.author_id = au.author_id
+                and (
+                (au.author_canonical = a.award_author)
                 or (a.award_author like concat(au.author_canonical, '+%'))
                 or (a.award_author like concat('%+', au.author_canonical))
                 or (a.award_author like concat('%+', au.author_canonical, '+%'))

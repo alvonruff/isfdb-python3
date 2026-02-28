@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2014   Ahasuerus
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,4 +9,4 @@
 #     Version: $Revision: 418 $
 #     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
 
-# Stub file needed in biblio because some classes import isfdblib.py; to be removed once all classes have been cleaned up
+# Stub file needed in rest because some classes import isfdblib.py; to be removed once all classes have been cleaned up

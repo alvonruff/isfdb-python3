@@ -1,18 +1,17 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff
+#     (C) COPYRIGHT 2005-2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 20 $
-#     Date: $Date: 2017-10-31 19:35:38 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1271 $
+#     Date: $Date: 2026-02-27 16:20:27 -0500 (Fri, 27 Feb 2026) $
 
 
 import sys
 import os
-import string
 
 if __name__ == '__main__':
 
@@ -20,7 +19,7 @@ if __name__ == '__main__':
                 basename  = sys.argv[1]
                 directory = sys.argv[2]
                 python    = sys.argv[3]
-        except:
+        except IndexError:
                 print("Usage: install.py <basename> <directory> <pythonloc>")
                 sys.exit(0)
 
@@ -31,9 +30,6 @@ if __name__ == '__main__':
         image = str.replace(image, '_PYTHONLOC', python)
         fd = open(directory +'/' +basename+ '.cgi', 'w+')
         fd.write(image)
-        fd.close
+        fd.close()
 
-        os.system('chmod 755 '+directory+ '/' +basename+'.cgi')
-        
-
-
+        os.chmod(directory +'/' +basename+ '.cgi', 0o755)

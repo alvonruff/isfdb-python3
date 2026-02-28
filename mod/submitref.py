@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2006-2026   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 17 $
-#     Date: $Date: 2017-10-31 18:57:31 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1260 $
+#     Date: $Date: 2026-02-18 08:27:14 -0500 (Wed, 18 Feb 2026) $
 
         
 import cgi
@@ -35,7 +35,6 @@ if __name__ == '__main__':
         form = IsfdbFieldStorage()
 
         print('<pre>')
-        CNX = MYSQL_CONNECTOR()
 
         index = 0
         skips = 0
@@ -76,6 +75,7 @@ if __name__ == '__main__':
                                 url_value = 0
 
                         query = "select * from reference where reference_id='%d'" % index
+                        CNX = MYSQL_CONNECTOR()
                         CNX.DB_QUERY(query)
                         if CNX.DB_NUMROWS() > 0: 
                                 record = CNX.DB_FETCHONE()

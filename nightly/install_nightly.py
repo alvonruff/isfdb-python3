@@ -1,12 +1,14 @@
+#!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2013-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2013-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 418 $
-#     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
+#     Version: $Revision: 1251 $
+#     Date: $Date: 2026-02-10 15:00:23 -0500 (Tue, 10 Feb 2026) $
 
 
 import sys
@@ -33,6 +35,3 @@ if __name__ == '__main__':
         fd.close
 
         os.system('chmod 755 '+directory+ '/' +basename+'.py')
-        
-
-

@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2024   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -30,7 +30,7 @@ def slow_queries():
                     'NONFICTION': ['NONFICTION'],
                     'NOVEL': ['NOVEL'],
                     'OMNIBUS': ['OMNIBUS']}
-                      
+
         query = ""
         for pub_type in only_one:
                 if query:

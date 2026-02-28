@@ -1,13 +1,13 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Uzume
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Uzume
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 995 $
-#     Date: $Date: 2022-09-09 14:03:58 -0400 (Fri, 09 Sep 2022) $
+#     Version: $Revision: 1267 $
+#     Date: $Date: 2026-02-25 15:47:11 -0500 (Wed, 25 Feb 2026) $
 
 
 import os
@@ -16,9 +16,18 @@ import time
 import hashlib
 from localdefs import *
 from isfdb import *
-from http.cookies import SimpleCookie
+if PYTHONVER == "python2":
+        from Cookie import SimpleCookie
+else:
+        from http.cookies import SimpleCookie
 from SQLparsing import *
-from library import ISFDBLink, ISFDBLinkNoName
+from library import ISFDBLink, ISFDBLinkNoName, ISFDBText
+
+# HttpOnly is always set. Secure is only set for https deployments;
+# omitting it on http allows private/home-server instances without
+# a TLS certificate to function, at the cost of cookies travelling
+# in cleartext (acceptable on a trusted private network).
+_COOKIE_SECURE = '; HttpOnly; Secure' if PROTOCOL == 'https' else '; HttpOnly'
 
 ####################################################################
 # setCookies() sets the user_id, user_name, and user_token
@@ -31,9 +40,9 @@ def setCookies(user_id, user_name, user_token):
 def setDomainCookies(domain, user_id, user_name, user_token):
         if not domain:
                 return
-        print('Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_id, domain))
-        print('Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_name, domain))
-        print('Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (user_token, domain))
+        print('Set-Cookie: isfdbUserID=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"%s' % (user_id, domain, _COOKIE_SECURE))
+        print('Set-Cookie: isfdbUserName=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"%s' % (user_name, domain, _COOKIE_SECURE))
+        print('Set-Cookie: isfdbToken=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"%s' % (user_token, domain, _COOKIE_SECURE))
 
 ####################################################################
 # clearCookies() clears user_id, user_name, and user_token
@@ -46,9 +55,9 @@ def clearCookies():
 def clearDomainCookies(domain):
         if not domain:
                 return
-        print('Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
-        print('Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
-        print('Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"' % domain)
+        print('Set-Cookie: isfdbUserID=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"%s' % (domain, _COOKIE_SECURE))
+        print('Set-Cookie: isfdbUserName=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"%s' % (domain, _COOKIE_SECURE))
+        print('Set-Cookie: isfdbToken=x; path=/; domain=%s; expires="Fri, 08-Sep-1995 15:00:00"%s' % (domain, _COOKIE_SECURE))
 
 
 ####################################################################
@@ -57,7 +66,7 @@ def clearDomainCookies(domain):
 def getCookie():
         try:
                 httpCookie = os.environ['HTTP_COOKIE']
-        except:
+        except KeyError:
                 return 0
         cookie = SimpleCookie(httpCookie)
         return cookie
@@ -76,7 +85,7 @@ def GetUserData():
         try:
                 id = cookie['isfdbUserID'].value
                 token = cookie['isfdbToken'].value
-        except:
+        except KeyError:
                 return(0,0,0)
 
         # If cookie expiration works properly, this should never happen, but we leave it
@@ -123,8 +132,8 @@ def LoginPage(executable, argument):
         print('</table>')
         print('<div>')
         print('<input type="submit" value="submit">')
-        print('<input NAME="executable" VALUE="' +executable+ '" TYPE="HIDDEN">')
-        print('<input NAME="argument" VALUE="' +argument+ '" TYPE="HIDDEN">')
+        print('<input NAME="executable" VALUE="' +ISFDBText(executable, True)+ '" TYPE="HIDDEN">')
+        print('<input NAME="argument" VALUE="' +ISFDBText(argument, True)+ '" TYPE="HIDDEN">')
         print('</div>')
         print('</form>')
 
@@ -235,7 +244,7 @@ class User:
                 # Validate the translation parameter
                 if translations not in ('All','None'):
                         return
-                print('Set-Cookie: isfdbDisplayTranslations=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"' % (translations, HTMLHOST))
+                print('Set-Cookie: isfdbDisplayTranslations=%s; path=/; domain=%s; expires="Fri, 08-Sep-2037 15:00:00"%s' % (translations, HTMLHOST, _COOKIE_SECURE))
                 os.environ['HTTP_COOKIE'] = 'isfdbDisplayTranslations=%s;' % translations
                 self.display_all_languages = translations
 

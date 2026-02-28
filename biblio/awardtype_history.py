@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020-2025   Ahasuerus
+#     (C) COPYRIGHT 2020-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -41,4 +41,3 @@ if __name__ == '__main__':
                 ISFDBprintSubmissionTable(CNX, 'I')
 
         PrintTrailer('awardtype_history', 0, 0)
-

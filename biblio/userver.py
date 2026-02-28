@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2011-2025  Bill Longley, Ahasuerus and Dirk Stoeker
+#     (C) COPYRIGHT 2011-2026  Bill Longley, Ahasuerus and Dirk Stoeker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 833 $
-#     Date: $Date: 2022-01-31 17:33:20 -0500 (Mon, 31 Jan 2022) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 from SQLparsing import *
 from common import *
@@ -22,7 +22,7 @@ if __name__ == '__main__':
 
         PrintHeader('My Primary Verifications')
         PrintNavbar('userver', 0, 0, 'userver.cgi', 0)
-        
+
         my_verifications = MyVerifications()
         my_verifications.display()
 

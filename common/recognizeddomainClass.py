@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2023   Ahasuerus
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -8,7 +8,6 @@
 #     Version: $Revision: 203 $
 #     Date: $Date: 2018-09-12 17:38:34 -0400 (Wed, 12 Sep 2018) $
 
-import cgi
 from isfdb import *
 from library import XMLescape, XMLunescape
 from SQLparsing import SQLGetRecognizedDomainByID
@@ -131,10 +130,10 @@ class RecognizedDomain():
                                                                       'Explicit Credit Page Link Required')
                         if self.error:
                                 return
-                        if self.used_explicit_link_required_display == 'Yes':
-                                self.used_explicit_link_required = '1'
+                        if self.explicit_link_required_display == 'Yes':
+                                self.explicit_link_required = '1'
                         else:
-                                self.used_explicit_link_required = '0'
+                                self.explicit_link_required = '0'
                         self.used_explicit_link_required = 1
                         self.used_explicit_link_required_display = 1
                 else:

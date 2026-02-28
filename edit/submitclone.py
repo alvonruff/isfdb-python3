@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1061 $
-#     Date: $Date: 2022-12-27 13:43:52 -0500 (Tue, 27 Dec 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
         
 import cgi
@@ -43,8 +43,8 @@ if __name__ == '__main__':
         if not submission.user.id:
                 submission.error()
         
-        CNX = MYSQL_CONNECTOR()
         changes = 0
+        CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
         update_string += "  <NewPub>\n"

@@ -5,8 +5,8 @@
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 17 $
-#     Date: $Date: 2017-10-31 18:57:31 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
 LOCAL:
@@ -21,6 +21,9 @@ SITE:
 	cat TARGETS | sed -e s/DIR/site/g > .TARGETS
 	make -f site.mk 
 
+lint:
+	bash ../common/dolint.sh
+
 install:
 	make -f local.mk install
 
@@ -29,6 +32,7 @@ clean:
 	rm -f *.cgi
 	rm -f *.pyc
 	rm -f .TARGETS
+
 clobber:
 	make -f local.mk clobber
 	rm -f *.cgi

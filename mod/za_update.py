@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2010-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 729 $
-#     Date: $Date: 2021-09-02 12:08:46 -0400 (Thu, 02 Sep 2021) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
 
 
 from isfdb import *
@@ -21,6 +21,12 @@ from pubseriesClass import *
 submission    = 0
 submitter     = 0
 reviewer      = 0
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 def UpdateColumn(doc, tag, column, id):
         if TagPresent(doc, tag):
@@ -159,4 +165,3 @@ if __name__ == '__main__':
         print(ISFDBLinkNoName('pubseries.cgi', Record, 'View This Publication Series', True))
 
         PrintPostMod(0)
-

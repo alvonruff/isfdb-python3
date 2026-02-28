@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Ahasuerus and Bill Longley
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 917 $
-#     Date: $Date: 2022-05-15 17:54:21 -0400 (Sun, 15 May 2022) $
+#     Version: $Revision: 1246 $
+#     Date: $Date: 2026-02-09 07:23:57 -0500 (Mon, 09 Feb 2026) $
 
 
 from isfdb import *
@@ -20,7 +20,7 @@ class AdvancedSearchMenu:
         def __init__(self):
                 self.user = User()
                 self.user.load()
-        
+
         def display_selection(self):
                 PrintHeader('Advanced Search')
                 PrintNavbar('adv_search_menu', 0, 0, 0, 0)
@@ -82,7 +82,6 @@ class AdvancedSearchMenu:
                 print('<input TYPE="SUBMIT" VALUE="Submit Query">')
                 print('</form>')
 
-        
 if __name__ == '__main__':
         search = AdvancedSearchMenu()
         search.display_selection()

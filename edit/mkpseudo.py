@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Bill Longley
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Bill Longley
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 734 $
-#     Date: $Date: 2021-09-05 17:35:09 -0400 (Sun, 05 Sep 2021) $
+#     Version: $Revision: 1247 $
+#     Date: $Date: 2026-02-09 10:25:26 -0500 (Mon, 09 Feb 2026) $
 
 
 import cgi

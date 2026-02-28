@@ -1,52 +1,44 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
-#       ALL RIGHTS RESERVED
+#         (C) COPYRIGHT 2019-2026   Ahasuerus, Al von Ruff
+#           ALL RIGHTS RESERVED
 #
-#     The copyright notice above does not evidence any actual or
-#     intended publication of such source code.
+#         The copyright notice above does not evidence any actual or
+#         intended publication of such source code.
 #
-#     Version: $Revision: 411 $
-#     Date: $Date: 2019-05-10 17:33:37 -0400 (Fri, 10 May 2019) $
+#         Version: $Revision: 1264 $
+#         Date: $Date: 2026-02-21 11:58:41 -0500 (Sat, 21 Feb 2026) $
 
 
 import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
+debug = 0
 
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
+        # Retrieve Amazon cover scans with extraneous formatting
+        query = "select pub_id, pub_frontimage from pubs where pub_frontimage like 'http://images-eu.amazon.com/images/P/%.02.LZZZZZZZ.jpg'"
 
-    # Retrieve Amazon cover scans with extraneous formatting
-    query = "select pub_id, pub_frontimage from pubs where pub_frontimage like 'http://images-eu.amazon.com/images/P/%.02.LZZZZZZZ.jpg'"
-    db.query(query)
-    result = db.store_result()
-    record = result.fetch_row()
-    pubs = {}
-    while record:
-        pub_id = record[0][0]
-        image = record[0][1]
-        pubs[pub_id] = '%s.jpg' % image.split('.02.LZZZZZZZ.jpg')[0]
-        record = result.fetch_row()
-    print(result.num_rows())
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        pubs = {}
+        while record:
+                pub_id = record[0][0]
+                image = record[0][1]
+                pubs[pub_id] = '%s.jpg' % image.split('.02.LZZZZZZZ.jpg')[0]
+                record = CNX.DB_FETCHMANY()
+        print(CNX.DB_NUMROWS())
 
-    for pub_id in pubs:
-        image = pubs[pub_id]
-        update = "update pubs set pub_frontimage = '%s' where pub_id = %d" % (pubs[pub_id], pub_id)
-        print(update)
-        db.query(update)
+        for pub_id in pubs:
+                image = pubs[pub_id]
+                update = "update pubs set pub_frontimage = '%s' where pub_id = %d" % (pubs[pub_id], pub_id)
+                print(update)
+                if debug == 0:
+                        CNX.DB_QUERY(update)

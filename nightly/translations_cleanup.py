@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -39,7 +39,7 @@ def translations_cleanup():
                 order by t1.title_title
                 limit 1000"""
         standardReport(query, 239)
-        
+
         #   Reports 264-271: Language-specific Translations without Notes
         reports = ISFDBtranslatedReports()
         for report_id in sorted(reports):
@@ -69,7 +69,7 @@ def translations_cleanup():
 
         #   Report 315: Other book-length titles with no publications and with a translation
         otherTranslationsWithoutOriginalPubs(315, 'long')
-        
+
         #   Report 316: English short titles with no publications and with a translation
         translationsWithoutOriginalPubs(316, 'English', 'short')
 

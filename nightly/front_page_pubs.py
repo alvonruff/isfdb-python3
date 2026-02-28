@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2022   Ahasuerus
+#     (C) COPYRIGHT 2022-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,4 +23,3 @@ def front_page_pubs():
                 insert += '(%d),' % pub[PUB_PUBID]
         insert = '%s' % insert[:-1]
         CNX.DB_QUERY(insert)
-        

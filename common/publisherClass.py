@@ -1,22 +1,19 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2008-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2008-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1067 $
-#     Date: $Date: 2023-01-04 19:34:22 -0500 (Wed, 04 Jan 2023) $
+#     Version: $Revision: 1271 $
+#     Date: $Date: 2026-02-27 16:20:27 -0500 (Fri, 27 Feb 2026) $
 
 import cgi
-import sys
-import os
 from isfdb import *
 from isfdblib import *
 from library import *
 from xml.dom import minidom
-from xml.dom import Node
 
 
 class publishers:
@@ -43,7 +40,7 @@ class publishers:
                         if record[PUBLISHER_ID]:
                                 self.publisher_id = record[PUBLISHER_ID]
                                 self.used_id = 1
-                                
+
                         if record[PUBLISHER_NAME]:
                                 self.publisher_name = record[PUBLISHER_NAME]
                                 self.used_name = 1
@@ -87,9 +84,9 @@ class publishers:
         def xml2obj(self, xml):
                 doc = minidom.parseString(xml)
                 metadata = doc.getElementsByTagName('UpdatePublisher')
-                if metadata == 0:
+                if not metadata:
                         metadata = doc.getElementsByTagName('NewPublisher')
-                if metadata == 0:
+                if not metadata:
                         return
 
                 elem = GetElementValue(metadata, 'PublisherName')
@@ -109,18 +106,19 @@ class publishers:
                 try:
                         self.publisher_id = str(int(self.form['publisher_id'].value))
                         self.used_id = 1
-                except:
+                except (KeyError, ValueError):
                         self.error = "Publisher ID must be an integer number"
                         return
                 try:
                         self.publisher_name = XMLescape(self.form['publisher_name'].value)
-                        self.used_name = 1
-                        unescaped_name = XMLunescape(self.publisher_name)
-                        if not self.publisher_name:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'Publisher name is required'
                         return
+                if not self.publisher_name:
+                        self.error = 'Publisher name is required'
+                        return
+                self.used_name = 1
+                unescaped_name = XMLunescape(self.publisher_name)
 
                 # Limit the ability to edit publisher names to moderators
                 user = User()
@@ -132,7 +130,7 @@ class publishers:
                         if current_publisher[PUBLISHER_NAME] != unescaped_name:
                                 self.error = 'Only moderators can edit publisher names'
                                 return
-                
+
                 # If the publisher name has been edited, check if another publisher with the new name
                 # already exists in the database
                 current_publisher = SQLFindPublisher(unescaped_name, 'exact')

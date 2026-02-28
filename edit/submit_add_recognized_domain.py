@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,7 @@
 #     Version: $Revision: 18 $
 #     Date: $Date: 2017-10-31 19:18:05 -0400 (Tue, 31 Oct 2017) $
 
-        
+
 from isfdb import *
 from isfdblib import Submission
 from library import XMLescape

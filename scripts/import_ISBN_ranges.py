@@ -1,4 +1,6 @@
-#     (C) COPYRIGHT 2024   Ahasuerus
+#!_PYTHONLOC
+from __future__ import print_function
+#     (C) COPYRIGHT 2024-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -7,19 +9,11 @@
 #     Version: $Revision: 335 $
 #     Date: $Date: 2019-02-09 15:35:36 -0500 (Sat, 09 Feb 2019) $
 
-import sys
-import MySQLdb
+# import sys
 import xml.etree.ElementTree as ET
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-    import MySQLdb.converters
-    IsfdbConv = MySQLdb.converters.conversions
-    IsfdbConv[10] = Date_or_None
-    return(IsfdbConv)
+debug = 0
 
 class Process():
         def __init__(self):
@@ -56,16 +50,22 @@ class Process():
 
         def file_isbn_ranges(self):
                 truncate = 'truncate table isbn_ranges'
-                db.query(truncate)
+                CNX = MYSQL_CONNECTOR()
+                if debug == 0:
+                        CNX.DB_QUERY(truncate)
+                else:
+                        print(truncate)
+
                 insert = 'INSERT INTO isbn_ranges (start_value, end_value, prefix_length, publisher_length) VALUES'
                 for range in self.ranges:
                         insert += '(%d, %d, %d, %d),' % (range[0], range[1], range[2], range[3])
                 insert = insert[:-1]
-                db.query(insert)
+                if debug == 0:
+                        CNX.DB_QUERY(insert)
+                else:
+                        print(insert)
 
 if __name__ == '__main__':
-        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-        db.select_db(DBASE)
         process = Process()
         process.import_all()
 

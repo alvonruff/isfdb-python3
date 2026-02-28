@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2020   Ahasuerus
+#     (C) COPYRIGHT 2020-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -10,28 +11,16 @@
 #     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
 
 
-import cgi
-import sys
-import os
-import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 from library import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
-
+debug = 0
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
-
-    update = "update submissions set sub_holdid = 0 where sub_state in ('I','R')"
-    db.query(update)
+        update = "update submissions set sub_holdid = 0 where sub_state in ('I','R')"
+        if debug == 0:
+                CNX = MYSQL_CONNECTOR()
+                CNX.DB_QUERY(update)
+        else:
+                print(update)

@@ -1,15 +1,20 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus, Dirk Stoecker, Al von Ruff
+#     (C) COPYRIGHT 2010-2026   Ahasuerus, Dirk Stoecker, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 921 $
-#     Date: $Date: 2022-05-26 12:58:37 -0400 (Thu, 26 May 2022) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from SQLparsing import *
 from common import *

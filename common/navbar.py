@@ -1,17 +1,17 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1039 $
-#     Date: $Date: 2022-10-18 16:34:51 -0400 (Tue, 18 Oct 2022) $
+#     Version: $Revision: 1270 $
+#     Date: $Date: 2026-02-27 06:57:58 -0500 (Fri, 27 Feb 2026) $
 
 from isfdb import *
 from SQLparsing import *
-from library import ISFDBLink
+from library import ISFDBLink, ISFDBText
 
 ################################################################
 # The functions found here are used across all ISFDB directories
@@ -19,30 +19,32 @@ from library import ISFDBLink
 ################################################################
 
 def PrintMessagesLink(userid, username):
+        from library import Portable_urllib_quote
         if SQLhasNewTalk(userid):
                 # diff=cur causes the page to display in "diff" mode, with the
                 # most recent change highlighted in a diff region at the top.
-                print('<li><div class="newtalk"><a href="%s://%s/index.php/User_talk:%s">My Messages</a> (new)</div>' % (PROTOCOL, WIKILOC, username))
+                print('<li><div class="newtalk"><a href="%s://%s/index.php/User_talk:%s">My Messages</a> (new)</div>' % (PROTOCOL, WIKILOC, Portable_urllib_quote(username)))
         else:
-                print('<li><a href="%s://%s/index.php/User_talk:%s">My Messages</a>' % (PROTOCOL, WIKILOC, username))
+                print('<li><a href="%s://%s/index.php/User_talk:%s">My Messages</a>' % (PROTOCOL, WIKILOC, Portable_urllib_quote(username)))
 
 def PrintWikiPointer(submitter):
+        from library import Portable_urllib_quote
         #If the count of Wiki edits is greater than X, then do not display the Wiki pointer
         if SQLWikiEditCount(submitter) > 100:
                 return
         wikipointer = """<h1>Your submission must be approved by a moderator before it enters the database.</h1>
                         If the moderator has questions or comments about your submission,
                         they will be posted on your Wiki Talk page: """
-        wikipointer += '<a href="%s://%s/index.php/User_talk:%s">' % (PROTOCOL, WIKILOC, submitter)
-        wikipointer += '%s://%s/index.php/User_talk:%s</a>.' % (PROTOCOL, WIKILOC, submitter)
+        encoded_submitter = Portable_urllib_quote(submitter)
+        display_submitter = ISFDBText(submitter)
+        wikipointer += '<a href="%s://%s/index.php/User_talk:%s">' % (PROTOCOL, WIKILOC, encoded_submitter)
+        wikipointer += '%s://%s/index.php/User_talk:%s</a>.' % (PROTOCOL, WIKILOC, display_submitter)
         wikipointer += " Please check this page frequently for comments or questions."
         print(wikipointer)
-        return
 
 
 # Display the Search box in the navigation bar
 def PrintSearchBox(page, search_value = '', search_type = ''):
-        from library import ISFDBLink, ISFDBText
         print('<div id="search">')
         print('<a href="%s:/%s/index.cgi">' % (PROTOCOL, HTFAKE))
         if page == 'frontpage':
@@ -71,7 +73,6 @@ def PrintSearchBox(page, search_value = '', search_type = ''):
         print('<p class="bottomlinks">')
         print(ISFDBLink("adv_search_menu.cgi","","Advanced Search", argument='class="inverted"'))
         print('</div>')
-        return
 
 #Display the Other Pages section in the navigation bar
 def PrintOtherPages(choice):
@@ -94,14 +95,13 @@ def PrintOtherPages(choice):
         print('<li>%s' % ISFDBLink('recent_activity_menu.cgi', '', 'Recent Activity'))
         print('<li>%s' % ISFDBLink('edit/cleanup.cgi', '', 'Cleanup Reports'))
         print('</ul>')
-        return
 
 def PrintLoggedIn(userid,username):
         print('<div class="divider">')
         print('Logged In As')
         print('</div>')
         print('<ul class="navbar">')
-        print('<li>', username)
+        print('<li>', ISFDBText(username))
         print('<li>%s' % ISFDBLink('dologout.cgi', '', 'Log Out'))
         print('<li><a href="%s://%s/index.php/Help:Navigation_Bar">Help Navigating</a>' % (PROTOCOL, WIKILOC))
         PrintMessagesLink( userid, username )
@@ -117,7 +117,6 @@ def PrintLoggedIn(userid,username):
         if SQLChangedVerifications(userid):
                 print(' <span class="inverted">New!</span>')
         print('</ul>')
-        return
 
 def PrintNotLoggedIn(executable,argument):
         print('<div class="divider">')
@@ -127,4 +126,3 @@ def PrintNotLoggedIn(executable,argument):
         print('<li>%s' % ISFDBLink('dologin.cgi', '%s+%s' % (str(executable), str(argument)), 'Log In'))
         print('<li><a href="%s://%s/index.php/Help:Navigation_Bar">Help Navigating</a>' % (PROTOCOL, WIKILOC))
         print('</ul>')
-        return

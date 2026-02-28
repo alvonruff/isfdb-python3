@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -15,32 +15,21 @@ import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-        return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
-
+debug = 0
 
 if __name__ == '__main__':
-
-        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-        db.select_db(DBASE)
 
         query = """select p.pub_id, n.note_id, n.note_note from notes n, pubs p
              where p.note_id = n.note_id
              and n.note_note like \"%Acheve D'Imprimer%"\
              and n.note_note not like \"%{{Acheve D'Imprimer}}%\""""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        # num = CNX.DB_NUMROWS()
         count = 0
         while record:
                 pub_id = record[0][0]
@@ -53,19 +42,21 @@ if __name__ == '__main__':
                                    "achev%s d'imprimer" % chr(233)):
                         new_note = new_note.replace(substitute, templatized_string)
                 count += 1
-                update = """update notes set note_note = '%s' where note_id = %d""" % (db.escape_string(new_note), int(note_id))
-                db.query(update)
-                record = result.fetch_row()
+                update = """update notes set note_note = '%s' where note_id = %d""" % (CNX.DB_ESCAPE_STRING(new_note), int(note_id))
+                if debug == 0:
+                        CNX.DB_QUERY(update)
+                else:
+                        print(update)
+                record = CNX.DB_FETCHMANY()
         print(count)
 
         query = """select p.pub_id, n.note_id, n.note_note from notes n, pubs p
                    where p.note_id = n.note_id
                    and n.note_note like '%Depot Legal%'
                    and n.note_note not like '%{{Depot Legal}}%'"""
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
-        num = result.num_rows()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
+        # num = CNX.DB_NUMROWS()
         count = 0
         while record:
                 pub_id = record[0][0]
@@ -84,8 +75,11 @@ if __name__ == '__main__':
                                    'Depot legal'):
                         new_note = new_note.replace(substitute, templatized_string)
                 count += 1
-                update = """update notes set note_note = '%s' where note_id = %d""" % (db.escape_string(new_note), int(note_id))
-                db.query(update)
-                record = result.fetch_row()
+                update = """update notes set note_note = '%s' where note_id = %d""" % (CNX.DB_ESCAPE_STRING(new_note), int(note_id))
+                if debug == 0:
+                        CNX.DB_QUERY(update)
+                else:
+                        print(update)
+                record = CNX.DB_FETCHMANY()
         print(count)
         

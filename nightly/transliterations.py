@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2024   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,7 +9,6 @@
 #     Version: $Revision: 460 $
 #     Date: $Date: 2019-10-04 21:29:45 -0400 (Fri, 04 Oct 2019) $
 
-import string
 from SQLparsing import *
 from library import *
 from shared_cleanup_lib import *
@@ -23,7 +22,7 @@ def transliterations():
                 """
         standardReport(query, 85)
 
-        #   Report 97: Pub series with non-Latin Title records 
+        #   Report 97: Pub series with non-Latin Title records
         #   where the pub series name contains Latin characters
         query = """select distinct ps.pub_series_id
                 from pub_series ps, pubs p, pub_content pc, titles t use index (language), languages l
@@ -36,7 +35,7 @@ def transliterations():
                 """
         standardReport(query, 97)
 
-        #   Report 99: Non-Latin Title records with 
+        #   Report 99: Non-Latin Title records with
         #   the publisher name containing Latin characters
         query = """select distinct pb.publisher_id
                 from publishers pb, pubs p, pub_content pc, titles t use index (language), languages l
@@ -199,7 +198,7 @@ def transliterations():
         standardReport(query, 168)
 
         #   Reports 169-181: Authors whose working language is one of the "popular" ones
-        #   and no transliterated names on file for common languages 
+        #   and no transliterated names on file for common languages
         reports = transliteratedReports('authors')
         for report in reports:
                 report_id = report[1]
@@ -349,7 +348,7 @@ def nonLatiTitlesWithLatinChars():
 
         for report_id in sorted(cleanup_ids):
                 standardReportFromList(cleanup_ids[report_id], report_id)
-  
+
 def pubsWithNonLatin():
         #   Reports 148-161: Pub titles with non-Latin characters without
         #   an associated transliterated title
@@ -360,7 +359,7 @@ def pubsWithNonLatin():
                 report_id = report[1]
                 reports_dict[language] = report_id
                 standardDelete(report_id)
-        
+
         query = """select distinct p.pub_id
                from pubs p
                where p.pub_title regexp '&#'
@@ -397,6 +396,6 @@ def pubsWithNonLatin():
                         cleanup_ids[report_id] = []
                 cleanup_ids[report_id].append(pub_id)
                 record = CNX.DB_FETCHMANY()
-        
+
         for report_id in sorted(cleanup_ids):
                 standardReportFromList(cleanup_ids[report_id], report_id)

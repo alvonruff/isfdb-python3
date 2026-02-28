@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 674 $
-#     Date: $Date: 2021-07-04 15:59:13 -0400 (Sun, 04 Jul 2021) $
+#     Version: $Revision: 1260 $
+#     Date: $Date: 2026-02-18 08:27:14 -0500 (Wed, 18 Feb 2026) $
 
 
 from isfdb import *
@@ -37,7 +37,6 @@ if __name__ == '__main__':
         xml = SQLloadXML(submission)
         doc = minidom.parseString(XMLunescape2(xml))
 
-        CNX = MYSQL_CONNECTOR()
         if doc.getElementsByTagName('AwardDelete'):
                 merge = doc.getElementsByTagName('AwardDelete')
                 Record = GetElementValue(merge, 'Record')
@@ -50,6 +49,7 @@ if __name__ == '__main__':
                 ##########################################################
                 query = "delete from title_awards where award_id=%d" % current.award_id
                 print("<li> ", query)
+                CNX = MYSQL_CONNECTOR()
                 CNX.DB_QUERY(query)
 
                 ##############################################################

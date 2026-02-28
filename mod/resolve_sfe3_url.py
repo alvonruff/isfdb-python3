@@ -1,20 +1,20 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2019-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2019-2026   Ahasuerus, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 783 $
-#     Date: $Date: 2021-10-15 13:56:50 -0400 (Fri, 15 Oct 2021) $
+#     Version: $Revision: 1260 $
+#     Date: $Date: 2026-02-18 08:27:14 -0500 (Wed, 18 Feb 2026) $
 
 from isfdb import *
 from SQLparsing import *
 from library import ISFDBLocalRedirect
 from login import User
 
-        
+
 if __name__ == '__main__':
 
         url = SESSION.Parameter(0, 'str')

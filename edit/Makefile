@@ -5,8 +5,8 @@
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 18 $
-#     Date: $Date: 2017-10-31 19:18:05 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
 LOCAL:
@@ -20,6 +20,9 @@ TAMU:
 SITE:
 	cat TARGETS | sed -e s/DIR/site/g > .TARGETS
 	make -f site.mk 
+
+lint:
+	bash ../common/dolint.sh
 
 install:
 	make -f local.mk install

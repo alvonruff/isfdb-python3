@@ -1,15 +1,20 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus, Bill Longley and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1166 $
-#     Date: $Date: 2024-02-08 14:50:44 -0500 (Thu, 08 Feb 2024) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 import random
 from isfdb import *
@@ -707,6 +712,7 @@ if __name__ == '__main__':
 
         print(ISFDBLinkNoName('edit/editpub.cgi', Record, 'Edit This Pub', True))
         print(ISFDBLinkNoName('pl.cgi', Record, 'View This Pub', True))
+        print(ISFDBLinkNoName('edit/importcontent.cgi', Record, 'Import Content into This Pub', True))
         print(ISFDBLinkNoName('edit/find_pub_dups.cgi', Record, 'Check for Duplicate Titles', True))
         print('<p>')
         LIBPrintDuplicateWarning(Record)

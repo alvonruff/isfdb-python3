@@ -1,54 +1,32 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Lokal_Profil
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Lokal_Profil
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1197 $
-#     Date: $Date: 2024-11-23 17:33:18 -0500 (Sat, 23 Nov 2024) $
+#     Version: $Revision: 1257 $
+#     Date: $Date: 2026-02-11 10:26:05 -0500 (Wed, 11 Feb 2026) $
 
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=bad-indentation
-# pylint: disable=line-too-long
-# pylint: disable=invalid-name
-# pylint: disable=consider-using-f-string
-# pylint: disable=too-many-statements
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
-# pylint: disable=too-many-locals
-# pylint: disable=too-many-nested-blocks
-# pylint: disable=too-many-public-methods
-# pylint: disable=too-few-public-methods
-# pylint: disable=too-many-lines
-##############################################################################
-# Look at these later
-##############################################################################
-# pylint: disable=unused-wildcard-import
-# pylint: disable=wildcard-import
-# pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
-# pylint: disable=bare-except
-# pylint: disable=misplaced-bare-raise
-
+import cgi
 import sys
 import re
+import os
+import time
 from SQLparsing import *
 from isfdb import *
 from isfdblib import *
 from library import *
+from xml.dom import minidom
+from xml.dom import Node
 
 
 def lastRecord(form, field,counter):
         # Determine if the current field is the last field of its type
         # (title, review or interview) in the submitted form
-        for item in range(counter, counter+30):
-                key = field + str(item+1)
+        for next in range(counter, counter+30):
+                key = field + str(next+1)
                 if key in form:
                         return 0
         return 1
@@ -69,16 +47,15 @@ class titleEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, pubId):
-                if int(pubId) > 0:
-                        self.id = int(pubId)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
-        def setType(self, pubType):
-                self.type = XMLescape(pubType)
+        def setType(self, type):
+                self.type = XMLescape(type)
         def setLength(self, length):
-                # XXX Comparison 'length == None' should be 'length is None' (singleton-comparison)
-                if length is None:
+                if length == None:
                         length = ''
                 self.length = XMLescape(length)
         def setAuthors(self, authors):
@@ -177,9 +154,9 @@ class reviewEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, pubId):
-                if int(pubId) > 0:
-                        self.id = int(pubId)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
         def setBookAuthors(self, authors):
@@ -267,9 +244,9 @@ class interviewEntry:
                 self.page = XMLescape(page)
         def setTitle(self, title):
                 self.title = XMLescape(title)
-        def setID(self, pubId):
-                if int(pubId) > 0:
-                        self.id = int(pubId)
+        def setID(self, id):
+                if int(id) > 0:
+                        self.id = int(id)
         def setDate(self, date):
                 self.date = ISFDBnormalizeDate(date)
         def setInterviewees(self, authors):
@@ -367,7 +344,7 @@ class pubs:
                 self.pub_authors    = []
                 self.num_artists    = 0
                 self.pub_artists    = []
-                self.pub_id         = 0
+                self.pub_id         = ''
                 self.pub_title      = ''
                 self.pub_trans_titles = []
                 self.pub_tag        = ''
@@ -379,7 +356,7 @@ class pubs:
                 self.pub_catalog    = ''
                 self.pub_image      = ''
                 self.pub_price      = ''
-                self.pub_publisher_id = 0
+                self.pub_publisher_id = ''
                 self.pub_publisher  = ''
                 self.pub_series     = ''
                 self.pub_series_id  = ''
@@ -404,34 +381,33 @@ class pubs:
                 self.reference_title_count = 0
                 self.identifiers    = {}
                 self.body   = ''
-                self.form   = ''
 
-        def pushTitle(self, pubTitleEntry):
+        def pushTitle(self, titleEntry):
                 if self.titles == '':
-                        self.titles = pubTitleEntry
+                        self.titles = titleEntry
                 else:
                         tmp = self.titles
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = pubTitleEntry
+                        tmp.next = titleEntry
 
-        def pushReview(self, pubReviewEntry):
+        def pushReview(self, reviewEntry):
                 if self.reviews == '':
-                        self.reviews = pubReviewEntry
+                        self.reviews = reviewEntry
                 else:
                         tmp = self.reviews
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = pubReviewEntry
+                        tmp.next = reviewEntry
 
-        def pushInterview(self, pubInterviewEntry):
+        def pushInterview(self, interviewEntry):
                 if self.interviews == '':
-                        self.interviews = pubInterviewEntry
+                        self.interviews = interviewEntry
                 else:
                         tmp = self.interviews
                         while tmp.next != '':
                                 tmp = tmp.next
-                        tmp.next = pubInterviewEntry
+                        tmp.next = interviewEntry
 
         def xmlCoverArt(self, clone):
                 retval = ''
@@ -553,10 +529,10 @@ class pubs:
                         counter += 1
                 return retval
 
-        def load(self, pubId):
-                if pubId == 0:
+        def load(self, id):
+                if id == 0:
                         return
-                query = "select %s from pubs where pub_id=%d" % (CNX_PUBS_STAR, int(pubId))
+                query = "select %s from pubs where pub_id=%d" % (CNX_PUBS_STAR, int(id))
                 CNX = MYSQL_CONNECTOR()
                 CNX.DB_QUERY(query)
                 SQLlog("pubClass::load: %s" % query)
@@ -614,6 +590,7 @@ class pubs:
                                         break
 
                         titles = SQLloadTitlesXBT(record[0][PUB_PUBID])
+                        results = []
                         for title in titles:
                                 if title[TITLE_TTYPE] == 'COVERART':
                                         artists = SQLTitleAuthors(title[TITLE_PUBID])
@@ -744,16 +721,12 @@ class pubs:
 
 
         # cgi2obj converts input from an html form into a pubs class object.
-        def cgi2obj(self, reference_title = 'explicit', form=0):
-                if form:
-                        self.form = form
-                else:
-                        self.form = IsfdbFieldStorage()
-
+        def cgi2obj(self, reference_title = 'explicit'):
                 sys.stderr = sys.stdout
+                self.form = IsfdbFieldStorage()
                 if 'pub_id' in self.form:
                         try:
-                                self.pub_id = int(self.form['pub_id'].value)
+                                self.pub_id = str(int(self.form['pub_id'].value))
                         except:
                                 self.error = "Publication ID must be an integer number"
                                 return
@@ -1782,21 +1755,21 @@ class pubs:
                 print('<th>Date</th>')
                 print('</tr>')
 
-        def printExternalIDs(self, pubFormat = 'list'):
+        def printExternalIDs(self, format = 'list'):
                 if not self.identifiers:
-                        if pubFormat == 'list':
+                        if format == 'list':
                                 # If this is an empty table cell, display a hyphen
                                 print('-')
                         return
                 formatted_ids = self.formatExternalIDs()
-                if pubFormat == 'list':
+                if format == 'list':
                         print('  <ul class="noindent">')
                 for formatted_id in formatted_ids:
-                        if pubFormat == 'list':
+                        if format == 'list':
                                 print('<li>',formatted_id)
                         else:
                                 print(formatted_id,'<br>')
-                if pubFormat == 'list':
+                if format == 'list':
                         print('  </ul>')
 
         def formatExternalIDs(self):
@@ -1807,7 +1780,6 @@ class pubs:
                         formatted_line = FormatExternalIDType(type_name, types)
                         for id_value in self.identifiers[type_name]:
                                 type_id = self.identifiers[type_name][id_value][0]
-                                # XXX - Unused variable 'type_full_name' (unused-variable)
                                 type_full_name = self.identifiers[type_name][id_value][1]
                                 formatted_id = FormatExternalIDSite(sites, type_id, id_value)
                                 formatted_line += ' %s' % formatted_id

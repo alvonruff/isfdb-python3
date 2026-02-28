@@ -1,31 +1,23 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2016-2025   Ahasuerus
-#       ALL RIGHTS RESERVED
+#         (C) COPYRIGHT 2016-2026   Ahasuerus, Al von Ruff
+#           ALL RIGHTS RESERVED
 #
-#     The copyright notice above does not evidence any actual or
-#     intended publication of such source code.
+#         The copyright notice above does not evidence any actual or
+#         intended publication of such source code.
 #
-#     Version: $Revision: 1.1 $
-#     Date: $Date: 2016/06/28 22:56:54 $
+#         Version: $Revision: 1.1 $
+#         Date: $Date: 2016/06/28 22:56:54 $
 
 
 import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
+debug = 0
 
 def list_to_in_clause(id_list):
         in_clause = ''
@@ -40,34 +32,38 @@ def list_to_in_clause(id_list):
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
+        # Delete all records for report type 96 from the cleanup table
+        delete = "delete from cleanup where report_type=96"
 
-    # Delete all records for report type 96 from the cleanup table
-    delete = "delete from cleanup where report_type=96"
-    db.query(delete)
-    
-    # Retrieve all COVERART titles with a "Cover: " prefix
-    query = """select title_id, title_title from titles
-               where title_ttype = 'COVERART'
-               and title_title like 'Cover: %'"""
-    db.query(query)
-    result = db.store_result()
+        CNX = MYSQL_CONNECTOR()
+        if debug == 0:
+                CNX.DB_QUERY(delete)
+        else:
+                print(delete)
+        
+        # Retrieve all COVERART titles with a "Cover: " prefix
+        query = """select title_id, title_title from titles
+                           where title_ttype = 'COVERART'
+                           and title_title like 'Cover: %'"""
+        CNX.DB_QUERY(query)
 
-    if not result.num_rows():
-        print("No COVERART titles with a 'Cover: ' prefix on file.")
-        sys.exit(0)
+        if not CNX.DB_NUMROWS():
+                print("No COVERART titles with a 'Cover: ' prefix on file.")
+                sys.exit(0)
 
-    record = result.fetch_row()
-    while record:
-        title_id = record[0][0]
-        old_title = record[0][1]
-        new_title = old_title[7:]
-        print(old_title)
-        print(new_title)
-        update = "update titles set title_title = '%s' where title_id = %d" % (db.escape_string(new_title), title_id)
-        print(update)
-        print(" ")
-        db.query(update)
-        record = result.fetch_row()
-    print('Updated %d titles' % int(result.num_rows()))
+        record = CNX.DB_FETCHMANY()
+        while record:
+                title_id = record[0][0]
+                old_title = record[0][1]
+                new_title = old_title[7:]
+                print(old_title)
+                print(new_title)
+                update = "update titles set title_title = '%s' where title_id = %d" % (CNX.DB_ESCAPE_STRING(new_title), title_id)
+                print(update)
+                print(" ")
+                if debug == 0:
+                        CNX.DB_QUERY(update)
+                else:
+                        print(update)
+                record = CNX.DB_FETCHMANY()
+        print('Updated %d titles' % int(CNX.DB_NUMROWS()))

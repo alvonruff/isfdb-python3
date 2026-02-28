@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2022   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -138,7 +138,7 @@ def links_in_notes():
         #   Report 296: Stonecreek's EditPub submissions with 'first printing' in notes
         query = """select user_id from mw_user where user_name='Stonecreek'"""
         CNX.DB_QUERY(query)
-        record = CNX.DB_FETCHONE()
+        record = CNX.DB_FETCHMANY()
         user_id = record[0][0]
 
         query = """select affected_record_id from submissions

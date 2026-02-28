@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2023   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1139 $
-#     Date: $Date: 2023-07-12 18:51:22 -0400 (Wed, 12 Jul 2023) $
+#     Version: $Revision: 1265 $
+#     Date: $Date: 2026-02-25 07:25:05 -0500 (Wed, 25 Feb 2026) $
 
 
 BASE_FILES = login.py \
@@ -15,6 +15,7 @@ BASE_FILES = login.py \
         isfdb.py \
         library.py \
         navbar.py \
+        pylintrc \
         install.py \
         sfe3.py
 
@@ -54,21 +55,31 @@ check_dirs:
 	else mkdir ../nightly/local; \
 	fi
 
+lint:
+	bash ../common/dolint.sh
+
 install: check_dirs
 	cp $(BASE_FILES) ../biblio
 	cp $(CLASS_FILES) ../biblio
+	cp localdefs.py ../biblio/local
 	cp $(BASE_FILES) ../edit
 	cp $(CLASS_FILES) ../edit
+	cp localdefs.py ../edit/local
 	cp $(BASE_FILES) ../mod
 	cp $(CLASS_FILES) ../mod
+	cp localdefs.py ../mod/local
 	cp $(BASE_FILES) ../rest
 	cp $(CLASS_FILES) ../rest
+	cp localdefs.py ../rest/local
 	cp $(BASE_FILES) ../nightly
 	cp $(CLASS_FILES) ../nightly
+	cp localdefs.py ../nightly/local
 	cp localdefs.py ../css
+	cp localdefs.py ../scripts
 	cp $(BASE_FILES) ../scripts
 	cp $(BASE_FILES) ../tests
 	cp $(CLASS_FILES) ../tests
+	cp localdefs.py ../tests
 
 clean:
 	cd ../biblio && rm -rf $(BASE_FILES) $(CLASS_FILES) local

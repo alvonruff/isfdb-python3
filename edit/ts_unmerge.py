@@ -1,17 +1,16 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
-        
+
 import cgi
-import sys
 from isfdb import *
 from isfdblib import *
 from titleClass import *
@@ -32,14 +31,14 @@ if __name__ == '__main__':
                 record = int(form['record'].value)
         except:
                 submission.error("Integer title number required")
-        
+
         titlename = SQLgetTitle(record)
         if not titlename:
                 submission.error("Specified title number doesn't exist")
 
         if not submission.user.id:
                 submission.error("", record)
-        
+
         CNX = MYSQL_CONNECTOR()
         update_string =  '<?xml version="1.0" encoding="' +UNICODE+ '" ?>\n'
         update_string += "<IsfdbSubmission>\n"
@@ -70,5 +69,5 @@ if __name__ == '__main__':
 
         update_string += "  </TitleUnmerge>\n"
         update_string += "</IsfdbSubmission>\n"
-        
+
         submission.file(update_string)

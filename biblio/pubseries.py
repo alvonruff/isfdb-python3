@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2010-2026   Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1212 $
-#     Date: $Date: 2025-01-22 16:00:18 -0500 (Wed, 22 Jan 2025) $
+#     Version: $Revision: 1246 $
+#     Date: $Date: 2026-02-09 07:23:57 -0500 (Mon, 09 Feb 2026) $
 
 
 from SQLparsing import *

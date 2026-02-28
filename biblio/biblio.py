@@ -1,13 +1,13 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1212 $
-#     Date: $Date: 2025-01-22 16:00:18 -0500 (Wed, 22 Jan 2025) $
+#     Version: $Revision: 1267 $
+#     Date: $Date: 2026-02-25 15:47:11 -0500 (Wed, 25 Feb 2026) $
 
 
 import sys
@@ -45,6 +45,8 @@ class Bibliography:
                 self.au_trans_names = []
                 # List of this author's transliterated legal names
                 self.au_trans_legal_names = []
+                self.au_emails = ''
+                self.au_webpages = ''
 
                 ##############################################
                 # WEB PAGE TYPE properties
@@ -192,7 +194,7 @@ class Bibliography:
                 # 1/0 flag indicating whether the current title is the first within its
                 # category/title type; used to decide whether to display the category line
                 self.first = 1
-                
+
         ####################################################
         #         MAIN DISPLAY METHOD
         ####################################################
@@ -240,12 +242,14 @@ class Bibliography:
         def printTime(self, message):
                 # Currently disabled
                 return
+
                 # If we are on the development server, print how long it takes
                 # to load and print different parts of the page
-                if HTMLHOST == '127.0.0.1':
-                        start = self.last_checkpoint
-                        self.last_checkpoint = time()
-                        print('%s %f<br>' % (message, self.last_checkpoint - start))
+
+                # if HTMLHOST == '127.0.0.1':
+                #         start = self.last_checkpoint
+                #         self.last_checkpoint = time()
+                #         print('%s %f<br>' % (message, self.last_checkpoint - start))
 
         ####################################################
         #         LOAD METHODS
@@ -287,15 +291,16 @@ class Bibliography:
         def loadVariantTitles(self):
                 # Retrieve all variants associated with this author, including Serials
                 variants = SQLloadVTsForAuthor(self.au_id)
-                
+
                 # Create a dictionary of variant titles and a separate dictionary of
                 # variant serials, both indexed by parent title ID. The logic is
                 # shared with the series display code.
                 (self.variant_titles, self.variant_serials) = buildVariants(self.canonical_titles, variants, self.user)
 
                 # Build a list of parent title IDs that have pubs associated DIRECTLY with them
-                parent_string = dict_to_in_clause(self.variant_titles, self.variant_serials)
-                self.parent_titles_with_pubs = SQLTitlesWithPubs(parent_string)
+                #parent_string = dict_to_in_clause(self.variant_titles, self.variant_serials)
+                #self.parent_titles_with_pubs = SQLTitlesWithPubs(parent_string)
+                self.parent_titles_with_pubs = SQLTitlesWithPubs(list(self.variant_titles)+list(self.variant_serials))
 
                 # Load all variants' (including serials') authors
                 self.variant_authors = buildVTAuthors(self.variant_titles, self.variant_serials)
@@ -304,7 +309,7 @@ class Bibliography:
                 self.translit_titles = builtTranslitTitles(self.canonical_titles, self.variant_titles,
                                                            self.variant_serials, self.interviews)
                 self.translit_authors = builtTranslitAuthors(self.parent_authors, self.variant_authors)
-                
+
         def loadSeriesData(self):
                 series_list = SQLgetSeriesData(self.au_id)
                 # Retrieve all higher level super-series and put them in self.series_tree
@@ -319,12 +324,12 @@ class Bibliography:
                                 continue
                         # Retrieve the top parent for this title
                         top_parent = self.findTopSeries(series_id)
-                        
+
                         # Indicate that this top series has at least one title of this type
                         if top_parent not in self.series_type:
                                 self.series_type[top_parent] = {}
                         self.series_type[top_parent][title[TITLE_TTYPE]] = 1
-                        
+
                         # If at least one title in a series tree is NOT "non-genre", then the
                         # whole series tree will be displayed in the genre section of the Summary page
                         if title[TITLE_NON_GENRE] != 'Yes':
@@ -443,7 +448,7 @@ class Bibliography:
                                 continue
                         if self.series_priority[series_id] == series_type:
                                 series_type_list.append(self.series_tree[series_id])
-                
+
                 # If there are no titles to display for this series type/genre, return
                 if not series_type_list:
                         return
@@ -601,7 +606,7 @@ class Bibliography:
                                                                         'class="bold inverted"')
                                         break
                         print(print_string)
-                
+
                 print('</ul>')
 
                 if self.au_data[AUTHOR_IMAGE]:
@@ -636,7 +641,7 @@ class Bibliography:
                 interviewed_collaborators = SQLIntervieweeAuthors(title[TITLE_PUBID], self.au_id)
                 interviewer_collaborators = SQLTitleBriefAuthorRecords(title[TITLE_PUBID])
                 print(" <b>by</b> ")
-               
+
                 counter = 0
                 for author in interviewer_collaborators:
                         if counter:
@@ -681,7 +686,7 @@ class Bibliography:
                                              self.parent_titles_with_pubs, self.variant_authors,
                                              self.translit_titles, self.translit_authors, self.user,
                                              self.au_data[AUTHOR_LANGUAGE], self.nongenre)
-                
+
                 if not self.first:
                         print("</ul>")
 
@@ -713,7 +718,6 @@ class Bibliography:
                 print('</tr>')
                 print('</table>')
                 print('<br>')
-                return
 
         def printHeaders(self):
                 self.cgi_script = '%s.cgi' % self.page_types[self.page_type]
@@ -728,7 +732,7 @@ class Bibliography:
                         self.au_data = SQLgetAuthorData(author)
 
                 if not self.au_data:
-                        SESSION.DisplayError('Author not found: %s' % author)
+                        SESSION.DisplayError('Author not found: %s' % ISFDBText(author))
 
                 # Check if the user not logged in and is trying to change the default settings for translations
                 if not self.user.id and len(SESSION.parameters) > 1:

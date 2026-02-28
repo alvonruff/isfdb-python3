@@ -1,13 +1,13 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Bill Longley, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1166 $
-#     Date: $Date: 2024-02-08 14:50:44 -0500 (Thu, 08 Feb 2024) $
+#     Version: $Revision: 1267 $
+#     Date: $Date: 2026-02-25 15:47:11 -0500 (Wed, 25 Feb 2026) $
 
 
 from isfdb import *
@@ -138,6 +138,13 @@ def SelfCreated(submission_id, reviewer_id):
         return 0
 
 def PrintPostMod(closetable = 1):
+
+        if len(SESSION.SQLlog) > 0:
+                print('<div class="VerificationBox">')
+                print('<h2>Debug SQL Log:</h2>')
+                SQLoutputLog()
+                print("</div>")
+
         if closetable:
                 print('</table>')
         print('</div>')

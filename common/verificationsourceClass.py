@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2023-2025  Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2021-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -8,7 +8,6 @@
 #     Version: $Revision: 203 $
 #     Date: $Date: 2018-09-12 17:38:34 -0400 (Wed, 12 Sep 2018) $
 
-import cgi
 from isfdb import *
 from library import XMLescape, XMLunescape, IsfdbFieldStorage
 from SQLparsing import SQLGetVerificationSource, SQLGetVerificationSourceByLabel
@@ -57,18 +56,19 @@ class VerificationSource():
 
                 try:
                         self.label = XMLescape(self.form['source_label'].value)
-                        self.used_label = 1
-                        if not self.label:
-                                raise
-                        # Unescape the label to ensure that the lookup finds it in the database
-                        current_source = SQLGetVerificationSourceByLabel(XMLunescape(self.label))
-                        if current_source:
-                                if (self.id != int(current_source[REFERENCE_ID])) and (current_source[REFERENCE_LABEL] == XMLunescape(self.label)):
-                                        self.error = "Entered label is aready associated with another Verification Source"
-                                        return
-                except:
+                except KeyError:
                         self.error = "Verification Source Label is a required field"
                         return
+                if not self.label:
+                        self.error = "Verification Source Label is a required field"
+                        return
+                self.used_label = 1
+                # Unescape the label to ensure that the lookup finds it in the database
+                current_source = SQLGetVerificationSourceByLabel(XMLunescape(self.label))
+                if current_source:
+                        if (self.id != int(current_source[REFERENCE_ID])) and (current_source[REFERENCE_LABEL] == XMLunescape(self.label)):
+                                self.error = "Entered label is already associated with another Verification Source"
+                                return
 
                 if 'source_name' in self.form:
                         self.name = XMLescape(self.form['source_name'].value)

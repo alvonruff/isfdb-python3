@@ -1,22 +1,19 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
-#         ALL RIGHTS RESERVED
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
+#       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1135 $
-#     Date: $Date: 2023-06-29 19:33:23 -0400 (Thu, 29 Jun 2023) $
+#     Version: $Revision: 1262 $
+#     Date: $Date: 2026-02-18 16:00:00 -0500 (Wed, 18 Feb 2026) $
 
-import cgi
 import sys
 from isfdb import *
 from SQLparsing import *
 from library import normalizeInput, XMLunescape, XMLescape
-from login import User
 from xml.dom import minidom
-from xml.dom import Node
 
 
 class Submission:
@@ -156,7 +153,7 @@ class Submission:
         def response_footers(self):
                 print('</ISFDB>')
                 sys.exit(0)
-                
+
         def get_element_value(self, tag):
                 document = self.merge[0].getElementsByTagName(tag)
                 try:

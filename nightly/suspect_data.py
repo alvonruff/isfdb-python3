@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -250,8 +250,7 @@ def suspect_data():
         # Insert the new pub IDs and their months into the cleanup table
         for pub_id in containers:
                 update = "insert into cleanup (record_id, report_type, record_id_2) values(%d, 277, %d)" % (int(pub_id), int(containers[pub_id]))
-                CNX2 = MYSQL_CONNECTOR()
-                CNX2.DB_QUERY(update)
+                CNX.DB_QUERY(update)
         elapsed.print_elapsed(277, CNX.DB_NUMROWS())
 
         #   Report 290: Suspected Ineligible Reviewed NONFICTION Titles (first 1000)

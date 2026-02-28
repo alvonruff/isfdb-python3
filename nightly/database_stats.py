@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2024   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -162,7 +162,7 @@ class Output():
                         user = record[0][1]
                         total[user] = total.get(user, 0) + count
                         primary[user] = primary.get(user, 0) + count
-                        record = CNX.DB_FETCHMANY() 
+                        record = CNX.DB_FETCHMANY()
 
                 # Secondary verifications
                 query = """select distinct r.reference_label, count(v.user_id), u.user_name
@@ -187,7 +187,7 @@ class Output():
                                 headers[source] = 0
                         total[user] = total.get(user, 0) + count
                         secondary[user] = secondary.get(user, 0) + count
-                        record = CNX.DB_FETCHMANY() 
+                        record = CNX.DB_FETCHMANY()
 
                 self.start('<table cellpadding="1" class="publications">')
                 self.append('<tr class="generic_table_header">')
@@ -327,7 +327,7 @@ class Output():
                 CNX.DB_QUERY(query)
                 record = CNX.DB_FETCHONE()
                 self.append("<li><b>Titles with Votes:</b> %d (%2.2f%%)" % (record[0][0], (100.0 * float(record[0][0]))/self.last_count))
-                
+
                 query = "select count(distinct title_id) from tag_mapping"
                 CNX.DB_QUERY(query)
                 record = CNX.DB_FETCHONE()
@@ -367,7 +367,7 @@ class Output():
                         self.append("<li>%s: %d" % (record[0][0], int(record[0][1])))
                         record = CNX.DB_FETCHMANY()
                 self.append("</ul>")
-                            
+
                 self.append("</ul>")
                 self.file(4, 0)
 
@@ -428,7 +428,7 @@ class Output():
                                      and YEAR(pub_year)<%s
                                      group by YEAR(pub_year)
                                      order by YEAR(pub_year)""" % (startyear-1, endyear+1)
-                
+
                 CNX = MYSQL_CONNECTOR()
                 CNX.DB_QUERY(query)
                 record = CNX.DB_FETCHMANY()
@@ -480,7 +480,7 @@ class Output():
                         record = CNX.DB_FETCHMANY()
                         # Save the last year that we had data for
                         lastyear = year
-                
+
                 years = endyear-startyear+1
                 height = 200
                 xscale = 6
@@ -699,7 +699,7 @@ class Output():
                         if color != 'black':
                                 self.append('%s - %s, ' % (color.capitalize(), ISFDBPubFormat(format)))
                 self.append('Black - all other formats</h3>')
-                
+
                 # Set the start year to 1900
                 startyear = 1900
                 # Set the end year to the last year (current year may not have enough data points)
@@ -827,10 +827,10 @@ class Output():
 
         def topNovels(self):
                 self.top100('novel', 12)
-        
+
         def topShorts(self):
                 self.top100('short', 25)
-        
+
         def top100(self, report_type, report_id):
                 if report_type == 'novel':
                         ttype = 'NOVEL'
@@ -838,7 +838,8 @@ class Output():
                         ttype = 'SHORTFICTION'
 
                 self.start('')
-                query = """select t.title_id, t.title_title, DATE_FORMAT(t.title_copyright, '%%Y-%%m-%%d') as year, AVG(v.rating)
+                # WAS: query = """select t.title_id, t.title_title, t.title_copyright, AVG(v.rating)
+                query = """select t.title_id, t.title_title, DATE_FORMAT(t.title_copyright, '%%Y-%%m-%%d'), AVG(v.rating)
                         from titles t, votes v
                         where t.title_id = v.title_id
                         and t.title_ttype = '%s'
@@ -1350,4 +1351,3 @@ def database_stats():
         output.report("topVoters")
         output.report("topForthcoming")
         output.report("mostReviewed")
-        print("SUCCESS")

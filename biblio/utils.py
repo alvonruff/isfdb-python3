@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff and Dirk Stoecker
+#     (C) COPYRIGHT 2004-2026   Al von Ruff and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 21 $
-#     Date: $Date: 2017-10-31 19:57:53 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1251 $
+#     Date: $Date: 2026-02-10 15:00:23 -0500 (Tue, 10 Feb 2026) $
 
 
 import string

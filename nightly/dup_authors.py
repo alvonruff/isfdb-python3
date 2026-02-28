@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 419 $
-#     Date: $Date: 2019-05-15 10:54:53 -0400 (Wed, 15 May 2019) $
+#     Version: $Revision: 1261 $
+#     Date: $Date: 2026-02-18 15:47:04 -0500 (Wed, 18 Feb 2026) $
 
 from SQLparsing import *
 from library import *
@@ -48,7 +48,7 @@ def author_similarity(letter, report_type):
         # we may also use Jaro distance if we can make it fast enough
 
         processed = []
-        found = []
+        # found = []
         for author_id1 in sorted(names, key = names.get):
                 name1 = names[author_id1]
                 for author_id2 in names:

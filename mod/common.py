@@ -1,16 +1,21 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Bill Longley, Ahasuerus and Dirk Stoecker
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1176 $
-#     Date: $Date: 2024-05-02 19:26:24 -0400 (Thu, 02 May 2024) $
+#     Version: $Revision: 1263 $
+#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
 
 
 import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
+
 from isfdb import *
 from SQLparsing import *
 from library import *
@@ -61,7 +66,6 @@ def PrintNextSubmissionLink(next_sub):
         subtype = next_sub[SUB_TYPE]
         if subtype in SUBMAP:
                 print(ISFDBLink('mod/submission_review.cgi', next_sub[SUB_ID], 'Next Submission', False, 'class="approval"'))
-
 
 ########################################################################
 #                      T I T L E   F I E L D S

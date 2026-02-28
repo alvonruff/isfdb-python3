@@ -1,13 +1,13 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1099 $
-#     Date: $Date: 2023-02-07 18:29:53 -0500 (Tue, 07 Feb 2023) $
+#     Version: $Revision: 1257 $
+#     Date: $Date: 2026-02-11 10:26:05 -0500 (Wed, 11 Feb 2026) $
 
 import cgi
 import sys
@@ -143,7 +143,7 @@ class titles:
                         if record[TITLE_CONTENT]:
                                 self.title_content = record[TITLE_CONTENT]
                                 self.used_content = 1
-                        
+
                         author_tuples = SQLTitleBriefAuthorRecords(record[TITLE_PUBID])
                         for author_tuple in author_tuples:
                                 self.title_authors.append(author_tuple[1])
@@ -313,7 +313,7 @@ class titles:
                         if value:
                                 self.title_series = value
                                 self.used_series = 1
-                                
+
                 if 'title_seriesnum' in self.form:
                         value = XMLescape(self.form['title_seriesnum'].value)
                         if value:
@@ -327,7 +327,7 @@ class titles:
                                                 position titles in between other titles in the series,
                                                 e.g. 3.5 will appear between 3 and 4"""
                                         return
-                                
+
                 if 'title_translator' in self.form:
                         value = XMLescape(self.form['title_translator'].value)
                         if value:
@@ -345,7 +345,7 @@ class titles:
                                                 return
                                         self.title_webpages.append(value)
                                         self.used_webpages = 1
-        
+
                 if 'language' in self.form:
                         value = XMLescape(self.form['language'].value)
                         if value:
@@ -354,7 +354,7 @@ class titles:
                                         return
                                 self.title_language = value
                                 self.used_language = 1
-                                
+
                 if 'title_storylen' in self.form:
                         value = XMLescape(self.form['title_storylen'].value)
                         if value:
@@ -372,13 +372,13 @@ class titles:
                         if value:
                                 self.title_parent = value
                                 self.used_parent = 1
-                                
+
                 if 'title_synopsis' in self.form:
                         value = XMLescape(self.form['title_synopsis'].value)
                         if value:
                                 self.title_synop = value
                                 self.used_synop = 1
-                                
+
                 if 'title_note' in self.form:
                         value = XMLescape(self.form['title_note'].value)
                         if value:
@@ -390,7 +390,7 @@ class titles:
                         self.used_non_genre = 1
                 else:
                         self.title_non_genre = 'No'
-                        self.used_non_genre = 1                        
+                        self.used_non_genre = 1
 
                 if 'title_graphic' in self.form:
                         self.title_graphic = 'Yes'
@@ -445,7 +445,7 @@ class titles:
                         if self.title_graphic == 'Yes':
                                 self.error = 'COVERART and INTERIORART titles can\'t be graphic'
                                 return
-                
+
         def delete(self):
                 # This method tries to delete a single title record.
                 #  It returns 1 if the delete operation was a success
@@ -458,9 +458,9 @@ class titles:
                 SQLlog("titleClass::delete: %s" % query)
                 if CNX.DB_NUMROWS():
                         # If this title is in a pub, do not delete it
-                        # and return with the status code set to failure 
+                        # and return with the status code set to failure
                         return 0
-                
+
                 ##########################################################
                 # Delete Note
                 ##########################################################

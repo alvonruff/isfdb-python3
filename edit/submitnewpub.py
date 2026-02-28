@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2004-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2004-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1099 $
-#     Date: $Date: 2023-02-07 18:29:53 -0500 (Tue, 07 Feb 2023) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
         
 import cgi
@@ -153,7 +153,7 @@ if __name__ == '__main__':
                 update_string += "    </Webpages>\n"
 
         # Retrieve the Source and the Mod Note values from the "form" dictionary, which was
-        # created by cgi.FieldStorage, because they are not either in the Pub or in the Title class
+        # created by IsfdbFieldStorage(), because they are not either in the Pub or in the Title class
 
         if 'Source' in new.form:
                 update_string += "    <Source>%s</Source>\n" % (CNX.DB_ESCAPE_STRING(XMLescape(new.form['Source'].value)))

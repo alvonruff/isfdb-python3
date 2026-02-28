@@ -1,39 +1,20 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2006-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2006-2026   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 970 $
-#     Date: $Date: 2022-08-15 12:47:52 -0400 (Mon, 15 Aug 2022) $
+#     Version: $Revision: 1270 $
+#     Date: $Date: 2026-02-27 06:57:58 -0500 (Fri, 27 Feb 2026) $
 
-##############################################################################
-#  Pylint disable list. These checks are too gratuitous for our purposes
-##############################################################################
-# pylint: disable=bad-indentation
-# pylint: disable=line-too-long
-# pylint: disable=invalid-name
-# pylint: disable=consider-using-f-string
-# pylint: disable=too-many-statements
-# pylint: disable=too-many-return-statements
-# pylint: disable=too-many-branches
-# pylint: disable=too-many-instance-attributes
-##############################################################################
-# Look at these later
-##############################################################################
-# pylint: disable=unused-wildcard-import
-# pylint: disable=missing-function-docstring
-# pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
-
-import re
+import cgi
 from xml.dom import minidom
 from isfdb import *
 from isfdblib import *
 from library import *
-from login import User
+
 
 class authors:
         def __init__(self, db):
@@ -54,23 +35,22 @@ class authors:
                 self.used_note = 0
 
                 self.author_canonical = ''
+                self.author_trans_names = []
                 self.author_legalname = ''
                 self.author_lastname = ''
+                self.author_trans_legal_names = []
                 self.author_birthplace = ''
                 self.author_birthdate = ''
                 self.author_deathdate = ''
+                self.author_emails = []
+                self.author_webpages = []
                 self.author_image = ''
                 self.author_language = ''
                 self.author_note = ''
-                # These values are lists, and should be handled differently
-                self.author_trans_names = []
-                self.author_trans_legal_names = []
-                self.author_emails = []
-                self.author_webpages = []
+                self.author_id = 0
+                self.form = ''
 
                 self.error = ''
-                self.author_id = 0
-                self.form = 0
 
         def load(self, author_id):
                 record = SQLloadAuthorData(author_id)
@@ -143,9 +123,17 @@ class authors:
                                 container += "  <AuthorCanonical>%s</AuthorCanonical>\n" % \
                                                 (self.author_canonical)
 
+                        if self.used_trans_names:
+                                container += "  <AuthorTransNames>%s</AuthorTransNames>\n" % \
+                                                (self.author_trans_names)
+
                         if self.used_legalname:
                                 container += "  <AuthorLegalname>%s</AuthorLegalname>\n" % \
                                                 (self.author_legalname)
+
+                        if self.used_trans_legal_names:
+                                container += "  <AuthorTransLegalNames>%s</AuthorTransLegalNames>\n" % \
+                                                (self.author_trans_legal_names)
 
                         if self.used_lastname:
                                 container += "  <AuthorLastname>%s</AuthorLastname>\n" % \
@@ -163,22 +151,9 @@ class authors:
                                 container += "  <AuthorDeathdate>%s</AuthorDeathdate>\n" % \
                                                 (self.author_deathdate)
 
-                        if self.used_image:
-                                container += "  <AuthorImage>%s</AuthorImage>\n" % \
-                                                (self.author_image)
-
-                        if self.used_language:
-                                container += "  <AuthorLanguage>%s</AuthorLanguage>\n" % \
-                                                (self.author_language)
-
-                        ##################################################
-                        # These entries are lists, which require subtags
-                        ##################################################
                         if self.used_emails:
-                                container += "  <AuthorEmails>\n"
-                                for email in self.author_emails:
-                                        container += "    <AuthorEmail>%s</AuthorEmail>\n" % (email)
-                                container += "  </AuthorEmails>\n"
+                                container += "  <AuthorEmails>%s</AuthorEmails>\n" % \
+                                                (self.author_emails)
 
                         if self.used_webpages:
                                 container += "  <AuthorWebpages>\n"
@@ -186,17 +161,13 @@ class authors:
                                         container += "    <AuthorWebpage>%s</AuthorWebpage>\n" % (webpage)
                                 container += "  </AuthorWebpages>\n"
 
-                        if self.used_trans_names:
-                                container += "  <AuthorTransNames>\n"
-                                for transname in self.author_trans_names:
-                                        container += "    <AuthorTransName>%s</AuthorTransName>\n" % (transname)
-                                container += "  </AuthorTransNames>\n"
+                        if self.used_image:
+                                container += "  <AuthorImage>%s</AuthorImage>\n" % \
+                                                (self.author_image)
 
-                        if self.used_trans_legal_names:
-                                container += "  <AuthorTransLegalNames>\n"
-                                for transname in self.author_trans_legal_names:
-                                        container += "    <AuthorTransLegalName>%s</AuthorTransLegalName>\n" % (transname)
-                                container += "  </AuthorTransLegalNames>\n"
+                        if self.used_language:
+                                container += "  <AuthorLanguage>%s</AuthorLanguage>\n" % \
+                                                (self.author_language)
 
                         container += "</UpdateAuthor>\n"
                 else:
@@ -207,9 +178,9 @@ class authors:
         def xml2obj(self, xml):
                 doc = minidom.parseString(xml)
                 metadata = doc.getElementsByTagName('UpdateAuthor')
-                if metadata == 0:
+                if not metadata:
                         metadata = doc.getElementsByTagName('NewAuthor')
-                if metadata == 0:
+                if not metadata:
                         return
 
                 elem = GetElementValue(metadata, 'AuthorCanonical')
@@ -217,10 +188,20 @@ class authors:
                         self.used_canonical = 1
                         self.author_canonical = elem
 
+                elem = GetElementValue(metadata, 'AuthorTransNames')
+                if elem:
+                        self.used_trans_names = 1
+                        self.author_trans_names = elem
+
                 elem = GetElementValue(metadata, 'AuthorLegalname')
                 if elem:
                         self.used_legalname = 1
                         self.author_legalname = elem
+
+                elem = GetElementValue(metadata, 'AuthorTransLegalNames')
+                if elem:
+                        self.used_trans_legal_names = 1
+                        self.author_trans_legal_names = elem
 
                 elem = GetElementValue(metadata, 'AuthorLastname')
                 if elem:
@@ -252,66 +233,35 @@ class authors:
                         self.used_language = 1
                         self.author_language = elem
 
-                ##################################################
-                # These entries are lists, which require subtags
-                ##################################################
-
                 elem = GetElementValue(metadata, 'AuthorEmails')
                 if elem:
                         self.used_emails = 1
-                        self.author_emails = []
-                        emails = doc.getElementsByTagName('AuthorEmail')
-                        for email in emails:
-                                value = XMLunescape(email.firstChild.data)
-                                self.author_emails.append(value)
+                        self.author_emails = elem
 
                 elem = GetElementValue(metadata, 'AuthorWebpages')
                 if elem:
                         self.used_webpages = 1
-                        self.author_webpages = []
-                        webpages = doc.getElementsByTagName('AuthorWebpage')
-                        for webpage in webpages:
-                                value = XMLunescape(webpage.firstChild.data)
-                                self.author_webpages.append(value)
+                        self.author_webpages = elem
 
-                elem = GetElementValue(metadata, 'AuthorTransNames')
-                if elem:
-                        self.used_trans_names = 1
-                        self.author_trans_names = []
-                        transnames = doc.getElementsByTagName('AuthorTransName')
-                        for transname in transnames:
-                                value = XMLunescape(transname.firstChild.data)
-                                self.author_trans_names.append(value)
-
-                elem = GetElementValue(metadata, 'AuthorTransLegalNames')
-                if elem:
-                        self.used_trans_legal_names = 1
-                        self.author_trans_legal_names = []
-                        transnames = doc.getElementsByTagName('AuthorTransLegalName')
-                        for transname in transnames:
-                                value = XMLunescape(transname.firstChild.data)
-                                self.author_trans_legal_names.append(value)
-
-        def cgi2obj(self, form=0):
-                if form:
-                        self.form = form
-                else:
-                        self.form = IsfdbFieldStorage()
+        def cgi2obj(self):
+                import re
+                self.form = IsfdbFieldStorage()
                 try:
                         self.author_id = str(int(self.form['author_id'].value))
                         self.used_id = 1
-                except:
+                except (KeyError, ValueError):
                         self.error = 'Author ID not specified'
                         return
 
                 try:
                         self.author_canonical = XMLescape(self.form['author_canonical'].value)
-                        self.used_canonical = 1
-                        if not self.author_canonical:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'Canonical name is required'
                         return
+                if not self.author_canonical:
+                        self.error = 'Canonical name is required'
+                        return
+                self.used_canonical = 1
 
                 # Unescape the canonical name so that the lookup would find it in the database
                 unescaped_name = XMLunescape(self.author_canonical)
@@ -360,12 +310,13 @@ class authors:
 
                 try:
                         self.author_lastname = XMLescape(self.form['author_lastname'].value)
-                        self.used_lastname = 1
-                        if not self.author_lastname:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'Directory Entry is required'
                         return
+                if not self.author_lastname:
+                        self.error = 'Directory Entry is required'
+                        return
+                self.used_lastname = 1
 
                 if 'author_birthplace' in self.form:
                         value = XMLescape(self.form['author_birthplace'].value)
@@ -399,20 +350,14 @@ class authors:
 
                 try:
                         value = XMLescape(self.form['author_language'].value)
-                        if value:
-                                self.author_language = value
-                                self.used_language = 1
-                        else:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'Language is required'
                         return
-
-                if 'author_note' in self.form:
-                        value = XMLescape(self.form['author_note'].value)
-                        if value:
-                                self.author_note = value
-                                self.used_note = 1
+                if not value:
+                        self.error = 'Language is required'
+                        return
+                self.author_language = value
+                self.used_language = 1
 
                 for key in self.form:
                         if key[:13] == 'author_emails':
@@ -439,3 +384,8 @@ class authors:
                                         self.author_webpages.append(value)
                                         self.used_webpages = 1
 
+                if 'author_note' in self.form:
+                        value = XMLescape(self.form['author_note'].value)
+                        if value:
+                                self.author_note = value
+                                self.used_note = 1

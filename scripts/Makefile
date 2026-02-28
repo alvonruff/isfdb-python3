@@ -1,17 +1,14 @@
 #
-#     (C) COPYRIGHT 2025   Al von Ruff
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
-clean:
-	rm -f *.cgi
-	rm -f *.pyc
-	rm -f .TARGETS
+lint:
+	bash ../common/dolint.sh
 
-clobber:
-	rm -f *.cgi
-	rm -f *.pyc

@@ -1,5 +1,7 @@
+#!_PYTHONLOC
+from __future__ import print_function
 #
-#    (C) COPYRIGHT 2019   ErsatzCulture
+#    (C) COPYRIGHT 2019-2026   ErsatzCulture, Al von Ruff
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -21,19 +23,10 @@ Background:
 """
 
 import getopt
-from localdefs import (DBASEHOST, USERNAME, PASSWORD, DBASE, HTFAKE)
-import MySQLdb
+from SQLparsing import *
 import sys
 
-def Date_or_None(s):
-        return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
-
+debug = 1
 
 def print_usage():
         print('%s [-h] [-d]' % __file__)
@@ -52,10 +45,10 @@ URL_BASE = '%s%s' % (PROTOCOL_PREFIX, HTFAKE)
 TITLE_URL_FORMAT = URL_BASE + '/title.cgi?%d'
 AUTHOR_URL_FORMAT = URL_BASE + '/ea.cgi?%d'
 
-def report_orphaned_authors(db, print_to_screen=True):
-        db.query(BASE_QUERY)
-        result = db.store_result()
-        record = result.fetch_row()
+def report_orphaned_authors(print_to_screen=True):
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(BASE_QUERY)
+        record = CNX.DB_FETCHMANY()
         i = 0
         orphaned_ca_ids = []
         while record:
@@ -68,18 +61,18 @@ def report_orphaned_authors(db, print_to_screen=True):
                                TITLE_URL_FORMAT % (rec[1]),
                                AUTHOR_URL_FORMAT % (rec[2])))
                 orphaned_ca_ids.append(rec[0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
         if not orphaned_ca_ids and print_to_screen:
                 print('No orphaned records found in canonical_author')
         return orphaned_ca_ids
 
 
-def delete_orphaned_authors(db):
+def delete_orphaned_authors():
         # I tried doing this in one hit as
         # DELETE FROM canonical_author WHERE ca_id in (SELECT ...)
         # but MySQL/MariaDB doesn't like it (ERROR 1093 (HY000), hence getting
         # the IDs and then doing the delete.
-        ca_ids_to_delete = report_orphaned_authors(db, print_to_screen=False)
+        ca_ids_to_delete = report_orphaned_authors(print_to_screen=False)
         if not ca_ids_to_delete:
                 print('No orphaned records to delete!')
                 return
@@ -88,13 +81,15 @@ def delete_orphaned_authors(db):
 
         query = 'DELETE FROM canonical_author WHERE ca_id in (%s);' % (stringified_ids)
         print('Executing %s' % (query))
-        db.query(query)
+        CNX = MYSQL_CONNECTOR()
+        if debug == 0:
+                CNX.DB_QUERY(query)
 
 
 if __name__ == '__main__':
         try:
                 opts, _ = getopt.getopt(sys.argv[1:], 'dh')
-        except getopt.GetoptError, err:
+        except getopt.GetoptError as err:
                 print('Argument handling error: %s' % (err))
                 sys.exit(1)
         opt_dict = dict(opts)
@@ -102,10 +97,7 @@ if __name__ == '__main__':
                 print_usage()
                 sys.exit(0)
 
-        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-        db.select_db(DBASE)
         if '-d' in opt_dict:
-                delete_orphaned_authors(db)
+                delete_orphaned_authors()
         else:
-                report_orphaned_authors(db)
-        db.close()
+                report_orphaned_authors()

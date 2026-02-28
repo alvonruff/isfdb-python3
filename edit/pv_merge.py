@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2008-2025   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2008-2026   Al von Ruff, Bill Longley and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1070 $
-#     Date: $Date: 2023-01-05 17:56:54 -0500 (Thu, 05 Jan 2023) $
+#     Version: $Revision: 1254 $
+#     Date: $Date: 2026-02-11 06:41:04 -0500 (Wed, 11 Feb 2026) $
 
 
 from isfdb import *

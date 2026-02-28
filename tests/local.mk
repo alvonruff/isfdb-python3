@@ -1,54 +1,43 @@
 #
-#     (C) COPYRIGHT 2005-2023   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1139 $
-#     Date: $Date: 2023-07-12 18:51:22 -0400 (Wed, 12 Jul 2023) $
-
+#     Version: $Revision: 1256 $
+#     Date: $Date: 2026-02-11 08:03:50 -0500 (Wed, 11 Feb 2026) $
 
 VERSION = $(shell cat ../.pythonver)
 
-LIBS	= authorClass.py \
-	 awardClass.py \
-	 awardcatClass.py \
-	 awardtypeClass.py \
-	 recognizeddomainClass.py \
-	 titleClass.py \
-	 pubClass.py \
-	 publisherClass.py \
-	 pubseriesClass.py \
-	 seriesClass.py \
-	 templateClass.py \
-	 verificationsourceClass.py \
-	 login.py \
-	 SQLparsing.py \
-	 isbn.py \
-	 sfe3.py \
-	 isfdb.py \
-	 library.py \
-	 localdefs.py \
-	 navbar.py \
-	 install.py \
-	 viewers.py
-
-all:	
-
-local/%.cgi:	%.py
-		python install.py $* local $(VERSION)
-
-install:
+NOT_TESTS = authorClass.py \
+	awardcatClass.py \
+	awardClass.py \
+	awardtypeClass.py \
+	install.py \
+	isbn.py \
+	isfdb.py \
+	library.py \
+	localdefs.py \
+	login.py \
+	navbar.py \
+	pubClass.py \
+	publisherClass.py \
+	pubseriesClass.py \
+	pylintrc \
+	recognizeddomainClass.py \
+	seriesClass.py \
+	sfe3.py \
+	SQLparsing.py \
+	templateClass.py \
+	titleClass.py \
+	verificationsourceClass.py \
+	viewers.py
 
 clean:
-	rm -f $(LIBS)
 	rm -f local/*.cgi
 	rm -f local/*.pyc
-	rm -rf __pycache__
+	rm -f $(NOT_TESTS)
 
 clobber:
-	rm -f $(LIBS)
-	rm -f local/*.cgi
-	rm -f local/*.pyc
-	rm -rf __pycache__
+	rm -f $(NOT_TESTS)

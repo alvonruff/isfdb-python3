@@ -1,13 +1,19 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025         Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2026         Al von Ruff, Kevin Pulliam (kevin.pulliam@gmail.com), Ahasuerus, Bill Longley and Dirk Stoecker
 #                ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1176 $
-#     Date: $Date: 2024-05-02 19:26:24 -0400 (Thu, 02 May 2024) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
+
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from isfdb import *
 from SQLparsing import *
@@ -18,19 +24,18 @@ from navbar import *
 from isbn import ISBNValidFormat
 from datetime import datetime
 
-
-def validateMonth(string):
+def validateMonth(target):
         now = datetime.now()
         # Validate that the passed string is in the YYYY-MM format
         error = "Month must be specified using the YYYY-MM format"
-        if len(string ) != 7:
+        if len(target ) != 7:
                 return (0, 0, error)
 
-        if string[4:5] != '-':
+        if target[4:5] != '-':
                 return (0, 0, error)
         try:
-                year=int(string[0:4])
-                month=int(string[5:7])
+                year=int(target[0:4])
+                month=int(target[5:7])
                 if (year < 1) or (year > (now.year +1)):
                         return (0, 0 , "Year must be between 1 and one year in the future")
                 if (month <1) or (month > 12):
@@ -64,7 +69,6 @@ def PrintNewPubs(userid):
                 print('<li>%s' % ISFDBLinkNoName('edit/newpub.cgi', pub_type.title(), 'Add New %s' % pub_type.title()))
         print('<li>%s' % ISFDBLinkNoName('edit/select_award_type.cgi', '0', 'Add Untitled Award'))
         print('</ul>')
-        return
 
 def convertTitleYear(title):
         try:
@@ -195,7 +199,7 @@ def displayVariants(title, parent_authors, variants, serials, variant_authors, a
         #         info on the same line as the parent title
         ###################################################
         titleVariation = 1
-        # Display VT info on the same line as the parent if there is only one VT 
+        # Display VT info on the same line as the parent if there is only one VT
         # AND its title AND its title type match those of the parent title
         if (len(variant_list) == 1
             and variant_list[0][TITLE_TITLE] == title[TITLE_TITLE]
@@ -289,7 +293,7 @@ def displayVariantTitle(title, origTitle, variant_type, parent_authors,
 
         if translation:
                 output += '[%s] ' % LANGUAGES[title[TITLE_LANGUAGE]]
-        
+
         try:
                 if isinstance(title[TITLE_YEAR], datetime):
                         year = title[TITLE_YEAR].year
@@ -357,10 +361,10 @@ def displayAuthorsforReview(reviewer_authors, title, author_id, translit_authors
                         print(" <b>and</b> ")
                 displayAuthorById(author[0], author[1])
                 counter += 1
-        
+
         if not reviewer_authors:
                 return
-        
+
         counter = 0
         output = ''
         for author in reviewer_authors:
@@ -410,7 +414,7 @@ def displayAuthorsforInterview(interviewer_authors, title, author_id, translit_a
                 output += buildAuthorById(author[0], author[1], translit_authors)
                 counter += 1
         if counter:
-                output += ")"        
+                output += ")"
         print(output)
 
 def displayVariantAuthors(authors, qualifier, translit_authors):
@@ -438,7 +442,7 @@ def buildVariants(canonical_titles, variants, user):
         for title in canonical_titles:
                 title_id = title[TITLE_PUBID]
                 parents[title_id] = title
-        
+
         for variant in variants:
                 parent_id = variant[TITLE_PARENT]
                 if parent_id not in parents:
@@ -587,7 +591,7 @@ def PrintNavbar(page_type, arg1, arg2, executable, argument, search_value = '', 
 
         # Display the search box
         PrintSearchBox(page_type, search_value, search_type)
-        
+
         userid = PrintUserInfo(executable, argument)
 
         # Print nav bar items common to all pages
@@ -789,17 +793,17 @@ def PrintTrailer(page_type, arg1, arg2):
         print('</body>')
         print('</html>')
 
-def escape_spaces(input):
-        return str.replace(input, ' ', '%20')
+def escape_spaces(target):
+        return str.replace(target, ' ', '%20')
 
-def escapeLink2(input):
-        retval = str.replace(input, '\\', '')
+def escapeLink2(target):
+        retval = str.replace(target, '\\', '')
         retval = str.replace(retval, ' ', '%20')
         retval = str.replace(retval, '&rsquo;', "'")
         return retval
 
-def escapeLink(input):
-        retval = str.replace(input, ' ', '_')
+def escapeLink(target):
+        retval = str.replace(target, ' ', '_')
         retval = str.replace(retval, "'", '&rsquo;')
         retval = str.replace(retval, '"', '&quot;')
         return retval
@@ -810,16 +814,16 @@ def displayAuthorList(authors):
 def displayRecordList(record_type, records):
         print(LIBbuildRecordList(record_type, records))
 
-def displayAuthorById(id, name, trans_authors = None):
-        print(buildAuthorById(id, name, trans_authors = None))
+def displayAuthorById(author_id, name, trans_authors = None):
+        print(buildAuthorById(author_id, name, trans_authors = None))
 
-def buildAuthorById(id, name, trans_authors = None):
-        return ISFDBLink('ea.cgi', id, name, False, '', trans_authors)
+def buildAuthorById(author_id, name, trans_authors = None):
+        return ISFDBLink('ea.cgi', author_id, name, False, '', trans_authors)
 
 def PrintAllAuthors(title_id, prefix = '', suffix = ''):
         print(ISFDBFormatAllAuthors(title_id, prefix, suffix))
 
-def PrintWebPages(webpages, format = '<li>'):
+def PrintWebPages(webpages, myformat = '<li>'):
         if not webpages:
                 return
         printed = {}
@@ -837,7 +841,7 @@ def PrintWebPages(webpages, format = '<li>'):
                 # Retrieve Web page urls for this domain name
                 for webpage in printed[display]:
                         if not total:
-                                output = "%s<b>Webpages:</b> " % format
+                                output = "%s<b>Webpages:</b> " % myformat
                                 total = 1
                         else:
                                 output += ", "
@@ -908,7 +912,7 @@ def BuildDisplayedURL(webpage):
                 if display[:4] == 'www.':
                         display = display[4:]
         return (webpage, display, home_page, linked_page)
-        
+
 def PrintAwardResults(results, limit):
         print('<table class="generic_table">')
         print('<tr align="left" class="generic_table_header">')
@@ -1059,7 +1063,7 @@ def PrintPubsTable(pubs, display_type, user = None, limit = 100000):
         pub_publishers = SQLGetPublisherList(publisher_list)
         pub_series = SQLGetPubSeriesList(pub_series_list)
         cover_artists = SQLGetCoverAuthorsForPubs(pub_list)
-        
+
         bgcolor = 1
         index = 1
         for pub in pubs:
@@ -1149,7 +1153,7 @@ def PrintOnePub(pub, pub_authors, pub_publishers, pub_series, cover_artists, bgc
                                 first = 0
                         output += ISFDBText(page_number)
                 print(output)
-                print('</td>') 
+                print('</td>')
         else:
                 print('<td>&nbsp;</td>')
 
@@ -1279,7 +1283,7 @@ def PrintTitleRecord(title, merge, limit, bgcolor, user):
 
         authors = SQLTitleBriefAuthorRecords(title_id)
         print("<td>%s</td>" % FormatAuthors(authors))
-        
+
         if title[TITLE_PARENT]:
                 print('<td>')
                 parent_data = SQLloadTitle(title[TITLE_PARENT])

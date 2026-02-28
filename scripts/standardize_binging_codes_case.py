@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2014-2025   Ahasuerus
+#     (C) COPYRIGHT 2014-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -15,25 +15,16 @@ import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
+debug = 0
 
 if __name__ == '__main__':
 
-    db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-    db.select_db(DBASE)
-
-    BINDINGS = ('unknown','hc','tp','pb','ph','digest','dos','ebook','webzine','pulp','bedsheet','tabloid','A4','A5','quarto','octavo','audio CD','audio MP3 CD','audio cassette','audio LP','digital audio player','digital audio download','other')
-    for binding in BINDINGS:
-        update = "update pubs set pub_ptype='%s' where pub_ptype = '%s'" % (binding, binding)
-        print(update)
-        db.query(update)
+        BINDINGS = ('unknown','hc','tp','pb','ph','digest','dos','ebook','webzine','pulp','bedsheet','tabloid','A4','A5','quarto','octavo','audio CD','audio MP3 CD','audio cassette','audio LP','digital audio player','digital audio download','other')
+        for binding in BINDINGS:
+                update = "update pubs set pub_ptype='%s' where pub_ptype = '%s'" % (binding, binding)
+                print(update)
+                if debug == 0:
+                        CNX = MYSQL_CONNECTOR()
+                        CNX.DB_QUERY(update)

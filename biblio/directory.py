@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Ahasuerus, Bill Longley and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1156 $
-#     Date: $Date: 2023-10-30 14:43:07 -0400 (Mon, 30 Oct 2023) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
 from SQLparsing import *
 from biblio import *
@@ -19,7 +19,6 @@ def PrintPublisherTableColumns():
         print('<tr class="generic_table_header">')
         print('<td><b>Publisher</b></td>')
         print('</tr>')
-        return
 
 def PrintPublisherRecord(publisher_id, publisher_name, bgcolor):
         if bgcolor:
@@ -35,7 +34,6 @@ def PrintMagazineTableColumns():
         print('<th>Magazine</th>')
         print('<th>Parent Series</th>')
         print('</tr>')
-        return
 
 def PrintMagazineRecord(title_title, series_id, parent_id, series_title, bgcolor):
         if bgcolor:
@@ -82,14 +80,14 @@ if __name__ == '__main__':
                 records_map = SQLGetMagazineDirectory()
         else:
                 records_map = SQLGetAuthorDirectory()
-        
+
         first_characters = string.ascii_lowercase + "'"
         if dir_type != 'author':
                 # The Author Directory doesn't support asterisks in author names because
                 # it uses the Advanced Author Search logic, which treats asterisks as wildcards
                 first_characters += "*"
         second_characters = first_characters + "." + "/"
-        
+
         if section == '':
                 if dir_type == 'publisher':
                         print("""Also see the ISFDB Wiki

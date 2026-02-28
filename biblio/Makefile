@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2005-2025   Al von Ruff
+#     (C) COPYRIGHT 2005-2006   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 21 $
-#     Date: $Date: 2017-10-31 19:57:53 -0400 (Tue, 31 Oct 2017) $
+#     Version: $Revision: 1240 $
+#     Date: $Date: 2026-02-07 07:25:49 -0500 (Sat, 07 Feb 2026) $
 
 
 LOCAL:
@@ -21,16 +21,17 @@ SITE:
 	cat TARGETS | sed -e s/DIR/site/g > .TARGETS
 	make -f site.mk 
 
+lint:
+	bash ../common/dolint.sh
+
 install:
 	make -f local.mk install
 
 clean:
-	cat TARGETS | sed -e s/DIR/local/g > .TARGETS
 	make -f local.mk clean
 	rm -f *.cgi
 	rm -f *.pyc
 	rm -f .TARGETS
-
 clobber:
 	make -f local.mk clobber
 	rm -f *.cgi

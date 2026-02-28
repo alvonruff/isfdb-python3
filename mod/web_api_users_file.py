@@ -1,7 +1,7 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2023-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2023-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -23,14 +23,14 @@ def PrintError(message):
         PrintPostMod(0)
         sys.exit(0)
 
-        
+
 if __name__ == '__main__':
         PrintPreMod('Manage Web API Users - SQL Statements')
         PrintNavBar()
-        
+
         sys.stderr = sys.stdout
         form = IsfdbFieldStorage()
-        
+
         try:
                 user_name = form['user_name'].value
         except:
@@ -57,7 +57,7 @@ if __name__ == '__main__':
         CNX = MYSQL_CONNECTOR()
         CNX.DB_QUERY(query)
         print('<li>%s' % query)
-        
+
         if web_api_user:
                 query = 'insert into web_api_users(user_id) values(%d)' % user_id
                 CNX.DB_QUERY(query)

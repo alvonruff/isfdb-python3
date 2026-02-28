@@ -1,14 +1,14 @@
 #!_PYTHONLOC
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2026   Al von Ruff and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 715 $
-#     Date: $Date: 2021-08-27 18:27:37 -0400 (Fri, 27 Aug 2021) $
+#     Version: $Revision: 1258 $
+#     Date: $Date: 2026-02-13 16:16:41 -0500 (Fri, 13 Feb 2026) $
 
 
 from SQLparsing import *

@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2005-2025   Ahasuerus
+#     (C) COPYRIGHT 2005-2013   Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 418 $
-#     Date: $Date: 2019-05-15 10:10:07 -0400 (Wed, 15 May 2019) $
+#     Version: $Revision: 1242 $
+#     Date: $Date: 2026-02-07 09:01:10 -0500 (Sat, 07 Feb 2026) $
 
 
 LOCAL:
@@ -21,6 +21,9 @@ SITE:
 	cat TARGETS | sed -e s/DIR/site/g > .TARGETS
 	make -f site.mk 
 
+lint:
+	bash ../common/dolint.sh
+
 install:
 	make -f local.mk install
 
@@ -29,7 +32,6 @@ clean:
 	rm -f *.cgi
 	rm -f *.pyc
 	rm -f .TARGETS
-
 clobber:
 	make -f local.mk clobber
 	rm -f *.cgi

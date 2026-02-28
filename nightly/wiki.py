@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
+#     (C) COPYRIGHT 2009-2026   Al von Ruff, Ahasuerus and Dirk Stoecker
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -142,7 +142,7 @@ def wiki():
                                 (select 1 from series
                                 where mw_page.page_title=REPLACE(series.series_title,' ','_'))"""
                 standardReport(query, 120)
-                
+
                 #   Report 200: Finds authors with Author pages in the ISFDB Wiki that
                 #               are not linked from the Webpages field
                 wiki_report(200, 100, 'author_id', 'author_canonical', 'authors')
@@ -232,7 +232,7 @@ def wiki_report(report_number, namespace, record_id_field, linking_field, table_
         CNX.DB_QUERY(query)
         if not CNX.DB_NUMROWS():
                 return
-        
+
         record = CNX.DB_FETCHMANY()
         records = []
         while record:

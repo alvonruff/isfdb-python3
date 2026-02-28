@@ -1,5 +1,5 @@
 #
-#     (C) COPYRIGHT 2025   Ahasuerus
+#     (C) COPYRIGHT 2022-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -8,7 +8,6 @@
 #     Version: $Revision: 203 $
 #     Date: $Date: 2018-09-12 17:38:34 -0400 (Wed, 12 Sep 2018) $
 
-import cgi
 from isfdb import *
 from library import XMLescape, XMLunescape, IsfdbFieldStorage
 from SQLparsing import SQLGetTemplate, SQLGetTemplateByName
@@ -76,7 +75,7 @@ class Template():
                 current_template = SQLGetTemplateByName(XMLunescape(self.name))
                 if current_template:
                         if (self.id != int(current_template[TEMPLATE_ID])) and (current_template[TEMPLATE_NAME] == XMLunescape(self.name)):
-                                self.error = "Entered template name is aready associated with another ISFDB template"
+                                self.error = "Entered template name is already associated with another ISFDB template"
                                 return
 
                 if 'template_displayed_name' in self.form:
@@ -106,4 +105,4 @@ class Template():
 
 ##                if self.type == 'Substitute String' and self.url:
 ##                        self.error = 'Templates with Substitute Strings can not have URLs'
-                
+

@@ -1,7 +1,7 @@
 #!/usr/bin/python
 from __future__ import print_function
-#    (C) COPYRIGHT 2008-2025   Al von Ruff
-#         ALL RIGHTS RESERVED
+#    (C) COPYRIGHT 2008-2026   Al von Ruff
+#        ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
@@ -11,24 +11,15 @@ import cgi
 import sys
 import os
 import string
-import MySQLdb
-from localdefs import *
+from SQLparsing import *
 
-
-def Date_or_None(s):
-    return s
-
-def IsfdbConvSetup():
-        import MySQLdb.converters
-        IsfdbConv = MySQLdb.converters.conversions
-        IsfdbConv[10] = Date_or_None
-        return(IsfdbConv)
 
 def doTable(db, table):
         query = "show create table %s" % table
-        db.query(query)
-        res2 = db.store_result()
-        rec2 = res2.fetch_row()
+
+        CNX2 = MYSQL_CONNECTOR()
+        CNX2.DB_QUERY(query)
+        rec2 = CNX2.DB_FETCHMANY()
         print("%s;\n" % str(rec2[0][1]))
         if table == 'metadata':
                 print("INSERT INTO `metadata` VALUES ('0.02',1,1,1);\n")
@@ -38,15 +29,13 @@ def doTable(db, table):
 
 if __name__ == '__main__':
 
-        db = MySQLdb.connect(DBASEHOST, USERNAME, PASSWORD, conv=IsfdbConvSetup())
-        db.select_db(DBASE)
-
         query = "show tables"
-        db.query(query)
-        result = db.store_result()
-        record = result.fetch_row()
+
+        CNX = MYSQL_CONNECTOR()
+        CNX.DB_QUERY(query)
+        record = CNX.DB_FETCHMANY()
         while record:
                 doTable(db, record[0][0])
-                record = result.fetch_row()
+                record = CNX.DB_FETCHMANY()
 
         db.close()

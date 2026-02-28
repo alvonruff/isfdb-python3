@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2007-2025   Al von Ruff and Ahasuerus
+#     (C) COPYRIGHT 2007-2026   Al von Ruff and Ahasuerus
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 972 $
-#     Date: $Date: 2022-08-23 16:44:48 -0400 (Tue, 23 Aug 2022) $
+#     Version: $Revision: 1259 $
+#     Date: $Date: 2026-02-15 16:59:31 -0500 (Sun, 15 Feb 2026) $
 
         
 import cgi
@@ -30,8 +30,8 @@ def EvalField(Label, NewUsed, OldUsed, NewValue, OldValue):
         elif (NewUsed == 0) and OldUsed:
                 NewValue = ""
                 update = 1
-        CNX = MYSQL_CONNECTOR()
         if update:
+                CNX = MYSQL_CONNECTOR()
                 retval = "    <%s>%s</%s>\n" % (Label, CNX.DB_ESCAPE_STRING(NewValue), Label)
                 return(retval, 1)
         else:

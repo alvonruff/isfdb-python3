@@ -1,13 +1,13 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2009-2025   Ahasuerus and Klaus Elsbernd
+#     (C) COPYRIGHT 2009-2026   Ahasuerus and Klaus Elsbernd
 #         ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 960 $
-#     Date: $Date: 2022-07-16 08:27:53 -0400 (Sat, 16 Jul 2022) $
+#     Version: $Revision: 1260 $
+#     Date: $Date: 2026-02-18 08:27:14 -0500 (Wed, 18 Feb 2026) $
 
 from isfdb import *
 from SQLparsing import *

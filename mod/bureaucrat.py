@@ -1,6 +1,6 @@
 #!_PYTHONLOC
 #
-#     (C) COPYRIGHT 2021-2025   Ahasuerus
+#     (C) COPYRIGHT 2021-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,9 +9,6 @@
 #     Version: $Revision: 419 $
 #     Date: $Date: 2019-05-15 10:54:53 -0400 (Wed, 15 May 2019) $
 
-
-import sys
-import string
 from isfdb import *
 from common import *
 from isfdblib import *
@@ -21,7 +18,7 @@ from login import *
 class Bureaucrat:
         def __init__(self):
                 pass
-        
+
         def display_options(self):
                 PrintPreMod('Bureaucrat Menu')
                 PrintNavBar()
@@ -56,7 +53,6 @@ class Bureaucrat:
                 print('</ul>')
                 print('<p>')
 
-        
 if __name__ == '__main__':
         bureaucrat = Bureaucrat()
         bureaucrat.display_options()

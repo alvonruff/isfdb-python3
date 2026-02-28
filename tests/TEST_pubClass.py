@@ -1,6 +1,7 @@
 #!_PYTHONLOC
+from __future__ import print_function
 #
-#     (C) COPYRIGHT 2025    Al von Ruff
+#     (C) COPYRIGHT 2026   Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
@@ -9,802 +10,303 @@
 #     Version: $Revision: 717 $
 #     Date: $Date: 2021-08-28 11:04:26 -0400 (Sat, 28 Aug 2021) $
 
+import sys
+if sys.version_info.major == 3:
+        PYTHONVER = "python3"
+elif sys.version_info.major == 2:
+        PYTHONVER = "python2"
 
 from SQLparsing import *
-from pubClass import pubs
-from xml.dom import minidom
-from xml.dom import Node
+from pubClass import *
 import unittest
 
-#####################################################################################
-# Test for pubClass.py. This indirectly tests the following SQLparsing methods:
 #
-# SQLGetPageNumber
-# SQLLoadAllLanguages
-# SQLLoadIdentifiers
-# SQLLoadIdentifierTypes
-# SQLloadPubWebpages
-# SQLloadTitle
-# SQLloadTitlesXBT
-# SQLloadTransPubTitles
-# SQLTitleAuthors
-# SQLUpdateQueries
+# This test suite was create to provide some coverage for the Python2 to
+# Python3 upgrade. The purpose is to drive the interpreter through the
+# main code line to help find any required API changes or deprecations.
 #
-#####################################################################################
+# These tests are not intended to exhaustively test all of a
+# function's operational requirements.
+#
 
-def TryPrint(label, value):
-        try:
-                print("%s %s" % (label, value))
-        except:
-                pass
+##############################################################
+# UNTESTED Methods
+##############################################################
+# pubs.cgi2obj             - requires IsfdbFieldStorage / CGI input
+# pubs.ValidatePageNumber  - requires self.form set by cgi2obj
+# pubs.PrintPrimaryVerifications   - prints to stdout; requires verified pub
+# pubs.PrintAllSecondaryVerifications - prints to stdout
+# pubs.PrintActiveSecondaryVerifications - prints to stdout
+# pubs.PrintTitleLine      - prints to stdout; requires live title record
+# pubs.printExternalIDs    - prints to stdout
+# pubs.printModNoteRequired - prints to stdout
+# titleEntry.xmlTitle      - edit path (self.id != 0) requires self.oldtitle object
+# reviewEntry.xmlTitle     - edit path requires self.oldreview object
+# interviewEntry.xmlTitle  - edit path requires self.oldinterview object
+# pubBody                  - prints to stdout; requires live pub record
 
-INT_TYPE  = "<class 'int'>"
-STR_TYPE  = "<class 'str'>"
-DICT_TYPE = "<class 'dict'>"
-NONE_TYPE = "<class 'NoneType'>"
-LIST_TYPE = "<class 'list'>"
-TUPLE_TYPE = "<class 'tuple'>"
 
-debug = 1
+def printClass(pub):
+        print("used_id        =", pub.used_id)
+        print("used_title     =", pub.used_title)
+        print("used_year      =", pub.used_year)
+        print("used_publisher =", pub.used_publisher)
+        print("used_isbn      =", pub.used_isbn)
+        print("used_ptype     =", pub.used_ptype)
+        print("pub_id         =", pub.pub_id)
+        print("pub_title      =", pub.pub_title)
+        print("pub_year       =", pub.pub_year)
+        print("pub_publisher  =", pub.pub_publisher)
+        print("pub_isbn       =", pub.pub_isbn)
+        print("pub_ptype      =", pub.pub_ptype)
+        print("pub_authors    =", pub.pub_authors)
+        print("num_authors    =", pub.num_authors)
+        print("error          =", pub.error)
 
-def printPubRecord(pub):
-        print("-------------------------------------------------")
-        TryPrint("ID              =", pub.pub_id)
-        TryPrint("TITLE           =", pub.pub_title)
-        TryPrint("TAG             =", pub.pub_tag)
-        TryPrint("YEAR            =", pub.pub_year)
-        TryPrint("PAGES           =", pub.pub_pages)
-        TryPrint("PTYPE           =", pub.pub_ptype)
-        TryPrint("CTYPE           =", pub.pub_ctype)
-        TryPrint("ISBN            =", pub.pub_isbn)
-        TryPrint("CATALOG         =", pub.pub_catalog)
-        TryPrint("IMAGE           =", pub.pub_image)
-        TryPrint("PRICE           =", pub.pub_price)
-        TryPrint("PUBLISHER ID    =", pub.pub_publisher_id)
-        TryPrint("PUBLISHER       =", pub.pub_publisher)
-        TryPrint("SERIES          =", pub.pub_series)
-        TryPrint("SERIES ID       =", pub.pub_series_id)
-        TryPrint("SERIES NUM      =", pub.pub_series_num)
-        TryPrint("NOTE            =", pub.pub_note)
-
-        # Lists
-        print("AUTHORS:")
-        for author in pub.pub_authors:
-                TryPrint("  AUTHOR          =", author)
-        print("ARTISTS:")
-        for artist in pub.pub_artists:
-                TryPrint("  ARTIST          =", artist)
-        print("TRANSTITLES:")
-        for trans_title in pub.pub_trans_titles:
-                TryPrint("  TRANSTITLE      =", trans_title)
-        print("WEBPAGES:")
-        for webpage in pub.pub_webpages:
-                TryPrint("  WEBPAGE         =", webpage)
-        print("-------------------------------------------------")
-
-def printPubRecordTypes(pub):
-        TryPrint("ID              =", str(type(pub.pub_id)))
-        TryPrint("TITLE           =", str(type(pub.pub_title)))
-        TryPrint("TAG             =", str(type(pub.pub_tag)))
-        TryPrint("YEAR            =", str(type(pub.pub_year)))
-        TryPrint("PAGES           =", str(type(pub.pub_pages)))
-        TryPrint("PTYPE           =", str(type(pub.pub_ptype)))
-        TryPrint("CTYPE           =", str(type(pub.pub_ctype)))
-        TryPrint("ISBN            =", str(type(pub.pub_isbn)))
-        TryPrint("CATALOG         =", str(type(pub.pub_catalog)))
-        TryPrint("IMAGE           =", str(type(pub.pub_image)))
-        TryPrint("PRICE           =", str(type(pub.pub_price)))
-        TryPrint("PUBLISHER ID    =", str(type(pub.pub_publisher_id)))
-        TryPrint("PUBLISHER       =", str(type(pub.pub_publisher)))
-        TryPrint("SERIES          =", str(type(pub.pub_series)))
-        TryPrint("SERIES ID       =", str(type(pub.pub_series_id)))
-        TryPrint("SERIES NUM      =", str(type(pub.pub_series_num)))
-        TryPrint("NOTE            =", str(type(pub.pub_note)))
-        TryPrint("AUTHORS         =", str(type(pub.pub_authors)))
-        TryPrint("ARTISTS         =", str(type(pub.pub_artists)))
-        TryPrint("TRANSTITLES     =", str(type(pub.pub_trans_titles)))
-        TryPrint("WEBPAGES        =", str(type(pub.pub_webpages)))
-
-class TestStorage(dict):
-        def __init__(self, s=None):
-                self.value = s
-        def getvalue(self, theKey):
-                return self[theKey]
 
 class MyTestCase(unittest.TestCase):
 
-        def test_001_load_Base(self):
-                print("TEST: pubClass::load_Base")
+        def test_01_lastRecord(self):
+                print("\nTEST: lastRecord")
+
+                # TEST 1 - No next field exists -> last record
+                form = {'title_title1': 'something'}
+                value = lastRecord(form, 'title_title', 1)
+                print("  Received (no next field):", value)
+                self.assertEqual(1, value, "Should be last record when no next field")
+
+                # TEST 2 - Next field exists -> not last record
+                form = {'title_title1': 'first', 'title_title2': 'second'}
+                value = lastRecord(form, 'title_title', 1)
+                print("  Received (next field present):", value)
+                self.assertEqual(0, value, "Should not be last record when next field exists")
+
+                # TEST 3 - Counter at a high value, no next field -> last record
+                form = {'title_title5': 'only'}
+                value = lastRecord(form, 'title_title', 5)
+                print("  Received (high counter, no next):", value)
+                self.assertEqual(1, value, "Should be last record at high counter")
+
+        def test_02_titleEntry_init(self):
+                print("\nTEST: titleEntry.__init__")
+                entry = titleEntry()
+                self.assertEqual('', entry.page, "Bad page init")
+                self.assertEqual('', entry.title, "Bad title init")
+                self.assertEqual('', entry.date, "Bad date init")
+                self.assertEqual('', entry.type, "Bad type init")
+                self.assertEqual('', entry.length, "Bad length init")
+                self.assertEqual('', entry.authors, "Bad authors init")
+                self.assertEqual('', entry.next, "Bad next init")
+                self.assertEqual(0, entry.id, "Bad id init")
+                self.assertEqual(0, entry.oldtitle, "Bad oldtitle init")
+                print("  titleEntry init state verified.")
+
+        def test_03_titleEntry_setters(self):
+                print("\nTEST: titleEntry setters")
+                entry = titleEntry()
+
+                entry.setPage('42')
+                print("  page:", entry.page)
+                self.assertEqual('42', entry.page, "Bad setPage")
+
+                entry.setTitle('The Shining')
+                print("  title:", entry.title)
+                self.assertEqual('The Shining', entry.title, "Bad setTitle")
+
+                # setID: positive int -> stored; 0 -> not stored
+                entry.setID('100')
+                print("  id:", entry.id)
+                self.assertEqual(100, entry.id, "Bad setID for positive int")
+
+                entry2 = titleEntry()
+                entry2.setID('0')
+                self.assertEqual(0, entry2.id, "setID(0) should leave id at 0")
+
+                entry.setType('SHORTFICTION')
+                print("  type:", entry.type)
+                self.assertEqual('SHORTFICTION', entry.type, "Bad setType")
+
+                entry.setLength('short story')
+                print("  length:", entry.length)
+                self.assertEqual('short story', entry.length, "Bad setLength")
+
+                # setLength with None -> stored as ''
+                entry.setLength(None)
+                print("  length (None):", entry.length)
+                self.assertEqual('', entry.length, "setLength(None) should produce ''")
+
+                entry.setAuthors('Stephen King')
+                print("  authors:", entry.authors)
+                self.assertEqual('Stephen King', entry.authors, "Bad setAuthors")
+
+        def test_04_titleEntry_xmlTitle_new(self):
+                print("\nTEST: titleEntry.xmlTitle - new entry (id=0)")
+                entry = titleEntry()
+                entry.setTitle('The Shining')
+                entry.setAuthors('Stephen King')
+                entry.setDate('1977-01-01')
+                entry.setPage('1')
+                entry.setType('NOVEL')
+
+                xml = entry.xmlTitle()
+                print("  xml:", xml)
+                self.assertIn('<ContentTitle>', xml, "Missing <ContentTitle>")
+                self.assertIn('<cTitle>The Shining</cTitle>', xml, "Missing cTitle")
+                self.assertIn('<cAuthors>Stephen King</cAuthors>', xml, "Missing cAuthors")
+                self.assertIn('<cPage>1</cPage>', xml, "Missing cPage")
+                self.assertIn('<cType>NOVEL</cType>', xml, "Missing cType")
+                self.assertIn('</ContentTitle>', xml, "Missing </ContentTitle>")
+
+                # Without page or type, those tags should be absent
+                entry2 = titleEntry()
+                entry2.setTitle('Untitled')
+                entry2.setAuthors('Unknown')
+                xml2 = entry2.xmlTitle()
+                self.assertNotIn('<cPage>', xml2, "cPage should be absent when empty")
+                self.assertNotIn('<cType>', xml2, "cType should be absent when empty")
+                self.assertNotIn('<cLength>', xml2, "cLength should be absent when empty")
+
+        def test_05_reviewEntry_xmlTitle_new(self):
+                print("\nTEST: reviewEntry.xmlTitle - new entry (id=0)")
+                entry = reviewEntry()
+                entry.setTitle('A Review of Something')
+                entry.setBookAuthors('Stephen King')
+                entry.setReviewers('John Doe')
+                entry.setDate('2000-01-01')
+                entry.setPage('15')
+
+                xml = entry.xmlTitle()
+                print("  xml:", xml)
+                self.assertIn('<ContentReview>', xml, "Missing <ContentReview>")
+                self.assertIn('<cTitle>A Review of Something</cTitle>', xml, "Missing cTitle")
+                self.assertIn('<cBookAuthors>Stephen King</cBookAuthors>', xml, "Missing cBookAuthors")
+                self.assertIn('<cReviewers>John Doe</cReviewers>', xml, "Missing cReviewers")
+                self.assertIn('<cPage>15</cPage>', xml, "Missing cPage")
+                self.assertIn('</ContentReview>', xml, "Missing </ContentReview>")
+
+        def test_06_interviewEntry_xmlTitle_new(self):
+                print("\nTEST: interviewEntry.xmlTitle - new entry (id=0)")
+                entry = interviewEntry()
+                entry.setTitle('Interview with the Author')
+                entry.setInterviewees('Stephen King')
+                entry.setInterviewers('Jane Smith')
+                entry.setDate('2005-06-01')
+
+                xml = entry.xmlTitle()
+                print("  xml:", xml)
+                self.assertIn('<ContentInterview>', xml, "Missing <ContentInterview>")
+                self.assertIn('<cTitle>Interview with the Author</cTitle>', xml, "Missing cTitle")
+                self.assertIn('<cInterviewees>Stephen King</cInterviewees>', xml, "Missing cInterviewees")
+                self.assertIn('<cInterviewers>Jane Smith</cInterviewers>', xml, "Missing cInterviewers")
+                self.assertIn('</ContentInterview>', xml, "Missing </ContentInterview>")
+
+                # No page set -> cPage absent
+                self.assertNotIn('<cPage>', xml, "cPage should be absent when empty")
+
+        def test_07_pubs_authors(self):
+                print("\nTEST: pubs.authors")
                 pub = pubs(db)
-                pub.load(26549)
 
-                if debug:
-                        printPubRecord(pub)
-                        printPubRecordTypes(pub)
+                # TEST 1 - No authors -> empty string
+                value = pub.authors()
+                print("  Received (0 authors):", value)
+                self.assertEqual('', value, "0 authors should return ''")
 
-                self.assertEqual(INT_TYPE, str(type(pub.pub_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_title)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_tag)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_year)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_pages)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_ptype)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_ctype)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_isbn)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_catalog)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_image)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_price)))
-                self.assertEqual(INT_TYPE, str(type(pub.pub_publisher_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_publisher)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series_num)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_note)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_authors)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_artists)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_trans_titles)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_webpages)))
+                # TEST 2 - One author
+                pub.pub_authors = ['Stephen King']
+                pub.num_authors = 1
+                value = pub.authors()
+                print("  Received (1 author):", value)
+                self.assertIn('Stephen King', value, "Author name missing")
 
-        def test_002_load_TransWeb(self):
-                print("TEST: pubClass::load_TransWeb")
+                # TEST 3 - Two authors joined with '+'
+                pub.pub_authors = ['Stephen King', 'Peter Straub']
+                pub.num_authors = 2
+                value = pub.authors()
+                print("  Received (2 authors):", value)
+                self.assertIn('Stephen King', value, "First author missing")
+                self.assertIn('Peter Straub', value, "Second author missing")
+                self.assertIn('+', value, "Authors should be joined with '+'")
+
+        def test_08_pubs_artists(self):
+                print("\nTEST: pubs.artists")
                 pub = pubs(db)
-                pub.load(872624)
 
-                if debug:
-                        printPubRecord(pub)
+                # TEST 1 - No artists -> empty string
+                value = pub.artists()
+                print("  Received (0 artists):", value)
+                self.assertEqual('', value, "0 artists should return ''")
 
-        def test_003_load_Catalog(self):
-                print("TEST: pubClass::load_Catalog")
+                # TEST 2 - One artist
+                pub.pub_artists = ['Joe Artist']
+                pub.num_artists = 1
+                value = pub.artists()
+                print("  Received (1 artist):", value)
+                self.assertIn('Joe Artist', value, "Artist name missing")
+
+        def test_09_pubs_load(self):
+                print("\nTEST: pubs.load - by id (pub 24052, Night Shift)")
                 pub = pubs(db)
-                pub.load(267729)
+                pub.load(24052)
+                print_values = 1
+                if print_values:
+                        printClass(pub)
+                else:
+                        self.assertEqual(1, pub.used_id, "Bad used_id")
+                        self.assertEqual(1, pub.used_title, "Bad used_title")
+                        self.assertEqual('', pub.error, "Unexpected error")
+                        print("  Received title:", pub.pub_title)
+                        self.assertEqual('Night Shift', pub.pub_title, "Bad pub_title")
 
-                if debug:
-                        printPubRecord(pub)
+        def test_10_pubs_load_not_found(self):
+                print("\nTEST: pubs.load - edge cases")
 
-        def test_004_load_PubSeries(self):
-                print("TEST: pubClass::load_PubSeries")
+                # TEST 1 - id=0: returns silently, error stays ''
                 pub = pubs(db)
-                pub.load(266473)
+                pub.load(0)
+                print("  error (id=0):", pub.error)
+                self.assertEqual('', pub.error, "load(0) should not set error")
+                self.assertEqual(0, pub.used_id, "load(0) should not set used_id")
 
-                if debug:
-                        printPubRecord(pub)
+                # TEST 2 - Non-existent id: sets error
+                pub2 = pubs(db)
+                pub2.load(999999999)
+                print("  error (not found):", pub2.error)
+                self.assertEqual('Pub record not found', pub2.error, "Bad error for missing pub")
 
-        def test_005_authors(self):
-                print("TEST: pubClass::authors")
+        def test_11_pubs_obj2xml(self):
+                print("\nTEST: pubs.obj2xml")
                 pub = pubs(db)
-                pub.load(267729)
-                retval = pub.authors()
-                print("AUTHORS:", retval)
 
-                if debug:
-                        printPubRecord(pub)
-
-        def test_006_artists(self):
-                print("TEST: pubClass::artists")
-                pub = pubs(db)
-                pub.load(267729)
-                retval = pub.artists()
-                print("ARTISTS:", retval)
-
-                if debug:
-                        printPubRecord(pub)
-
-        def test_007_obj2xml(self):
-                print("TEST: pubClass::obj2xml")
-                pub = pubs(db)
-                pub.load(26549)
+                # TEST 1 - No used_id: returns empty string (and prints "XML: pass")
                 xml = pub.obj2xml()
-                print(xml)
+                print("  xml (no used_id):", xml)
+                self.assertEqual('', xml, "obj2xml with no used_id should return ''")
 
-                if debug:
-                        printPubRecord(pub)
-                        printPubRecordTypes(pub)
+                # TEST 2 - With used_id and several fields set
+                pub.pub_id = 24052
+                pub.used_id = 1
+                pub.pub_title = 'Night Shift'
+                pub.used_title = 1
+                pub.pub_year = '1978-01-01'
+                pub.used_year = 1
+                pub.pub_isbn = '0385120400'
+                pub.used_isbn = 1
 
-        def test_008_cgi2obj_requiredArgs(self):
-                print("TEST: awardClass::cgi2obj_requiredArgs")
-                print("==============================================")
+                xml = pub.obj2xml()
+                print("  xml (with fields):", xml[:200])
+                self.assertIn('<Publication>', xml, "Missing <Publication>")
+                self.assertIn('<Record>24052</Record>', xml, "Missing Record")
+                self.assertIn('<Title>Night Shift</Title>', xml, "Missing Title")
+                self.assertIn('<Year>1978-01-01</Year>', xml, "Missing Year")
+                self.assertIn('<Isbn>0385120400</Isbn>', xml, "Missing Isbn")
+                self.assertIn('</Publication>', xml, "Missing </Publication>")
 
-                # Test 1 - Bad pub_id
-                form = {
-                    'pub_id': TestStorage('xyz'),
-                    'pub_title': TestStorage('Bogus Title'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, "Publication ID must be an integer number")
-
-                # Test 2 - No title ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, "No title specified")
-
-                if debug:
-                        printPubRecord(pub)
-
-        def test_009_cgi2obj_Authors(self):
-                print("TEST: awardClass::cgi2obj_Authors")
-                print("==============================================")
-
-                # Test 1 - No specified authors
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                if len(pub.error) > 1:
-                        ChoppedError = pub.error[:25]
-                self.assertEqual(ChoppedError, 'No authors were specified')
-
-                # Test 2 - Successful authors
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_author2': TestStorage('Bill Simmons'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, "No year was specified")
-
-        def test_010_cgi2obj_Meta(self):
-                print("TEST: awardClass::cgi2obj_Meta")
-                print("==============================================")
-
-                # Test 1 - Mangled year
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_author2': TestStorage('Bill Simmons'),
-                    'pub_year': TestStorage('Bogus'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.pub_year, '0000-00-00')
-
-                # Test 2 - Good year
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_author2': TestStorage('Bill Simmons'),
-                    'pub_year': TestStorage('1984'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.pub_year, '1984-00-00')
-
-                # Test 3 - Bad ptype
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('xxxBOGUSxxx'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Publication Format - xxxBOGUSxxx')
-
-                # Test 4 - Bad ctype
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('xxxBOGUSxxx'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Publication Type - xxxBOGUSxxx')
-
-                # Test 5 - Bad image
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('yada.com'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, ' URLs must start with http or https')
-
-                # Test 6 - Bad webpage
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('httttp://yada.com'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, ' URLs must start with http or https')
-
-                # Test 7 - Bad external_id
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'external_id.xxx': TestStorage('ASIN'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid identifier type')
-
-                # Test 8 - Success
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, '')
-
-                if debug:
-                        printPubRecord(pub)
-
-                self.assertEqual(INT_TYPE, str(type(pub.pub_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_title)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_tag)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_year)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_pages)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_ptype)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_ctype)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_isbn)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_catalog)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_image)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_price)))
-                self.assertEqual(INT_TYPE, str(type(pub.pub_publisher_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_publisher)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series_id)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_series_num)))
-                self.assertEqual(STR_TYPE, str(type(pub.pub_note)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_authors)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_artists)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_trans_titles)))
-                self.assertEqual(LIST_TYPE, str(type(pub.pub_webpages)))
-
-        def test_011_cgi2obj_CoverArt(self):
-
-                # Test 1 - Invalid Cover ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id0': TestStorage(0),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Cover ID')
-
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 2 - Invalid Cover ID Value
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('xyz'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Cover ID Value')
-
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 3 - Invalid Cover ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist0.170': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Cover ID')
-
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 3 - Invalid Artist ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.0': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Artist ID')
-
-                if debug:
-                        printPubRecord(pub)
-                    #'X.cover_artist1.170': TestStorage('170'),
-
-                # Test 4 - Invalid Cover Title ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title0': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Cover Title ID')
-
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 5 - Invalid Cover Date ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date0': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid Cover Date ID')
-
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 6 - Invalid Cover Date ID
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, '')
-
-                if debug:
-                        printPubRecord(pub)
-
-        def test_012_cgi2obj_Titles(self):
-
-                # Test 1 - Missing Title with Page
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                    'title_page1': TestStorage('42'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Entry must have a title. Page=42')
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 2 - Missing Title with Author
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                    'title_author1.1': TestStorage('42'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Entry must have a title. Author=42')
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 3 - invalid Title Type
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                    'title_title1': TestStorage('0'),
-                    'title_id1': TestStorage('40762'),
-                    'title_page1': TestStorage('15'),
-                    'title_author1.1': TestStorage('170'),
-                    'title_ttype1': TestStorage('xyz'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid title type')
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 4 - invalid Story Length
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                    'title_title1': TestStorage('0'),
-                    'title_id1': TestStorage('40762'),
-                    'title_page1': TestStorage('15'),
-                    'title_author1.1': TestStorage('170'),
-                    'title_ttype1': TestStorage('SHORTFICTION'),
-                    'title_storylen1': TestStorage('xyz'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, 'Invalid short fiction length')
-                if debug:
-                        printPubRecord(pub)
-
-                # Test 5 - Success
-                form = {
-                    'pub_id': TestStorage(26549),
-                    'pub_title': TestStorage('Prayers to Broken Stones'),
-                    'pub_author1': TestStorage('Dan Simmons'),
-                    'pub_year': TestStorage('1984'),
-                    'pub_tag': TestStorage('PTBS1990'),
-                    'pub_publisher': TestStorage('Dark Harvest'),
-                    'pub_series_num': TestStorage('3'),
-                    'pub_pages': TestStorage('viii+322+[7]'),
-                    'pub_ptype': TestStorage('hc'),
-                    'pub_ctype': TestStorage('COLLECTION'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_catalog': TestStorage('Nice Cat'),
-                    'pub_image': TestStorage('http://yada.com/test.jpg'),
-                    'pub_webpages': TestStorage('http://yada.com'),
-                    'pub_price': TestStorage('$10.99'),
-                    'external_id.1': TestStorage('1'),
-                    'external_id_type.1': TestStorage('1'),
-                    'X.cover_id1': TestStorage('0'),
-                    'X.cover_artist1.170': TestStorage('0'),
-                    'X.cover_title1': TestStorage('0'),
-                    'X.cover_date1': TestStorage('0'),
-                    'title_title1': TestStorage('0'),
-                    'title_id1': TestStorage('40762'),
-                    'title_page1': TestStorage('15'),
-                    'title_author1.1': TestStorage('170'),
-                    'title_ttype1': TestStorage('SHORTFICTION'),
-                    'title_storylen1': TestStorage('novella'),
-                }
-                pub = pubs(db)
-                pub.cgi2obj('explicit', form)
-                self.assertEqual(pub.error, '')
-                if debug:
-                        printPubRecord(pub)
-
-        def test_100_dumpLog(self):
+        def test_dumpLog(self):
                 print(".")
                 print("SQL Log")
                 SQLoutputLog()
+
 
 if __name__ == '__main__':
         unittest.main()

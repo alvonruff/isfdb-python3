@@ -1,22 +1,19 @@
 from __future__ import print_function
 #
-#     (C) COPYRIGHT 2010-2025   Ahasuerus, Al von Ruff
+#     (C) COPYRIGHT 2010-2026   Ahasuerus, Al von Ruff
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 796 $
-#     Date: $Date: 2021-11-02 19:08:22 -0400 (Tue, 02 Nov 2021) $
+#     Version: $Revision: 1272 $
+#     Date: $Date: 2026-02-28 15:53:11 -0500 (Sat, 28 Feb 2026) $
 
 import cgi
-import sys
-import os
 from isfdb import *
 from isfdblib import *
 from library import *
 from xml.dom import minidom
-from xml.dom import Node
 
 
 class pub_series:
@@ -89,9 +86,9 @@ class pub_series:
         def xml2obj(self, xml):
                 doc = minidom.parseString(xml)
                 metadata = doc.getElementsByTagName('UpdatePubSeries')
-                if metadata == 0:
+                if not metadata:
                         metadata = doc.getElementsByTagName('NewPubSeries')
-                if metadata == 0:
+                if not metadata:
                         return
 
                 elem = GetElementValue(metadata, 'PubSeriesName')
@@ -110,17 +107,18 @@ class pub_series:
                 try:
                         self.pub_series_id = str(int(self.form['pub_series_id'].value))
                         self.used_id = 1
-                except:
+                except (KeyError, ValueError):
                         self.error = 'Publication Series ID must be an integer number'
                         return
                 try:
                         self.pub_series_name = XMLescape(self.form['pub_series_name'].value)
-                        self.used_name = 1
-                        if not self.pub_series_name:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'Publication Series name is required'
                         return
+                if not self.pub_series_name:
+                        self.error = 'Publication Series name is required'
+                        return
+                self.used_name = 1
 
                 # Unescape the pub series name to ensure that the lookup finds it in the database
                 current_pub_series = SQLGetPubSeriesByName(XMLunescape(self.pub_series_name))
@@ -140,7 +138,6 @@ class pub_series:
                         self.pub_series_note = XMLescape(self.form['pub_series_note'].value)
                         self.used_note = 1
 
-                counter = 1
                 for key in self.form:
                         if key[:19] == 'pub_series_webpages':
                                 value = XMLescape(self.form[key].value)
