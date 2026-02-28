@@ -1,0 +1,18 @@
+
+# There has been an unwritten rule that the scripts here are standalone, hence their previous direct
+# usage of MySQLdb and localdefs.py, and reimplementation of Date_or_None() and IsfdbConvSetup().
+
+# That's impractical if we want scripts to run under both python2 or python3, as the rest of the
+# site does. As such, the Makefile in /common now copies all $(BASE_FILES) into /scripts (this directory),
+# and the scripts here now connect to the database using the standard method, which is a simple 
+# import of SQLparsing: 
+#
+# 
+#        from SQLparsing import *
+#
+# This hides implementation differences between Python2 and Python3. Instead of instantiating the
+# db variable (because there isn't such a thing under the Python3 connector), each script instantiates
+# the CNX class, which implements a set of cross-connector methods:
+#
+#        CNX = MYSQL_CONNECTOR()
+#
