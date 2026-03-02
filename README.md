@@ -1,4 +1,4 @@
-This repo contains the Python3 port of the ISFDB. This work is currently in progress.
+This repo contains the Python3 port of the ISFDB. Final testing is currently in progress.
 
 Let's say the isfdb.org is down, the founders are not responding, and the wiki at isfdb.org is not available. How would one bootstrap a new version of isfdb.org? Here are the steps needed to bringup a new version of the web site.
 
