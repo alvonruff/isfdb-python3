@@ -1,12 +1,12 @@
 #
-#     (C) COPYRIGHT 2005-2024   Al von Ruff, Bill Longley and Ahasuerus
+#     (C) COPYRIGHT 2005-2026   Al von Ruff, Bill Longley and Ahasuerus
 #       ALL RIGHTS RESERVED
 #
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision$
-#     Date: $Date$
+#     Version: $Revision: 1268 $
+#     Date: $Date: 2026-02-25 16:55:22 -0500 (Wed, 25 Feb 2026) $
 
 
 DBASE      	= "isfdb"
@@ -24,3 +24,4 @@ USERNAME   	= "root"
 UNICODE		= "iso-8859-1"
 WIKILOC         = "www.isfdb.org/wiki"
 WIKILOC_ALT     = "isfdb.org/wiki"
+GLOBAL_DEBUG    = 0

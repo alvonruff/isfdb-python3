@@ -6,20 +6,14 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1257 $
-#     Date: $Date: 2026-02-11 10:26:05 -0500 (Wed, 11 Feb 2026) $
+#     Version: $Revision: 1273 $
+#     Date: $Date: 2026-03-01 13:54:04 -0500 (Sun, 01 Mar 2026) $
 
-import cgi
-import sys
 import re
-import os
-import time
 from SQLparsing import *
 from isfdb import *
 from isfdblib import *
 from library import *
-from xml.dom import minidom
-from xml.dom import Node
 
 
 def lastRecord(form, field,counter):
@@ -55,7 +49,7 @@ class titleEntry:
         def setType(self, type):
                 self.type = XMLescape(type)
         def setLength(self, length):
-                if length == None:
+                if length is None:
                         length = ''
                 self.length = XMLescape(length)
         def setAuthors(self, authors):
@@ -586,7 +580,7 @@ class pubs:
                                         self.pub_authors.append(rec2[0][0])
                                         self.num_authors += 1
                                         rec2 = CNX.DB_FETCHMANY()
-                                except:
+                                except Exception:
                                         break
 
                         titles = SQLloadTitlesXBT(record[0][PUB_PUBID])
@@ -722,29 +716,29 @@ class pubs:
 
         # cgi2obj converts input from an html form into a pubs class object.
         def cgi2obj(self, reference_title = 'explicit'):
-                sys.stderr = sys.stdout
                 self.form = IsfdbFieldStorage()
                 if 'pub_id' in self.form:
                         try:
                                 self.pub_id = str(int(self.form['pub_id'].value))
-                        except:
+                        except (KeyError, ValueError):
                                 self.error = "Publication ID must be an integer number"
                                 return
                         self.used_id = 1
 
                 try:
                         self.pub_title = XMLescape(self.form['pub_title'].value)
-                        self.used_title = 1
-                        if not self.pub_title:
-                                raise
-                except:
+                except KeyError:
                         self.error = 'No title specified'
                         return
+                if not self.pub_title:
+                        self.error = 'No title specified'
+                        return
+                self.used_title = 1
 
                 if 'title_id' in self.form:
                         try:
                                 self.title_id = str(int(self.form['title_id'].value))
-                        except:
+                        except (KeyError, ValueError):
                                 self.error = "Title ID must be an integer number"
                                 return
 
@@ -798,14 +792,15 @@ class pubs:
                 try:
                         # Handle XML escaping; also strip leading and trailing spaces
                         self.pub_year = XMLescape(self.form['pub_year'].value)
-                        if not self.pub_year:
-                                raise
-                        # Validate and normalize the date - change to 0000-00-00 if it's invalid
-                        self.pub_year = ISFDBnormalizeDate(self.pub_year)
-                        self.used_year = 1
-                except:
+                except KeyError:
                         self.error = 'No year was specified'
                         return
+                if not self.pub_year:
+                        self.error = 'No year was specified'
+                        return
+                # Validate and normalize the date - change to 0000-00-00 if it's invalid
+                self.pub_year = ISFDBnormalizeDate(self.pub_year)
+                self.used_year = 1
 
                 if 'pub_publisher' in self.form:
                         value = XMLescape(self.form['pub_publisher'].value)
@@ -846,15 +841,13 @@ class pubs:
                         self.used_ptype = 1
 
                 ctype = ''
-                try:
+                if 'pub_ctype' in self.form:
                         ctype = self.form['pub_ctype'].value
-                        if ctype not in SESSION.db.pub_types:
-                                raise
-                        self.pub_ctype = ctype
-                        self.used_ctype = 1
-                except:
+                if ctype not in SESSION.db.pub_types:
                         self.error = 'Invalid Publication Type - %s' % ctype
                         return
+                self.pub_ctype = ctype
+                self.used_ctype = 1
 
                 if 'pub_image' in self.form:
                         value = XMLescape(self.form['pub_image'].value)
@@ -905,9 +898,10 @@ class pubs:
                                 # Get the External ID number and value
                                 try:
                                         ext_id_number = int(key.split('.')[1])
-                                        if not ext_id_number:
-                                                raise
-                                except:
+                                except (IndexError, ValueError):
+                                        self.error = 'Invalid identifier type'
+                                        return
+                                if not ext_id_number:
                                         self.error = 'Invalid identifier type'
                                         return
                                 ext_id_value = self.form[key].value.strip()
@@ -921,9 +915,10 @@ class pubs:
                                 # If there is none, it's non-numeric or 0, then this ID is invalid
                                 try:
                                         id_type_number = int(self.form['external_id_type.%d' % ext_id_number].value)
-                                        if not id_type_number:
-                                                raise
-                                except:
+                                except (KeyError, ValueError):
+                                        self.error = 'Invalid identifier type'
+                                        return
+                                if not id_type_number:
                                         self.error = 'Invalid identifier type'
                                         return
                                 type_tuple = identifier_types.get(id_type_number, None)
@@ -984,14 +979,15 @@ class pubs:
                                         # Valid cover IDs are 0 for new cover titles and
                                         # positive integers for existing cover titles
                                         cover_id = int(cover_id)
-                                        if cover_id < 1:
-                                                raise
-                                except:
+                                except ValueError:
+                                        self.error = 'Invalid Cover ID'
+                                        return
+                                if cover_id < 1:
                                         self.error = 'Invalid Cover ID'
                                         return
                                 try:
                                         self.cover_ids[cover_id] = int(self.form[key].value)
-                                except:
+                                except ValueError:
                                         self.error = 'Invalid Cover ID Value'
                                         return
                                 continue
@@ -1004,16 +1000,18 @@ class pubs:
                                 artist_id = split_suffix[2]
                                 try:
                                         cover_id = int(cover_id)
-                                        if cover_id < 1:
-                                                raise
-                                except:
+                                except ValueError:
+                                        self.error = 'Invalid Cover ID'
+                                        return
+                                if cover_id < 1:
                                         self.error = 'Invalid Cover ID'
                                         return
                                 try:
                                         artist_id = int(artist_id)
-                                        if artist_id < 1:
-                                                raise
-                                except:
+                                except ValueError:
+                                        self.error = 'Invalid Artist ID'
+                                        return
+                                if artist_id < 1:
                                         self.error = 'Invalid Artist ID'
                                         return
                                 artist_name = XMLescape(ISFDBnormalizeAuthor(self.form[key].value))
@@ -1034,9 +1032,10 @@ class pubs:
                         if cover_id:
                                 try:
                                         cover_id = int(cover_id)
-                                        if cover_id < 1:
-                                                raise
-                                except:
+                                except ValueError:
+                                        self.error = 'Invalid Cover Title ID'
+                                        return
+                                if cover_id < 1:
                                         self.error = 'Invalid Cover Title ID'
                                         return
                                 self.cover_titles[cover_id] = XMLescape(self.form[key].value)
@@ -1047,9 +1046,10 @@ class pubs:
                         if cover_id:
                                 try:
                                         cover_id = int(cover_id)
-                                        if cover_id < 1:
-                                                raise
-                                except:
+                                except ValueError:
+                                        self.error = 'Invalid Cover Date ID'
+                                        return
+                                if cover_id < 1:
                                         self.error = 'Invalid Cover Date ID'
                                         return
                                 self.cover_dates[cover_id] = ISFDBnormalizeDate(self.form[key].value)
@@ -1328,7 +1328,7 @@ class pubs:
                                 newReview = reviewEntry()
                                 try:
                                         newReview.setTitle(self.form[key].value)
-                                except:
+                                except (AttributeError, TypeError):
                                         self.error = "Could not read the value associated with %s" % key
                                         break
 

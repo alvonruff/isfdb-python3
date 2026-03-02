@@ -7,8 +7,8 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1272 $
-#     Date: $Date: 2026-02-28 15:53:11 -0500 (Sat, 28 Feb 2026) $
+#     Version: $Revision: 1276 $
+#     Date: $Date: 2026-03-02 11:34:39 -0500 (Mon, 02 Mar 2026) $
 
 
 from SQLparsing import *
@@ -86,7 +86,7 @@ def PrintReviews(reviews, title_language):
                 sort_id = review[3]
                 if not sort_id:
                         sort_id = review_id
-                sort_date = review[4]
+                sort_date = str(review[4])
                 if not sort_date:
                         sort_date = review_date
                 pub_id = review[5]

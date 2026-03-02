@@ -32,6 +32,9 @@ run:
 	$(PYTHON) TEST_verificationsourceClass.py
 	$(PYTHON) TEST_viewers.py
 
+compare:
+	$(PYTHON) biblio_compare.py
+
 clean:
 	make -f local.mk clean
 	rm -f *.cgi

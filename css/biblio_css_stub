@@ -1,11 +1,11 @@
-/* (C) COPYRIGHT 2008-2024   Al von Ruff, Ahasuerus and Dirk Stoecker
+/* (C) COPYRIGHT 2008-2025   Al von Ruff, Ahasuerus and Dirk Stoecker
          ALL RIGHTS RESERVED
 
      The copyright notice above does not evidence any actual or
      intended publication of such source code.
 
-     Version: $Revision: 1185 $
-     Date: $Date: 2024-07-23 13:47:48 -0400 (Tue, 23 Jul 2024) $
+     Version: $Revision: 1224 $
+     Date: $Date: 2025-05-10 16:41:04 -0400 (Sat, 10 May 2025) $
 */
  
 html,body { 
@@ -103,16 +103,6 @@ div#statusbar {
    margin-left: 10px; 
    margin-right: 10px; 
    text-align: center; 
-}
-div#statusbar2 {
-   background: #F00;
-   color: #fff;
-   padding-top: 2px;
-   padding-bottom: 2px;
-   margin-bottom: 10px;
-   margin-left: 10px;
-   margin-right: 10px;
-   text-align: center;
 }
 
 /* main navigation bar on left side */
@@ -492,7 +482,7 @@ div#HelpBox {
 	margin-top: 10px;
 	margin-bottom: 25px;
 }
-div#WarningBox, div#RecentSubmissionWarning, div#PendingSubmissionWarning, div#DateMismatchWarning, div#PendingTitleRemovalWarning, div#PendingImportWarning, div#PendingVTs, div#PendingTitleMergesWarning {
+div#WarningBox, div#RecentSubmissionWarning, div#PendingSubmissionWarning, div#DateMismatchWarning, div#PendingTitleRemovalWarning, div#PendingImportWarning, div#PendingVTs, div#PendingTitleMergesWarning, div#PendingTitleEditsWarning, div#PendingTitleEditsInPubEditsWarning {
 	background: yellow; 
 	border: 1px solid black;
 	padding-top: 15px;
@@ -1076,23 +1066,7 @@ img.coversmall {
 
 /* cover display on the front page */
 img.covermainpage {
-   width: 175px;
-   padding-top: 25px;
-   padding-left: 10px;
-   padding-right: 10px;
-   padding-bottom: 5px;
-}
-span.covermainpage {
-   width: 175px;
-   padding-right: 10px;
-   padding-left: 10px;
-   text-align: center;
-   font-style: italic;
-   font-weight: bold;
-}
-table.mainpage td {
-   text-align: center;
-   color: #000;
+   width: 90px;
 }
 
 /* links to detailed forcoming books on the main page */

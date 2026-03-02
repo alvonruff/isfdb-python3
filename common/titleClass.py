@@ -6,19 +6,14 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1257 $
-#     Date: $Date: 2026-02-11 10:26:05 -0500 (Wed, 11 Feb 2026) $
+#     Version: $Revision: 1273 $
+#     Date: $Date: 2026-03-01 13:54:04 -0500 (Sun, 01 Mar 2026) $
 
-import cgi
-import sys
 import re
-import os
-import traceback
 from isfdb import *
 from isfdblib import *
 from library import *
 from xml.dom import minidom
-from xml.dom import Node
 
 class titles:
         def __init__(self, db):
@@ -184,7 +179,6 @@ class titles:
                         return
 
         def cgi2obj(self, from_form = 0):
-                sys.stderr = sys.stdout
                 if from_form == 0:
                         self.form = IsfdbFieldStorage()
                 else:
@@ -193,20 +187,19 @@ class titles:
                         # Check that the submitted Title ID is an integer
                         self.title_id = str(int(self.form['title_id'].value))
                         self.used_id = 1
-                except Exception as e:
-                        e = traceback.format_exc()
-                        self.error = 'Title ID must be a valid integer number. %s' % e
+                except (KeyError, ValueError):
+                        self.error = 'Title ID must be a valid integer number'
                         return
 
                 try:
                         self.title_title = XMLescape(self.form['title_title'].value)
-                        self.used_title = 1
-                        if not self.title_title:
-                                raise
-                except Exception as e:
-                        e = traceback.format_exc()
-                        self.error = 'Title not specified. %s' % e
+                except KeyError:
+                        self.error = 'Title not specified'
                         return
+                if not self.title_title:
+                        self.error = 'Title not specified'
+                        return
+                self.used_title = 1
 
                 for key in self.form:
                         if 'trans_titles' in key:
@@ -278,29 +271,29 @@ class titles:
 
                 try:
                         self.title_year = XMLescape(self.form['title_copyright'].value)
-                        if not self.title_year:
-                                raise
-                        # Validate and normalize the date - change to 0000-00-00 if it's invalid
-                        self.title_year = ISFDBnormalizeDate(self.title_year)
-                        self.used_year = 1
-                except Exception as e:
-                        e = traceback.format_exc()
-                        self.error = 'Date not specified. %s' % e
+                except KeyError:
+                        self.error = 'Date not specified'
                         return
+                if not self.title_year:
+                        self.error = 'Date not specified'
+                        return
+                # Validate and normalize the date - change to 0000-00-00 if it's invalid
+                self.title_year = ISFDBnormalizeDate(self.title_year)
+                self.used_year = 1
 
                 try:
                         value = self.form['title_ttype'].value
-                        if value not in ('ANTHOLOGY','COLLECTION','COVERART',
-                                     'INTERIORART','EDITOR','ESSAY','INTERVIEW','NOVEL',
-                                     'NONFICTION','OMNIBUS','POEM','REVIEW','SERIAL',
-                                     'SHORTFICTION','CHAPBOOK'):
-                                raise
-                        self.title_ttype = value
-                        self.used_ttype = 1
-                except Exception as e:
-                        e = traceback.format_exc()
-                        self.error = 'Invalid Title Type. %s' % e
+                except KeyError:
+                        self.error = 'Invalid Title Type'
                         return
+                if value not in ('ANTHOLOGY','COLLECTION','COVERART',
+                             'INTERIORART','EDITOR','ESSAY','INTERVIEW','NOVEL',
+                             'NONFICTION','OMNIBUS','POEM','REVIEW','SERIAL',
+                             'SHORTFICTION','CHAPBOOK'):
+                        self.error = 'Invalid Title Type'
+                        return
+                self.title_ttype = value
+                self.used_ttype = 1
 
                 # Validate optional fields
                 self.validateOptional()

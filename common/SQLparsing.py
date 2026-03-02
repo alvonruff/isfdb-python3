@@ -6,8 +6,8 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1268 $
-#     Date: $Date: 2026-02-25 16:55:22 -0500 (Wed, 25 Feb 2026) $
+#     Version: $Revision: 1273 $
+#     Date: $Date: 2026-03-01 13:54:04 -0500 (Sun, 01 Mar 2026) $
 
 ##############################################################################
 #  Imports (Recommended to be top-level in Python3
@@ -365,7 +365,8 @@ def SQLgetBriefActualFromPseudo(au_id):
 # SQLGetDisambiguatedRecords. Identifiers are never safe to escape;
 # they must be validated against known-good values instead.
 _DISAMBIGUATED_RECORD_TYPES = {
-        'publishers': ('publisher_id', 'publisher_name'),
+        'authors':    ('author_id',     'author_canonical'),
+        'publishers': ('publisher_id',  'publisher_name'),
         'pub_series': ('pub_series_id', 'pub_series_name'),
         'series':     ('series_id',     'series_title'),
 }

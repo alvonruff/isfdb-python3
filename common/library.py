@@ -6,8 +6,8 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1269 $
-#     Date: $Date: 2026-02-26 14:26:55 -0500 (Thu, 26 Feb 2026) $
+#     Version: $Revision: 1276 $
+#     Date: $Date: 2026-03-02 11:34:39 -0500 (Mon, 02 Mar 2026) $
 
 import sys
 if sys.version_info.major == 3:
@@ -1713,7 +1713,9 @@ def EscapeParams(params):
         elif PYTHONVER == "python3":
                 import urllib.request, urllib.parse, urllib.error
                 for param in params:
-                        param_string += '&amp;%s=%s' % (urllib.parse.quote(param[0]), urllib.parse.quote(param[1]))
+                        param0 = param[0].encode("iso-8859-1")
+                        param1 = param[1].encode("iso-8859-1")
+                        param_string += '&amp;%s=%s' % (urllib.parse.quote(param0), urllib.parse.quote(param1))
         return param_string
 
 def printRecordID(record_type, record_id, user_id, user = None, edit_mode = 1):
@@ -2051,6 +2053,7 @@ def Portable_urllib_quote(target):
         if PYTHONVER == 'python2':
                 retval = urllib.quote(target)
         else:
+                target = target.encode("iso-8859-1")
                 retval = urllib.parse.quote(target)
         return(retval)
 

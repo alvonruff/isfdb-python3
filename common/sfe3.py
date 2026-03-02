@@ -6,8 +6,8 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1263 $
-#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
+#     Version: $Revision: 1273 $
+#     Date: $Date: 2026-03-01 13:54:04 -0500 (Sun, 01 Mar 2026) $
 
 import sys
 if sys.version_info.major == 3:
@@ -17,7 +17,6 @@ elif sys.version_info.major == 2:
 
 import os
 import shutil
-import string
 from library import *
 from SQLparsing import *
 
@@ -113,10 +112,10 @@ class Sfe3:
                         category_url = self.base_category_url + category
                         try:
                                 if PYTHONVER == 'python2':
-                                        page_contents = urllib.request.urlopen(category_url).read()
+                                        page_contents = urllib.urlopen(category_url).read()
                                 else:
                                         page_contents = urllib.request.urlopen(category_url).read().decode('utf-8')
-                        except:
+                        except Exception:
                                 continue
                         fragments = page_contents.split(fragment_separator)
                         count = 0

@@ -6,8 +6,8 @@ from __future__ import print_function
 #     The copyright notice above does not evidence any actual or
 #     intended publication of such source code.
 #
-#     Version: $Revision: 1263 $
-#     Date: $Date: 2026-02-19 16:39:39 -0500 (Thu, 19 Feb 2026) $
+#     Version: $Revision: 1274 $
+#     Date: $Date: 2026-03-02 06:57:57 -0500 (Mon, 02 Mar 2026) $
 
 import sys
 if sys.version_info.major == 3:
@@ -16,7 +16,6 @@ elif sys.version_info.major == 2:
         PYTHONVER = "python2"
 
 from xml.dom import minidom
-from xml.dom import Node
 from library import *
 
 class ContentTable():
@@ -260,7 +259,7 @@ class SubmissionTable():
                         colspan = 1
                         try:
                                 colspan = self.headers_colspan[count]
-                        except:
+                        except IndexError:
                                 pass
                         print('<th colspan="%d" class="%s">%s</th>' % (colspan, self.bold_label_css, header))
                 print('</tr>')
@@ -1266,7 +1265,7 @@ class SubmissionViewer():
                 self.sub_type = self.sub_data[SUB_TYPE]
                 try:
                         self.doc = minidom.parseString(XMLunescape2(self.xmlData))
-                except:
+                except Exception:
                         self._InvalidSubmission('Invalid XML in the submission')
                 self.root_element = SUBMAP[self.sub_type][1]
                 if not self.doc.getElementsByTagName(self.root_element):
@@ -1762,7 +1761,7 @@ class SubmissionViewer():
 
                 # Check if the series has already been deleted
                 seriesRecord = SQLget1Series(series_id)
-                if seriesRecord == 0:
+                if not seriesRecord:
                         self._InvalidSubmission('This series no longer exists')
 
                 # Check if any sub-series have been added to this series since the time the submission was created
@@ -2485,7 +2484,7 @@ class SubmissionViewer():
 
                 try:
                         title_id = int(self.metadata['Record'])
-                except:
+                except (KeyError, ValueError, TypeError):
                         title_id = 0
 
                 table = SubmissionTable(self)
@@ -2594,12 +2593,9 @@ class SubmissionViewer():
                         RecordIds[MaxIds] = int(dropid.firstChild.data)
                         MaxIds += 1
 
-                try:
-                        Records[0] = publishers(db)
-                        Records[0].load(RecordIds[0])
-                        if Records[0].error:
-                                raise
-                except:
+                Records[0] = publishers(db)
+                Records[0].load(RecordIds[0])
+                if Records[0].error:
                         self._InvalidSubmission("Can't load record: %s" % KeepId)
 
                 print('<table border="2" class="generic_table">')
@@ -2615,12 +2611,9 @@ class SubmissionViewer():
 
                 index = 1
                 while RecordIds[index]:
-                        try:
-                                Records[index] = publishers(db)
-                                Records[index].load(RecordIds[index])
-                                if Records[index].error:
-                                        raise
-                        except:
+                        Records[index] = publishers(db)
+                        Records[index].load(RecordIds[index])
+                        if Records[index].error:
                                 print('</table>')
                                 self._InvalidSubmission("Can't load record: %s" % RecordIds[index])
                         index += 1
@@ -2636,7 +2629,7 @@ class SubmissionViewer():
 
                 try:
                         keepId = int(GetElementValue(self.merge, Label))
-                except:
+                except (TypeError, ValueError):
                         keepId = KeepId
 
                 index = 0
@@ -3868,7 +3861,7 @@ class SubmissionViewer():
                                 type_id = int(GetChildValue(id_element, 'IDtype'))
                                 type_name = id_types[type_id][0]
                                 full_name = id_types[type_id][1]
-                        except:
+                        except (KeyError, ValueError, TypeError):
                                 self._InvalidSubmission('Submitted external ID type does not exist')
                         id_value = XMLunescape(GetChildValue(id_element, 'IDvalue'))
                         if type_name not in display_values:
